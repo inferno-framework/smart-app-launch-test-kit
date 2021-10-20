@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    smart_test_kit (0.0.1)
+    smart_app_launch_test_kit (0.0.1)
       inferno_core (= 0.0.6)
       jwt (~> 2.2.2)
 
@@ -166,8 +166,6 @@ GEM
     nio4r (2.5.8)
     nokogiri (1.12.5-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.12.5-x86_64-linux)
-      racc (~> 1.4)
     oauth2 (1.4.7)
       faraday (>= 0.8, < 2.0)
       jwt (>= 1.0, < 3.0)
@@ -175,12 +173,12 @@ GEM
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
     oj (3.13.9)
-    pry (0.14.1)
+    pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    pry-byebug (3.8.0)
+    pry-byebug (3.9.0)
       byebug (~> 11.0)
-      pry (~> 0.10)
+      pry (~> 0.13.0)
     public_suffix (4.0.6)
     puma (5.5.2)
       nio4r (~> 2.0)
@@ -225,24 +223,22 @@ GEM
     unf_ext (0.0.8)
     url_mount (0.2.1)
       rack
-    webmock (3.13.0)
-      addressable (>= 2.3.6)
+    webmock (3.14.0)
+      addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    zeitwerk (2.4.2)
+    zeitwerk (2.5.1)
 
 PLATFORMS
-  x86_64-darwin-19
   x86_64-darwin-20
-  x86_64-linux
 
 DEPENDENCIES
   database_cleaner-sequel (~> 1.8)
   factory_bot (~> 6.1)
   rack-test (~> 1.1.0)
   rspec (~> 3.10)
-  smart_test_kit!
+  smart_app_launch_test_kit!
   webmock (~> 3.11)
 
 BUNDLED WITH
-   2.2.22
+   2.2.29

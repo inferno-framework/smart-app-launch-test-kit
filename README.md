@@ -1,4 +1,4 @@
-# Inferno SMART Test Kit 
+# Inferno SMART App Launch Test Kit 
 
 This is a collection of tests for the [SMART Application Launch Framework
 Implementation Guide](http://hl7.org/fhir/smart-app-launch/index.html) using the

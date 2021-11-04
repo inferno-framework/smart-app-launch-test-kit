@@ -24,6 +24,7 @@ module SMARTAppLaunch
 
     group do
       title 'Standalone Launch'
+      id :smart_full_standalone_launch
 
       run_as_group
 
@@ -82,6 +83,7 @@ module SMARTAppLaunch
 
     group do
       title 'EHR Launch'
+      id :smart_full_ehr_launch
 
       run_as_group
 

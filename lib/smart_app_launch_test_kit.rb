@@ -37,7 +37,8 @@ module SMARTAppLaunch
               inputs: {
                 id_token: { name: :standalone_id_token },
                 client_id: { name: :standalone_client_id },
-                requested_scopes: { name: :standalone_requested_scopes }
+                requested_scopes: { name: :standalone_requested_scopes },
+                access_token: { name: :standalone_access_token }
               }
             }
 
@@ -96,7 +97,8 @@ module SMARTAppLaunch
               inputs: {
                 id_token: { name: :ehr_id_token },
                 client_id: { name: :ehr_client_id },
-                requested_scopes: { name: :standalone_requested_scopes }
+                requested_scopes: { name: :ehr_requested_scopes },
+                access_token: { name: :ehr_access_token }
               }
             }
 

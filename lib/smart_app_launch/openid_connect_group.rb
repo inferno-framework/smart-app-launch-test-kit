@@ -54,30 +54,5 @@ module SMARTAppLaunch
     test from: :smart_openid_token_payload
 
     test from: :smart_openid_fhir_user_claim
-
-    # test do
-    #   id :smart_openid_fhir_user_retrieval
-    #   title 'fhirUser can be retrieved'
-    #   description %(
-    #     Verify that the FHIR resource referred to in the `fhirUser` claim can be
-    #     retrieved.
-    #   )
-
-    #   input :id_token_fhir_user, :openid_issuer, :standalone_access_token
-    #   makes_request :id_token_fhir_user
-
-    #   run do
-    #     skip_if id_token_fhir_user.blank?
-
-    #     split_fhir_user = id_token_fhir_user.split('/')
-    #     resource_type = split_fhir_user[-2]
-    #     resource_id = split_fhir_user[-1]
-    #     fhir_read(resource_type, resource_id)
-
-    #     assert_response_status(200)
-    #     assert_valid_json(response[:body])
-    #     assert_resource_type(resource_type)
-    #   end
-    # end
   end
 end

@@ -5,21 +5,12 @@ module SMARTAppLaunch
     include TokenPayloadValidation
 
     id :smart_token_refresh_body
-    title 'Server successfully refreshes the access token when optional scope parameter omitted'
+    title 'Token refresh response contains all required fields'
     description %(
-      Server successfully exchanges refresh token at OAuth token endpoint
-      without providing scope in the body of the request.
-
       The EHR authorization server SHALL return a JSON structure that includes
       an access token or a message indicating that the authorization request
       has been denied. `access_token`, `expires_in`, `token_type`, and `scope` are
       required. `access_token` must be `Bearer`.
-
-      Although not required in the token refresh portion of the SMART App
-      Launch Guide, the token refresh response should include the HTTP
-      Cache-Control response header field with a value of no-store, as well as
-      the Pragma response header field with a value of no-cache to be
-      consistent with the requirements of the inital access token exchange.
     )
     input :received_scopes
     output :refresh_token, :access_token, :token_retrieval_time, :expires_in, :received_scopes

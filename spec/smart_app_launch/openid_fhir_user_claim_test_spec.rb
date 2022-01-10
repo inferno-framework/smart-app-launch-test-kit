@@ -22,39 +22,67 @@ RSpec.describe SMARTAppLaunch::OpenIDFHIRUserClaimTest do
   end
 
   it 'skips if no token payload is available' do
-    result = run(test, id_token_payload_json: nil)
+    result = run(test, id_token_payload_json: nil, url: url)
 
     expect(result.result).to eq('skip')
   end
 
   it 'skips if no fhirUser scope was requested' do
-    result = run(test, id_token_payload_json: nil, requested_scopes: 'launch')
+    result = run(test, id_token_payload_json: nil, requested_scopes: 'launch', url: url)
 
     expect(result.result).to eq('skip')
   end
 
-  it 'passes when the fhirUser claim is present' do
-    result = run(test, id_token_payload_json: payload.to_json, requested_scopes: scopes)
+  it 'passes when the fhirUser claim is present and the user can be retrieved' do
+    user_request =
+      stub_request(:get, payload[:fhirUser])
+        .to_return(status: 200, body: FHIR::Patient.new(id: '123').to_json)
+    result = run(test, id_token_payload_json: payload.to_json, requested_scopes: scopes, url: url)
 
     expect(result.result).to eq('pass')
+    expect(user_request).to have_been_made
   end
 
   it 'fails if the fhirUser claim is blank' do
-    result = run(test, id_token_payload_json: { fhirUser: '' }.to_json, requested_scopes: scopes)
+    result = run(test, id_token_payload_json: { fhirUser: '' }.to_json, requested_scopes: scopes, url: url)
 
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/does not contain/)
   end
 
   it 'fails if the fhirUser claim does not refer to a valid resource type' do
-    result = run(test, id_token_payload_json: { fhirUser: "#{url}/Observation/123" }.to_json, requested_scopes: scopes)
+    result = run(test, id_token_payload_json: { fhirUser: "#{url}/Observation/123" }.to_json, requested_scopes: scopes, url: url)
 
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/resource type/)
   end
 
+  it 'fails if the incorrect resource type is returned' do
+    user_request =
+      stub_request(:get, payload[:fhirUser])
+        .to_return(status: 200, body: FHIR::Person.new(id: '123').to_json)
+    result = run(test, id_token_payload_json: { fhirUser: "#{url}/Patient/123" }.to_json, requested_scopes: scopes, url: url)
+
+    expect(result.result).to eq('fail')
+    expect(result.result_message).to match(/Patient/)
+    expect(user_request).to have_been_made
+  end
+
+  it 'fails when the fhirUser can not be retrieved' do
+    user_request =
+      stub_request(:get, payload[:fhirUser])
+        .to_return(status: 404)
+    result = run(test, id_token_payload_json: payload.to_json, requested_scopes: scopes, url: url)
+
+    expect(result.result).to eq('fail')
+    expect(result.result_message).to include('200')
+    expect(user_request).to have_been_made
+  end
+
   it 'persists outputs' do
-    result = run(test, id_token_payload_json: payload.to_json, requested_scopes: scopes)
+    stub_request(:get, payload[:fhirUser])
+      .to_return(status: 200, body: FHIR::Patient.new(id: '123').to_json)
+    result = run(test, id_token_payload_json: payload.to_json, requested_scopes: scopes, url: url)
 
     expect(result.result).to eq('pass')
 

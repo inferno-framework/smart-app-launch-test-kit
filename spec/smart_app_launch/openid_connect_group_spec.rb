@@ -62,8 +62,10 @@ RSpec.describe SMARTAppLaunch::OpenIDConnectGroup do
         },
         body: config.to_json
       )
+    stub_request(:get, payload[:fhirUser])
+      .to_return(status: 200, body: FHIR::Patient.new(id: '123').to_json)
 
-    run(group, id_token: id_token, client_id: client_id, requested_scopes: 'openid fhirUser')
+    run(group, id_token: id_token, client_id: client_id, requested_scopes: 'openid fhirUser', url: url)
     results = results_repo.current_results_for_test_session(test_session.id)
 
     expect(results.map(&:result)).to all(eq('pass'))

@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     smart_app_launch_test_kit (0.0.1)
-      inferno_core (= 0.1.0)
+      inferno_core (~> 0.1.0)
       jwt (~> 2.2)
 
 GEM

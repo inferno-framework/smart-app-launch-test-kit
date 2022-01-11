@@ -13,7 +13,12 @@ RSpec.describe SMARTAppLaunch::CodeReceivedTest do
     test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
     test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
     inputs.each do |name, value|
-      session_data_repo.save(test_session_id: test_session.id, name: name, value: value)
+      session_data_repo.save(
+        test_session_id: test_session.id,
+        name: name,
+        value: value,
+        type: runnable.config.input_type(name)
+      )
     end
     Inferno::TestRunner.new(test_session: test_session, test_run: test_run).run(runnable)
   end
@@ -30,14 +35,14 @@ RSpec.describe SMARTAppLaunch::CodeReceivedTest do
 
   it 'passes if it receives a code with no error' do
     create_redirect_request('http://example.com/redirect?code=CODE')
-    result = run(test, code: 'CODE')
+    result = run(test)
 
     expect(result.result).to eq('pass')
   end
 
   it 'fails if it receives an error' do
     create_redirect_request('http://example.com/redirect?code=CODE&error=invalid_request')
-    result = run(test, code: 'CODE')
+    result = run(test)
 
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/Error returned from authorization server/)
@@ -48,7 +53,7 @@ RSpec.describe SMARTAppLaunch::CodeReceivedTest do
     create_redirect_request(
       'http://example.com/redirect?code=CODE&error=invalid_request&error_description=DESCRIPTION&error_uri=URI'
     )
-    result = run(test, code: 'CODE')
+    result = run(test)
 
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/Error returned from authorization server/)

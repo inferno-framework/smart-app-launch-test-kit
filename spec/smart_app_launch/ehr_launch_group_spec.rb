@@ -18,8 +18,8 @@ RSpec.describe SMARTAppLaunch::EHRLaunchGroup do
       url: url,
       smart_authorization_url: "#{url}/auth",
       smart_token_url: token_url,
-      ehr_client_id: 'CLIENT_ID',
-      ehr_requested_scopes: 'launch/patient patient/*.*'
+      client_id: 'CLIENT_ID',
+      requested_scopes: 'launch/patient patient/*.*'
     }
   end
   let(:token_response) do
@@ -46,7 +46,12 @@ RSpec.describe SMARTAppLaunch::EHRLaunchGroup do
     test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
     test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
     inputs.each do |name, value|
-      session_data_repo.save(test_session_id: test_session.id, name: name, value: value)
+      session_data_repo.save(
+        test_session_id: test_session.id,
+        name: runnable.config.input_name(name).presence || name,
+        value: value,
+        type: runnable.config.input_type(name).presence || 'text'
+      )
     end
     Inferno::TestRunner.new(test_session: test_session, test_run: test_run).run(runnable)
   end

@@ -23,11 +23,13 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
     test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
     test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
     inputs.each do |name, value|
+      type = runnable.config.input_type(name)
+      type = 'text' if type == 'radio'
       session_data_repo.save(
         test_session_id: test_session.id,
         name: name,
         value: value,
-        type: runnable.config.input_type(name)
+        type: type
       )
     end
     Inferno::TestRunner.new(test_session: test_session, test_run: test_run).run(runnable)
@@ -112,5 +114,29 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
 
     expect(result.result).to eq('skip')
     expect(result.result_message).to eq('Error during authorization request')
+  end
+
+  context 'with PKCE support' do
+    it 'sends the code verifier' do
+      create_redirect_request('http://example.com/redirect?code=CODE')
+      token_request =
+        stub_request(:post, token_url)
+          .with(
+            body:
+              {
+                grant_type: 'authorization_code',
+                code: 'CODE',
+                client_id: 'CLIENT_ID',
+                redirect_uri: described_class.config.options[:redirect_uri],
+                code_verifier: 'CODE_VERIFIER'
+              }
+          )
+          .to_return(status: 200)
+
+      result = run(test, public_inputs.merge(use_pkce: 'true', pkce_code_verifier: 'CODE_VERIFIER'))
+
+      expect(result.result).to eq('pass')
+      expect(token_request).to have_been_made
+    end
   end
 end

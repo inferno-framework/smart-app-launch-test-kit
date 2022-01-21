@@ -47,6 +47,10 @@ module SMARTAppLaunch
 
     config options: { redirect_uri: "#{Inferno::Application['inferno_host']}/custom/smart/redirect" }
 
+    def self.calculate_s256_challenge(verifier)
+      Base64.urlsafe_encode64(Digest::SHA256.digest(verifier), padding: false)
+    end
+
     run do
       assert_valid_http_uri(
         smart_authorization_url,
@@ -70,7 +74,7 @@ module SMARTAppLaunch
         code_verifier = SecureRandom.uuid
         code_challenge =
           if pkce_code_challenge_method == 'S256'
-            Base64.urlsafe_encode64(Digest::SHA256.digest(code_verifier), padding: false)
+            self.class.calculate_s256_challenge(code_verifier)
           else
             code_verifier
           end

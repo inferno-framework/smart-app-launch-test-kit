@@ -7,7 +7,7 @@ require_relative 'smart_app_launch/token_refresh_group'
 module SMARTAppLaunch
   class SMARTSuite < Inferno::TestSuite
     id 'smart'
-    title 'SMART'
+    title 'SMART App Launch STU1'
 
     resume_test_route :get, '/launch' do
       request.query_parameters['iss']

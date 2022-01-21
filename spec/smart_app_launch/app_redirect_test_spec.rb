@@ -24,11 +24,13 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
     test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
     test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
     inputs.each do |name, value|
+      type = runnable.config.input_type(name)
+      type = 'text' if type == 'radio'
       session_data_repo.save(
         test_session_id: test_session.id,
         name: name,
         value: value,
-        type: runnable.config.input_type(name)
+        type: type
       )
     end
     Inferno::TestRunner.new(test_session: test_session, test_run: test_run).run(runnable)
@@ -80,5 +82,38 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
     persisted_state = session_data_repo.load(test_session_id: test_session.id, name: 'state')
 
     expect(persisted_state).to eq(state)
+  end
+
+  context 'when PKCE is enabled' do
+    let(:pkce_inputs) { inputs.merge(use_pkce: 'true', pkce_code_challenge_method: 'S256') }
+
+    it 'adds code_challenge and code_challenge method to the authorization url' do
+      result = run(test, pkce_inputs)
+
+      expect(result.result).to eq('wait')
+      expect(result.result_message).to match(/code_challenge=[a-zA-Z0-9\-_]+/)
+      expect(result.result_message).to match(/code_challenge_method=S256/)
+    end
+
+    it 'sends the verifier as the challenge when challenge method is plain' do
+      result = run(test, pkce_inputs.merge(pkce_code_challenge_method: 'plain'))
+
+      expect(result.result).to eq('wait')
+      # We generate a uuid for the verifier, so check that the challenge is a uuid
+      expect(result.result_message).to match(/code_challenge=[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}/)
+      expect(result.result_message).to match(/code_challenge_method=plain/)
+    end
+  end
+
+  describe '.calculate_s256_challenge' do
+    # https://datatracker.ietf.org/doc/html/rfc7636#appendix-B
+    it 'correctly calculates the challenge for the example from the PKCE RFC' do
+      verifier = 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk'
+      expected_challenge = 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM'
+
+      challenge = test.calculate_s256_challenge(verifier)
+
+      expect(challenge).to eq(expected_challenge)
+    end
   end
 end

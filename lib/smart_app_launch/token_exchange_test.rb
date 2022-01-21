@@ -14,6 +14,23 @@ module SMARTAppLaunch
           :smart_token_url,
           :client_id
     input :client_secret, optional: true
+    input :use_pkce,
+          title: 'Proof Key for Code Exchange (PKCE)',
+          type: 'radio',
+          default: 'false',
+          options: {
+            list_options: [
+              {
+                label: 'Enabled',
+                value: 'true'
+              },
+              {
+                label: 'Disabled',
+                value: 'false'
+              }
+            ]
+          }
+    input :pkce_code_verifier, optional: true
     output :token_retrieval_time
     uses_request :redirect
     makes_request :token
@@ -35,6 +52,10 @@ module SMARTAppLaunch
         oauth2_headers['Authorization'] = "Basic #{Base64.strict_encode64(client_credentials)}"
       else
         oauth2_params[:client_id] = client_id
+      end
+
+      if use_pkce == 'true'
+        oauth2_params[:code_verifier] = pkce_code_verifier
       end
 
       post(smart_token_url, body: oauth2_params, name: :token, headers: oauth2_headers)

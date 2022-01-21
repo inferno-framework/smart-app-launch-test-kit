@@ -8,8 +8,41 @@ module SMARTAppLaunch
     id :smart_app_redirect
 
     input :client_id, :requested_scopes, :url, :smart_authorization_url
+    input :use_pkce,
+          title: 'Prook Key for Code Exchange (PKCE)',
+          type: 'radio',
+          default: 'false',
+          options: {
+            list_options: [
+              {
+                label: 'Enabled',
+                value: 'true'
+              },
+              {
+                label: 'Disabled',
+                value: 'false'
+              }
+            ]
+          }
+    input :pkce_code_challenge_method,
+          optional: true,
+          title: 'PKCE Code Challenge Method',
+          type: 'radio',
+          default: 'S256',
+          options: {
+            list_options: [
+              {
+                label: 'S256',
+                value: 'S256'
+              },
+              {
+                label: 'plain',
+                value: 'plain'
+              }
+            ]
+          }
 
-    output :state
+    output :state, :pkce_code_challenge, :pkce_code_verifier
     receives_request :redirect
 
     config options: { redirect_uri: "#{Inferno::Application['inferno_host']}/custom/smart/redirect" }
@@ -32,6 +65,20 @@ module SMARTAppLaunch
       }
 
       oauth2_params['launch'] = launch if self.class.inputs.include?(:launch)
+
+      if use_pkce == 'true'
+        code_verifier = SecureRandom.uuid
+        code_challenge =
+          if pkce_code_challenge_method == 'S256'
+            Base64.urlsafe_encode64(Digest::SHA256.digest(code_verifier), padding: false)
+          else
+            code_verifier
+          end
+
+        output pkce_code_verifier: code_verifier, pkce_code_challenge: code_challenge
+
+        oauth2_params.merge!('code_challenge' => code_challenge, 'code_challenge_method' => pkce_code_challenge_method)
+      end
 
       authorization_url = smart_authorization_url
 

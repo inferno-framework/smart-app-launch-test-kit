@@ -15,7 +15,7 @@ module SMARTAppLaunch
           :client_id
     input :client_secret, optional: true
     input :use_pkce,
-          title: 'Prook Key for Code Exchange (PKCE)',
+          title: 'Proof Key for Code Exchange (PKCE)',
           type: 'radio',
           default: 'false',
           options: {

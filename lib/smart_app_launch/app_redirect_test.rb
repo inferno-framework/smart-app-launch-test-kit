@@ -9,7 +9,7 @@ module SMARTAppLaunch
 
     input :client_id, :requested_scopes, :url, :smart_authorization_url
     input :use_pkce,
-          title: 'Prook Key for Code Exchange (PKCE)',
+          title: 'Proof Key for Code Exchange (PKCE)',
           type: 'radio',
           default: 'false',
           options: {

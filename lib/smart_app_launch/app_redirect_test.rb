@@ -51,6 +51,18 @@ module SMARTAppLaunch
       Base64.urlsafe_encode64(Digest::SHA256.digest(verifier), padding: false)
     end
 
+    def aud
+      url
+    end
+
+    def wait_message(auth_url)
+      %(
+        [Follow this link to authorize with the SMART server](#{auth_url}).
+        Waiting to receive a request at `#{config.options[:redirect_uri]}` with
+        a state of `#{state}`.
+      )
+    end
+
     run do
       assert_valid_http_uri(
         smart_authorization_url,
@@ -65,7 +77,7 @@ module SMARTAppLaunch
         'redirect_uri' => config.options[:redirect_uri],
         'scope' => requested_scopes,
         'state' => state,
-        'aud' => url
+        'aud' => aud
       }
 
       oauth2_params['launch'] = launch if self.class.inputs.include?(:launch)
@@ -101,11 +113,7 @@ module SMARTAppLaunch
 
       wait(
         identifier: state,
-        message: %(
-          [Follow this link to authorize with the SMART
-          server](#{authorization_url}). Waiting to receive a request at
-          `#{config.options[:redirect_uri]}` with a state of `#{state}`.
-        )
+        message: wait_message(authorization_url)
       )
     end
   end

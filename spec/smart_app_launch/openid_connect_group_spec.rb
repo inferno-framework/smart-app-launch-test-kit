@@ -21,6 +21,16 @@ RSpec.describe SMARTAppLaunch::OpenIDConnectGroup do
   let(:key_pair) { OpenSSL::PKey::RSA.new(2048) }
   let(:jwk) { JWT::JWK.new(key_pair) }
   let(:id_token) { JWT.encode(payload, key_pair, 'RS256', kid: jwk.kid) }
+  let(:smart_credentials) do
+    {
+      access_token: 'ACCESS_TOKEN',
+      refresh_token: 'REFRESH_TOKEN',
+      expires_in: 3600,
+      client_id: client_id,
+      token_retrieval_time: Time.now.iso8601,
+      token_url: 'http://example.com/token'
+    }.to_json
+  end
   let(:config) do
     {
       registration_endpoint: 'https://www.example.com/register',
@@ -47,7 +57,7 @@ RSpec.describe SMARTAppLaunch::OpenIDConnectGroup do
         test_session_id: test_session.id,
         name: name,
         value: value,
-        type: 'text'
+        type: runnable.config.input_type(name).presence || 'text'
       )
     end
     Inferno::TestRunner.new(test_session: test_session, test_run: test_run).run(runnable)
@@ -70,7 +80,14 @@ RSpec.describe SMARTAppLaunch::OpenIDConnectGroup do
     stub_request(:get, payload[:fhirUser])
       .to_return(status: 200, body: FHIR::Patient.new(id: '123').to_json)
 
-    run(group, id_token: id_token, client_id: client_id, requested_scopes: 'openid fhirUser', url: url)
+    run(
+      group,
+      id_token: id_token,
+      client_id: client_id,
+      requested_scopes: 'openid fhirUser',
+      url: url,
+      smart_credentials: smart_credentials
+    )
     results = results_repo.current_results_for_test_session(test_session.id)
 
     expect(results.map(&:result)).to all(eq('pass'))

@@ -5,6 +5,25 @@ require_relative 'smart_app_launch/ehr_launch_group'
 require_relative 'smart_app_launch/openid_connect_group'
 require_relative 'smart_app_launch/token_refresh_group'
 
+# TODO: Remove once this functionality is released in core:
+# https://github.com/inferno-framework/inferno-core/pull/86
+module Inferno
+  module DSL
+    module Runnable
+      def required_inputs(prior_outputs = [])
+        required_inputs =
+          inputs
+            .reject { |input| input_definitions[input][:optional] }
+            .map { |input| config.input_name(input) }
+            .reject { |input| prior_outputs.include?(input) }
+        children_required_inputs = children.flat_map { |child| child.required_inputs(prior_outputs) }
+        prior_outputs.concat(outputs.map { |output| config.output_name(output) })
+        (required_inputs + children_required_inputs).flatten.uniq
+      end
+    end
+  end
+end
+
 module SMARTAppLaunch
   class SMARTSuite < Inferno::TestSuite
     id 'smart'

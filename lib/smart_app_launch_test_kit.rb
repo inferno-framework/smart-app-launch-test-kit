@@ -1,3 +1,4 @@
+require 'tls_test_kit'
 require_relative 'smart_app_launch/discovery_group'
 require_relative 'smart_app_launch/standalone_launch_group'
 require_relative 'smart_app_launch/ehr_launch_group'

@@ -8,12 +8,13 @@ module SMARTAppLaunch
       the url for a Patient, Practitioner, RelatedPerson, or Person resource
     )
 
-    input :id_token_payload_json, :requested_scopes, :url, :access_token
+    input :id_token_payload_json, :requested_scopes, :url
+    input :smart_credentials, type: :oauth_credentials
     output :id_token_fhir_user
 
     fhir_client do
       url :url
-      bearer_token :access_token
+      oauth_credentials :smart_credentials
     end
 
     run do

@@ -32,6 +32,7 @@ module SMARTAppLaunch
           }
     input :pkce_code_verifier, optional: true
     output :token_retrieval_time
+    output :smart_credentials
     uses_request :redirect
     makes_request :token
 
@@ -60,9 +61,21 @@ module SMARTAppLaunch
 
       post(smart_token_url, body: oauth2_params, name: :token, headers: oauth2_headers)
 
+      assert_response_status(200)
+      assert_valid_json(request.response_body)
+
       output token_retrieval_time: Time.now.iso8601
 
-      assert_response_status(200)
+      token_response_body = JSON.parse(request.response_body)
+      output smart_credentials: {
+               refresh_token: token_response_body['refresh_token'],
+               access_token: token_response_body['access_token'],
+               expires_in: token_response_body['expires_in'],
+               client_id: client_id,
+               client_secret: client_secret,
+               token_retrieval_time: token_retrieval_time,
+               token_url: smart_token_url
+             }.to_json
     end
   end
 end

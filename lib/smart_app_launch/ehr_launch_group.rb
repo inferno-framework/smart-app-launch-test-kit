@@ -81,6 +81,9 @@ module SMARTAppLaunch
         },
         launch: {
           name: :ehr_launch
+        },
+        smart_credentials: {
+          name: :ehr_smart_credentials
         }
       },
       outputs: {
@@ -95,7 +98,8 @@ module SMARTAppLaunch
         patient_id: { name: :ehr_patient_id },
         encounter_id: { name: :ehr_encounter_id },
         received_scopes: { name: :ehr_received_scopes },
-        intent: { name: :ehr_intent }
+        intent: { name: :ehr_intent },
+        smart_credentials: { name: :ehr_smart_credentials }
       },
       requests: {
         launch: { name: :ehr_launch },

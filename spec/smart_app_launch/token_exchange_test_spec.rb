@@ -58,7 +58,7 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
             },
           headers: { 'Authorization' => "Basic #{Base64.strict_encode64('CLIENT_ID:CLIENT_SECRET')}" }
         )
-        .to_return(status: 200)
+        .to_return(status: 200, body: {}.to_json)
 
       result = run(test, confidential_inputs)
 
@@ -79,7 +79,7 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
               redirect_uri: described_class.config.options[:redirect_uri]
             }
         )
-        .to_return(status: 200)
+        .to_return(status: 200, body: {}.to_json)
 
       result = run(test, public_inputs)
 
@@ -131,7 +131,7 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
                 code_verifier: 'CODE_VERIFIER'
               }
           )
-          .to_return(status: 200)
+          .to_return(status: 200, body: {}.to_json)
 
       result = run(test, public_inputs.merge(use_pkce: 'true', pkce_code_verifier: 'CODE_VERIFIER'))
 

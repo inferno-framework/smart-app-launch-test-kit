@@ -74,7 +74,11 @@ module SMARTAppLaunch
         },
         state: {
           name: :standalone_state
+        },
+        smart_credentials: {
+          name: :standalone_smart_credentials
         }
+
       },
       outputs: {
         code: { name: :standalone_code },
@@ -87,7 +91,8 @@ module SMARTAppLaunch
         patient_id: { name: :standalone_patient_id },
         encounter_id: { name: :standalone_encounter_id },
         received_scopes: { name: :standalone_received_scopes },
-        intent: { name: :standalone_intent }
+        intent: { name: :standalone_intent },
+        smart_credentials: { name: :standalone_smart_credentials }
       },
       requests: {
         redirect: { name: :standalone_redirect },

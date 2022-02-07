@@ -106,10 +106,34 @@ module SMARTAppLaunch
 
     test from: :smart_app_launch
     test from: :smart_launch_received
+    test from: :tls_version_test,
+         id: :ehr_auth_tls,
+         title: 'OAuth 2.0 authorize endpoint secured by transport layer security',
+         description: %(
+           Apps MUST assure that sensitive information (authentication secrets,
+           authorization codes, tokens) is transmitted ONLY to authenticated
+           servers, over TLS-secured channels.
+         ),
+         config: {
+           inputs: { url: { name: :smart_authorization_url } },
+           options: {  minimum_allowed_version: OpenSSL::SSL::TLS1_2_VERSION }
+         }
     test from: :smart_app_redirect do
       input :launch
     end
     test from: :smart_code_received
+    test from: :tls_version_test,
+         id: :ehr_token_tls,
+         title: 'OAuth 2.0 token endpoint secured by transport layer security',
+         description: %(
+           Apps MUST assure that sensitive information (authentication secrets,
+           authorization codes, tokens) is transmitted ONLY to authenticated
+           servers, over TLS-secured channels.
+         ),
+         config: {
+           inputs: { url: { name: :smart_token_url } },
+           options: {  minimum_allowed_version: OpenSSL::SSL::TLS1_2_VERSION }
+         }
     test from: :smart_token_exchange
     test from: :smart_token_response_body
     test from: :smart_token_response_headers

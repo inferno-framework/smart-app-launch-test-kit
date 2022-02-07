@@ -57,6 +57,16 @@ RSpec.describe SMARTAppLaunch::StandaloneLaunchGroup do
   end
 
   it 'persists requests and outputs' do
+    stub_request(:get, 'https://example.com:80/fhir/auth')
+      .to_raise(StandardError)
+      .times(4)
+      .then
+      .to_return(status: 200)
+    stub_request(:get, 'https://example.com:80/fhir/token')
+      .to_raise(StandardError)
+      .times(4)
+      .then
+      .to_return(status: 200)
     stub_request(:post, token_url)
       .to_return(status: 200, body: token_response.to_json, headers: token_response_headers)
     run(group, inputs)

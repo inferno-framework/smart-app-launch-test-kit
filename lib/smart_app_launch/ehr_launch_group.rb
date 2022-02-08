@@ -10,6 +10,7 @@ module SMARTAppLaunch
   class EHRLaunchGroup < Inferno::TestGroup
     id :smart_ehr_launch
     title 'SMART EHR Launch'
+    short_description 'Demonstrate the ability to authorize an app using the EHR Launch.'
 
     description %(
       # Background

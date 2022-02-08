@@ -6,6 +6,7 @@ module SMARTAppLaunch
   class TokenRefreshGroup < Inferno::TestGroup
     id :smart_token_refresh
     title 'SMART Token Refresh'
+    short_description 'Demonstrate the ability to exchange a refresh token for an access token.'
     description %(
       # Background
 

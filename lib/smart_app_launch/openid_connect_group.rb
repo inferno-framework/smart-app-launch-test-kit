@@ -11,6 +11,7 @@ module SMARTAppLaunch
   class OpenIDConnectGroup < Inferno::TestGroup
     id :smart_openid_connect
     title 'OpenID Connect'
+    short_description 'Demonstrate the ability to authenticate users with OpenID Connect.'
 
     description %(
       # Background

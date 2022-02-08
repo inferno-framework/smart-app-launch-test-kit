@@ -2,6 +2,7 @@ module SMARTAppLaunch
   class DiscoveryGroup < Inferno::TestGroup
     id :smart_discovery
     title 'SMART on FHIR Discovery'
+    short_description 'Retrieve server\'s SMART on FHIR configuration.'
     description %(
       # Background
 

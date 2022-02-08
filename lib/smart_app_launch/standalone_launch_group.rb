@@ -8,6 +8,7 @@ module SMARTAppLaunch
   class StandaloneLaunchGroup < Inferno::TestGroup
     id :smart_standalone_launch
     title 'SMART Standalone Launch'
+    short_description 'Demonstrate the ability to authorize an app using the Standalone Launch.'
 
     description %(
       # Background

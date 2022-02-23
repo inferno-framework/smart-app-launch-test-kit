@@ -54,7 +54,7 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
             {
               grant_type: 'authorization_code',
               code: 'CODE',
-              redirect_uri: "#{Inferno::Application['inferno_host']}/custom/smart/redirect"
+              redirect_uri: "#{Inferno::Application['base_url']}/custom/smart/redirect"
             },
           headers: { 'Authorization' => "Basic #{Base64.strict_encode64('CLIENT_ID:CLIENT_SECRET')}" }
         )

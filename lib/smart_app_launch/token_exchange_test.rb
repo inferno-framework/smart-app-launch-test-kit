@@ -36,7 +36,7 @@ module SMARTAppLaunch
     uses_request :redirect
     makes_request :token
 
-    config options: { redirect_uri: "#{Inferno::Application['inferno_host']}/custom/smart/redirect" }
+    config options: { redirect_uri: "#{Inferno::Application['base_url']}/custom/smart/redirect" }
 
     run do
       skip_if request.query_parameters['error'].present?, 'Error during authorization request'

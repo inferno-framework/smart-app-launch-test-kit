@@ -10,7 +10,7 @@ module SMARTAppLaunch
     input :url
     receives_request :launch
 
-    config options: { launch_uri: "#{Inferno::Application['inferno_host']}/custom/smart/launch" }
+    config options: { launch_uri: "#{Inferno::Application['base_url']}/custom/smart/launch" }
 
     run do
       wait(

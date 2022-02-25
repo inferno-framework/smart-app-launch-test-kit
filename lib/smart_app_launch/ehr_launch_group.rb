@@ -43,8 +43,7 @@ module SMARTAppLaunch
         client_id: {
           name: :ehr_client_id,
           title: 'EHR Launch Client ID',
-          description: 'Client ID provided during registration of Inferno as an EHR launch application',
-          default: 'SAMPLE_PUBLIC_CLIENT_ID'
+          description: 'Client ID provided during registration of Inferno as an EHR launch application'
         },
         client_secret: {
           name: :ehr_client_secret,
@@ -56,23 +55,11 @@ module SMARTAppLaunch
           title: 'EHR Launch Scope',
           description: 'OAuth 2.0 scope provided by system to enable all required functionality',
           type: 'textarea',
-          default: %(
-            launch openid fhirUser offline_access
-            patient/Medication.read patient/AllergyIntolerance.read
-            patient/CarePlan.read patient/CareTeam.read patient/Condition.read
-            patient/Device.read patient/DiagnosticReport.read
-            patient/DocumentReference.read patient/Encounter.read
-            patient/Goal.read patient/Immunization.read patient/Location.read
-            patient/MedicationRequest.read patient/Observation.read
-            patient/Organization.read patient/Patient.read
-            patient/Practitioner.read patient/Procedure.read
-            patient/Provenance.read patient/PractitionerRole.read
-          ).gsub(/\s{2,}/, ' ').strip
+          default: 'launch openid fhirUser offline_access user/*.read'
         },
         url: {
           title: 'EHR Launch FHIR Endpoint',
-          description: 'URL of the FHIR endpoint used by EHR launched applications',
-          default: 'https://inferno.healthit.gov/reference-server/r4'
+          description: 'URL of the FHIR endpoint used by EHR launched applications'
         },
         code: {
           name: :ehr_code

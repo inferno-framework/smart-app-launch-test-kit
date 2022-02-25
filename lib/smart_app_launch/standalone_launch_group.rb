@@ -39,8 +39,7 @@ module SMARTAppLaunch
         client_id: {
           name: :standalone_client_id,
           title: 'Standalone Client ID',
-          description: 'Client ID provided during registration of Inferno as a standalone application',
-          default: 'SAMPLE_PUBLIC_CLIENT_ID'
+          description: 'Client ID provided during registration of Inferno as a standalone application'
         },
         client_secret: {
           name: :standalone_client_secret,
@@ -52,23 +51,11 @@ module SMARTAppLaunch
           title: 'Standalone Scope',
           description: 'OAuth 2.0 scope provided by system to enable all required functionality',
           type: 'textarea',
-          default: %(
-            launch/patient openid fhirUser offline_access
-            patient/Medication.read patient/AllergyIntolerance.read
-            patient/CarePlan.read patient/CareTeam.read patient/Condition.read
-            patient/Device.read patient/DiagnosticReport.read
-            patient/DocumentReference.read patient/Encounter.read
-            patient/Goal.read patient/Immunization.read patient/Location.read
-            patient/MedicationRequest.read patient/Observation.read
-            patient/Organization.read patient/Patient.read
-            patient/Practitioner.read patient/Procedure.read
-            patient/Provenance.read patient/PractitionerRole.read
-          ).gsub(/\s{2,}/, ' ').strip
+          default: 'launch/patient openid fhirUser offline_access patient/*.read'
         },
         url: {
           title: 'Standalone FHIR Endpoint',
-          description: 'URL of the FHIR endpoint used by standalone applications',
-          default: 'https://inferno.healthit.gov/reference-server/r4'
+          description: 'URL of the FHIR endpoint used by standalone applications'
         },
         code: {
           name: :standalone_code

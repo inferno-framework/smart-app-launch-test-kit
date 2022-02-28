@@ -1,4 +1,6 @@
 require 'tls_test_kit'
+
+require_relative 'smart_app_launch/version'
 require_relative 'smart_app_launch/discovery_group'
 require_relative 'smart_app_launch/standalone_launch_group'
 require_relative 'smart_app_launch/ehr_launch_group'
@@ -28,6 +30,7 @@ module SMARTAppLaunch
   class SMARTSuite < Inferno::TestSuite
     id 'smart'
     title 'SMART App Launch STU1'
+    version VERSION
 
     resume_test_route :get, '/launch' do
       request.query_parameters['iss']
@@ -38,8 +41,8 @@ module SMARTAppLaunch
     end
 
     config options: {
-      redirect_uri: "#{Inferno::Application['inferno_host']}/custom/smart/redirect",
-      launch_uri: "#{Inferno::Application['inferno_host']}/custom/smart/launch"
+      redirect_uri: "#{Inferno::Application['base_url']}/custom/smart/redirect",
+      launch_uri: "#{Inferno::Application['base_url']}/custom/smart/launch"
     }
 
     group do

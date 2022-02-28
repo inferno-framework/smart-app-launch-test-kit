@@ -45,7 +45,7 @@ module SMARTAppLaunch
     output :state, :pkce_code_challenge, :pkce_code_verifier
     receives_request :redirect
 
-    config options: { redirect_uri: "#{Inferno::Application['inferno_host']}/custom/smart/redirect" }
+    config options: { redirect_uri: "#{Inferno::Application['base_url']}/custom/smart/redirect" }
 
     def self.calculate_s256_challenge(verifier)
       Base64.urlsafe_encode64(Digest::SHA256.digest(verifier), padding: false)
@@ -64,6 +64,7 @@ module SMARTAppLaunch
     end
 
     run do
+      info(config.options[:redirect_uri])
       assert_valid_http_uri(
         smart_authorization_url,
         "OAuth2 Authorization Endpoint '#{smart_authorization_url}' is not a valid URI"

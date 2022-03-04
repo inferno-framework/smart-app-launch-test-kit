@@ -8,7 +8,7 @@ module SMARTAppLaunch
 
       The #{title} Sequence test looks for authorization endpoints and SMART
       capabilities as described by the [SMART App Launch
-      Framework](http://hl7.org/fhir/smart-app-launch/conformance/index.html).
+      Framework](https://www.hl7.org/fhir/smart-app-launch/1.0.0/conformance/index.html).
       The SMART launch framework uses OAuth 2.0 to *authorize* apps, like
       Inferno, to access certain information on a FHIR server. The
       authorization service accessed at the endpoint allows users to give
@@ -31,7 +31,7 @@ module SMARTAppLaunch
 
       For more information see:
 
-      * [SMART App Launch Framework](http://hl7.org/fhir/smart-app-launch/index.html)
+      * [SMART App Launch Framework](https://www.hl7.org/fhir/smart-app-launch/1.0.0/conformance/index.html)
       * [The OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749)
       * [OpenID Connect Core](https://openid.net/specs/openid-connect-core-1_0.html)
     )

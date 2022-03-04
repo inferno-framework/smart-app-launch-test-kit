@@ -64,7 +64,6 @@ module SMARTAppLaunch
     end
 
     run do
-      info(config.options[:redirect_uri])
       assert_valid_http_uri(
         smart_authorization_url,
         "OAuth2 Authorization Endpoint '#{smart_authorization_url}' is not a valid URI"
@@ -81,7 +80,11 @@ module SMARTAppLaunch
         'aud' => aud
       }
 
-      oauth2_params['launch'] = launch if self.class.inputs.include?(:launch)
+      if config.options[:launch]
+        oauth2_params['launch'] = config.options[:launch]
+      elsif self.class.inputs.include?(:launch)
+        oauth2_params['launch'] = launch
+      end
 
       if use_pkce == 'true'
         code_verifier = SecureRandom.uuid

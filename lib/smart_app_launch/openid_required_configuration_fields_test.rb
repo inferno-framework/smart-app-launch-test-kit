@@ -9,7 +9,7 @@ module SMARTAppLaunch
       `id_token_signing_alg_values_supported`.
 
       Additionally, the [SMART App Launch
-      Framework](http://www.hl7.org/fhir/smart-app-launch/scopes-and-launch-context/index.html#scopes-for-requesting-identity-data)
+      Framework](https://www.hl7.org/fhir/smart-app-launch/1.0.0/scopes-and-launch-context/index.html#scopes-for-requesting-identity-data)
       requires that the RSA SHA-256 signing algorithm be supported.
     )
 

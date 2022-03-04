@@ -18,7 +18,7 @@ module SMARTAppLaunch
 
       OpenID Connect (OIDC) provides the ability to verify the identity of the
       authorizing user. Within the [SMART App Launch
-      Framework](http://hl7.org/fhir/smart-app-launch/), Applications can
+      Framework](https://www.hl7.org/fhir/smart-app-launch/1.0.0/index.html), Applications can
       request an `id_token` be provided with by including the `openid fhirUser`
       scopes when requesting authorization.
 
@@ -36,9 +36,9 @@ module SMARTAppLaunch
 
       For more information see:
 
-      * [SMART App Launch Framework](http://hl7.org/fhir/smart-app-launch/)
-      * [Scopes for requesting identity data](http://hl7.org/fhir/smart-app-launch/scopes-and-launch-context/index.html#scopes-for-requesting-identity-data)
-      * [Apps Requesting Authorization](http://hl7.org/fhir/smart-app-launch/#step-1-app-asks-for-authorization)
+      * [SMART App Launch Framework](https://www.hl7.org/fhir/smart-app-launch/1.0.0/index.html)
+      * [Scopes for requesting identity data](https://www.hl7.org/fhir/smart-app-launch/1.0.0/scopes-and-launch-context/index.html#scopes-for-requesting-identity-data)
+      * [Apps Requesting Authorization](https://www.hl7.org/fhir/smart-app-launch/1.0.0/index.html#step-1-app-asks-for-authorization)
       * [OpenID Connect Core](https://openid.net/specs/openid-connect-core-1_0.html)
     )
 

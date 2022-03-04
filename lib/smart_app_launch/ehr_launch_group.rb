@@ -16,7 +16,7 @@ module SMARTAppLaunch
       # Background
 
       The [EHR
-      Launch](http://hl7.org/fhir/smart-app-launch/index.html#ehr-launch-sequence)
+      Launch](https://www.hl7.org/fhir/smart-app-launch/1.0.0/index.html#ehr-launch-sequence)
       is one of two ways in which an app can be launched, the other being
       Standalone launch. In an EHR launch, the app is launched from an
       existing EHR session or portal by a redirect to the registered launch
@@ -35,7 +35,7 @@ module SMARTAppLaunch
 
       For more information on the #{title} see:
 
-      * [SMART EHR Launch Sequence](http://hl7.org/fhir/smart-app-launch/index.html#ehr-launch-sequence)
+      * [SMART EHR Launch Sequence](https://www.hl7.org/fhir/smart-app-launch/1.0.0/index.html#ehr-launch-sequence)
     )
 
     config(

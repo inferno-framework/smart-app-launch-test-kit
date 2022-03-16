@@ -28,6 +28,12 @@ module SMARTAppLaunch
       end
     end
 
+    def validate_scope_subset(received_scopes, original_scopes)
+      extra_scopes = received_scopes.split - original_scopes.split
+      assert extra_scopes.empty?, "Token response contained scopes which are not a subset of the scope granted to the "\
+                                  "original access token: #{extra_scopes.join(', ')}"
+    end
+
     def validate_token_field_types(body)
       STRING_FIELDS
         .select { |field| body[field].present? }

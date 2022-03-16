@@ -36,8 +36,7 @@ module SMARTAppLaunch
       validate_token_field_types(body)
       validate_token_type(body)
 
-      assert received_scopes.split.sort == old_received_scopes.split.sort,
-             'Received scopes not equal to originally granted scopes'
+      validate_scope_subset(received_scopes, old_received_scopes)
     end
   end
 end

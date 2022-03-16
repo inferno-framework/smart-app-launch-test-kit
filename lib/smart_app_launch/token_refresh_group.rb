@@ -10,7 +10,7 @@ module SMARTAppLaunch
     description %(
       # Background
 
-      The #{title} Sequence tests the ability of the system to successfuly
+      The #{title} Sequence tests the ability of the system to successfully
       exchange a refresh token for an access token. Refresh tokens are typically
       longer lived than access tokens and allow client applications to obtain a
       new access token Refresh tokens themselves cannot provide access to

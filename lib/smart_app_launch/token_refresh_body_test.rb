@@ -11,6 +11,8 @@ module SMARTAppLaunch
       an access token or a message indicating that the authorization request
       has been denied. `access_token`, `expires_in`, `token_type`, and `scope` are
       required. `access_token` must be `Bearer`.
+
+      Scopes returned must be a strict subset of the scopes granted in the original launch.
     )
     input :received_scopes
     output :refresh_token, :access_token, :token_retrieval_time, :expires_in, :received_scopes

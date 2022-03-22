@@ -103,7 +103,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshBodyTest do
     expect(result.result_message).to match(/bearer/)
   end
 
-  it 'fails if scopes do not match the original scopes' do
+  it 'fails if scopes are not a subset of the original scopes' do
     body = valid_body
     body[:scope] += ' user/*.*'
     create_token_refresh_request(body: body)
@@ -111,7 +111,19 @@ RSpec.describe SMARTAppLaunch::TokenRefreshBodyTest do
     result = run(test, received_scopes: received_scopes)
 
     expect(result.result).to eq('fail')
-    expect(result.result_message).to match(/scopes not equal/)
+    expect(result.result_message).to match(/contained scopes which are not a subset/)
+  end
+
+  it 'passes if the scopes are a subset of the original scopes' do
+    body = valid_body
+    body[:scope] = body[:scope].split
+    body[:scope].pop
+    body[:scope] = body[:scope].join(' ')
+    create_token_refresh_request(body: body)
+
+    result = run(test, received_scopes: received_scopes)
+
+    expect(result.result).to eq('pass')
   end
 
   it 'fails is the fields are the wrong types' do

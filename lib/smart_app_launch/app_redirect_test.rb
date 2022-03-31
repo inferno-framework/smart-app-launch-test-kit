@@ -87,7 +87,8 @@ module SMARTAppLaunch
       end
 
       if use_pkce == 'true'
-        code_verifier = SecureRandom.uuid
+        # code verifier must be between 43 and 128 characters
+        code_verifier = SecureRandom.uuid + '-' + SecureRandom.uuid
         code_challenge =
           if pkce_code_challenge_method == 'S256'
             self.class.calculate_s256_challenge(code_verifier)

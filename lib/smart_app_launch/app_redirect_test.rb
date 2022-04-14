@@ -1,3 +1,5 @@
+require 'uri'
+
 module SMARTAppLaunch
   class AppRedirectTest < Inferno::Test
     title 'OAuth server redirects client browser to app redirect URI'
@@ -63,6 +65,17 @@ module SMARTAppLaunch
       )
     end
 
+    def authorization_url_builder(url, params)
+      uri = URI(url)
+
+      # because the URL might have paramters on it
+      original_parameters = Hash[URI.decode_www_form(uri.query || '')]
+      new_params = original_parameters.merge(params)
+
+      uri.query = URI.encode_www_form(new_params)
+      uri.to_s
+    end
+
     run do
       assert_valid_http_uri(
         smart_authorization_url,
@@ -101,20 +114,10 @@ module SMARTAppLaunch
         oauth2_params.merge!('code_challenge' => code_challenge, 'code_challenge_method' => pkce_code_challenge_method)
       end
 
-      authorization_url = smart_authorization_url
-
-      authorization_url +=
-        if authorization_url.include? '?'
-          '&'
-        else
-          '?'
-        end
-
-      oauth2_params.each do |key, value|
-        authorization_url += "#{key}=#{CGI.escape(value)}&"
-      end
-
-      authorization_url.chomp!('&')
+      authorization_url = authorization_url_builder(
+        smart_authorization_url,
+        oauth2_params
+      )
 
       wait(
         identifier: state,

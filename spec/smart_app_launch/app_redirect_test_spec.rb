@@ -116,4 +116,36 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
       expect(challenge).to eq(expected_challenge)
     end
   end
+
+  describe '.authorization_url_builder' do
+    let(:base_url) { 'https://example.com' }
+    let(:new_params) { { one: 1, two: 2 } }
+
+    context 'when there are no existing URL paramters' do
+      let(:result) do
+        subject.authorization_url_builder(base_url, new_params)
+      end
+
+      it { expect(result).to eq "https://example.com?one=1&two=2" }
+    end
+
+    context 'when there are existing URL paramters' do
+      let(:base_url) { 'https://example.com?keep=me' }
+      let(:result) do
+        subject.authorization_url_builder(base_url, new_params)
+      end
+
+      it { expect(result).to eq "https://example.com?keep=me&one=1&two=2" }
+    end
+
+    context 'when a URL parameter value is nil' do
+      let(:new_params) { { one: 1, empty: nil } }
+      let(:result) do
+        subject.authorization_url_builder(base_url, new_params)
+      end
+
+      # an empty query parameter is not disallowed by RFC3986, although weird
+      it { expect(result).to eq "https://example.com?one=1&empty" }
+    end
+  end
 end

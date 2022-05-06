@@ -142,6 +142,38 @@ RSpec.describe SMARTAppLaunch::OpenIDTokenPayloadTest do
     expect(result.result_message).to match(/exp/)
   end
 
+  it 'fails if the sub is blank' do
+    payload[:sub] = ' '
+    token = JWT.encode(payload, key_pair, 'RS256', kid: jwk.kid)
+
+    result = run(
+      test,
+      id_token: token,
+      openid_configuration_json: config.to_json,
+      id_token_jwk_json: jwk.export.to_json,
+      client_id: client_id
+    )
+    
+    expect(result.result).to eq('fail')
+    expect(result.result_message).to match("ID token `sub` claim is blank")
+  end
+
+  it 'fails if the sub exceeds 255 characters' do
+    payload[:sub] = '0' * 256
+    token = JWT.encode(payload, key_pair, 'RS256', kid: jwk.kid)
+
+    result = run(
+      test,
+      id_token: token,
+      openid_configuration_json: config.to_json,
+      id_token_jwk_json: jwk.export.to_json,
+      client_id: client_id
+    )
+    
+    expect(result.result).to eq('fail')
+    expect(result.result_message).to match("ID token `sub` claim exceeds 255 characters in length")
+  end
+
   it 'fails if any required fields are missing' do
     test::REQUIRED_CLAIMS.each do |claim|
       bad_payload = payload.dup

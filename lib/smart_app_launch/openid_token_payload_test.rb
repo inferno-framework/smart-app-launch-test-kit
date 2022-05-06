@@ -13,6 +13,7 @@ module SMARTAppLaunch
         configuration
       - `aud` must match the client ID
       - `exp` must represent a time in the future
+      - `sub` must be a non-blank string not exceeding 255 characters in length
     )
 
     REQUIRED_CLAIMS = ['iss', 'sub', 'aud', 'exp', 'iat'].freeze
@@ -47,13 +48,17 @@ module SMARTAppLaunch
             verify_not_before: false,
             verify_iat: false,
             verify_jti: false,
-            verify_sub: false,
+            verify_sub: true,
             verify_iss: true,
             verify_aud: true
           )
       rescue StandardError => e
         assert false, "Token validation error: #{e.message}"
       end
+
+      sub_value = payload['sub']
+      assert !sub_value.blank?, "ID token `sub` claim is blank"
+      assert sub_value.length < 256, "ID token `sub` claim exceeds 255 characters in length"
 
       missing_claims = required_claims - payload.keys
       missing_claims_string = missing_claims.map { |claim| "`#{claim}`" }.join(', ')

@@ -1,3 +1,8 @@
+# 0.1.3
+
+* Update OpenID Token Payload test to check for `sub` claim.
+* Fix url creation to account for `nil` params. 
+
 # 0.1.2
 
 * Update scope validation for token refresh to accept a subset of the originally

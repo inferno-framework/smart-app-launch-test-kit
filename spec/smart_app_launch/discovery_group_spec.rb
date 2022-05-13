@@ -20,7 +20,11 @@ RSpec.describe SMARTAppLaunch::DiscoveryGroup do
       'introspection_endpoint' => 'https://example.com/fhir/user/introspect',
       'revocation_endpoint' => 'https://example.com/fhir/user/revoke',
       'capabilities' =>
-        ['launch-ehr', 'client-public', 'client-confidential-symmetric', 'context-ehr-patient', 'sso-openid-connect']
+        ['launch-ehr', 'client-public', 'client-confidential-symmetric', 'context-ehr-patient', 'sso-openid-connect'],
+      'issuer' => 'https://example.com',
+      'jwks_uri' => 'https://example.com/.well-known/jwks.json',
+      'grant_types_supported' => ['authorization_code'],
+      'code_challenge_methods_supported' => ['S256']
     }
   end
 
@@ -108,10 +112,7 @@ RSpec.describe SMARTAppLaunch::DiscoveryGroup do
     end
   end
 
-  describe 'well-known required fields test' do
-    let(:runnable) { group.tests[1] }
-    let(:valid_config) { well_known_config.slice('authorization_endpoint', 'token_endpoint', 'capabilities') }
-
+  shared_examples 'well-known tests' do
     it 'passes when the well-known configuration contains all required fields' do
       result = run(runnable, well_known_configuration: valid_config.to_json)
 
@@ -167,6 +168,18 @@ RSpec.describe SMARTAppLaunch::DiscoveryGroup do
       expect(result.result_message).to match(/must be an array of strings/)
       expect(result.result_message).to match(/`1`/)
       expect(result.result_message).to match(/`nil`/)
+    end
+  end
+
+  describe 'well-known required fields test' do
+    it_behaves_like 'well-known tests' do 
+      let(:runnable) { group.tests[1] }
+      let(:valid_config) { well_known_config.slice('authorization_endpoint', 'token_endpoint', 'capabilities', 'issuer', 'jwks_uri', 'grant_types_supported', 'code_challenge_methods_supported') }
+      #let(:valid_config) { well_known_config.slice('authorization_endpoint', 'token_endpoint', 'capabilities') }
+    end
+    it_behaves_like 'well-known tests' do
+      let(:runnable) { group.tests[1] }
+      let(:valid_config) { well_known_config.slice('authorization_endpoint', 'token_endpoint', 'capabilities', 'issuer', 'jwks_uri', 'grant_types_supported', 'code_challenge_methods_supported') }
     end
   end
 

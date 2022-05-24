@@ -175,7 +175,6 @@ RSpec.describe SMARTAppLaunch::DiscoveryGroup do
     it_behaves_like 'well-known tests' do 
       let(:runnable) { group.tests[1] }
       let(:valid_config) { well_known_config.slice('authorization_endpoint', 'token_endpoint', 'capabilities', 'issuer', 'jwks_uri', 'grant_types_supported', 'code_challenge_methods_supported') }
-      #let(:valid_config) { well_known_config.slice('authorization_endpoint', 'token_endpoint', 'capabilities') }
     end
     it_behaves_like 'well-known tests' do
       let(:runnable) { group.tests[1] }

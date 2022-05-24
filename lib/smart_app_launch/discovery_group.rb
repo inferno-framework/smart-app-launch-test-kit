@@ -114,10 +114,6 @@ module SMARTAppLaunch
                'Well-known `capabilities` field must be an array'
 
         if suite_options[:ig_version] == '2.0.0'
-          assert config['issuer'].is_a?(String),
-               'Well-known `issuer` field must be a string'
-          assert config['jwks_uri'].is_a?(String),
-               'Well-known `jwks_uri` field must be a string'
           assert config['grant_types_supported'].is_a?(Array),
                'Well-known `grant_types_supported` field must be an array'
           assert config['grant_types_supported'].include?('authorization_code'),
@@ -125,9 +121,17 @@ module SMARTAppLaunch
           assert config['code_challenge_methods_supported'].is_a?(Array),
                'Well-known `code_challenge_methods_supported` field must be an array'
           assert config['code_challenge_methods_supported'].include?('S256'),
-               'Well-known `grant_types_supporte` must include `S256`'
+               'Well-known `code_challenge_methods_supported` must include `S256`'
           assert config['code_challenge_methods_supported'].exclude?('plain'),
-               'Well-known `grant_types_supporte` must not include `plain`'
+               'Well-known `code_challenge_methods_support` must not include `plain`'
+          if config['capabilities'].include?('sso-openid-connect')
+            assert config['issuer'].is_a?(String),
+              'Well-known `issuer` field must be a string and present when server capabilities includes `sso-openid-connect`'
+            assert config['jwks_uri'].is_a?(String),
+                 'Well-known `jwks_uri` field must be a string and present if server capabilites includes `sso-openid-coneect`'
+          else
+            assert config['issuer'].nil?, 'Well-known `issuer` is omitted when server capabilites does not include `sso-openid-connect`'
+          end
         end
 
         non_string_capabilities = config['capabilities'].reject { |capability| capability.is_a? String }

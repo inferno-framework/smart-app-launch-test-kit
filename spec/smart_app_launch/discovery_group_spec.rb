@@ -49,6 +49,14 @@ RSpec.describe SMARTAppLaunch::DiscoveryGroup do
       expect(result.result).to eq('pass')
     end
 
+    it 'sends an Accept Header with application/json' do
+      request = stub_request(:get, well_known_url)
+        .to_return(status: 200, body: well_known_config.to_json, headers: { 'Content-Type' => 'application/json' })
+      result = run(runnable, url: url)
+      
+      expect(a_request(:get, well_known_url).with(headers: {'Accept' => 'application/json'})).to have_been_made.once
+    end
+
     it 'fails when a non-200 response is received' do
       stub_request(:get, well_known_url)
         .to_return(status: 201, body: well_known_config.to_json, headers: { 'Content-Type' => 'application/json' })

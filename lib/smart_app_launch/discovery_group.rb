@@ -56,7 +56,9 @@ module SMARTAppLaunch
 
       run do
         well_known_configuration_url = "#{url.chomp('/')}/.well-known/smart-configuration"
-        get(well_known_configuration_url, name: :smart_well_known_configuration)
+        get(well_known_configuration_url,
+            name: :smart_well_known_configuration,
+            headers: { 'Accept' => 'application/json' })
 
         assert_response_status(200)
 

@@ -17,6 +17,10 @@ Tests from this test kit can be imported to perform the SMART App Launch
 workflow as part of another test suite. The tests are arranged in groups which
 can be easily reused.
 
+In order for the redirect and launch urls to be determined correctly, make sure
+that the `INFERNO_HOST` environment variable is populated in `.env` with the
+scheme and host where inferno will be hosted.
+
 ### Discovery Group
 
 [The Discovery
@@ -61,6 +65,10 @@ performs the entire standalone launch workflow.
 * `received_scopes`
 * `intent`
 
+**options:**
+* `redirect_uri`: You should not have to manually set this if the `INFERNO_HOST`
+  environment variable is set.
+
 ### EHR Launch Group
 
 [The EHR Launch
@@ -85,6 +93,14 @@ performs the entire EHR launch workflow.
 * `received_scopes`
 * `intent`
 
+**options:**
+* `launch`: a hardcoded value to use instead of the `launch` parameter received
+  during the launch
+* `redirect_uri`: You should not have to manually set this if the `INFERNO_HOST`
+  environment variable is set.
+* `launch_uri`: You should not have to manually set this if the `INFERNO_HOST`
+  environment variable is set.
+  
 ### OpenID Connect Group
 [The OpenID Connect
 Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/openid_connect_group.rb)
@@ -92,7 +108,8 @@ validates an id token obtained during a SMART launch.
 
 **id:** `smart_openid_connect`
 
-**inputs:** `id_token`, `client_id`, `requested_scopes`, `access_token`, `smart_credentials`
+**inputs:** `id_token`, `client_id`, `requested_scopes`, `access_token`,
+`smart_credentials`
 
 **outputs:**
 * `id_token_payload_json`
@@ -113,7 +130,8 @@ performs a token refresh.
 
 **id:** `smart_token_refresh`
 
-**inputs:** `refresh_token`, `client_id`, `client_secret`, `received_scopes`, `well_known_token_url`
+**inputs:** `refresh_token`, `client_id`, `client_secret`, `received_scopes`,
+`well_known_token_url`
 
 **outputs:**
 * `smart_credentials` - An [OAuthCredentials
@@ -125,6 +143,9 @@ performs a token refresh.
 * `expires_in`
 * `received_scopes`
 
+**options:**
+* `include_scopes`: (`true/false`) Whether to include scopes in the refresh
+  request
 
 ## License
 Copyright 2022 The MITRE Corporation

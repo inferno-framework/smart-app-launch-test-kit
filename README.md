@@ -21,6 +21,48 @@ In order for the redirect and launch urls to be determined correctly, make sure
 that the `INFERNO_HOST` environment variable is populated in `.env` with the
 scheme and host where inferno will be hosted.
 
+### Example
+
+```ruby
+require 'smart_app_launch_test_kit'
+
+class MySuite < Inferno::TestSuite
+  input :url
+  
+  group do
+    title 'Auth'
+    
+    group from: :smart_discovery
+    group from: :smart_standalone_launch
+    group from: :smart_openid_connect
+  end
+  
+  group do
+    title 'Make some FHIR requests using SMART credentials'
+    
+    input :smart_credentials
+    
+    fhir_client do
+      url :url
+      oauth_credentials :smart_credentials # Obtained from the auth group
+    end
+    
+    test do
+      title 'Retrieve patient from SMART launch context'
+      
+      input :patient_id
+      
+      run do
+        fhir_read(:patient, patient_id)
+        
+        assert_response_status(200)
+        assert_resource_type(:patient)
+      end
+    end
+  end
+end
+```
+
 ### Discovery Group
 
 [The Discovery

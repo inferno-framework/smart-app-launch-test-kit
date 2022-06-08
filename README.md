@@ -9,7 +9,122 @@ Implementation Guide](http://hl7.org/fhir/smart-app-launch/index.html) using the
 - Clone this repo.
 - Run `setup.sh` in this repo.
 - Run `run.sh` in this repo.
-- Navigate to `http://localhost`. The SMART test suite will be available.
+- Navigate to `http://localhost**. The SMART test suite will be available.
+
+## Importing tests
+
+Tests from this test kit can be imported to perform the SMART App Launch
+workflow as part of another test suite. The tests are arranged in groups which
+can be easily reused.
+
+### Discovery Group
+
+[The Discovery
+Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/discovery_group.rb)
+examines a server's CapabilityStatement and `.well-known/smart-configuration`
+endpoint to determine its configuration.
+
+**id:** `smart_discovery`
+
+**inputs:** `url`
+
+**outputs:**
+* `well_known_configuration` - The contents of `.well-known/smart-configuration`
+* `smart_authorization_url`
+* `smart_introspection_url`
+* `smart_management_url`
+* `smart_registration_url`
+* `smart_revocation_url`
+* `smart_token_url`
+
+### Standalone Launch Group
+
+[The Standalone Launch
+Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/standalone_launch_group.rb)
+performs the entire standalone launch workflow.
+
+**id:** `smart_standalone_launch`
+
+**inputs:** `url`, `client_id`, `client_secret`, `requested_scopes`
+
+**outputs:**
+* `smart_credentials` - An [OAuthCredentials
+  Object](https://inferno-framework.github.io/inferno-core/docs/Inferno/DSL/OAuthCredentials.html)
+  containing the credentials obtained from the launch.
+* `token_retrieval_time`
+* `id_token`
+* `refresh_token`
+* `access_token`
+* `expires_in`
+* `patient_id`
+* `encounter_id`
+* `received_scopes`
+* `intent`
+
+### EHR Launch Group
+
+[The EHR Launch
+Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/ehr_launch_group.rb)
+performs the entire EHR launch workflow.
+
+**id:** `smart_standalone_launch`
+
+**inputs:** `url`, `client_id`, `client_secret`, `requested_scopes`
+
+**outputs:**
+* `smart_credentials` - An [OAuthCredentials
+  Object](https://inferno-framework.github.io/inferno-core/docs/Inferno/DSL/OAuthCredentials.html)
+  containing the credentials obtained from the launch.
+* `token_retrieval_time`
+* `id_token`
+* `refresh_token`
+* `access_token`
+* `expires_in`
+* `patient_id`
+* `encounter_id`
+* `received_scopes`
+* `intent`
+
+### OpenID Connect Group
+[The OpenID Connect
+Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/openid_connect_group.rb)
+validates an id token obtained during a SMART launch.
+
+**id:** `smart_openid_connect`
+
+**inputs:** `id_token`, `client_id`, `requested_scopes`, `access_token`, `smart_credentials`
+
+**outputs:**
+* `id_token_payload_json`
+* `id_token_header_json`
+* `openid_configuration_json`
+* `openid_issuer`
+* `openid_jwks_uri`
+* `openid_jwks_json`
+* `openid_rsa_keys_json`
+* `id_token_jwk_json`
+* `id_token_fhir_user`
+
+### Token Refresh Group
+
+[The Token Refresh
+Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/token_refresh_group.rb)
+performs a token refresh.
+
+**id:** `smart_token_refresh`
+
+**inputs:** `refresh_token`, `client_id`, `client_secret`, `received_scopes`, `well_known_token_url`
+
+**outputs:**
+* `smart_credentials` - An [OAuthCredentials
+  Object](https://inferno-framework.github.io/inferno-core/docs/Inferno/DSL/OAuthCredentials.html)
+  containing the credentials obtained from the launch.
+* `token_retrieval_time`
+* `refresh_token`
+* `access_token`
+* `expires_in`
+* `received_scopes`
+
 
 ## License
 Copyright 2022 The MITRE Corporation

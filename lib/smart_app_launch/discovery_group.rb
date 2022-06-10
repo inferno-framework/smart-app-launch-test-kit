@@ -1,3 +1,6 @@
+require_relative 'well_known_capabilities_v1_test'
+require_relative 'well_known_capabilities_v2_test'
+
 module SMARTAppLaunch
   class DiscoveryGroup < Inferno::TestGroup
     id :smart_discovery
@@ -81,68 +84,7 @@ module SMARTAppLaunch
       end
     end
 
-    test do
-      title 'Well-known configuration contains required fields'
-      description %(
-        The JSON from .well-known/smart-configuration contains the following
-        required fields: `authorization_endpoint`, `token_endpoint`,
-        `capabilities`
-      )
-      input :well_known_configuration
-
-      run do
-        suite_options = { ig_version: '2.0.0' } # TODO: Remove this. Just for testing.
-        skip_if well_known_configuration.blank?, 'No well-known configuration found'
-        config = JSON.parse(well_known_configuration)
-
-        required_capabilities = ['authorization_endpoint', 'token_endpoint', 'capabilities']
-
-        if suite_options[:ig_version] == '2.0.0'
-          required_capabilities + ['issuer', 'grant_types_supported', 'code_challenge_methods_supported']
-        end
-
-        required_capabilities.each do |key|
-          assert config.key?(key), "Well-known configuration does not include `#{key}`"
-          assert config[key].present?, "Well-known configuration field `#{key}` is blank"
-        end
-
-        assert config['authorization_endpoint'].is_a?(String),
-               'Well-known `authorization_endpoint` field must be a string'
-        assert config['token_endpoint'].is_a?(String),
-               'Well-known `token_endpoint` field must be a string'
-        assert config['capabilities'].is_a?(Array),
-               'Well-known `capabilities` field must be an array'
-
-        if suite_options[:ig_version] == '2.0.0'
-          assert config['grant_types_supported'].is_a?(Array),
-               'Well-known `grant_types_supported` field must be an array'
-          assert config['grant_types_supported'].include?('authorization_code'),
-               'Well-known `grant_types_supported` must include `authorization_code` grant type to indicate SMART App Launch Support'
-          assert config['code_challenge_methods_supported'].is_a?(Array),
-               'Well-known `code_challenge_methods_supported` field must be an array'
-          assert config['code_challenge_methods_supported'].include?('S256'),
-               'Well-known `code_challenge_methods_supported` must include `S256`'
-          assert config['code_challenge_methods_supported'].exclude?('plain'),
-               'Well-known `code_challenge_methods_support` must not include `plain`'
-          if config['capabilities'].include?('sso-openid-connect')
-            assert config['issuer'].is_a?(String),
-              'Well-known `issuer` field must be a string and present when server capabilities includes `sso-openid-connect`'
-            assert config['jwks_uri'].is_a?(String),
-                 'Well-known `jwks_uri` field must be a string and present if server capabilites includes `sso-openid-coneect`'
-          else
-            assert config['issuer'].nil?, 'Well-known `issuer` is omitted when server capabilites does not include `sso-openid-connect`'
-          end
-        end
-
-        non_string_capabilities = config['capabilities'].reject { |capability| capability.is_a? String }
-
-        assert non_string_capabilities.blank?, %(
-          Well-known `capabilities` field must be an array of strings, but found
-          non-string values:
-          #{non_string_capabilities.map { |value| "`#{value.nil? ? 'nil' : value}`" }.join(', ')}
-        )
-      end
-    end
+    test from: :well_known_capabilities_v1
 
     test do
       title 'Conformance/CapabilityStatement provides OAuth 2.0 endpoints'

@@ -84,7 +84,10 @@ module SMARTAppLaunch
       end
     end
 
-    test from: :well_known_capabilities_v1
+    test from: :well_known_capabilities_v1,
+         required_suite_options: { ig_version: '1' }
+    test from: :well_known_capabilities_v2,
+         required_suite_options: { ig_version: '2' }
 
     test do
       title 'Conformance/CapabilityStatement provides OAuth 2.0 endpoints'

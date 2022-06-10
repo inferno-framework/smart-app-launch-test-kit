@@ -10,7 +10,7 @@ require_relative 'smart_app_launch/token_refresh_group'
 module SMARTAppLaunch
   class SMARTSuite < Inferno::TestSuite
     id 'smart'
-    title 'SMART App Launch STU1'
+    title 'SMART App Launch'
     version VERSION
 
     resume_test_route :get, '/launch' do
@@ -33,7 +33,6 @@ module SMARTAppLaunch
       run_as_group
 
       group from: :smart_discovery
-
       group from: :smart_standalone_launch
 
       group from: :smart_openid_connect,
@@ -151,5 +150,33 @@ module SMARTAppLaunch
               }
             }
     end
+  end
+
+  class SMARTV1Suite < SMARTSuite
+    id 'smart_v1'
+    title 'SMART App Launch STU1'
+    suite_option :ig_version,
+                 title: 'IG Version',
+                 description: 'Which IG Version should be used',
+                 list_options: [
+                   {
+                     label: 'v1',
+                     value: '1'
+                   }
+                 ]
+  end
+
+  class SMARTV2Suite < SMARTSuite
+    id 'smart_v2'
+    title 'SMART App Launch STU2'
+    suite_option :ig_version,
+                 title: 'IG Version',
+                 description: 'Which IG Version should be used',
+                 list_options: [
+                   {
+                     label: 'v2',
+                     value: '2'
+                   }
+                 ]
   end
 end

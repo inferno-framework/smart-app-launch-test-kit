@@ -38,7 +38,13 @@ module SMARTAppLaunch
       * [OpenID Connect Core](https://openid.net/specs/openid-connect-core-1_0.html)
     )
 
-    test from: :well_known_endpoint
+    test from: :well_known_endpoint,
+         config: {
+           outputs: {
+             well_known_authorization_url: { name: :smart_authorization_url },
+             well_known_token_url: { name: :smart_token_url }
+           }
+         }
     test from: :well_known_capabilities_stu2
   end
 end

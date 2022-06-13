@@ -1,11 +1,11 @@
 require 'tls_test_kit'
 
-require_relative 'smart_app_launch/version'
-require_relative 'smart_app_launch/discovery_stu2_group'
-require_relative 'smart_app_launch/standalone_launch_group'
-require_relative 'smart_app_launch/ehr_launch_group'
-require_relative 'smart_app_launch/openid_connect_group'
-require_relative 'smart_app_launch/token_refresh_group'
+require_relative 'version'
+require_relative 'discovery_stu2_group'
+require_relative 'standalone_launch_group'
+require_relative 'ehr_launch_group'
+require_relative 'openid_connect_group'
+require_relative 'token_refresh_group'
 
 module SMARTAppLaunch
   class SMARTSTU2Suite < Inferno::TestSuite

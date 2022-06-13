@@ -113,7 +113,7 @@ RSpec.describe SMARTAppLaunch::DiscoveryGroup do
   end
 
   describe 'capability statement test' do
-    let(:runnable) { group.tests[2] }
+    let(:runnable) { group.tests[3] }
     let(:minimal_capabilities) { FHIR::CapabilityStatement.new(fhirVersion: '4.0.1') }
     let(:full_extensions) do
       [
@@ -224,7 +224,7 @@ RSpec.describe SMARTAppLaunch::DiscoveryGroup do
   end
 
   describe 'endpoints match test' do
-    let(:runnable) { group.tests[3] }
+    let(:runnable) { group.tests[4] }
     let(:full_inputs) do
       [
         'authorization',

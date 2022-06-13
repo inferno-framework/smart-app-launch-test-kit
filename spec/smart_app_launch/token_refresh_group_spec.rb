@@ -15,7 +15,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshGroup do
   let(:token_url) { "#{url}/token" }
   let(:inputs) do
     {
-      well_known_token_url: token_url,
+      smart_token_url: token_url,
       refresh_token: 'REFRESH_TOKEN',
       client_id: 'CLIENT_ID',
       received_scopes: 'launch/patient patient/*.*'

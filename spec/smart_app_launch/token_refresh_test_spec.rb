@@ -57,7 +57,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
 
       result = run(
         test,
-        well_known_token_url: token_url,
+        smart_token_url: token_url,
         refresh_token: refresh_token,
         client_id: client_id,
         received_scopes: received_scopes
@@ -86,7 +86,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
 
       result = run(
         test,
-        well_known_token_url: token_url,
+        smart_token_url: token_url,
         refresh_token: refresh_token,
         client_id: client_id,
         client_secret: client_secret,
@@ -109,7 +109,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
 
     result = run(
       test,
-      well_known_token_url: token_url,
+      smart_token_url: token_url,
       refresh_token: refresh_token,
       client_id: client_id,
       received_scopes: received_scopes
@@ -131,7 +131,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
 
     result = run(
       test,
-      well_known_token_url: token_url,
+      smart_token_url: token_url,
       refresh_token: refresh_token,
       client_id: client_id,
       received_scopes: received_scopes
@@ -153,7 +153,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
 
     result = run(
       test,
-      well_known_token_url: token_url,
+      smart_token_url: token_url,
       refresh_token: refresh_token,
       client_id: client_id,
       received_scopes: received_scopes

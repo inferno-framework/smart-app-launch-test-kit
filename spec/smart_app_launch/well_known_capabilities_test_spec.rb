@@ -109,10 +109,34 @@ RSpec.describe "Well-Known Tests" do
   end
 
   describe SMARTAppLaunch::WellKnownCapabilitiesV2Test do
-    it_behaves_like 'well-known tests' do
-      let(:runnable) { test_v2 }
-      let(:required_fields) { ['authorization_endpoint', 'token_endpoint', 'capabilities', 'issuer', 'jwks_uri', 'grant_types_supported', 'code_challenge_methods_supported'] }
-      let(:valid_config) { well_known_config.slice(*required_fields) }
+    let(:required_fields) { ['authorization_endpoint', 'token_endpoint', 'capabilities', 'issuer', 'jwks_uri', 'grant_types_supported', 'code_challenge_methods_supported'] }
+    let(:runnable) { test_v2 }
+    let(:valid_config) { well_known_config.slice(*required_fields) }
+
+    it_behaves_like 'well-known tests'
+
+    it 'fails if `issuer` is missing while `sso-openid-connect` is listed as a capability' do
+      config = valid_config.dup
+      config.delete('issuer')
+      result = run(runnable, well_known_configuration: config.to_json)
+      expect(result.result).to eq('fail')
+      expect(result.result_message).to match('Well-known `issuer` field must be a string and present when server capabilities includes `sso-openid-connect`')
+    end
+
+    it 'fails if `jwks_uri` is missing while `sso-openid-connect` is listed as a capability' do
+      config = valid_config.dup
+      config.delete('jwks_uri')
+      result = run(runnable, well_known_configuration: config.to_json)
+      expect(result.result).to eq('fail')
+      expect(result.result_message).to match('Well-known `jwks_uri` field must be a string and present when server capabilites includes `sso-openid-coneect`')
+    end
+
+    it 'fails if `issuer` is present while `sso-openid-connect` is not listed as a capability' do
+      config = valid_config.dup
+      config['capabilities'].reject! { |capability| capability == 'sso-openid-connect' }
+      result = run(runnable, well_known_configuration: config.to_json)
+      expect(result.result).to eq('fail')
+      expect(result.result_message).to match('Well-known `issuer` is omitted when server capabilites does not include `sso-openid-connect`')
     end
   end
 end

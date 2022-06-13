@@ -1,8 +1,8 @@
-require_relative '../../lib/smart_app_launch/discovery_group'
+require_relative '../../lib/smart_app_launch/discovery_stu1_group'
 
-RSpec.describe SMARTAppLaunch::DiscoveryGroup do
+RSpec.describe SMARTAppLaunch::DiscoverySTU1Group do
   let(:suite) { Inferno::Repositories::TestSuites.new.find('smart') }
-  let(:group) { Inferno::Repositories::TestGroups.new.find('smart_discovery') }
+  let(:group) { Inferno::Repositories::TestGroups.new.find('smart_discovery_stu1') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
   let(:url) { 'http://example.com/fhir' }
@@ -113,7 +113,7 @@ RSpec.describe SMARTAppLaunch::DiscoveryGroup do
   end
 
   describe 'capability statement test' do
-    let(:runnable) { group.tests[3] }
+    let(:runnable) { group.tests[2] }
     let(:minimal_capabilities) { FHIR::CapabilityStatement.new(fhirVersion: '4.0.1') }
     let(:full_extensions) do
       [
@@ -224,7 +224,7 @@ RSpec.describe SMARTAppLaunch::DiscoveryGroup do
   end
 
   describe 'endpoints match test' do
-    let(:runnable) { group.tests[4] }
+    let(:runnable) { group.tests[3] }
     let(:full_inputs) do
       [
         'authorization',

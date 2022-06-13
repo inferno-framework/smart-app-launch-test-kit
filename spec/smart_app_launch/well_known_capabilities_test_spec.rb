@@ -1,9 +1,9 @@
-require_relative '../../lib/smart_app_launch/well_known_capabilities_v1_test'
-require_relative '../../lib/smart_app_launch/well_known_capabilities_v2_test'
+require_relative '../../lib/smart_app_launch/well_known_capabilities_stu1_test'
+require_relative '../../lib/smart_app_launch/well_known_capabilities_stu2_test'
 
 RSpec.describe "Well-Known Tests" do
-  let(:test_v1) { Inferno::Repositories::Tests.new.find('well_known_capabilities_v1') }
-  let(:test_v2) { Inferno::Repositories::Tests.new.find('well_known_capabilities_v2') }
+  let(:test_v1) { Inferno::Repositories::Tests.new.find('well_known_capabilities_stu1') }
+  let(:test_v2) { Inferno::Repositories::Tests.new.find('well_known_capabilities_stu2') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
   let(:well_known_config) do
@@ -100,7 +100,7 @@ RSpec.describe "Well-Known Tests" do
     end
   end
 
-  describe SMARTAppLaunch::WellKnownCapabilitiesV1Test do
+  describe SMARTAppLaunch::WellKnownCapabilitiesSTU1Test do
     it_behaves_like 'well-known tests' do
       let(:runnable) { test_v1 }
       let(:required_fields) { ['authorization_endpoint', 'token_endpoint', 'capabilities'] }
@@ -108,7 +108,7 @@ RSpec.describe "Well-Known Tests" do
     end
   end
 
-  describe SMARTAppLaunch::WellKnownCapabilitiesV2Test do
+  describe SMARTAppLaunch::WellKnownCapabilitiesSTU2Test do
     let(:required_fields) { ['authorization_endpoint', 'token_endpoint', 'capabilities', 'issuer', 'jwks_uri', 'grant_types_supported', 'code_challenge_methods_supported'] }
     let(:runnable) { test_v2 }
     let(:valid_config) { well_known_config.slice(*required_fields) }

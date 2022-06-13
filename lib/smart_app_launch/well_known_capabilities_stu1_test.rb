@@ -1,7 +1,7 @@
 module SMARTAppLaunch
-  class WellKnownCapabilitiesV1Test < Inferno::Test
+  class WellKnownCapabilitiesSTU1Test < Inferno::Test
     title 'Well-known configuration contains required fields'
-    id :well_known_capabilities_v1
+    id :well_known_capabilities_stu1
     input :well_known_configuration
     description %(
       The JSON from .well-known/smart-configuration contains the following

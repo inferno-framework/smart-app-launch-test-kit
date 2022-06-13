@@ -1,6 +1,7 @@
+require_relative 'well_known_capabilities_stu1_test'
 module SMARTAppLaunch
-  class WellKnownCapabilitiesV2Test < SMARTAppLaunch::WellKnownCapabilitiesV1Test
-    id :well_known_capabilities_v2
+  class WellKnownCapabilitiesSTU2Test < SMARTAppLaunch::WellKnownCapabilitiesSTU1Test
+    id :well_known_capabilities_stu2
     description %(
       The JSON from .well-known/smart-configuration contains the following
       required fields: `authorization_endpoint`, `token_endpoint`,

@@ -52,9 +52,11 @@ RSpec.describe SMARTAppLaunch::WellKnownEndpointTest do
 
   it 'sends an Accept Header with application/json' do
     stub_request(:get, well_known_url)
+      .with( headers: { 'Accept' => 'application/json' })
       .to_return(status: 200, body: well_known_config.to_json, headers: { 'Content-Type' => 'application/json' })
-    run(runnable, url: url)
-    expect(a_request(:get, well_known_url).with(headers: {'Accept' => 'application/json'})).to have_been_made.once
+    result = run(runnable, url: url)
+    
+    expect(result.result).to eq('pass')
   end
 
   it 'fails when a non-200 response is received' do

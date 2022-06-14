@@ -5,7 +5,7 @@ module SMARTAppLaunch
     description %(
       The JSON from .well-known/smart-configuration contains the following
       required fields: `authorization_endpoint`, `token_endpoint`,
-      `capabilities`, 'issuer`, `grant_types_supported`, `code_challenge_methods_supported`.
+      `capabilities`, `issuer`, `grant_types_supported`, `code_challenge_methods_supported`.
       If the `sso-openid-connect` capability is supported, then `issuer` and `jwks_uri` must be
       present.
     )

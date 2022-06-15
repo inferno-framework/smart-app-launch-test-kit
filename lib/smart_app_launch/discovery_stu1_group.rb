@@ -39,8 +39,10 @@ module SMARTAppLaunch
       * [OpenID Connect Core](https://openid.net/specs/openid-connect-core-1_0.html)
     )
 
-    test from: :well_known_endpoint
-    test from: :well_known_capabilities_stu1
+    test from: :well_known_endpoint,
+         id: 'Test01'
+    test from: :well_known_capabilities_stu1,
+         id: 'Test02'
 
     test do
       title 'Conformance/CapabilityStatement provides OAuth 2.0 endpoints'

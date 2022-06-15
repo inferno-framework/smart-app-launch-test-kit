@@ -1,7 +1,8 @@
-require_relative 'well_known_capabilities_stu1_test'
 module SMARTAppLaunch
-  class WellKnownCapabilitiesSTU2Test < SMARTAppLaunch::WellKnownCapabilitiesSTU1Test
+  class WellKnownCapabilitiesSTU2Test < Inferno::Test
+    title 'Well-known configuration contains required fields'
     id :well_known_capabilities_stu2
+    input :well_known_configuration
     description %(
       The JSON from .well-known/smart-configuration contains the following
       required fields: `authorization_endpoint`, `token_endpoint`,
@@ -11,12 +12,13 @@ module SMARTAppLaunch
     )
  
     def required_capabilities
-      super.merge(
-        {
-          'grant_types_supported' => Array,
-          'code_challenge_methods_supported' => Array
-        }
-      )
+      {
+        'authorization_endpoint' => String,
+        'token_endpoint' => String,
+        'capabilities' => Array,
+        'grant_types_supported' => Array,
+        'code_challenge_methods_supported' => Array
+      }
     end
 
     run do

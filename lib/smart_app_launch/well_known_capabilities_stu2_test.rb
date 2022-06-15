@@ -44,7 +44,9 @@ module SMARTAppLaunch
         assert config['jwks_uri'].is_a?(String),
           'Well-known `jwks_uri` field must be a string and present when server capabilites includes `sso-openid-coneect`'
       else
-        assert config['issuer'].nil?, 'Well-known `issuer` is omitted when server capabilites does not include `sso-openid-connect`'
+        warning do
+          assert config['issuer'].nil?, 'Well-known `issuer` is omitted when server capabilites does not include `sso-openid-connect`'
+        end
       end
 
       non_string_capabilities = config['capabilities'].reject { |capability| capability.is_a? String }

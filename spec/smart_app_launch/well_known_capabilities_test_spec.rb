@@ -131,12 +131,14 @@ RSpec.describe "Well-Known Tests" do
       expect(result.result_message).to match('Well-known `jwks_uri` field must be a string and present when server capabilites includes `sso-openid-coneect`')
     end
 
-    it 'fails if `issuer` is present while `sso-openid-connect` is not listed as a capability' do
+    it 'warns if `issuer` is present while `sso-openid-connect` is not listed as a capability' do
       config = valid_config.dup
       config['capabilities'].reject! { |capability| capability == 'sso-openid-connect' }
       result = run(runnable, well_known_configuration: config.to_json)
-      expect(result.result).to eq('fail')
-      expect(result.result_message).to match('Well-known `issuer` is omitted when server capabilites does not include `sso-openid-connect`')
+      expect(result.result).to eq('pass')
+      warning_messages = Inferno::Repositories::Messages.new.messages_for_result(result.id).filter { |message| message.type == 'warning' }
+      expect(warning_messages).to be_present
+      expect(warning_messages.any? { |wm| wm.message.include? 'Well-known `issuer` is omitted when server capabilites does not include `sso-openid-connect`'}).to be_truthy
     end
   end
 end

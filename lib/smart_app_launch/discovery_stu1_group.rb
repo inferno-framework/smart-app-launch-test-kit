@@ -3,7 +3,7 @@ require_relative 'well_known_endpoint_test'
 
 module SMARTAppLaunch
   class DiscoverySTU1Group < Inferno::TestGroup
-    id :smart_discovery_stu1
+    id :smart_discovery
     title 'SMART on FHIR Discovery'
     short_description 'Retrieve server\'s SMART on FHIR configuration.'
     description %(

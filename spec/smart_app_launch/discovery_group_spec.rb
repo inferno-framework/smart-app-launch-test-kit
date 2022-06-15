@@ -2,7 +2,7 @@ require_relative '../../lib/smart_app_launch/discovery_stu1_group'
 
 RSpec.describe SMARTAppLaunch::DiscoverySTU1Group do
   let(:suite) { Inferno::Repositories::TestSuites.new.find('smart') }
-  let(:group) { Inferno::Repositories::TestGroups.new.find('smart_discovery_stu1') }
+  let(:group) { Inferno::Repositories::TestGroups.new.find('smart_discovery') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
   let(:url) { 'http://example.com/fhir' }

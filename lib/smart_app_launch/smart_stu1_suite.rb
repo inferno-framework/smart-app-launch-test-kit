@@ -32,7 +32,7 @@ module SMARTAppLaunch
 
       run_as_group
 
-      group from: :smart_discovery_stu1
+      group from: :smart_discovery
       group from: :smart_standalone_launch
 
       group from: :smart_openid_connect,
@@ -94,7 +94,7 @@ module SMARTAppLaunch
 
       run_as_group
 
-      group from: :smart_discovery_stu1
+      group from: :smart_discovery
 
       group from: :smart_ehr_launch
 

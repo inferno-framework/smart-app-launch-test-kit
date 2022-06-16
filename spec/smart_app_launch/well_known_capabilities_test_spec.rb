@@ -137,7 +137,6 @@ RSpec.describe "Well-Known Tests" do
       result = run(runnable, well_known_configuration: config.to_json)
       expect(result.result).to eq('pass')
       warning_messages = Inferno::Repositories::Messages.new.messages_for_result(result.id).filter { |message| message.type == 'warning' }
-      expect(warning_messages).to be_present
       expect(warning_messages.any? { |wm| wm.message.include? 'Well-known `issuer` is omitted when server capabilites does not include `sso-openid-connect`'}).to be_truthy
     end
   end

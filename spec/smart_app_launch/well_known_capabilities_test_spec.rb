@@ -41,50 +41,42 @@ RSpec.describe "Well-Known Tests" do
     Inferno::TestRunner.new(test_session: test_session, test_run: test_run).run(runnable)
   end
 
-  shared_examples 'well-known tests' do
+  shared_examples 'well-known tests' do |required_fields|
     it 'passes when the well-known configuration contains all required fields' do
       result = run(runnable, well_known_configuration: valid_config.to_json)
 
       expect(result.result).to eq('pass')
     end
 
+    required_fields.each_key do |field|
       it 'fails if a required field is missing' do
-        required_fields.each do |field|
-          config = valid_config.reject { |key, _| key == field }
-          result = run(runnable, well_known_configuration: config.to_json)
+        valid_config.reject! { |key, _| key == field }
+        result = run(runnable, well_known_configuration: valid_config.to_json)
 
-          expect(result.result).to eq('fail')
-          expect(result.result_message).to eq("Well-known configuration does not include `#{field}`")
-        end
+        expect(result.result).to eq('fail')
+        expect(result.result_message).to eq("Well-known configuration does not include `#{field}`")
       end
+    end
 
-    it 'fails if a required field is blank' do
-      required_fields.each do |field|
-        config = valid_config.dup
-        config[field] = ''
-        result = run(runnable, well_known_configuration: config.to_json)
+    required_fields.each_key do |field|
+      it "fails if required field `#{field}` is blank" do
+        valid_config[field] = ''
+        result = run(runnable, well_known_configuration: valid_config.to_json)
 
         expect(result.result).to eq('fail')
         expect(result.result_message).to eq("Well-known configuration field `#{field}` is blank")
       end
     end
 
-    it 'fails if a required field is the wrong type' do
-      ['authorization_endpoint', 'token_endpoint'].each do |field|
-        config = valid_config.dup
-        config[field] = 1
+    required_fields.each do |field, type|
+      it "fails if a required field `#{field}` is the wrong type" do
+        valid_config[field] = 1
 
-        result = run(runnable, well_known_configuration: config.to_json)
+        result = run(runnable, well_known_configuration: valid_config.to_json)
 
         expect(result.result).to eq('fail')
-        expect(result.result_message).to match(/must be type: string/)
+        expect(result.result_message).to match(/must be type: #{type.to_s.downcase}/)
       end
-
-      valid_config['capabilities'] = '1'
-      result = run(runnable, well_known_configuration: valid_config.to_json)
-
-      expect(result.result).to eq('fail')
-      expect(result.result_message).to match(/must be type: array/)
     end
 
     it 'fails if the capabilities field contains a non-string entry' do
@@ -99,19 +91,30 @@ RSpec.describe "Well-Known Tests" do
   end
 
   describe SMARTAppLaunch::WellKnownCapabilitiesSTU1Test do
-    it_behaves_like 'well-known tests' do
-      let(:runnable) { test_v1 }
-      let(:required_fields) { ['authorization_endpoint', 'token_endpoint', 'capabilities'] }
-      let(:valid_config) { well_known_config.slice(*required_fields) }
-    end
+    stu1_required_fields = {
+        'authorization_endpoint' => String,
+        'token_endpoint' => String,
+        'capabilities' => Array
+    }
+    let(:runnable) { test_v1 }
+    let(:valid_config) { well_known_config.slice(*stu1_required_fields.keys) }
+
+    it_behaves_like 'well-known tests', stu1_required_fields
   end
 
   describe SMARTAppLaunch::WellKnownCapabilitiesSTU2Test do
-    let(:required_fields) { ['authorization_endpoint', 'token_endpoint', 'capabilities', 'grant_types_supported', 'code_challenge_methods_supported'] }
-    let(:runnable) { test_v2 }
-    let(:valid_config) { well_known_config.slice(*required_fields, 'issuer', 'jwks_uri') }
+    stu2_required_fields = {
+        'authorization_endpoint' => String,
+        'token_endpoint' => String,
+        'capabilities' => Array,
+        'grant_types_supported' => Array,
+        'code_challenge_methods_supported' => Array
+    }
 
-    it_behaves_like 'well-known tests'
+    let(:runnable) { test_v2 }
+    let(:valid_config) { well_known_config.slice(*stu2_required_fields.keys, 'issuer', 'jwks_uri') }
+
+    it_behaves_like 'well-known tests', stu2_required_fields
 
     it 'fails if `issuer` is missing while `sso-openid-connect` is listed as a capability' do
       valid_config.delete('issuer')

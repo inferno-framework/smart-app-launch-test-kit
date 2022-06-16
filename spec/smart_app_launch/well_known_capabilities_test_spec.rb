@@ -131,9 +131,8 @@ RSpec.describe "Well-Known Tests" do
     end
 
     it 'warns if `issuer` is present while `sso-openid-connect` is not listed as a capability' do
-      config = valid_config.dup
-      config['capabilities'].reject! { |capability| capability == 'sso-openid-connect' }
-      result = run(runnable, well_known_configuration: config.to_json)
+      valid_config['capabilities'].reject! { |capability| capability == 'sso-openid-connect' }
+      result = run(runnable, well_known_configuration: valid_config.to_json)
       expect(result.result).to eq('pass')
       warning_messages = Inferno::Repositories::Messages.new.messages_for_result(result.id).filter { |message| message.type == 'warning' }
       expect(warning_messages.any? { |wm| wm.message.include? 'Well-known `issuer` is omitted when server capabilites does not include `sso-openid-connect`'}).to be_truthy

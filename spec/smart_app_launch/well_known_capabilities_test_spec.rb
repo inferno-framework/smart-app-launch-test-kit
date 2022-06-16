@@ -123,9 +123,8 @@ RSpec.describe "Well-Known Tests" do
     end
 
     it 'fails if `jwks_uri` is missing while `sso-openid-connect` is listed as a capability' do
-      config = valid_config.dup
-      config.delete('jwks_uri')
-      result = run(runnable, well_known_configuration: config.to_json)
+      valid_config.delete('jwks_uri')
+      result = run(runnable, well_known_configuration: valid_config.to_json)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match('Well-known `jwks_uri` field must be a string and present when server capabilites includes `sso-openid-coneect`')
     end

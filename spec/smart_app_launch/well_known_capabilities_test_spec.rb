@@ -79,9 +79,8 @@ RSpec.describe "Well-Known Tests" do
         expect(result.result_message).to match(/must be type: string/)
       end
 
-      config = valid_config.dup
-      config['capabilities'] = '1'
-      result = run(runnable, well_known_configuration: config.to_json)
+      valid_config['capabilities'] = '1'
+      result = run(runnable, well_known_configuration: valid_config.to_json)
 
       expect(result.result).to eq('fail')
       expect(result.result_message).to match(/must be type: array/)

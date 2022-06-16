@@ -48,18 +48,18 @@ RSpec.describe "Well-Known Tests" do
       expect(result.result).to eq('pass')
     end
 
-    it 'fails if a required field is missing' do
-      ['authorization_endpoint', 'token_endpoint', 'capabilities'].each do |field|
-        config = valid_config.reject { |key, _| key == field }
-        result = run(runnable, well_known_configuration: config.to_json)
+      it 'fails if a required field is missing' do
+        required_fields.each do |field|
+          config = valid_config.reject { |key, _| key == field }
+          result = run(runnable, well_known_configuration: config.to_json)
 
-        expect(result.result).to eq('fail')
-        expect(result.result_message).to eq("Well-known configuration does not include `#{field}`")
+          expect(result.result).to eq('fail')
+          expect(result.result_message).to eq("Well-known configuration does not include `#{field}`")
+        end
       end
-    end
 
     it 'fails if a required field is blank' do
-      ['authorization_endpoint', 'token_endpoint', 'capabilities'].each do |field|
+      required_fields.each do |field|
         config = valid_config.dup
         config[field] = ''
         result = run(runnable, well_known_configuration: config.to_json)
@@ -73,6 +73,7 @@ RSpec.describe "Well-Known Tests" do
       ['authorization_endpoint', 'token_endpoint'].each do |field|
         config = valid_config.dup
         config[field] = 1
+
         result = run(runnable, well_known_configuration: config.to_json)
 
         expect(result.result).to eq('fail')
@@ -106,9 +107,9 @@ RSpec.describe "Well-Known Tests" do
   end
 
   describe SMARTAppLaunch::WellKnownCapabilitiesSTU2Test do
-    let(:required_fields) { ['authorization_endpoint', 'token_endpoint', 'capabilities', 'issuer', 'jwks_uri', 'grant_types_supported', 'code_challenge_methods_supported'] }
+    let(:required_fields) { ['authorization_endpoint', 'token_endpoint', 'capabilities', 'grant_types_supported', 'code_challenge_methods_supported'] }
     let(:runnable) { test_v2 }
-    let(:valid_config) { well_known_config.slice(*required_fields) }
+    let(:valid_config) { well_known_config.slice(*required_fields, 'issuer', 'jwks_uri') }
 
     it_behaves_like 'well-known tests'
 

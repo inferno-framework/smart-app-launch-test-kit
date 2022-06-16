@@ -89,8 +89,7 @@ RSpec.describe "Well-Known Tests" do
 
     it 'fails if the capabilities field contains a non-string entry' do
       config = valid_config.dup
-      config['capabilities'] << 1
-      config['capabilities'] << nil
+      config['capabilities'].concat [1, nil]
       result = run(runnable, well_known_configuration: config.to_json)
 
       expect(result.result).to eq('fail')

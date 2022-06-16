@@ -115,9 +115,8 @@ RSpec.describe "Well-Known Tests" do
     it_behaves_like 'well-known tests'
 
     it 'fails if `issuer` is missing while `sso-openid-connect` is listed as a capability' do
-      config = valid_config.dup
-      config.delete('issuer')
-      result = run(runnable, well_known_configuration: config.to_json)
+      valid_config.delete('issuer')
+      result = run(runnable, well_known_configuration: valid_config.to_json)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match('Well-known `issuer` field must be a string and present when server capabilities includes `sso-openid-connect`')
     end

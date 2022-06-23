@@ -2,8 +2,8 @@ require 'tls_test_kit'
 
 require_relative 'version'
 require_relative 'discovery_stu2_group'
-require_relative 'standalone_launch_group'
-require_relative 'ehr_launch_group'
+require_relative 'standalone_launch_group_stu2'
+require_relative 'ehr_launch_group_stu2'
 require_relative 'openid_connect_group'
 require_relative 'token_refresh_group'
 
@@ -33,7 +33,7 @@ module SMARTAppLaunch
       run_as_group
 
       group from: :smart_discovery_stu2
-      group from: :smart_standalone_launch
+      group from: :smart_standalone_launch_stu2
 
       group from: :smart_openid_connect,
             config: {
@@ -96,7 +96,7 @@ module SMARTAppLaunch
 
       group from: :smart_discovery_stu2
 
-      group from: :smart_ehr_launch
+      group from: :smart_ehr_launch_stu2
 
       group from: :smart_openid_connect,
             config: {

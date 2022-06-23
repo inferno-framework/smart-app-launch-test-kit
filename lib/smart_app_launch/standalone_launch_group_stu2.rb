@@ -1,15 +1,8 @@
-require_relative 'app_redirect_test'
-require_relative 'code_received_test'
-require_relative 'token_exchange_test'
-require_relative 'token_response_body_test'
-require_relative 'token_response_headers_test'
+require_relative 'standalone_launch_group'
 
 module SMARTAppLaunch
-  class StandaloneLaunchGroupSTU2 < Inferno::TestGroup
+  class StandaloneLaunchGroupSTU2 < StandaloneLaunchGroup
     id :smart_standalone_launch_stu2
-    title 'SMART Standalone Launch'
-    short_description 'Demonstrate the ability to authorize an app using the Standalone Launch.'
-
     description %(
       # Background
 
@@ -36,27 +29,6 @@ module SMARTAppLaunch
 
     config(
       inputs: {
-        client_id: {
-          name: :standalone_client_id,
-          title: 'Standalone Client ID',
-          description: 'Client ID provided during registration of Inferno as a standalone application'
-        },
-        client_secret: {
-          name: :standalone_client_secret,
-          title: 'Standalone Client Secret',
-          description: 'Client Secret provided during registration of Inferno as a standalone application'
-        },
-        requested_scopes: {
-          name: :standalone_requested_scopes,
-          title: 'Standalone Scope',
-          description: 'OAuth 2.0 scope provided by system to enable all required functionality',
-          type: 'textarea',
-          default: 'launch/patient openid fhirUser offline_access patient/*.read'
-        },
-        url: {
-          title: 'Standalone FHIR Endpoint',
-          description: 'URL of the FHIR endpoint used by standalone applications'
-        },
         use_pkce: {
           default: 'true',
           locked: true
@@ -64,65 +36,8 @@ module SMARTAppLaunch
         pkce_code_challenge_method: {
           default: 'S256',
           locked: true
-        },
-        code: {
-          name: :standalone_code
-        },
-        state: {
-          name: :standalone_state
-        },
-        smart_credentials: {
-          name: :standalone_smart_credentials
         }
-      },
-      outputs: {
-        code: { name: :standalone_code },
-        token_retrieval_time: { name: :standalone_token_retrieval_time },
-        state: { name: :standalone_state },
-        id_token: { name: :standalone_id_token },
-        refresh_token: { name: :standalone_refresh_token },
-        access_token: { name: :standalone_access_token },
-        expires_in: { name: :standalone_expires_in },
-        patient_id: { name: :standalone_patient_id },
-        encounter_id: { name: :standalone_encounter_id },
-        received_scopes: { name: :standalone_received_scopes },
-        intent: { name: :standalone_intent },
-        smart_credentials: { name: :standalone_smart_credentials }
-      },
-      requests: {
-        redirect: { name: :standalone_redirect },
-        token: { name: :standalone_token }
       }
     )
-
-    test from: :tls_version_test,
-         id: :standalone_auth_tls,
-         title: 'OAuth 2.0 authorize endpoint secured by transport layer security',
-         description: %(
-           Apps MUST assure that sensitive information (authentication secrets,
-           authorization codes, tokens) is transmitted ONLY to authenticated
-           servers, over TLS-secured channels.
-         ),
-         config: {
-           inputs: { url: { name: :smart_authorization_url } },
-           options: {  minimum_allowed_version: OpenSSL::SSL::TLS1_2_VERSION }
-         }
-    test from: :smart_app_redirect
-    test from: :smart_code_received
-    test from: :tls_version_test,
-         id: :standalone_token_tls,
-         title: 'OAuth 2.0 token endpoint secured by transport layer security',
-         description: %(
-           Apps MUST assure that sensitive information (authentication secrets,
-           authorization codes, tokens) is transmitted ONLY to authenticated
-           servers, over TLS-secured channels.
-         ),
-         config: {
-           inputs: { url: { name: :smart_token_url } },
-           options: {  minimum_allowed_version: OpenSSL::SSL::TLS1_2_VERSION }
-         }
-    test from: :smart_token_exchange
-    test from: :smart_token_response_body
-    test from: :smart_token_response_headers
   end
 end

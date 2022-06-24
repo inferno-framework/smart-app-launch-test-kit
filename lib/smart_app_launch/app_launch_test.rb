@@ -14,8 +14,12 @@ module SMARTAppLaunch
 
     def wait_message
       %(
-        Waiting to receive a request at `#{config.options[:launch_uri]}` with an
-        `iss` of `#{url}`.
+        ### #{title}
+
+        Waiting for Inferno to be launched from the EHR.
+
+        Tests will resume once Inferno receives a launch request at
+        `#{config.options[:launch_uri]}` with an `iss` of `#{url}`.
       )
     end
 

@@ -12,13 +12,17 @@ module SMARTAppLaunch
 
     config options: { launch_uri: "#{Inferno::Application['base_url']}/custom/smart/launch" }
 
+    def wait_message
+      %(
+        Waiting to receive a request at `#{config.options[:launch_uri]}` with an
+        `iss` of `#{url}`.
+      )
+    end
+
     run do
       wait(
         identifier: url,
-        message: %(
-          Waiting to receive a request at
-          `#{config.options[:launch_uri]}` with an `iss` of `#{url}`.
-        )
+        message: wait_message
       )
     end
   end

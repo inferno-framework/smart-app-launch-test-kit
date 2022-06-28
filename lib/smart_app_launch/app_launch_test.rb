@@ -13,6 +13,8 @@ module SMARTAppLaunch
     config options: { launch_uri: "#{Inferno::Application['base_url']}/custom/smart/launch" }
 
     def wait_message
+      return instance_eval(config.options[:launch_message_proc]) if config.options[:launch_message_proc].present?
+
       %(
         ### #{title}
 

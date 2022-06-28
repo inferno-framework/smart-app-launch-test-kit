@@ -61,7 +61,7 @@ module SMARTAppLaunch
       return instance_eval(config.options[:redirect_message_proc]) if config.options[:redirect_message_proc].present?
 
       %(
-        ### #{title}
+        ### #{self.class.parent.parent.title}
 
         [Follow this link to authorize with the SMART server](#{auth_url}).
 

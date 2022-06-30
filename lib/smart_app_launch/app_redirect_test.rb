@@ -58,7 +58,9 @@ module SMARTAppLaunch
     end
 
     def wait_message(auth_url)
-      return instance_eval(config.options[:redirect_message_proc]) if config.options[:redirect_message_proc].present?
+      if config.options[:redirect_message_proc].present?
+        return instance_exec(auth_url, &config.options[:redirect_message_proc])
+      end
 
       %(
         ### #{self.class.parent.parent.title}

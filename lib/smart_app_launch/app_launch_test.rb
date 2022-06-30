@@ -16,7 +16,7 @@ module SMARTAppLaunch
       return instance_exec(&config.options[:launch_message_proc]) if config.options[:launch_message_proc].present?
 
       %(
-        ### #{self.class.parent.parent.title}
+        ### #{self.class.parent&.parent&.title}
 
         Waiting for Inferno to be launched from the EHR.
 

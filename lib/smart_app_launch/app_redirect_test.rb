@@ -63,7 +63,7 @@ module SMARTAppLaunch
       end
 
       %(
-        ### #{self.class.parent.parent.title}
+        ### #{self.class.parent&.parent&.title}
 
         [Follow this link to authorize with the SMART server](#{auth_url}).
 

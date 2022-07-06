@@ -23,7 +23,9 @@
     for (const property in params) {
       let input = document.createElement('input');
       input.setAttribute('name', property);
-      input.setAttribute('value', params[property]);
+
+      let value = params[property].replace(/\+/g, ' ');
+      input.setAttribute('value', decodeURIComponent(value));
 
       form.appendChild(input);
     }

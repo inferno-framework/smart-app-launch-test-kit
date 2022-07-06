@@ -1,12 +1,15 @@
 # 0.1.4
 
-Note: This kit contains separate suites for both the STU1 and STU2 versions of the SMART App Launch Framework. However, development is ongoing and the SMART STU2 suite is not yet fully complete. 
+Note: This kit contains separate suites for both the STU1 and STU2 versions of
+the SMART App Launch Framework. However, development is ongoing and the SMART
+STU2 suite is not yet fully complete.
 
 * Create separate TestSuites for containing SMART STU1 and STU2.
-* Include additional field requirements for Well-known configuration tests in SMART STU2 suite.
+* Include additional field requirements for Well-known configuration tests in
+  SMART STU2 suite.
 * Add an Accept header to Well-known configuration request.
 * Provide documentation concerning the TestGroups available in this kit.
-* Require PKCE for SMART STU2 Standalone and EHR launches. 
+* Require PKCE for SMART STU2 Standalone and EHR launches.
 * Improve wait messages.
 
 # 0.1.3

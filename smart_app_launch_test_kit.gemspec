@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
   spec.metadata['source_code_uri'] = 'https://github.com/inferno_framework/smart-app-launch-test-kit'
   spec.files = [
     Dir['lib/**/*.rb'],
+    Dir['lib/**/*.html'],
     Dir['lib/**/*.json'],
     'LICENSE'
   ].flatten

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Use the highest supported document mode of Internet Explorer -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta charset="utf-8" />
+    <title>Inferno POST Authorization Redirect</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <form id="form" style="display:none;">
+    </form>
+  </body>
+  <script>
+    const params = Object.fromEntries(new URLSearchParams(window.location.search).entries());
+    const submitUrl = params.auth_url;
+    delete params.auth_url;
+    const form = document.getElementById('form');
+    form.method = 'POST';
+    form.action = submitUrl;
+
+    for (const property in params) {
+      let input = document.createElement('input');
+      input.setAttribute('name', property);
+      input.setAttribute('value', params[property]);
+
+      form.appendChild(input);
+    }
+
+    form.submit();
+  </script>
+</html>

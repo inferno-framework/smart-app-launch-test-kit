@@ -21,9 +21,15 @@ module SMARTAppLaunch
       request.query_parameters['state']
     end
 
+    @post_auth_page = File.read(File.join(__dir__, 'post_auth.html'))
+    post_auth_handler = proc { [200, {}, [@post_auth_page]] }
+
+    route :get, '/post_auth', post_auth_handler
+
     config options: {
-      redirect_uri: "#{Inferno::Application['base_url']}/custom/smart/redirect",
-      launch_uri: "#{Inferno::Application['base_url']}/custom/smart/launch"
+      redirect_uri: "#{Inferno::Application['base_url']}/custom/smart_stu2/redirect",
+      launch_uri: "#{Inferno::Application['base_url']}/custom/smart_stu2/launch",
+      post_authorization_uri: "#{Inferno::Application['base_url']}/custom/smart_stu2/post_auth"
     }
 
     group do

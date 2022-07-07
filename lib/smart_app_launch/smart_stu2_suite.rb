@@ -10,7 +10,7 @@ require_relative 'token_refresh_group'
 module SMARTAppLaunch
   class SMARTSTU2Suite < Inferno::TestSuite
     id 'smart_stu2'
-    title 'SMART App Launch STU2'
+    title 'SMART App Launch STU2 (Work in Progress)'
     version VERSION
 
     resume_test_route :get, '/launch' do

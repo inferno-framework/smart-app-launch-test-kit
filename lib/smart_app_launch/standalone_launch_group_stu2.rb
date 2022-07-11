@@ -1,3 +1,4 @@
+require_relative 'app_redirect_test_stu2'
 require_relative 'standalone_launch_group'
 
 module SMARTAppLaunch
@@ -39,5 +40,10 @@ module SMARTAppLaunch
         }
       }
     )
+
+    test from: :smart_app_redirect_stu2
+
+    redirect_index = children.find_index { |child| child.id.to_s.end_with? 'app_redirect' }
+    children[redirect_index] = children.pop
   end
 end

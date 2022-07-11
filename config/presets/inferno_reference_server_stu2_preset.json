@@ -19,43 +19,6 @@
       "value": "launch/patient openid fhirUser offline_access patient/*.read"
     },
     {
-      "name": "use_pkce",
-      "type": "radio",
-      "title": "Proof Key for Code Exchange (PKCE)",
-      "options": {
-        "list_options": [
-          {
-            "label": "Enabled",
-            "value": "true"
-          },
-          {
-            "label": "Disabled",
-            "value": "false"
-          }
-        ]
-      },
-      "value": "false"
-    },
-    {
-      "name": "pkce_code_challenge_method",
-      "type": "radio",
-      "optional": true,
-      "title": "PKCE Code Challenge Method",
-      "options": {
-        "list_options": [
-          {
-            "label": "S256",
-            "value": "S256"
-          },
-          {
-            "label": "plain",
-            "value": "plain"
-          }
-        ]
-      },
-      "value": "S256"
-    },
-    {
       "name": "standalone_client_secret",
       "type": "text",
       "optional": true,

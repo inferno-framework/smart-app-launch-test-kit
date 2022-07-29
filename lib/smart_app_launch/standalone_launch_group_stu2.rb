@@ -39,7 +39,7 @@ module SMARTAppLaunch
           locked: true
         },
         requested_scopes: {
-          default: 'launch/patient openid fhirUser offline_access patient/*.r'
+          default: 'launch/patient openid fhirUser offline_access patient/*.rs'
         }
       }
     )

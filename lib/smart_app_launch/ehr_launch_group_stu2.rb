@@ -41,7 +41,7 @@ module SMARTAppLaunch
           locked: true
         },
         requested_scopes: {
-          default: 'launch openid fhirUser offline_access user/*.r'
+          default: 'launch openid fhirUser offline_access user/*.rs'
         }
       }
     )

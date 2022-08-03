@@ -1,4 +1,4 @@
-# Inferno SMART App Launch Test Kit 
+# Inferno SMART App Launch Test Kit
 
 This is a collection of tests for the [SMART Application Launch Framework
 Implementation Guide](http://hl7.org/fhir/smart-app-launch/index.html) using the
@@ -9,7 +9,14 @@ Implementation Guide](http://hl7.org/fhir/smart-app-launch/index.html) using the
 - Clone this repo.
 - Run `setup.sh` in this repo.
 - Run `run.sh` in this repo.
-- Navigate to `http://localhost**. The SMART test suite will be available.
+- Navigate to `http://localhost**`. The SMART test suite will be available.
+
+## Versions
+This test kit contains both the SMART App Launch STU1 and SMART App Launch STU2
+suites. While these suites are generally designed to test implementations of
+the SMART App Launch Framework, each suite is tailored to the
+[STU1](https://hl7.org/fhir/smart-app-launch/1.0.0/) and
+[STU2](http://hl7.org/fhir/smart-app-launch/STU2/) versions of SMART, respectively.
 
 ## Importing tests
 
@@ -28,33 +35,33 @@ require 'smart_app_launch_test_kit'
 
 class MySuite < Inferno::TestSuite
   input :url
-  
+
   group do
     title 'Auth'
-    
+
     group from: :smart_discovery
     group from: :smart_standalone_launch
     group from: :smart_openid_connect
   end
-  
+
   group do
     title 'Make some FHIR requests using SMART credentials'
-    
+
     input :smart_credentials
-    
+
     fhir_client do
       url :url
       oauth_credentials :smart_credentials # Obtained from the auth group
     end
-    
+
     test do
       title 'Retrieve patient from SMART launch context'
-      
+
       input :patient_id
-      
+
       run do
         fhir_read(:patient, patient_id)
-        
+
         assert_response_status(200)
         assert_resource_type(:patient)
       end
@@ -65,12 +72,12 @@ end
 
 ### Discovery Group
 
-[The Discovery
-Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/discovery_group.rb)
+The Discovery Group ([STU1](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/discovery_stu1_group.rb)
+and [STU2](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/discovery_stu2_group.rb))
 examines a server's CapabilityStatement and `.well-known/smart-configuration`
 endpoint to determine its configuration.
 
-**id:** `smart_discovery`
+**ids:** `smart_discovery`, `smart_discovery_stu2`
 
 **inputs:** `url`
 
@@ -85,11 +92,11 @@ endpoint to determine its configuration.
 
 ### Standalone Launch Group
 
-[The Standalone Launch
-Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/standalone_launch_group.rb)
+The Standalone Launch Group ([STU1](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/standalone_launch_group.rb)
+and [STU2](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/standalone_launch_group_stu2.rb))
 performs the entire standalone launch workflow.
 
-**id:** `smart_standalone_launch`
+**ids:** `smart_standalone_launch`, `smart_standalone_launch_stu2`
 
 **inputs:** `url`, `client_id`, `client_secret`, `requested_scopes`
 
@@ -110,14 +117,16 @@ performs the entire standalone launch workflow.
 **options:**
 * `redirect_uri`: You should not have to manually set this if the `INFERNO_HOST`
   environment variable is set.
+* `ignore_missing_scopes_check`: Forego checking that the scopes granted by the
+ token match those requested.
 
 ### EHR Launch Group
 
-[The EHR Launch
-Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/ehr_launch_group.rb)
+The EHR Launch Group ([STU1](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/ehr_launch_group.rb)
+and [STU2](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/ehr_launch_group_stu2.rb))
 performs the entire EHR launch workflow.
 
-**id:** `smart_standalone_launch`
+**ids:** `smart_ehr_launch`, `smart_ehr_launch_stu2`
 
 **inputs:** `url`, `client_id`, `client_secret`, `requested_scopes`
 
@@ -142,7 +151,9 @@ performs the entire EHR launch workflow.
   environment variable is set.
 * `launch_uri`: You should not have to manually set this if the `INFERNO_HOST`
   environment variable is set.
-  
+* `ignore_missing_scopes_check`: Forego checking that the scopes granted by the
+ token match those requested.
+
 ### OpenID Connect Group
 [The OpenID Connect
 Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/openid_connect_group.rb)

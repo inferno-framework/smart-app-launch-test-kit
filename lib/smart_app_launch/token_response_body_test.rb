@@ -43,7 +43,7 @@ module SMARTAppLaunch
       validate_required_fields_present(token_response_body, ['access_token', 'token_type', 'expires_in', 'scope'])
       validate_token_field_types(token_response_body)
       validate_token_type(token_response_body)
-      check_for_missing_scopes(requested_scopes, token_response_body) unless config.options[:limited_launch]
+      check_for_missing_scopes(requested_scopes, token_response_body) unless config.options[:ignore_missing_scopes_check]
 
       assert access_token.present?, 'Token response did not contain an access token'
       assert token_response_body['token_type']&.casecmp('Bearer')&.zero?,

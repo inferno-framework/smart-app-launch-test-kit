@@ -10,8 +10,7 @@ module SMARTAppLaunch
       an access token or a message indicating that the authorization request
       has been denied. `access_token`, `token_type`, and `scope` are required.
       `token_type` must be Bearer. `expires_in` is required for token
-      refreshes. Unless the `ignore_missing_scopes_check` flag is set in the
-      configuration options, all scopes requested should be approved.
+      refreshes.
     )
     id :smart_token_response_body
 

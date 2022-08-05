@@ -37,6 +37,9 @@ module SMARTAppLaunch
         pkce_code_challenge_method: {
           default: 'S256',
           locked: true
+        },
+        requested_scopes: {
+          default: 'launch/patient openid fhirUser offline_access patient/*.rs'
         }
       }
     )

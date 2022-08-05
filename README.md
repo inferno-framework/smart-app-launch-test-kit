@@ -9,7 +9,7 @@ Implementation Guide](http://hl7.org/fhir/smart-app-launch/index.html) using the
 - Clone this repo.
 - Run `setup.sh` in this repo.
 - Run `run.sh` in this repo.
-- Navigate to `http://localhost**`. The SMART test suite will be available.
+- Navigate to `http://localhost`. The SMART test suite will be available.
 
 ## Versions
 This test kit contains both the SMART App Launch STU1 and SMART App Launch STU2

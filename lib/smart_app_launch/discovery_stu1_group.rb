@@ -71,13 +71,14 @@ module SMARTAppLaunch
           resource
             .rest
             &.map(&:security)
+            &.compact
             &.find do |security|
-            security.service&.any? do |service|
-              service.coding&.any? do |coding|
-                coding.code == 'SMART-on-FHIR'
+              security.service&.any? do |service|
+                service.coding&.any? do |coding|
+                  coding.code == 'SMART-on-FHIR'
+                end
               end
             end
-          end
             &.extension
             &.find do |extension|
               extension.url == 'http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris'

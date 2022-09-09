@@ -44,7 +44,17 @@ RSpec.describe SMARTAppLaunch::DiscoverySTU1Group do
 
   describe 'capability statement test' do
     let(:runnable) { group.tests[2] }
-    let(:minimal_capabilities) { FHIR::CapabilityStatement.new(fhirVersion: '4.0.1') }
+    let(:minimal_capabilities) do
+      FHIR::CapabilityStatement.new(
+        fhirVersion: '4.0.1',
+        rest: [
+          {
+            mode: 'server'
+          }
+        ]
+      )
+    end
+
     let(:full_extensions) do
       [
         {

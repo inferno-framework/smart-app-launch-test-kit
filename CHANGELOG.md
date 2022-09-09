@@ -1,3 +1,6 @@
+# 0.1.6
+* Fix an unhandled exception in the discovery group.
+
 # 0.1.5
 
 * Add support for creating an authorization request using POST and integrate

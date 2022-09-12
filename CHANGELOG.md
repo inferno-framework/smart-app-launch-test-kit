@@ -1,4 +1,9 @@
+# 0.1.7
+
+* Update title for STU2 suite.
+
 # 0.1.6
+
 * Fix an unhandled exception in the discovery group.
 
 # 0.1.5

@@ -1,5 +1,6 @@
 require_relative 'well_known_capabilities_stu1_test'
 require_relative 'well_known_endpoint_test'
+require_relative 'url_helpers'
 
 module SMARTAppLaunch
   class DiscoverySTU1Group < Inferno::TestGroup
@@ -45,6 +46,8 @@ module SMARTAppLaunch
          id: 'Test02'
 
     test do
+      include URLHelpers
+
       title 'Conformance/CapabilityStatement provides OAuth 2.0 endpoints'
       description %(
         If a server requires SMART on FHIR authorization for access, its
@@ -90,6 +93,7 @@ module SMARTAppLaunch
 
         oauth_urls = oauth_extension_urls.each_with_object({}) do |url, urls|
           urls[url] = smart_extension.extension.find { |extension| extension.url == url }&.valueUri
+          make_url_absolute(url, urls[url])
         end
 
         output capability_authorization_url: oauth_urls['authorize'],

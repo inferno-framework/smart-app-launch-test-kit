@@ -85,6 +85,36 @@ RSpec.describe SMARTAppLaunch::DiscoverySTU1Group do
     end
     let(:full_capabilities) { capabilities_with_smart(full_extensions) }
 
+    let(:relative_extensions) do
+      [
+        {
+          url: 'authorize',
+          valueUri: 'authorize'
+        },
+        {
+          url: 'introspect',
+          valueUri: '/introspect'
+        },
+        {
+          url: 'manage',
+          valueUri: "#{url}/manage"
+        },
+        {
+          url: 'register',
+          valueUri: "#{url}/register"
+        },
+        {
+          url: 'revoke',
+          valueUri: "#{url}/revoke"
+        },
+        {
+          url: 'token',
+          valueUri: "#{url}/token"
+        }
+      ]
+    end
+    let(:relative_capabilities) { capabilities_with_smart(relative_extensions) }
+
     def capabilities_with_smart(extensions)
       FHIR::CapabilityStatement.new(
         fhirVersion: '4.0.1',
@@ -117,6 +147,16 @@ RSpec.describe SMARTAppLaunch::DiscoverySTU1Group do
 
       result = run(runnable, url: url)
 
+      expect(result.result).to eq('pass')
+    end
+
+    it 'passes when all required extensions are present with relative URLs' do
+      stub_request(:get, "#{url}/metadata")
+        .to_return(status: 200, body: relative_capabilities.to_json)
+
+      result = run(runnable, url: url)
+
+      puts result.result_message
       expect(result.result).to eq('pass')
     end
 

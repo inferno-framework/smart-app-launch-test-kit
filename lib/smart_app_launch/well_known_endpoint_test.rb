@@ -31,14 +31,16 @@ module SMARTAppLaunch
 
       assert_valid_json(request.response_body)
 
+      base_url = "#{url.chomp('/')}/"
       config = JSON.parse(request.response_body)
+
       output well_known_configuration: request.response_body,
-             well_known_authorization_url: make_url_absolute(url, config['authorization_endpoint']),
-             well_known_introspection_url: make_url_absolute(url, config['introspection_endpoint']),
-             well_known_management_url: make_url_absolute(url, config['management_endpoint']),
-             well_known_registration_url: make_url_absolute(url, config['registration_endpoint']),
-             well_known_revocation_url: make_url_absolute(url, config['revocation_endpoint']),
-             well_known_token_url: make_url_absolute(url, config['token_endpoint'])
+             well_known_authorization_url: make_url_absolute(base_url, config['authorization_endpoint']),
+             well_known_introspection_url: make_url_absolute(base_url, config['introspection_endpoint']),
+             well_known_management_url: make_url_absolute(base_url, config['management_endpoint']),
+             well_known_registration_url: make_url_absolute(base_url, config['registration_endpoint']),
+             well_known_revocation_url: make_url_absolute(base_url, config['revocation_endpoint']),
+             well_known_token_url: make_url_absolute(base_url, config['token_endpoint'])
 
       content_type = request.response_header('Content-Type')&.value
 

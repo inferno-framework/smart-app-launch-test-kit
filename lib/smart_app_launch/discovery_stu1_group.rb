@@ -91,7 +91,7 @@ module SMARTAppLaunch
 
         oauth_extension_urls = ['authorize', 'introspect', 'manage', 'register', 'revoke', 'token']
 
-        base_url = url.chomp('/') + '/'
+      base_url = "#{url.chomp('/')}/"
         oauth_urls = oauth_extension_urls.each_with_object({}) do |url, urls|
           urls[url] = smart_extension.extension.find { |extension| extension.url == url }&.valueUri
           urls[url] = make_url_absolute(base_url, urls[url])

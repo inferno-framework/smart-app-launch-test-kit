@@ -97,11 +97,11 @@ RSpec.describe SMARTAppLaunch::DiscoverySTU1Group do
         },
         {
           url: 'manage',
-          valueUri: "#{url}/manage"
+          valueUri: "nested/manage"
         },
         {
           url: 'register',
-          valueUri: "#{url}/register"
+          valueUri: "/nested/register"
         },
         {
           url: 'revoke',
@@ -109,7 +109,7 @@ RSpec.describe SMARTAppLaunch::DiscoverySTU1Group do
         },
         {
           url: 'token',
-          valueUri: "#{url}/token"
+          valueUri: "http://foobar.quz/token"
         }
       ]
     end
@@ -156,8 +156,27 @@ RSpec.describe SMARTAppLaunch::DiscoverySTU1Group do
 
       result = run(runnable, url: url)
 
-      puts result.result_message
       expect(result.result).to eq('pass')
+    end
+
+    it 'converts relative URLs to absolute URLs' do
+      stub_request(:get, "#{url}/metadata")
+        .to_return(status: 200, body: relative_capabilities.to_json)
+
+      run(runnable, url: url)
+
+      expected_outputs = {
+        capability_authorization_url: 'http://example.com/fhir/authorize',
+        capability_introspection_url: 'http://example.com/introspect',
+        capability_management_url: 'http://example.com/fhir/nested/manage',
+        capability_registration_url: 'http://example.com/nested/register',
+        capability_revocation_url: 'http://example.com/fhir/revoke',
+        capability_token_url: 'http://foobar.quz/token'
+      }
+
+      expected_outputs.each do |name, value|
+        expect(session_data_repo.load(test_session_id: test_session.id, name: name)).to eq(value.to_s)
+      end
     end
 
     it 'fails when a non-200 response is received' do

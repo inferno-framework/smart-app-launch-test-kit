@@ -85,6 +85,36 @@ RSpec.describe SMARTAppLaunch::DiscoverySTU1Group do
     end
     let(:full_capabilities) { capabilities_with_smart(full_extensions) }
 
+    let(:relative_extensions) do
+      [
+        {
+          url: 'authorize',
+          valueUri: 'authorize'
+        },
+        {
+          url: 'introspect',
+          valueUri: '/introspect'
+        },
+        {
+          url: 'manage',
+          valueUri: "nested/manage"
+        },
+        {
+          url: 'register',
+          valueUri: "/nested/register"
+        },
+        {
+          url: 'revoke',
+          valueUri: "#{url}/revoke"
+        },
+        {
+          url: 'token',
+          valueUri: "http://foobar.quz/token"
+        }
+      ]
+    end
+    let(:relative_capabilities) { capabilities_with_smart(relative_extensions) }
+
     def capabilities_with_smart(extensions)
       FHIR::CapabilityStatement.new(
         fhirVersion: '4.0.1',
@@ -118,6 +148,35 @@ RSpec.describe SMARTAppLaunch::DiscoverySTU1Group do
       result = run(runnable, url: url)
 
       expect(result.result).to eq('pass')
+    end
+
+    it 'passes when all required extensions are present with relative URLs' do
+      stub_request(:get, "#{url}/metadata")
+        .to_return(status: 200, body: relative_capabilities.to_json)
+
+      result = run(runnable, url: url)
+
+      expect(result.result).to eq('pass')
+    end
+
+    it 'converts relative URLs to absolute URLs' do
+      stub_request(:get, "#{url}/metadata")
+        .to_return(status: 200, body: relative_capabilities.to_json)
+
+      run(runnable, url: url)
+
+      expected_outputs = {
+        capability_authorization_url: 'http://example.com/fhir/authorize',
+        capability_introspection_url: 'http://example.com/introspect',
+        capability_management_url: 'http://example.com/fhir/nested/manage',
+        capability_registration_url: 'http://example.com/nested/register',
+        capability_revocation_url: 'http://example.com/fhir/revoke',
+        capability_token_url: 'http://foobar.quz/token'
+      }
+
+      expected_outputs.each do |name, value|
+        expect(session_data_repo.load(test_session_id: test_session.id, name: name)).to eq(value.to_s)
+      end
     end
 
     it 'fails when a non-200 response is received' do

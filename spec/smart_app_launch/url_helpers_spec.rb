@@ -65,7 +65,7 @@ RSpec.describe SMARTAppLaunch::URLHelpers do
     expect(new_url).to eq(url)
   end
 
-  it 'If the embedded URL is preceded by a slash, then the path is not relative' do
+  it 'treats embedded URLs starting with a slash as non-relative' do
     leading_slash_url = klass.make_url_absolute(url, 'bar')
     expect(leading_slash_url).to eq('https://example.com/fhir/bar')
 

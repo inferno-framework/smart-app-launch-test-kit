@@ -1,3 +1,7 @@
+# 0.1.8
+
+* Handle relative urls from the discovery endpoints.
+
 # 0.1.7
 
 * Update title for STU2 suite.

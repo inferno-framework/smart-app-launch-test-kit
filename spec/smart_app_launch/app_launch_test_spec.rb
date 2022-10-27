@@ -26,6 +26,7 @@ RSpec.describe SMARTAppLaunch::AppLaunchTest do
   end
 
   it 'passes when a request is received with the provided url' do
+    allow(test).to receive(:parent).and_return(Inferno::TestGroup)
     result = run(test, url: url)
 
     expect(result.result).to eq('wait')

@@ -37,6 +37,7 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
   end
 
   it 'waits and then passes when it receives a request with the correct state' do
+    allow(test).to receive(:parent).and_return(Inferno::TestGroup)
     result = run(test, inputs)
     expect(result.result).to eq('wait')
 
@@ -65,6 +66,7 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
   end
 
   it "persists the incoming 'redirect' request" do
+    allow(test).to receive(:parent).and_return(Inferno::TestGroup)
     run(test, inputs)
     state = session_data_repo.load(test_session_id: test_session.id, name: 'state')
     url = "/custom/smart/redirect?state=#{state}"

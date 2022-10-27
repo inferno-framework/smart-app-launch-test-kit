@@ -1,3 +1,7 @@
+# 0.2.0
+
+* Update to use new version of inferno_core with ruby 3.
+
 # 0.1.8
 
 * Handle relative urls from the discovery endpoints.

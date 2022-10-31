@@ -13,11 +13,11 @@ module SMARTAppLaunch
     title 'SMART App Launch STU2'
     version VERSION
 
-    resume_test_route :get, '/launch' do
+    resume_test_route :get, '/launch' do |request|
       request.query_parameters['iss']
     end
 
-    resume_test_route :get, '/redirect' do
+    resume_test_route :get, '/redirect' do |request|
       request.query_parameters['state']
     end
 

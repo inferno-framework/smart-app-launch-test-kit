@@ -187,6 +187,10 @@ GEM
     nio4r (2.5.8)
     nokogiri (1.13.9-arm64-darwin)
       racc (~> 1.4)
+    nokogiri (1.13.9-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.13.9-x86_64-linux)
+      racc (~> 1.4)
     oauth2 (1.4.11)
       faraday (>= 0.17.3, < 3.0)
       jwt (>= 1.0, < 3.0)
@@ -237,6 +241,8 @@ GEM
       rack (~> 2.0)
       redis (>= 4.5.0, < 5)
     sqlite3 (1.5.3-arm64-darwin)
+    sqlite3 (1.5.3-x86_64-darwin)
+    sqlite3 (1.5.3-x86_64-linux)
     thor (1.2.1)
     tilt (2.0.11)
     tls_test_kit (0.2.0)
@@ -254,6 +260,8 @@ GEM
 
 PLATFORMS
   arm64-darwin-21
+  x86_64-darwin-20
+  x86_64-linux
 
 DEPENDENCIES
   database_cleaner-sequel (~> 1.8)

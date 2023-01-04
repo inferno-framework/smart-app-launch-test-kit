@@ -48,7 +48,7 @@ module SMARTAppLaunch
 
       token_response_body = JSON.parse(request.response_body)
       output smart_credentials: {
-               refresh_token: token_response_body['refresh_token'],
+               refresh_token: token_response_body['refresh_token'].presence || refresh_token,
                access_token: token_response_body['access_token'],
                expires_in: token_response_body['expires_in'],
                client_id: client_id,

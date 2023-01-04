@@ -164,4 +164,37 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
     request = requests_repo.find_named_request(test_session.id, :token_refresh)
     expect(request).to be_present
   end
+
+  context 'when the response does not contain a refresh token' do
+    it 'includes the original refresh token in the smart credentials' do
+      stub_request(:post, token_url)
+        .to_return(
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: valid_response.except(:refresh_token).to_json
+        )
+
+      result = run(
+        test,
+        smart_token_url: token_url,
+        refresh_token: refresh_token,
+        client_id: client_id,
+        received_scopes: received_scopes
+      )
+
+      expect(result.result).to eq('pass')
+
+      smart_credentials =
+        JSON.parse(
+          session_data_repo.load(
+            test_session_id: test_session.id,
+            name: :smart_credentials
+          )
+        ).symbolize_keys
+
+      expect(smart_credentials[:refresh_token]).to eq(refresh_token)
+    end
+  end
 end

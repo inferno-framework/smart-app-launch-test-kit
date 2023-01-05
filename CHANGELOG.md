@@ -1,3 +1,12 @@
+# 0.2.1
+
+* Update to support new development workflow. See [the template
+  repository](https://github.com/inferno-framework/inferno-template#development-with-ruby)
+  for details.
+* Fix a bug in token refresh test where the original refresh token was not
+  included in the smart credentials output when the refresh response did not
+  contain a new refresh token.
+
 # 0.2.0
 
 * Update to use new version of inferno_core with ruby 3.

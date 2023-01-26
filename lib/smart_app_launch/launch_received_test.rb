@@ -14,7 +14,7 @@ module SMARTAppLaunch
       launch = request.query_parameters['launch']
       output launch: launch
 
-      assert launch.present?, 'No `launch` paramater received'
+      assert launch.present?, 'No `launch` parameter received'
     end
   end
 end

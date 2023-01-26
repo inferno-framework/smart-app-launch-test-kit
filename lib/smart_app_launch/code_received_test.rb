@@ -13,7 +13,7 @@ module SMARTAppLaunch
       code = request.query_parameters['code']
       output code: code
 
-      assert code.present?, 'No `code` paramater received'
+      assert code.present?, 'No `code` parameter received'
 
       error = request.query_parameters['error']
 

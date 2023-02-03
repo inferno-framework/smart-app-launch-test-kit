@@ -186,7 +186,7 @@ RSpec.describe SMARTAppLaunch::DiscoverySTU1Group do
       result = run(runnable, url: url)
 
       expect(result.result).to eq('fail')
-      expect(result.result_message).to match(/Bad response status/)
+      expect(result.result_message).to match(/Unexpected response status/)
     end
 
     it 'fails when no SMART extensions are returned' do

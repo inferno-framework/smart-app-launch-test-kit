@@ -104,7 +104,7 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
     result = run(test, public_inputs)
 
     expect(result.result).to eq('fail')
-    expect(result.result_message).to match(/Bad response status/)
+    expect(result.result_message).to match(/Unexpected response status/)
   end
 
   it 'skips if the auth request had an error' do

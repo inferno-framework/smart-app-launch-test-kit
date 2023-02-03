@@ -1,3 +1,7 @@
+# 0.2.2
+
+* Fix typos and launch test description.
+
 # 0.2.1
 
 * Update to support new development workflow. See [the template

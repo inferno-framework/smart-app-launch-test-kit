@@ -114,7 +114,7 @@ RSpec.describe SMARTAppLaunch::WellKnownEndpointTest do
     result = run(runnable, url: url)
 
     expect(result.result).to eq('fail')
-    expect(result.result_message).to match(/Bad response status:/)
+    expect(result.result_message).to match(/Unexpected response status:/)
   end
 
   it 'fails when a Content-Type header is not received' do

@@ -10,6 +10,26 @@ module SMARTAppLaunch
     )
     id :smart_token_exchange
 
+    input :client_auth_type,
+          title: 'Client Authentication Method',
+          type: 'radio',
+          options: {
+            list_options: [
+              {
+                label: 'Public',
+                value: 'public'
+              },
+              {
+                label: 'Confidential Symmetric',
+                value: 'confidential_symmetric'
+              },
+              {
+                label: 'Confidential Asymmetric',
+                value: 'confidential_asymmetric'
+              }
+            ]
+          }
+
     input :code,
           :smart_token_url,
           :client_id
@@ -48,11 +68,16 @@ module SMARTAppLaunch
       }
       oauth2_headers = { 'Content-Type' => 'application/x-www-form-urlencoded' }
 
-      if client_secret.present?
+      if client_auth_type == 'confidential_symmetric'
+        assert client_secret.present?,
+               "A client secret must be provided when using confidential symmetric client authentication."
+
         client_credentials = "#{client_id}:#{client_secret}"
         oauth2_headers['Authorization'] = "Basic #{Base64.strict_encode64(client_credentials)}"
-      else
+      elsif client_auth_type == 'public'
         oauth2_params[:client_id] = client_id
+      else
+        # TODO: handle asymmetric auth
       end
 
       if use_pkce == 'true'

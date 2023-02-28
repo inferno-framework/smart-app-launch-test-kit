@@ -48,7 +48,8 @@ module SMARTAppLaunch
         client_secret: {
           name: :ehr_client_secret,
           title: 'EHR Launch Client Secret',
-          description: 'Client Secret provided during registration of Inferno as an EHR launch application'
+          description: 'Client Secret provided during registration of Inferno as an EHR launch application. ' \
+                       'Only for clients using confidential symmetric authentication.'
         },
         requested_scopes: {
           name: :ehr_requested_scopes,

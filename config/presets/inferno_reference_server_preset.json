@@ -1,6 +1,6 @@
 {
   "title": "Inferno Reference Server",
-  "id": null,
+  "id": "smart_stu1_reference_server",
   "test_suite_id": "smart",
   "inputs": [
     {
@@ -54,6 +54,28 @@
         ]
       },
       "value": "S256"
+    },
+    {
+      "name": "client_auth_type",
+      "value": "public",
+      "_title": "Client Authentication Method",
+      "_type": "radio",
+      "_options": {
+        "list_options": [
+          {
+          "label": "Public",
+          "value": "public"
+        },
+          {
+          "label": "Confidential Symmetric",
+          "value": "confidential_symmetric"
+        },
+          {
+          "label": "Confidential Asymmetric",
+          "value": "confidential_asymmetric"
+        }
+        ]
+      }
     },
     {
       "name": "standalone_client_secret",

@@ -21,6 +21,28 @@ module SMARTAppLaunch
       request.query_parameters['state']
     end
 
+    def self.jwks_json
+      @jwks_json ||=
+        begin
+          default_jwks_path = File.join(__dir__, 'smart_jwks.json')
+          jwks = JSON.parse(File.read(ENV.fetch('SMART_JWKS_PATH', default_jwks_path)))
+
+          @jwks_json ||= JSON.pretty_generate(
+            { keys: jwks['keys'].select { |key| key['key_ops']&.include?('verify') } }
+          )
+        end
+    end
+
+    def self.well_known_route_handler
+      ->(_env) { [200, { 'Content-Type' => 'application/json' }, [jwks_json]] }
+    end
+
+    route(
+      :get,
+      '/.well-known/jwks.json',
+      well_known_route_handler
+    )
+
     config options: {
       redirect_uri: "#{Inferno::Application['base_url']}/custom/smart/redirect",
       launch_uri: "#{Inferno::Application['base_url']}/custom/smart/launch"

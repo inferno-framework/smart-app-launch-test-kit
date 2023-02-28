@@ -1,5 +1,6 @@
 require 'tls_test_kit'
 
+require_relative 'jwks'
 require_relative 'version'
 require_relative 'discovery_stu2_group'
 require_relative 'standalone_launch_group_stu2'
@@ -21,26 +22,10 @@ module SMARTAppLaunch
       request.query_parameters['state']
     end
 
-    def self.jwks_json
-      @jwks_json ||=
-        begin
-          default_jwks_path = File.join(__dir__, 'smart_jwks.json')
-          jwks = JSON.parse(File.read(ENV.fetch('SMART_JWKS_PATH', default_jwks_path)))
-
-          @jwks_json ||= JSON.pretty_generate(
-            { keys: jwks['keys'].select { |key| key['key_ops']&.include?('verify') } }
-          )
-        end
-    end
-
-    def self.well_known_route_handler
-      ->(_env) { [200, { 'Content-Type' => 'application/json' }, [jwks_json]] }
-    end
-
     route(
       :get,
       '/.well-known/jwks.json',
-      well_known_route_handler
+      ->(_env) { [200, { 'Content-Type' => 'application/json' }, [JWKS.jwks_json]] }
     )
 
     @post_auth_page = File.read(File.join(__dir__, 'post_auth.html'))

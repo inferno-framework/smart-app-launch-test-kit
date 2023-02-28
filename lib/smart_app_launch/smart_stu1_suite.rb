@@ -33,7 +33,25 @@ module SMARTAppLaunch
       run_as_group
 
       group from: :smart_discovery
-      group from: :smart_standalone_launch
+      group from: :smart_standalone_launch,
+            config: {
+              inputs: {
+                client_auth_type: {
+                  options: {
+                    list_options: [
+                      {
+                        label: 'Public',
+                        value: 'public'
+                      },
+                      {
+                        label: 'Confidential Symmetric',
+                        value: 'confidential_symmetric'
+                      }
+                    ]
+                  }
+                }
+              }
+            }
 
       group from: :smart_openid_connect,
             config: {
@@ -96,7 +114,26 @@ module SMARTAppLaunch
 
       group from: :smart_discovery
 
-      group from: :smart_ehr_launch
+      group from: :smart_ehr_launch,
+            config: {
+              inputs: {
+                client_auth_type: {
+                  options: {
+                    list_options: [
+                      {
+                        label: 'Public',
+                        value: 'public'
+                      },
+                      {
+                        label: 'Confidential Symmetric',
+                        value: 'confidential_symmetric'
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+
 
       group from: :smart_openid_connect,
             config: {

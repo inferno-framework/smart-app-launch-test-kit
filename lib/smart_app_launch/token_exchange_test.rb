@@ -24,27 +24,6 @@ module SMARTAppLaunch
               {
                 label: 'Confidential Symmetric',
                 value: 'confidential_symmetric'
-              },
-              {
-                label: 'Confidential Asymmetric',
-                value: 'confidential_asymmetric'
-              }
-            ]
-          }
-
-    input :encryption_method,
-          title: 'Encryption Method (Confidential Asymmetric Client Auth Only)',
-          type: 'radio',
-          default: 'ES384',
-          options: {
-            list_options: [
-              {
-                label: 'ES384',
-                value: 'ES384'
-              },
-              {
-                label: 'RS384',
-                value: 'RS384'
               }
             ]
           }

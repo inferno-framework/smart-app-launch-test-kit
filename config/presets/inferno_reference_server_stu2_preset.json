@@ -41,6 +41,24 @@
       "value": null
     },
     {
+      "name": "encryption_method",
+      "value": "ES384",
+      "_title": "Encryption Method (Confidential Asymmetric Client Auth Only)",
+      "_type": "radio",
+      "_options": {
+        "list_options": [
+          {
+          "label": "ES384",
+          "value": "ES384"
+        },
+          {
+          "label": "RS384",
+          "value": "RS384"
+        }
+        ]
+      }
+    },
+    {
       "name": "client_auth_type",
       "value": "public",
       "_title": "Client Authentication Method",
@@ -50,15 +68,15 @@
           {
           "label": "Public",
           "value": "public"
-        },
-          {
-          "label": "Confidential Symmetric",
-          "value": "confidential_symmetric"
-        },
-          {
-          "label": "Confidential Asymmetric",
-          "value": "confidential_asymmetric"
-        }
+          },
+            {
+            "label": "Confidential Symmetric",
+            "value": "confidential_symmetric"
+          },
+            {
+            "label": "Confidential Asymmetric",
+            "value": "confidential_asymmetric"
+          }
         ]
       }
     }

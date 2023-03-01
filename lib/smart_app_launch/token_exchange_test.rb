@@ -1,3 +1,5 @@
+require_relative 'client_assertion_builder'
+
 module SMARTAppLaunch
   class TokenExchangeTest < Inferno::Test
     title 'OAuth token exchange request succeeds when supplied correct information'
@@ -26,6 +28,23 @@ module SMARTAppLaunch
               {
                 label: 'Confidential Asymmetric',
                 value: 'confidential_asymmetric'
+              }
+            ]
+          }
+
+    input :encryption_method,
+          title: 'Encryption Method (Confidential Asymmetric Client Auth Only)',
+          type: 'radio',
+          default: 'ES384',
+          options: {
+            list_options: [
+              {
+                label: 'ES384',
+                value: 'ES384'
+              },
+              {
+                label: 'RS384',
+                value: 'RS384'
               }
             ]
           }
@@ -62,9 +81,9 @@ module SMARTAppLaunch
       skip_if request.query_parameters['error'].present?, 'Error during authorization request'
 
       oauth2_params = {
-        grant_type: 'authorization_code',
         code: code,
-        redirect_uri: config.options[:redirect_uri]
+        redirect_uri: config.options[:redirect_uri],
+        grant_type: 'authorization_code'
       }
       oauth2_headers = { 'Content-Type' => 'application/x-www-form-urlencoded' }
 
@@ -77,7 +96,15 @@ module SMARTAppLaunch
       elsif client_auth_type == 'public'
         oauth2_params[:client_id] = client_id
       else
-        # TODO: handle asymmetric auth
+        oauth2_params.merge!(
+          client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+          client_assertion: ClientAssertionBuilder.build(
+            iss: client_id,
+            sub: client_id,
+            aud: smart_token_url,
+            encryption_method: encryption_method
+          )
+        )
       end
 
       if use_pkce == 'true'

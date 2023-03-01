@@ -1,10 +1,12 @@
+require 'jwt'
+
 module SMARTAppLaunch
   class JWKS
     class << self
       def jwks_json
         @jwks_json ||=
           JSON.pretty_generate(
-            { keys: jwks['keys'].select { |key| key['key_ops']&.include?('verify') } }
+            { keys: jwks.export[:keys].select { |key| key[:key_ops]&.include?('verify') } }
           )
       end
 
@@ -18,7 +20,7 @@ module SMARTAppLaunch
       end
 
       def jwks
-        @jwks ||= JSON.parse(File.read(jwks_path))
+        @jwks ||= JWT::JWK::Set.new(JSON.parse(File.read(jwks_path)))
       end
     end
   end

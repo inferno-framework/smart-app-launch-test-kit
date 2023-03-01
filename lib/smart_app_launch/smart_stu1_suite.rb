@@ -33,6 +33,16 @@ module SMARTAppLaunch
       launch_uri: "#{Inferno::Application['base_url']}/custom/smart/launch"
     }
 
+    description <<~DESCRIPTION
+      The SMART App Launch Test Suite verifies that servers correctly implement
+      the [SMART App Launch IG](http://hl7.org/fhir/smart-app-launch/1.0.0/).
+      To get started, please first register the Inferno client as a SMART App
+      with the following information:
+
+      * SMART Launch URI: `#{config.options[:launch_uri]}`
+      * OAuth Redirect URI: `#{config.options[:redirect_uri]}`
+    DESCRIPTION
+
     group do
       title 'Standalone Launch'
       id :smart_full_standalone_launch

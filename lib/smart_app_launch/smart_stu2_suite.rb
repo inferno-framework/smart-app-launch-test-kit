@@ -39,6 +39,21 @@ module SMARTAppLaunch
       post_authorization_uri: "#{Inferno::Application['base_url']}/custom/smart_stu2/post_auth"
     }
 
+    description <<~DESCRIPTION
+      The SMART App Launch Test Suite verifies that servers correctly implement
+      the [SMART App Launch IG](http://hl7.org/fhir/smart-app-launch/STU2/).
+      To get started, please first register the Inferno client as a SMART App
+      with the following information:
+
+      * SMART Launch URI: `#{config.options[:launch_uri]}`
+      * OAuth Redirect URI: `#{config.options[:redirect_uri]}`
+
+      If using asymmetric client authentication, register Inferno with the
+      following JWK Set Url:
+
+      * `#{Inferno::Application[:base_url]}/custom/smart_stu2/.well-known/jwks.json`
+    DESCRIPTION
+
     group do
       title 'Standalone Launch'
       id :smart_full_standalone_launch

@@ -48,13 +48,13 @@
       "_options": {
         "list_options": [
           {
-          "label": "ES384",
-          "value": "ES384"
-        },
+            "label": "ES384",
+            "value": "ES384"
+          },
           {
-          "label": "RS384",
-          "value": "RS384"
-        }
+            "label": "RS384",
+            "value": "RS384"
+          }
         ]
       }
     },
@@ -66,14 +66,14 @@
       "_options": {
         "list_options": [
           {
-          "label": "Public",
-          "value": "public"
+            "label": "Public",
+            "value": "public"
           },
-            {
+          {
             "label": "Confidential Symmetric",
             "value": "confidential_symmetric"
           },
-            {
+          {
             "label": "Confidential Asymmetric",
             "value": "confidential_asymmetric"
           }

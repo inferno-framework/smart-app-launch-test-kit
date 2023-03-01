@@ -63,17 +63,17 @@
       "_options": {
         "list_options": [
           {
-          "label": "Public",
-          "value": "public"
-        },
+            "label": "Public",
+            "value": "public"
+          },
           {
-          "label": "Confidential Symmetric",
-          "value": "confidential_symmetric"
-        },
+            "label": "Confidential Symmetric",
+            "value": "confidential_symmetric"
+          },
           {
-          "label": "Confidential Asymmetric",
-          "value": "confidential_asymmetric"
-        }
+            "label": "Confidential Asymmetric",
+            "value": "confidential_asymmetric"
+          }
         ]
       }
     },

@@ -1,5 +1,6 @@
 require_relative 'app_redirect_test_stu2'
 require_relative 'ehr_launch_group'
+require_relative 'token_exchange_stu2_test'
 
 module SMARTAppLaunch
   class EHRLaunchGroupSTU2 < EHRLaunchGroup
@@ -52,5 +53,10 @@ module SMARTAppLaunch
 
     redirect_index = children.find_index { |child| child.id.to_s.end_with? 'app_redirect' }
     children[redirect_index] = children.pop
+
+    test from: :smart_token_exchange_stu2
+
+    token_exchange_index = children.find_index { |child| child.id.to_s.end_with? 'token_exchange' }
+    children[token_exchange_index] = children.pop
   end
 end

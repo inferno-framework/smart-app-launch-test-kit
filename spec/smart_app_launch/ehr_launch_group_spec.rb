@@ -19,7 +19,8 @@ RSpec.describe SMARTAppLaunch::EHRLaunchGroup do
       smart_authorization_url: "#{url}/auth",
       smart_token_url: token_url,
       client_id: 'CLIENT_ID',
-      requested_scopes: 'launch/patient patient/*.*'
+      requested_scopes: 'launch/patient patient/*.*',
+      client_auth_type: 'public'
     }
   end
   let(:token_response) do

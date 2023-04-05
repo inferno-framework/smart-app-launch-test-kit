@@ -14,10 +14,16 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
     {
       code: 'CODE',
       smart_token_url: token_url,
-      client_id: 'CLIENT_ID'
+      client_id: 'CLIENT_ID',
+      client_auth_type: 'public'
     }
   end
-  let(:confidential_inputs) { public_inputs.merge(client_secret: 'CLIENT_SECRET') }
+  let(:confidential_inputs) do
+    public_inputs.merge(
+      client_secret: 'CLIENT_SECRET',
+      client_auth_type: 'confidential_symmetric'
+    )
+  end
 
   def run(runnable, inputs = {})
     test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)

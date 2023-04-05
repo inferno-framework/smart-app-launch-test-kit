@@ -1,5 +1,6 @@
 require 'tls_test_kit'
 
+require_relative 'jwks'
 require_relative 'version'
 require_relative 'discovery_stu1_group'
 require_relative 'standalone_launch_group'
@@ -21,14 +22,37 @@ module SMARTAppLaunch
       request.query_parameters['state']
     end
 
+    route(
+      :get,
+      '/.well-known/jwks.json',
+      ->(_env) { [200, { 'Content-Type' => 'application/json' }, [JWKS.jwks_json]] }
+    )
+
     config options: {
       redirect_uri: "#{Inferno::Application['base_url']}/custom/smart/redirect",
       launch_uri: "#{Inferno::Application['base_url']}/custom/smart/launch"
     }
 
+    description <<~DESCRIPTION
+      The SMART App Launch Test Suite verifies that servers correctly implement
+      the [SMART App Launch IG](http://hl7.org/fhir/smart-app-launch/1.0.0/).
+      To get started, please first register the Inferno client as a SMART App
+      with the following information:
+
+      * SMART Launch URI: `#{config.options[:launch_uri]}`
+      * OAuth Redirect URI: `#{config.options[:redirect_uri]}`
+    DESCRIPTION
+
     group do
       title 'Standalone Launch'
       id :smart_full_standalone_launch
+
+      input_instructions <<~INSTRUCTIONS
+        Please register the Inferno client as a SMART App with the following
+        information:
+
+        * OAuth Redirect URI: `#{config.options[:redirect_uri]}`
+      INSTRUCTIONS
 
       run_as_group
 
@@ -91,6 +115,14 @@ module SMARTAppLaunch
     group do
       title 'EHR Launch'
       id :smart_full_ehr_launch
+
+      input_instructions <<~INSTRUCTIONS
+        Please register the Inferno client as a SMART App with the following
+        information:
+
+        * SMART Launch URI: `#{config.options[:launch_uri]}`
+        * OAuth Redirect URI: `#{config.options[:redirect_uri]}`
+      INSTRUCTIONS
 
       run_as_group
 

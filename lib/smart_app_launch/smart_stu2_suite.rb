@@ -62,7 +62,6 @@ module SMARTAppLaunch
         Please register the Inferno client as a SMART App with the following
         information:
 
-        * SMART Launch URI: `#{config.options[:launch_uri]}`
         * OAuth Redirect URI: `#{config.options[:redirect_uri]}`
 
         If using asymmetric client authentication, register Inferno with the

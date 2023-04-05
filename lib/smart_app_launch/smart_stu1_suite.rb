@@ -47,6 +47,14 @@ module SMARTAppLaunch
       title 'Standalone Launch'
       id :smart_full_standalone_launch
 
+      input_instructions <<~INSTRUCTIONS
+        Please register the Inferno client as a SMART App with the following
+        information:
+
+        * SMART Launch URI: `#{config.options[:launch_uri]}`
+        * OAuth Redirect URI: `#{config.options[:redirect_uri]}`
+      INSTRUCTIONS
+
       run_as_group
 
       group from: :smart_discovery
@@ -108,6 +116,14 @@ module SMARTAppLaunch
     group do
       title 'EHR Launch'
       id :smart_full_ehr_launch
+
+      input_instructions <<~INSTRUCTIONS
+        Please register the Inferno client as a SMART App with the following
+        information:
+
+        * SMART Launch URI: `#{config.options[:launch_uri]}`
+        * OAuth Redirect URI: `#{config.options[:redirect_uri]}`
+      INSTRUCTIONS
 
       run_as_group
 

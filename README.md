@@ -2,7 +2,7 @@
 
 This is a collection of tests for the [SMART Application Launch Framework
 Implementation Guide](http://hl7.org/fhir/smart-app-launch/index.html) using the
-[Inferno FHIR testing tool](https://github.com/inferno-community/inferno-core).
+[Inferno Framework](https://inferno-framework.github.io/inferno-core/).
 
 ## Instructions
 
@@ -45,7 +45,7 @@ class MySuite < Inferno::TestSuite
   end
 
   group do
-    title 'Make some FHIR requests using SMART credentials'
+    title 'Make some HL7® FHIR® requests using SMART credentials'
 
     input :smart_credentials
 
@@ -213,3 +213,8 @@ Unless required by applicable law or agreed to in writing, software distributed
 under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
+
+## Trademark Notice
+
+HL7, FHIR and the FHIR [FLAME DESIGN] are the registered trademarks of Health
+Level Seven International and their use does not constitute endorsement by HL7.

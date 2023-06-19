@@ -2,7 +2,9 @@
 
 This is a collection of tests for the [SMART Application Launch Framework
 Implementation Guide](http://hl7.org/fhir/smart-app-launch/index.html) using the
-[Inferno Framework](https://inferno-framework.github.io/inferno-core/).
+[Inferno Framework](https://inferno-framework.github.io/inferno-core/), verifying
+that a server can provide authorization and/or authentication services to client 
+applications accessing HL7® FHIR® APIs.
 
 ## Instructions
 

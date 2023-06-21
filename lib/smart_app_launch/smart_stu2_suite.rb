@@ -40,11 +40,11 @@ module SMARTAppLaunch
     }
 
     description <<~DESCRIPTION
-    The SMART App Launch Test Suite verifies that systems correctly implement 
-    the [SMART App Launch IG](http://hl7.org/fhir/smart-app-launch/STU2/) 
-    for providing authorization and/or authentication services to client 
-    applications accessing HL7® FHIR® APIs. To get started, please first register 
-    the Inferno client as a SMART App with the following information:
+      The SMART App Launch Test Suite verifies that systems correctly implement 
+      the [SMART App Launch IG](http://hl7.org/fhir/smart-app-launch/STU2/) 
+      for providing authorization and/or authentication services to client 
+      applications accessing HL7® FHIR® APIs. To get started, please first register 
+      the Inferno client as a SMART App with the following information:
 
       * SMART Launch URI: `#{config.options[:launch_uri]}`
       * OAuth Redirect URI: `#{config.options[:redirect_uri]}`

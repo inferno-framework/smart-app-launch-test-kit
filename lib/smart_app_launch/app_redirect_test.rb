@@ -126,6 +126,8 @@ module SMARTAppLaunch
         oauth2_params
       )
 
+      info("Inferno redirecting browser to #{authorization_url}.")
+
       wait(
         identifier: state,
         message: wait_message(authorization_url)

@@ -1,3 +1,4 @@
+require_relative 'client_assertion_builder'
 require_relative 'token_exchange_test'
 
 module SMARTAppLaunch
@@ -29,9 +30,9 @@ module SMARTAppLaunch
             ]
           }
 
-    config(
-      inputs: {
-        client_auth_type: {
+    input :client_auth_type,
+          title: 'Client Authentication Method',
+          type: 'radio',
           options: {
             list_options: [
               {
@@ -48,8 +49,43 @@ module SMARTAppLaunch
               }
             ]
           }
+
+    config(
+      inputs: {
+        use_pkce: {
+          default: 'true',
+          options: {
+            list_options: [
+              {
+                label: 'Enabled',
+                value: 'true'
+              }
+            ]
+          }
         }
       }
     )
+
+    def add_credentials_to_request(oauth2_params, oauth2_headers)
+      if client_auth_type == 'confidential_symmetric'
+        assert client_secret.present?,
+               "A client secret must be provided when using confidential symmetric client authentication."
+
+        client_credentials = "#{client_id}:#{client_secret}"
+        oauth2_headers['Authorization'] = "Basic #{Base64.strict_encode64(client_credentials)}"
+      elsif client_auth_type == 'public'
+        oauth2_params[:client_id] = client_id
+      else
+        oauth2_params.merge!(
+          client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+          client_assertion: ClientAssertionBuilder.build(
+            iss: client_id,
+            sub: client_id,
+            aud: smart_token_url,
+            encryption_method: encryption_method
+          )
+        )
+      end
+    end
   end
 end

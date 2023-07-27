@@ -14,14 +14,12 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
     {
       code: 'CODE',
       smart_token_url: token_url,
-      client_id: 'CLIENT_ID',
-      client_auth_type: 'public'
+      client_id: 'CLIENT_ID'
     }
   end
   let(:confidential_inputs) do
     public_inputs.merge(
-      client_secret: 'CLIENT_SECRET',
-      client_auth_type: 'confidential_symmetric'
+      client_secret: 'CLIENT_SECRET'
     )
   end
 

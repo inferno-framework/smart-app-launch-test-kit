@@ -13,7 +13,7 @@ module SMARTAppLaunch
     )
     id :smart_token_exchange_stu2
 
-    input :encryption_method,
+    input :client_auth_encryption_method,
           title: 'Encryption Method (Confidential Asymmetric Client Auth Only)',
           type: 'radio',
           default: 'ES384',
@@ -82,7 +82,7 @@ module SMARTAppLaunch
             iss: client_id,
             sub: client_id,
             aud: smart_token_url,
-            encryption_method: encryption_method
+            client_auth_encryption_method: client_auth_encryption_method
           )
         )
       end

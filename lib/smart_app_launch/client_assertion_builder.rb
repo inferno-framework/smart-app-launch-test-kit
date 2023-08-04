@@ -11,7 +11,7 @@ module SMARTAppLaunch
     attr_reader :aud,
                 :client_assertion_type,
                 :content_type,
-                :encryption_method,
+                :client_auth_encryption_method,
                 :exp,
                 :grant_type,
                 :iss,
@@ -19,14 +19,14 @@ module SMARTAppLaunch
                 :sub
 
     def initialize(
-      encryption_method:,
+      client_auth_encryption_method:,
       iss:,
       sub:,
       aud:,
       exp: 5.minutes.from_now.to_i,
       jti: SecureRandom.hex(32)
     )
-      @encryption_method = encryption_method
+      @client_auth_encryption_method = client_auth_encryption_method
       @iss = iss
       @sub = sub
       @aud = aud
@@ -40,7 +40,7 @@ module SMARTAppLaunch
     def private_key
       @private_key ||=
         JWKS.jwks
-          .find { |key| key[:key_ops]&.include?('sign') && key[:alg] == encryption_method }
+          .find { |key| key[:key_ops]&.include?('sign') && key[:alg] == client_auth_encryption_method }
     end
 
     def jwt_payload
@@ -57,7 +57,7 @@ module SMARTAppLaunch
 
     def client_assertion
       @client_assertion ||=
-        JWT.encode jwt_payload, signing_key, encryption_method, { alg: encryption_method, kid:, typ: 'JWT' }
+        JWT.encode jwt_payload, signing_key, client_auth_encryption_method, { alg: client_auth_encryption_method, kid:, typ: 'JWT' }
     end
   end
 end

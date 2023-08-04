@@ -1,5 +1,3 @@
-require_relative 'client_assertion_builder'
-
 module SMARTAppLaunch
   class TokenExchangeTest < Inferno::Test
     title 'OAuth token exchange request succeeds when supplied correct information'
@@ -11,22 +9,6 @@ module SMARTAppLaunch
       RFC6749](https://tools.ietf.org/html/rfc6749#section-4.1.3).
     )
     id :smart_token_exchange
-
-    input :client_auth_type,
-          title: 'Client Authentication Method',
-          type: 'radio',
-          options: {
-            list_options: [
-              {
-                label: 'Public',
-                value: 'public'
-              },
-              {
-                label: 'Confidential Symmetric',
-                value: 'confidential_symmetric'
-              }
-            ]
-          }
 
     input :code,
           :smart_token_url,
@@ -56,6 +38,15 @@ module SMARTAppLaunch
 
     config options: { redirect_uri: "#{Inferno::Application['base_url']}/custom/smart/redirect" }
 
+    def add_credentials_to_request(oauth2_params, oauth2_headers)
+      if client_secret.present?
+        client_credentials = "#{client_id}:#{client_secret}"
+        oauth2_headers['Authorization'] = "Basic #{Base64.strict_encode64(client_credentials)}"
+      else
+        oauth2_params[:client_id] = client_id
+      end
+    end
+
     run do
       skip_if request.query_parameters['error'].present?, 'Error during authorization request'
 
@@ -66,25 +57,7 @@ module SMARTAppLaunch
       }
       oauth2_headers = { 'Content-Type' => 'application/x-www-form-urlencoded' }
 
-      if client_auth_type == 'confidential_symmetric'
-        assert client_secret.present?,
-               "A client secret must be provided when using confidential symmetric client authentication."
-
-        client_credentials = "#{client_id}:#{client_secret}"
-        oauth2_headers['Authorization'] = "Basic #{Base64.strict_encode64(client_credentials)}"
-      elsif client_auth_type == 'public'
-        oauth2_params[:client_id] = client_id
-      else
-        oauth2_params.merge!(
-          client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
-          client_assertion: ClientAssertionBuilder.build(
-            iss: client_id,
-            sub: client_id,
-            aud: smart_token_url,
-            encryption_method: encryption_method
-          )
-        )
-      end
+      add_credentials_to_request(oauth2_params, oauth2_headers)
 
       if use_pkce == 'true'
         oauth2_params[:code_verifier] = pkce_code_verifier

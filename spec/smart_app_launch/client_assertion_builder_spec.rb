@@ -1,7 +1,7 @@
 require_relative '../../lib/smart_app_launch/client_assertion_builder'
 
 RSpec.describe SMARTAppLaunch::ClientAssertionBuilder do
-  let(:encryption_methods) { ['ES384', 'RS384'] }
+  let(:client_auth_encryption_methods) { ['ES384', 'RS384'] }
   let(:iss) { 'ISS' }
   let(:sub) { 'SUB' }
   let(:aud) { 'AUD' }
@@ -9,12 +9,12 @@ RSpec.describe SMARTAppLaunch::ClientAssertionBuilder do
 
   describe '.build' do
     it 'creates a valid JWT' do
-      encryption_methods.each do |encryption_method|
-        jwt = described_class.build(encryption_method:, iss:, sub:, aud:)
+      client_auth_encryption_methods.each do |client_auth_encryption_method|
+        jwt = described_class.build(client_auth_encryption_method:, iss:, sub:, aud:)
 
-        payload, header = JWT.decode(jwt, nil, true, algorithms: [encryption_method], jwks:)
+        payload, header = JWT.decode(jwt, nil, true, algorithms: [client_auth_encryption_method], jwks:)
 
-        expect(header['alg']).to eq(encryption_method)
+        expect(header['alg']).to eq(client_auth_encryption_method)
         expect(header['typ']).to eq('JWT')
         expect(payload['iss']).to eq(iss)
         expect(payload['sub']).to eq(sub)

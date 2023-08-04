@@ -41,7 +41,7 @@
       "value": null
     },
     {
-      "name": "encryption_method",
+      "name": "client_auth_encryption_method",
       "value": "ES384",
       "_title": "Encryption Method (Confidential Asymmetric Client Auth Only)",
       "_type": "radio",

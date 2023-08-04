@@ -1,3 +1,10 @@
+# 0.3.0
+
+* Add support for asymmetric client auth to SMART v2.
+* Add a message to the test result when redirecting the user to the auth
+  endpoint.
+* Use `docker compose` instead of `docker-compose`.
+
 # 0.2.2
 
 * Fix typos and launch test description.

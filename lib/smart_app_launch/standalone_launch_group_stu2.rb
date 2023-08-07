@@ -54,5 +54,7 @@ module SMARTAppLaunch
 
     token_exchange_index = children.find_index { |child| child.id.to_s.end_with? 'token_exchange' }
     children[token_exchange_index] = children.pop
+
+    children[token_exchange_index].id('smart_token_exchange')
   end
 end

@@ -18,3 +18,5 @@
 /docs/yard
 .yardoc
 node_modules
+
+.byebug_history

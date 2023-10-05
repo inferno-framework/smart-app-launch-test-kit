@@ -21,6 +21,10 @@ module SMARTAppLaunch
       run do
         headers = {'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded'}
         body = "token=#{standalone_access_token}"
+        unless client_secret.blank?
+          body += "&client_id=#{client_id}&client_secret=#{client_secret}"
+        end
+        puts 'Body = ' + body
         post(token_introspection_endpoint, body: body, headers: headers)
         assert_response_status(200)
       end

@@ -33,3 +33,7 @@ services:
     extends:
       file: docker-compose.background.yml
       service: redis
+  keycloak:
+    extends:
+      file: docker-compose.background.yml
+      service: keycloak

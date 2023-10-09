@@ -4,24 +4,30 @@ module SMARTAppLaunch
     description %(TODO)
     id :token_introspection_test_group
 
+
     test do
       title 'Token introspection endpoint returns correct response for valid token'
       input :token_introspection_base_url,
             :token_introspection_endpoint,
             :client_id
       input :client_secret, optional: true
-      input :standalone_access_token
+      input :access_token
       output :token_introspection_url
 
       http_client do
         url :token_introspection_base_url
       end
 
+      def test_content_fields(field_name, intr_val, access_val)
+        error_msg = "Failure: expected introspection response value for '#{field_name}', #{intr_val}, to match corresponding value in original access token, #{access_val}"
+        assert intr_val == access_val, error_msg
+      end 
+
       run do
         begin
-          payload, header =
+          access_token_payload, access_token_header =
             JWT.decode(
-              standalone_access_token,
+              access_token,
               nil,
               false
             )
@@ -31,7 +37,7 @@ module SMARTAppLaunch
         end
 
         headers = {'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded'}
-        body = "token=#{standalone_access_token}"
+        body = "token=#{access_token}"
         unless client_secret.blank?
           body += "&client_id=#{client_id}&client_secret=#{client_secret}"
         end
@@ -42,15 +48,11 @@ module SMARTAppLaunch
 
         # check contents
         introspection_response_body = JSON.parse(request.response_body)
-        active_value = introspection_response_body['active']
-        client_id_value = introspection_response_body['client_id']
-        scope_value = introspection_response_body['scope']
-        exp_value = introspection_response_body['exp']
 
-        assert active_value == true, 'Failure: active not set to true for valid token'
-        assert client_id_value == payload['client_id'], 'Failure: client_id field does not match between introspection response and original access token'
-        assert scope_value == payload['scope'], 'Failure: scope field does not match between introspection response and original access token'
-        assert exp_value == payload['exp'], 'Failure: exp field does not match between introspection response and original access token'
+        assert introspection_response_body['active'] == true, "Failure: expected introspection response for 'active' to be true for valid token"
+        test_content_fields('client_id', introspection_response_body['client_id'], access_token_payload['client_id'])
+        test_content_fields('scope', introspection_response_body['scope'], access_token_payload['scope'])
+        test_content_fields('exp', introspection_response_body['exp'], access_token_payload['exp'])
       end
     end
 
@@ -61,7 +63,7 @@ module SMARTAppLaunch
             :token_introspection_endpoint,
             :client_id
       input :client_secret, optional: true
-      input :standalone_access_token
+      input :access_token
       output :token_introspection_url
 
       http_client do

@@ -1,3 +1,6 @@
+require_relative 'token_exchange_test'
+require_relative 'token_refresh_body_test'
+
 module SMARTAppLaunch
   class TokenIntrospectionTestGroup < Inferno::TestGroup
     title 'Token Introspection Group'
@@ -32,22 +35,49 @@ module SMARTAppLaunch
       title 'Token introspection endpoint returns correct response for valid token'
       input :client_id, default: DEFAULT_CLIENT_ID
       input :client_secret, optional: true, default: DEFAULT_CLIENT_SECRET
+      input :access_token_source, 
+            title: 'Source of access token to introspect',
+            type: 'radio',
+            default: 'new',
+            options: {
+              list_options: [
+                {
+                  label: 'New Request',
+                  value: 'new'
+                },
+                {
+                  label: 'Reuse from Standalone Launch Test',
+                  value: 'standalone_launch_test'
+                },
+                {
+                  label: 'Reuse from EHR Launch Test',
+                  value: 'ehr_launch_test'
+                }
+              ]
+            }
+
+      input :standalone_access_token, optional: true, locked: true
+      input :ehr_access_token, optional: true, locked: true
+
+
+      # Keycloak will not include an ID token with its access token response unless this is included
       input :openid_scope, 
             title: 'Include "scope=openid" field',
-                type: 'radio',
-                default: 'true',
-                options: {
-                  list_options: [
-                    {
-                      label: 'Yes',
-                      value: 'true'
-                    },
-                    {
-                      label: 'No',
-                      value: 'false'
-                    }
-                  ]
+            description: 'Whether or not to include scope=openid in new access token request, which is required for some auth servers to return an id token with access token response',
+            type: 'radio',
+            default: 'true',
+            options: {
+              list_options: [
+                {
+                  label: 'Yes',
+                  value: 'true'
+                },
+                {
+                  label: 'No',
+                  value: 'false'
                 }
+              ]
+            }
       output :access_token_response
       output :access_token_payload
 
@@ -57,23 +87,30 @@ module SMARTAppLaunch
       end 
 
       run do
-        tok_req_headers = {'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded'}
-        tok_req_body = "grant_type=client_credentials"
-        if openid_scope == 'true'
-          tok_req_body+="&scope=openid"
+        if access_token_source == 'new'
+          tok_req_headers = {'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded'}
+          tok_req_body = "grant_type=client_credentials"
+          if openid_scope == 'true'
+            tok_req_body+="&scope=openid"
+          end
+          tok_req_headers, tok_req_body = add_credentials(tok_req_headers, tok_req_body, client_id, client_secret)
+          post(token_endpoint, body: tok_req_body, headers: tok_req_headers)
+          assert_response_status(200)
+          assert_valid_json(request.response_body)
+          output access_token_response: JSON.parse(request.response_body)
+          intr_access_token = access_token_response['access_token']
+        elsif access_token_source == 'standalone_launch_test'
+          intr_access_token = standalone_access_token
+        elsif access_token_source == 'ehr_launch_test'
+          intr_access_token = ehr_access_token
         end
-        tok_req_headers, tok_req_body = add_credentials(tok_req_headers, tok_req_body, client_id, client_secret)
-        post(token_endpoint, body: tok_req_body, headers: tok_req_headers)
-        assert_response_status(200)
-        assert_valid_json(request.response_body)
-        output access_token_response: JSON.parse(request.response_body)
 
-        access_token = access_token_response['access_token']
-        
+        # Note this will fail with reference server implementation because it does not return a valid JWT, just
+        # a random string 
         begin
           access_token_payload, access_token_header =
             JWT.decode(
-              access_token,
+              intr_access_token,
               nil,
               false
             )
@@ -83,7 +120,7 @@ module SMARTAppLaunch
         end
 
         headers = {'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded'}
-        body = "token=#{access_token}"
+        body = "token=#{intr_access_token}"
         headers, body = add_credentials(headers, body, client_id, client_secret)
 
         post(token_introspection_endpoint, body: body, headers: headers)

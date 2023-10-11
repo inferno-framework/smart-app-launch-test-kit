@@ -16,6 +16,8 @@ module SMARTAppLaunch
     input :token_introspection_base_url, default: DEFAULT_INTR_BASE_URL
     input :token_endpoint, default: DEFAULT_TOKEN_ENDPOINT
     input :token_introspection_endpoint, default: DEFAULT_INTR_ENDPOINT
+    input :client_id, default: DEFAULT_CLIENT_ID
+    input :client_secret, optional: true, default: DEFAULT_CLIENT_SECRET
 
     http_client do
       url :token_introspection_base_url
@@ -150,26 +152,21 @@ module SMARTAppLaunch
       end
     end
 
-    # test do 
-    #   title 'Token introspection endpoint returns correct response for invalid token'
-    #   # TODO fix duplicated code
-    #   input :token_introspection_base_url,
-    #         :token_introspection_endpoint,
-    #         :client_id
-    #   input :client_secret, optional: true
-    #   input :access_token
-    #   output :token_introspection_url
+    test do 
+      title 'Token introspection endpoint returns correct response for invalid token with valid client ID'
 
-    #   http_client do
-    #     url :token_introspection_base_url
-    #   end
-
-    #   run do
-    #     headers = {'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded'}
-    #     body = "token=#{'fake_token_value'}"
-    #     post(token_introspection_endpoint, body: body, headers: headers)
-    #     assert_response_status(401)
-    #   end
-    # end
+      run do
+        headers = {'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded'}
+        body = "token=invalid_token_value"
+        headers, body = add_credentials(headers, body, client_id, client_secret)
+        post(token_introspection_endpoint, body: body, headers: headers)
+        
+        assert_response_status(200)
+        assert_valid_json(request.response_body)
+        introspection_response_body = JSON.parse(request.response_body)
+        assert introspection_response_body['active'] == false, "Failure: expected introspection response for 'active' to be false for invalid token"
+        assert introspection_response_body.size == 1, "Failure: expected only 'active' field to be present in introspection response for invalid token"
+      end
+    end
   end
 end

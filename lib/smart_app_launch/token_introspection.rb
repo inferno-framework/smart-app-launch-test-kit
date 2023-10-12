@@ -150,7 +150,7 @@ module SMARTAppLaunch
           intr_access_token = ehr_access_token
         end
 
-        # Note this will fail with reference server implementation because it does not return a valid JWT, just
+        # Note this will fail with current reference server implementation because it does not return a valid JWT, just
         # a random string 
         begin
           access_token_payload, access_token_header =
@@ -178,16 +178,27 @@ module SMARTAppLaunch
         # required fields for all
         assert introspection_response_body['active'] == true, "Failure: expected introspection response for 'active' to be true for valid token"
         test_content_fields('client_id', introspection_response_body['client_id'], access_token_payload['client_id'])
-        # scope test should also account for condtional inclusion of launch context parameter(s), as they would be part of scope
+        # TODO need to test scope details more thoroughly 
         test_content_fields('scope', introspection_response_body['scope'], access_token_payload['scope'])
         test_content_fields('exp', introspection_response_body['exp'], access_token_payload['exp'])
 
         # conditional fields based on access token
-        if access_token_payload.has_key?('id_token')
+        id_token_check = access_token_payload.has_key?('id_token')
+        if id_token_check == true
           id_token_payload, id_token_header = JWT.decode(access_token_payload['id_token'], nil, false)
-          test_content_fields('iss', introspection_response_body['iss'], id_token_payload['iss'])
-          test_content_fields('sub', introspection_response_body['sub'], id_token_payload['sub'])
-          # create warning/info for fhir user - should be a field in introspection response if id_token in access token
+          assert introspection_response_body.has_key?('iss'), 
+            "Failure: introspection response must have 'iss' claim because ID token was included in original access token response"
+          assert introspection_response_body.has_key?('sub'),
+            "Failure: introspection response must have 'sub' claim because ID token was included in original access token response"
+        end
+
+        # could not get message to display when info block included as part of prior if block
+        if id_token_check == true and introspection_response_body.has_key?('fhirUser')
+          skip_info_msg = true
+        end 
+        info do
+          assert skip_info_msg == true, 
+          'Identity token was returned with original access token response, but no fhirUser claim found in introspection response'
         end
       end
     end

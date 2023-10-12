@@ -4,7 +4,27 @@ require_relative 'token_refresh_body_test'
 module SMARTAppLaunch
   class TokenIntrospectionTestGroup < Inferno::TestGroup
     title 'Token Introspection Group'
-    description %(TODO)
+    description %(
+      # Background
+      OAuth 2.0 Token introspection, as described in [RFC-7662](https://datatracker.ietf.org/doc/html/rfc7662), allows
+      an authorized resource server to query an OAuth 2.0 authorization server for metadata on a token.  The
+      [SMART App Launch STU 2.1 Implementation Guide Section on Token Introspection](https://hl7.org/fhir/smart-app-launch/token-introspection.html)
+      states that "SMART on FHIR EHRs SHOULD support token introspection, which allows a broader ecosystem of resource servers
+      to leverage authorization decisions managed by a single authorization server."
+
+      # Test Methodology
+      For these tests, Inferno acts as an authorized resource server that queries the authorization server about an access 
+      token, rather than a client to a FHIR resource server as in the previous SMART App Launch tests.  The tests will 
+      create a request to the authorization server's token introspection endpoint and validate the introspection response.
+
+      The means of discovery of the token introspection endpoint are outside the scope of the RFC-7662 specification.
+      As such, Inferno makes no assumptions that that the introspection endpoint is included in the `.well-known` endpoint query and leaves it to be input by the user. 
+      
+      To complete the tests, Inferno should be registered with the authorization server as an authorized resource server
+      capable of accessing the token introspection endpoint.  RFC-7662 requires "some form of authorization" to access
+      the token endpoint but does specifiy any one specific approach.  
+      )
+
     id :token_introspection_test_group
 
     DEFAULT_INTR_BASE_URL = 'http://keycloak_auth_server:8080/realms/inferno'
@@ -14,7 +34,6 @@ module SMARTAppLaunch
     DEFAULT_CLIENT_SECRET = 'lLICFElPPfdcRQGnUcFjqAWexB1T6pqb'
 
     input :token_introspection_base_url, default: DEFAULT_INTR_BASE_URL
-    input :token_endpoint, default: DEFAULT_TOKEN_ENDPOINT
     input :token_introspection_endpoint, default: DEFAULT_INTR_ENDPOINT
     input :client_id, default: DEFAULT_CLIENT_ID
     input :client_secret, optional: true, default: DEFAULT_CLIENT_SECRET
@@ -34,9 +53,30 @@ module SMARTAppLaunch
     end
 
     test do
-      title 'Token introspection endpoint returns correct response for valid token'
-      input :client_id, default: DEFAULT_CLIENT_ID
-      input :client_secret, optional: true, default: DEFAULT_CLIENT_SECRET
+      title 'Token introspection endpoint returns correct response for active token'
+      description %(
+      This test will check whether the metadata in the token introspection response is correct for an active token and that the response data matches the data in the original access token and/or access token response from the authorization server, including the following:
+      
+      Required:
+      *  `active` claim is set to true 
+      * `scope`, `client_id`, and `exp` claim(s) match between introspection response and access token
+
+      Conditionally Required:
+      * IF launch context parameter(s) included in access token, introspection response includes claim(s) for launch context parameter(s) 
+      * IF identity token was included as part of access token response, `iss` and `sub` claims are present in introspection response
+
+      Optional but Recommended:
+      * IF identity token was included as part of access token response, `fhirUser` claim SHOULD be present in introspection response
+        
+      Per [RFC-7662](https://datatracker.ietf.org/doc/html/rfc7662#section-2), "the definition of an active token is currently dependent upon the authorization
+      server, but his is commonly a token that has been issued by this authorization server, is not expired, has not been
+      revoked, and is valid for use at the protected resource making the introspection call."
+
+      Inferno can either reuse an access token received from a prior SMART App Launch test or request a new one as part of the introspection test. It is up to the user's understanding of their setup to configure the tests such that an active token is provided to the introspection endpoint.
+
+      TODO - provide more configuration options for creating an new access token request.  
+      )
+      
       input :access_token_source, 
             title: 'Source of access token to introspect',
             type: 'radio',
@@ -57,7 +97,10 @@ module SMARTAppLaunch
                 }
               ]
             }
-
+      input :token_endpoint, 
+            optional: true, 
+            default: DEFAULT_TOKEN_ENDPOINT,
+            description: 'Only required if selecting to request a new access token'
       input :standalone_access_token, optional: true, locked: true
       input :ehr_access_token, optional: true, locked: true
 
@@ -65,7 +108,7 @@ module SMARTAppLaunch
       # Keycloak will not include an ID token with its access token response unless this is included
       input :openid_scope, 
             title: 'Include "scope=openid" field',
-            description: 'Whether or not to include scope=openid in new access token request, which is required for some auth servers to return an id token with access token response',
+            description: %(Whether or not to include scope=openid in new access token request, which is required for some auth servers to return an id token with access token response),
             type: 'radio',
             default: 'true',
             options: {
@@ -141,11 +184,8 @@ module SMARTAppLaunch
 
         # conditional fields based on access token
         if access_token_payload.has_key?('id_token')
-          # decode token
           id_token_payload, id_token_header = JWT.decode(access_token_payload['id_token'], nil, false)
-          # check for introspection response iss to match id token iss
           test_content_fields('iss', introspection_response_body['iss'], id_token_payload['iss'])
-          # check for introspection response sub to match id token sub
           test_content_fields('sub', introspection_response_body['sub'], id_token_payload['sub'])
           # create warning/info for fhir user - should be a field in introspection response if id_token in access token
         end
@@ -154,6 +194,10 @@ module SMARTAppLaunch
 
     test do 
       title 'Token introspection endpoint returns correct response for invalid token with valid client ID'
+      description %(
+        This test will query the introspection endpoint and provide an invalid token in the form of a hardcoded string value.
+        The authorization server must return a 200 OK status and have a response with no other data except an `active` claim, which must be set to false. 
+      )
 
       run do
         headers = {'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded'}

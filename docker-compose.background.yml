@@ -36,4 +36,8 @@ services:
     environment:
       - KEYCLOAK_ADMIN=admin 
       - KEYCLOAK_ADMIN_PASSWORD=admin
-    command: start-dev
+    command: ["start-dev", "--import-realm"]
+    profiles:
+      - keycloak
+    volumes:
+      - ./config/keycloak:/opt/keycloak/data/import

@@ -691,7 +691,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "**********",
+      "secret": "lLICFElPPfdcRQGnUcFjqAWexB1T6pqb",
       "redirectUris": [
         "http://host.docker.internal/custom/smart_stu2/redirect",
         "http://localhost/custom/smart_stu2/launch"
@@ -777,50 +777,7 @@
         "phone",
         "offline_access",
         "microprofile-jwt"
-      ],
-      "authorizationSettings": {
-        "allowRemoteResourceManagement": true,
-        "policyEnforcementMode": "ENFORCING",
-        "resources": [
-          {
-            "name": "Default Resource",
-            "type": "urn:inferno_client_confidential:resources:default",
-            "ownerManagedAccess": false,
-            "attributes": {},
-            "_id": "c375ed38-5c8c-474a-93ab-2aea9f491eae",
-            "uris": [
-              "/*"
-            ]
-          }
-        ],
-        "policies": [
-          {
-            "id": "326a7723-bcdf-414d-b146-678db968419b",
-            "name": "Default Policy",
-            "description": "A policy that grants access only for users within this realm",
-            "type": "js",
-            "logic": "POSITIVE",
-            "decisionStrategy": "AFFIRMATIVE",
-            "config": {
-              "code": "// by default, grants any permission associated with this policy\n$evaluation.grant();\n"
-            }
-          },
-          {
-            "id": "2b6f74e9-a7bb-496b-b957-f91b51dfb08d",
-            "name": "Default Permission",
-            "description": "A permission that applies to the default resource type",
-            "type": "resource",
-            "logic": "POSITIVE",
-            "decisionStrategy": "UNANIMOUS",
-            "config": {
-              "defaultResourceType": "urn:inferno_client_confidential:resources:default",
-              "applyPolicies": "[\"Default Policy\"]"
-            }
-          }
-        ],
-        "scopes": [],
-        "decisionStrategy": "UNANIMOUS"
-      }
+      ]
     },
     {
       "id": "f3db67d2-caa1-418d-9e24-c289cb788f60",

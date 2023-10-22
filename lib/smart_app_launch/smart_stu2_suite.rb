@@ -7,6 +7,7 @@ require_relative 'standalone_launch_group_stu2'
 require_relative 'ehr_launch_group_stu2'
 require_relative 'openid_connect_group'
 require_relative 'token_refresh_group'
+require_relative 'token_introspection'
 
 module SMARTAppLaunch
   class SMARTSTU2Suite < Inferno::TestSuite
@@ -203,6 +204,21 @@ module SMARTAppLaunch
                 smart_credentials: { name: :ehr_smart_credentials }
               }
             }
+    end
+  
+    # TBD - group token introspection? 
+    group do
+      title 'Token Introspection'
+      id :smart_token_introspection
+
+      input_instructions <<~INSTRUCTIONS
+        TODO: Instructions for token introspection go here!
+      INSTRUCTIONS
+      
+      group from: :token_introspection_test_group
+
+      run_as_group
+
     end
   end
 end

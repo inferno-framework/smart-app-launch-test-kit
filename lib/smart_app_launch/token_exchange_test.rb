@@ -33,6 +33,7 @@ module SMARTAppLaunch
     input :pkce_code_verifier, optional: true
     output :token_retrieval_time
     output :smart_credentials
+    output :token_response
     uses_request :redirect
     makes_request :token
 
@@ -70,6 +71,8 @@ module SMARTAppLaunch
 
       output token_retrieval_time: Time.now.iso8601
 
+      output token_response: request.response_body
+
       token_response_body = JSON.parse(request.response_body)
       output smart_credentials: {
                refresh_token: token_response_body['refresh_token'],
@@ -80,6 +83,7 @@ module SMARTAppLaunch
                token_retrieval_time: token_retrieval_time,
                token_url: smart_token_url
              }.to_json
+      
     end
   end
 end

@@ -7,7 +7,8 @@ require_relative 'standalone_launch_group_stu2'
 require_relative 'ehr_launch_group_stu2'
 require_relative 'openid_connect_group'
 require_relative 'token_refresh_group'
-require_relative 'token_introspection'
+require_relative 'token_introspection_request_group'
+require_relative 'token_introspection_response_group'
 
 module SMARTAppLaunch
   class SMARTSTU2Suite < Inferno::TestSuite
@@ -210,14 +211,38 @@ module SMARTAppLaunch
     group do
       title 'Token Introspection'
       id :smart_token_introspection
+      description %(
+        # Background
+        OAuth 2.0 Token introspection, as described in [RFC-7662](https://datatracker.ietf.org/doc/html/rfc7662), allows
+        an authorized resource server to query an OAuth 2.0 authorization server for metadata on a token.  The
+        [SMART App Launch STU 2.1 Implementation Guide Section on Token Introspection](https://hl7.org/fhir/smart-app-launch/token-introspection.html)
+        states that "SMART on FHIR EHRs SHOULD support token introspection, which allows a broader ecosystem of resource servers
+        to leverage authorization decisions managed by a single authorization server."
+  
+        # Test Methodology
+        For these tests, Inferno acts as an authorized resource server that queries the authorization server about an access 
+        token, rather than a client to a FHIR resource server as in the previous SMART App Launch tests.  By default, 
+        Inferno will aim to introspect the access token from the Standalone Launch tests, but this can be changed with the test inputs. 
+        
+        Ideally, Inferno should be registered with the authorization server as an authorized resource server
+        capable of accessing the token introspection endpoint through client credentials, per the SMART IG recommendations.  
+        However, the SMART IG only formally REQUIRES "some form of authorization" to access
+        the token endpoint and does specifiy any one specific approach.  As such, the token introspection tests are 
+        broken up into two groups that can be run indepndently:
+
+        1. Tests that complete the introspection request(s)
+        2. Tests that validate the contents of the introspection response(s)
+
+        If needed, the introspection request group can be run out of band from the introspection respone validation group
+        to accommodate non-standard authorization approaches to secure the token endpoint.  
+      )
 
       input_instructions <<~INSTRUCTIONS
         TODO: Instructions for token introspection go here!
       INSTRUCTIONS
       
-      group from: :token_introspection_test_group
-
-      run_as_group
+      group from: :token_introspection_request_group
+      group from: :token_introspection_response_group
 
     end
   end

@@ -2,30 +2,19 @@ require_relative 'token_exchange_test'
 require_relative 'token_refresh_body_test'
 
 module SMARTAppLaunch
-  class TokenIntrospectionTestGroup < Inferno::TestGroup
-    title 'Token Introspection Group'
+  class TokenIntrospectionRequestGroup < Inferno::TestGroup
+    title 'Token Introspection Request'
+    run_as_group
+
+    id :token_introspection_request_group
     description %(
-      # Background
-      OAuth 2.0 Token introspection, as described in [RFC-7662](https://datatracker.ietf.org/doc/html/rfc7662), allows
-      an authorized resource server to query an OAuth 2.0 authorization server for metadata on a token.  The
-      [SMART App Launch STU 2.1 Implementation Guide Section on Token Introspection](https://hl7.org/fhir/smart-app-launch/token-introspection.html)
-      states that "SMART on FHIR EHRs SHOULD support token introspection, which allows a broader ecosystem of resource servers
-      to leverage authorization decisions managed by a single authorization server."
+      This group of tests executes the token introspection requests and ensures the correct HTTP response is returned
+      but does not validate the contents of the token introspection response. 
 
-      # Test Methodology
-      For these tests, Inferno acts as an authorized resource server that queries the authorization server about an access 
-      token, rather than a client to a FHIR resource server as in the previous SMART App Launch tests.  The tests will 
-      create a request to the authorization server's token introspection endpoint and validate the introspection response.
-
-      The means of discovery of the token introspection endpoint are outside the scope of the RFC-7662 specification.
-      As such, Inferno makes no assumptions that that the introspection endpoint is included in the `.well-known` endpoint query and leaves it to be input by the user. 
-      
-      To complete the tests, Inferno should be registered with the authorization server as an authorized resource server
-      capable of accessing the token introspection endpoint.  RFC-7662 requires "some form of authorization" to access
-      the token endpoint but does specifiy any one specific approach.  
+      If Inferno cannot reasonably be configured to be authorized to access the token introspectione endpoint, these tests 
+      can be skipped.  Instead, an out of band token introspection request must be completed and the response body
+      provided as input for the next test group.  
       )
-
-    id :token_introspection_test_group
 
     DEFAULT_INTR_BASE_URL = 'http://localhost:8080/reference-server/'
     DEFAULT_TOKEN_ENDPOINT = 'protocol/openid-connect/token'
@@ -53,7 +42,7 @@ module SMARTAppLaunch
     end
 
     test do
-      title 'Token introspection endpoint returns correct response for active token'
+      title 'Token introspection endpoint returns a response when provided an active token'
       description %(
       This test will check whether the metadata in the token introspection response is correct for an active token and that the response data matches the data in the original access token and/or access token response from the authorization server, including the following:
       
@@ -204,7 +193,7 @@ module SMARTAppLaunch
     end
 
     test do 
-      title 'Token introspection endpoint returns correct response for invalid token with valid client ID'
+      title 'Token introspection endpoint returns a response when provided an invalid token'
       description %(
         This test will query the introspection endpoint and provide an invalid token in the form of a hardcoded string value.
         The authorization server must return a 200 OK status and have a response with no other data except an `active` claim, which must be set to false. 

@@ -221,14 +221,14 @@ module SMARTAppLaunch
         to leverage authorization decisions managed by a single authorization server."
   
         # Test Methodology
-        
+
         In these tests, Inferno acts as an authorized resource server that queries the authorization server about an access 
         token, rather than a client to a FHIR resource server as in the previous SMART App Launch tests.  
 
         Ideally, Inferno should be registered with the authorization server as an authorized resource server
         capable of accessing the token introspection endpoint through client credentials, per the SMART IG recommendations.  
         However, the SMART IG only formally REQUIRES "some form of authorization" to access
-        the token endpoint and does specifiy any one specific approach.  As such, the token introspection tests are 
+        the token introspection endpoint and does specifiy any one specific approach.  As such, the token introspection tests are 
         broken up into two groups that can be run independently:
 
         1. Token Introspection Request group - completes the introspection requests
@@ -245,13 +245,9 @@ module SMARTAppLaunch
         b. Skip the Token Introspection Request tests altogether and manually run the required access token AND introspection
         requests out-of-band to complete the Token Introspection Response tests.  Given the extent of manual steps
         and inputs required, we recommend this option only if it is not possible for the Inferno client to access the
-        token introspection.
+        token introspection endpoint.
       
       )
-
-      input_instructions <<~INSTRUCTIONS
-        TODO: Instructions for token introspection go here!
-      INSTRUCTIONS
       
       group from: :token_introspection_request_group
       group from: :token_introspection_response_group

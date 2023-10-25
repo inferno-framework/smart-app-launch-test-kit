@@ -213,6 +213,7 @@ module SMARTAppLaunch
       id :smart_token_introspection
       description %(
         # Background
+
         OAuth 2.0 Token introspection, as described in [RFC-7662](https://datatracker.ietf.org/doc/html/rfc7662), allows
         an authorized resource server to query an OAuth 2.0 authorization server for metadata on a token.  The
         [SMART App Launch STU 2.1 Implementation Guide Section on Token Introspection](https://hl7.org/fhir/smart-app-launch/token-introspection.html)
@@ -220,21 +221,32 @@ module SMARTAppLaunch
         to leverage authorization decisions managed by a single authorization server."
   
         # Test Methodology
-        For these tests, Inferno acts as an authorized resource server that queries the authorization server about an access 
-        token, rather than a client to a FHIR resource server as in the previous SMART App Launch tests.  By default, 
-        Inferno will aim to introspect the access token from the Standalone Launch tests, but this can be changed with the test inputs. 
         
+        In these tests, Inferno acts as an authorized resource server that queries the authorization server about an access 
+        token, rather than a client to a FHIR resource server as in the previous SMART App Launch tests.  
+
         Ideally, Inferno should be registered with the authorization server as an authorized resource server
         capable of accessing the token introspection endpoint through client credentials, per the SMART IG recommendations.  
         However, the SMART IG only formally REQUIRES "some form of authorization" to access
         the token endpoint and does specifiy any one specific approach.  As such, the token introspection tests are 
-        broken up into two groups that can be run indepndently:
+        broken up into two groups that can be run independently:
 
-        1. Tests that complete the introspection request(s)
-        2. Tests that validate the contents of the introspection response(s)
+        1. Token Introspection Request group - completes the introspection requests
+        2. Token Introspection Response group - validates the contents of the introspection responses
 
-        If needed, the introspection request group can be run out of band from the introspection respone validation group
-        to accommodate non-standard authorization approaches to secure the token endpoint.  
+        For ease of testing it is highly recommended to run the Token Introspection Request group after already completing the 
+        Standalone Launch tests, as Inferno will by default seek to introspect the access token received during those tests.
+        If this option is used, the Token Introspection Response test inputs will also auto-fill.
+
+        If needed, however, testers can:
+        
+        a. Provide a different active access token to be introspected in Token Introspection Request tests.  However, the
+        tester will need to manually input the access token response parameters for the Token Introspection Response tests. 
+        b. Skip the Token Introspection Request tests altogether and manually run the required access token AND introspection
+        requests out-of-band to complete the Token Introspection Response tests.  Given the extent of manual steps
+        and inputs required, we recommend this option only if it is not possible for the Inferno client to access the
+        token introspection.
+      
       )
 
       input_instructions <<~INSTRUCTIONS

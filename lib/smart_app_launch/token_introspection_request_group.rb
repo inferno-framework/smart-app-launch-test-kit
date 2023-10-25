@@ -11,16 +11,26 @@ module SMARTAppLaunch
       This group of tests executes the token introspection requests and ensures the correct HTTP response is returned
       but does not validate the contents of the token introspection response. 
 
-      If Inferno cannot reasonably be configured to be authorized to access the token introspectione endpoint, these tests 
-      can be skipped.  Instead, an out of band token introspection request must be completed and the response body
-      provided as input for the next test group.  
+      If Inferno cannot reasonably be configured to be authorized to access the token introspection endpoint, these tests 
+      can be skipped.  Instead, an out-of-band token introspection request must be completed and the response body
+      manually provided as input for the Token Introspection Response test group.
       )
+
+    input_instructions %(
+      By default, Inferno will aim to introspect the access token retrieved in the standalone launch tests. However,
+      the inputs can be modified and another active access token may be provided.  Either way, the token must be in an
+      active state in order for the test to pass.
+        
+      Per [RFC-7662](https://datatracker.ietf.org/doc/html/rfc7662#section-2), "the definition of an active token is currently dependent upon the authorization
+      server, but this is commonly a token that has been issued by this authorization server, is not expired, has not been
+      revoked, and is valid for use at the protected resource making the introspection call."
+    )
 
     input :token_endpoint_url, 
           description: 'The complete URL of the token introspection endpoint.'
     
     input :client_id, 
-          description: 'ID of the authorization server client requesting introspection'
+          description: 'ID of the client requesting introspection, as it is registered with the authorization server'
 
     input :authorization_required,
           type: 'radio',
@@ -54,13 +64,6 @@ module SMARTAppLaunch
       description %(
       This test will execute a token introspection request for an active token and ensure a 200 status and valid JSON
       body are returned in the response. 
-
-      By default, Inferno will aim to introspect the access token retrieved in the standalone launch tests. However,
-      the inputs can be modified and another active access token may be provided.
-        
-      Per [RFC-7662](https://datatracker.ietf.org/doc/html/rfc7662#section-2), "the definition of an active token is currently dependent upon the authorization
-      server, but his is commonly a token that has been issued by this authorization server, is not expired, has not been
-      revoked, and is valid for use at the protected resource making the introspection call."
       )
       
       # TODO set default value from other test output

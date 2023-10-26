@@ -1,5 +1,7 @@
 require_relative 'token_exchange_test'
 require_relative 'token_refresh_body_test'
+require_relative 'well_known_endpoint_test'
+require_relative 'standalone_launch_group'
 
 module SMARTAppLaunch
   class TokenIntrospectionRequestGroup < Inferno::TestGroup
@@ -24,21 +26,36 @@ module SMARTAppLaunch
       Per [RFC-7662](https://datatracker.ietf.org/doc/html/rfc7662#section-2), "the definition of an active token is currently dependent upon the authorization
       server, but this is commonly a token that has been issued by this authorization server, is not expired, has not been
       revoked, and is valid for use at the protected resource making the introspection call."
+
+      If only a client ID is input, Inferno will assume this is a public client and not include an Authorization
+      header in the introspection request.  If a client ID and secret are provided, Inferno will default to 
+      an Authorization: Basic header.  For all other use cases, tester must provide their own authorization header
+      for the HTTP request.  
     )
 
-    input :token_endpoint_url, 
+    input :well_known_introspection_url, 
+          title: 'Token Introspection Endpoint URL', 
           description: 'The complete URL of the token introspection endpoint.'
     
-    input :client_id, 
-          description: 'ID of the client requesting introspection, as it is registered with the authorization server'
-
-    input :authorization_required,
-          type: 'radio',
-          default: 'true',
+    input :standalone_client_id, 
+          title: 'Client ID',
+          optional: true,
           description: %(
-            Whether or not authorization is required to access the introspection endpoint.  If true, an authorization
-            header must be provided. 
-          ),
+            ID of the client requesting introspection, as it is registered with the authorization server.
+            Defaults to Standalone Client ID, if provided.
+          )
+
+    input :standalone_client_secret,
+          title: 'Client Secret',
+          optional: true,
+          description: %(
+            Provide to use Authorization: Basic header in introspection request.
+          )
+
+    input :custom_auth_method,
+          title: 'Use Custom HTTP Authorization Header',
+          type: 'radio',
+          default: 'false',
           options: {
             list_options: [
               {
@@ -52,12 +69,14 @@ module SMARTAppLaunch
             ]
           }
 
-
-    input :authorization_header, 
-          optional: true,
+    input :custom_authorization_header,
+          title: 'Custom HTTP Authorization Header for Introspection Request',
           type: 'textarea',
-          description: 'Ex: Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW'
-
+          optional: true,
+          description: %(
+            Include both header name and value.
+            Ex: 'Authorization: Bearer 23410913-abewfq.123483' 
+            )
 
     test do
       title 'Token introspection endpoint returns a response when provided an active token'
@@ -66,15 +85,15 @@ module SMARTAppLaunch
       body are returned in the response. 
       )
       
-      # TODO set default value from other test output
-      
+ 
 
       input :standalone_access_token, 
-            type: 'textarea',
-            description: 'The active access token to be introspected'
+            title: 'Access Token',
+            description: 'The access token to be introspected.'
 
 
-      output :token_introspection_response
+      output :active_token_introspection_response_body
+    
     end
 
     test do 
@@ -84,6 +103,7 @@ module SMARTAppLaunch
         body are returned in response. 
       )
 
+      output :inactive_token_introspection_response_body
       run do
         # headers = {'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded'}
         # body = "token=invalid_token_value"

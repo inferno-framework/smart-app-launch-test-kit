@@ -3,7 +3,7 @@ PATH
   specs:
     smart_app_launch_test_kit (0.3.0)
       inferno_core (>= 0.4.2)
-      jwt (~> 2.2)
+      jwt (~> 2.6)
       tls_test_kit (~> 0.2.0)
 
 GEM

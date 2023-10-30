@@ -1,4 +1,5 @@
 require_relative 'token_introspection_request_group'
+require_relative 'token_exchange_test'
 
 module SMARTAppLaunch
   class TokenIntrospectionResponseGroup < Inferno::TestGroup
@@ -56,29 +57,48 @@ module SMARTAppLaunch
         introspection response
       )
 
-      input :access_token_response_client_id,
-            description: 'The client ID from the original access token response body'
+      # Access token value is repeatedly overwritten during refresh token tests and value 
+      # when provided for introspection is from the last refresh token exchange test from standalone launch
+      # But other outputs (id token, received scopes, etc) do not update and are still the same as
+      # they were in the original access token request 
+      # Is there any contexts in which this could cause problems, i.e., the response body values from 
+      # using a refresh token grant are different than the response body values from the authorization code grant?
+
+      input :standalone_client_id,
+            title: 'Access Token Respone: client_id'
+
+      # TODO delete when verification done
+      input :standalone_access_token,
+            title: 'Access Token Introspected',
+            locked: true,
+            description: 'Included to ensure inputs are populating correctly, will delete later'
       
-      input :access_token_response_expires_in,
+      input :standalone_expires_in,
+            title: 'Access Token Response: expires_in',
             description: 'The expires_in value from the original access token response body'
 
-      input :access_token_response_scopes,
+      input :standalone_received_scopes,
+            title: 'Access Token Response: scope',
             description: 'A space-separated list of scopes from the original access token response body'
       
-      input :access_token_response_id_token,
+      input :standalone_id_token,
+            title: 'Access Token Response: id_token',
             type: 'textarea',
             optional: true,
             description: 'The ID token from the original access token response body, IF it was present'
 
-      input :access_token_response_patient,
+      input :standalone_patient_id,
+            title: 'Access Token Response (launch context): patient',
             optional: true,
             description: 'The value for patient context from the original access token response body, IF it was present'
 
-      input :access_token_response_encounter,
+      input :standalone_encounter_id,
+            title: 'Access Token Response (launch context): encounter',
             optional: true,
             description: 'The value for encounter context from the original access token response body, IF it was present'
 
       input :active_token_introspection_response_body,
+            title: 'Token Introspection Response Body',
             type: 'textarea',
             description: 'The JSON body of the token introspection response when provided an ACTIVE token'
 

@@ -256,6 +256,17 @@ module SMARTAppLaunch
                   :standalone_received_scopes, :standalone_id_token, :standalone_patient_id, :standalone_encounter_id,
                   :introspection_client_id, :introspection_client_secret, :custom_auth_method, :custom_authorization_header
 
+      input_instructions %(
+        Executing tests at this level will run both the Issue Introspection Request group and the Validate Introspection
+        Response group.  The HTTP response bodies from the Issue Request group will automatically be sent as inputs to the 
+        Validate Response group.
+
+        The Validate Response test for an active token will compare fields and/or values from the introspection response
+        to those from the access token response that provided the token being introspected.  These fields are labeled
+        "Access Token Response" and will need to be manaully input unless an access token from the Standalone Launch 
+        tests are being used. 
+      )
+
     end
   end
 end

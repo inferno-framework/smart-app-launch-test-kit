@@ -88,7 +88,7 @@ module SMARTAppLaunch
 
       input :standalone_access_token, 
             title: 'Access Token',
-            description: 'The access token to be introspected.'
+            description: 'The access token to be introspected. MUST be active.'
 
 
       output :active_token_introspection_response_body

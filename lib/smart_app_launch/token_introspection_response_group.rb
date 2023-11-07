@@ -65,7 +65,8 @@ module SMARTAppLaunch
       # using a refresh token grant are different than the response body values from the authorization code grant?
 
       input :standalone_client_id,
-            title: 'Access Token Respone: client_id'
+            title: 'Access Token Response: client_id',
+            description: 'ID of the client that requested the access token being introspected'
 
       # TODO delete when verification done
       input :standalone_access_token,

@@ -37,15 +37,14 @@ module SMARTAppLaunch
           title: 'Token Introspection Endpoint URL', 
           description: 'The complete URL of the token introspection endpoint.'
     
-    input :standalone_client_id, 
+    input :introspection_client_id, 
           title: 'Client ID',
           optional: true,
           description: %(
             ID of the client requesting introspection, as it is registered with the authorization server.
-            Defaults to Standalone Client ID, if provided.
           )
 
-    input :standalone_client_secret,
+    input :introspection_client_secret,
           title: 'Client Secret',
           optional: true,
           description: %(

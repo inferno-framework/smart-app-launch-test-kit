@@ -240,9 +240,9 @@ module SMARTAppLaunch
 
         If needed, however, testers can:
         
-        a. Provide a different active access token to be introspected in Token Introspection Request tests.  However, the
+        1. Provide a different active access token to be introspected in Token Introspection Request tests.  However, the
         tester will need to manually input the access token response parameters for the Token Introspection Response tests. 
-        b. Skip the Token Introspection Request tests altogether and manually run the required access token AND introspection
+        2. Skip the Token Introspection Request tests altogether and manually run the required access token AND introspection
         requests out-of-band to complete the Token Introspection Response tests.  Given the extent of manual steps
         and inputs required, we recommend this option only if it is not possible for the Inferno client to access the
         token introspection endpoint.

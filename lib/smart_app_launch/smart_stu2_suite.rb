@@ -231,18 +231,18 @@ module SMARTAppLaunch
         the token introspection endpoint and does specifiy any one specific approach.  As such, the token introspection tests are 
         broken up into two groups that can be run independently:
 
-        1. Token Introspection Request group - completes the introspection requests
-        2. Token Introspection Response group - validates the contents of the introspection responses
+        1. Issue Token Introspection Request group - completes the introspection requests
+        2. Validate Token Introspection Response group - validates the contents of the introspection responses
 
-        For ease of testing it is highly recommended to run the Token Introspection Request group after already completing the 
+        For ease of testing it is highly recommended to run the Issue Token Introspection Request group after already completing the 
         Standalone Launch tests, as Inferno will by default seek to introspect the access token received during those tests.
-        If this option is used, the Token Introspection Response test inputs will also auto-fill.
+        If this option is used, the Validate Token Introspection Response test inputs will also auto-fill.
 
         If needed, however, testers can:
         
         1. Provide a different active access token to be introspected in Token Introspection Request tests.  However, the
         tester will need to manually input the access token response parameters for the Token Introspection Response tests. 
-        2. Skip the Token Introspection Request tests altogether and manually run the required access token AND introspection
+        2. Skip the Issue Token Introspection Request tests altogether and manually run the required access token AND introspection
         requests out-of-band to complete the Token Introspection Response tests.  Given the extent of manual steps
         and inputs required, we recommend this option only if it is not possible for the Inferno client to access the
         token introspection endpoint.
@@ -251,6 +251,10 @@ module SMARTAppLaunch
       
       group from: :token_introspection_request_group
       group from: :token_introspection_response_group
+
+      input_order :well_known_introspection_url, :standalone_access_token, :standalone_client_id, :standalone_expires_in,
+                  :standalone_received_scopes, :standalone_id_token, :standalone_patient_id, :standalone_encounter_id,
+                  :introspection_client_id, :introspection_client_secret, :custom_auth_method, :custom_authorization_header
 
     end
   end

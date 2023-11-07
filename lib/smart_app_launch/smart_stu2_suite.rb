@@ -9,6 +9,7 @@ require_relative 'openid_connect_group'
 require_relative 'token_refresh_group'
 require_relative 'token_introspection_request_group'
 require_relative 'token_introspection_response_group'
+require_relative 'token_introspection_access_token_group'
 
 module SMARTAppLaunch
   class SMARTSTU2Suite < Inferno::TestSuite
@@ -248,7 +249,7 @@ module SMARTAppLaunch
         token introspection endpoint.
       
       )
-      
+      group from: :token_introspection_access_token_group
       group from: :token_introspection_request_group
       group from: :token_introspection_response_group
 

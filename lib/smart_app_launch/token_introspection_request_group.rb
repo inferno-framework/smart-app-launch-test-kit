@@ -5,7 +5,7 @@ require_relative 'standalone_launch_group'
 
 module SMARTAppLaunch
   class TokenIntrospectionRequestGroup < Inferno::TestGroup
-    title 'Token Introspection Request'
+    title 'Issue Token Introspection Request'
     run_as_group
 
     id :token_introspection_request_group

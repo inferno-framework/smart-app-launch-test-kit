@@ -3,7 +3,7 @@ require_relative 'token_exchange_test'
 
 module SMARTAppLaunch
   class TokenIntrospectionResponseGroup < Inferno::TestGroup
-    title 'Token Introspection Response'
+    title 'Validate Token Introspection Response'
     run_as_group
 
     id :token_introspection_response_group

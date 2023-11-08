@@ -15,67 +15,46 @@ module SMARTAppLaunch
 
       If Inferno cannot reasonably be configured to be authorized to access the token introspection endpoint, these tests 
       can be skipped.  Instead, an out-of-band token introspection request must be completed and the response body
-      manually provided as input for the Token Introspection Response test group.
+      manually provided as input for the Validate Introspection Response test group.
       )
 
     input_instructions %(
-      By default, Inferno will aim to introspect the access token retrieved in the standalone launch tests. However,
-      the inputs can be modified and another active access token may be provided.  Either way, the token must be in an
-      active state in order for the test to pass.
+      If the Request New Access Token group was executed, the access token input will auto-populate with that token. 
+      Otherwise an active access token needs to be obtained out-of-band and input.  
         
-      Per [RFC-7662](https://datatracker.ietf.org/doc/html/rfc7662#section-2), "the definition of an active token is currently dependent upon the authorization
-      server, but this is commonly a token that has been issued by this authorization server, is not expired, has not been
-      revoked, and is valid for use at the protected resource making the introspection call."
+      Per [RFC-7662](https://datatracker.ietf.org/doc/html/rfc7662#section-2), "the definition of an active token is 
+      currently dependent upon the authorization server, but this is commonly a token that has been issued by this 
+      authorization server, is not expired, has not been revoked, and is valid for use at the protected resource making 
+      the introspection call."
 
-      If only a client ID is input, Inferno will assume this is a public client and not include an Authorization
-      header in the introspection request.  If a client ID and secret are provided, Inferno will default to 
-      an Authorization: Basic header.  For all other use cases, tester must provide their own authorization header
-      for the HTTP request.  
+      If the introspection endpoint is protected, testers must enter their own HTTP Authorization header for the introspection request.  See
+      [RFC 7616 The 'Basic' HTTP Authentication Scheme](https://datatracker.ietf.org/doc/html/rfc7617) for the most common
+      approach that uses client credentials.  Testers may also provide any additional parameters needed for their authorization 
+      server to complete the introspection request.  All parameter values for both the header and the body must be input 
+      URI-encoded. 
     )
 
     input :well_known_introspection_url, 
           title: 'Token Introspection Endpoint URL', 
           description: 'The complete URL of the token introspection endpoint.'
-    
-    input :introspection_client_id, 
-          title: 'Client ID',
-          optional: true,
-          description: %(
-            ID of the client requesting introspection, as it is registered with the authorization server.
-          )
-
-    input :introspection_client_secret,
-          title: 'Client Secret',
-          optional: true,
-          description: %(
-            Provide to use Authorization: Basic header in introspection request.
-          )
-
-    input :custom_auth_method,
-          title: 'Use Custom HTTP Authorization Header',
-          type: 'radio',
-          default: 'false',
-          options: {
-            list_options: [
-              {
-                label: 'True',
-                value: 'true'
-              },
-              {
-                label: 'False',
-                value: 'false'
-              }
-            ]
-          }
 
     input :custom_authorization_header,
-          title: 'Custom HTTP Authorization Header for Introspection Request',
+          title: 'HTTP Authorization Header for Introspection Request',
           type: 'textarea',
           optional: true,
           description: %(
-            Include both header name and value.
+            Include both header name and encoded value.
             Ex: 'Authorization: Bearer 23410913-abewfq.123483' 
             )
+
+    input :optional_introspection_request_params,
+          title: 'Additional Introspection Request Parameters',
+          type: 'textarea',
+          optional: true,
+          description: %(
+            Any additional parameters required for the introspection request to succeed. Will be added to the request body.
+            Must be URI-encoded.  
+          )
 
     test do
       title 'Token introspection endpoint returns a response when provided an active token'

@@ -220,52 +220,52 @@ module SMARTAppLaunch
         [SMART App Launch STU 2.1 Implementation Guide Section on Token Introspection](https://hl7.org/fhir/smart-app-launch/token-introspection.html)
         states that "SMART on FHIR EHRs SHOULD support token introspection, which allows a broader ecosystem of resource servers
         to leverage authorization decisions managed by a single authorization server."
- 
+
         # Test Methodology
 
         In these tests, Inferno acts as an authorized resource server that queries the authorization server about an access 
         token, rather than a client to a FHIR resource server as in the previous SMART App Launch tests.  
-
         Ideally, Inferno should be registered with the authorization server as an authorized resource server
         capable of accessing the token introspection endpoint through client credentials, per the SMART IG recommendations.  
         However, the SMART IG only formally REQUIRES "some form of authorization" to access
-        the token introspection endpoint and does specifiy any one specific approach.  As such, the token introspection tests are 
-        broken up into two groups that can be run independently:
+        the token introspection endpoint and does not specifiy any one specific approach.  As such, the token introspection tests are 
+        broken up into three groups that each complete a discrete step in the token introspection process:
 
-        1. Issue Token Introspection Request group - completes the introspection requests
-        2. Validate Token Introspection Response group - validates the contents of the introspection responses
+        1. **Request Access Token Group** - optional but recommended, repeats a subset of Standalone Launch tests 
+          in order to receive a new access token with an authorization code grant.  If skipped, testers will need to
+            obtain an access token out-of-band and manually provide values from the access token response as inputs to
+            the Validate Token Response group.  
+        2. **Issue Token Introspection Request Group** - optional but recommended, completes the introspection requests.  
+        If skipped, testers will need to complete an introspection request out-of-band and manually provide the introspection
+        responses as inputs to the Validate Token Response group. 
+        3. **Validate Token Introspection Response Group** - required, validates the contents of the introspection responses. 
 
-        For ease of testing it is highly recommended to run the Issue Token Introspection Request group after already completing the 
-        Standalone Launch tests, as Inferno will by default seek to introspect the access token received during those tests.
-        If this option is used, the Validate Token Introspection Response test inputs will also auto-fill.
-
-        If needed, however, testers can:
+        Running all three test groups in order is the simplest and is highly recommended if the environment under test
+        can support it, as outputs from one group will feed the inputs of the next group. However, test groups can be run
+          independently if needed. 
         
-        1. Provide a different active access token to be introspected in Token Introspection Request tests.  However, the
-        tester will need to manually input the access token response parameters for the Token Introspection Response tests. 
-        2. Skip the Issue Token Introspection Request tests altogether and manually run the required access token AND introspection
-        requests out-of-band to complete the Token Introspection Response tests.  Given the extent of manual steps
-        and inputs required, we recommend this option only if it is not possible for the Inferno client to access the
-        token introspection endpoint.
-      
+        See the individual test groups for more details and guidance. 
       )
       group from: :token_introspection_access_token_group
       group from: :token_introspection_request_group
       group from: :token_introspection_response_group
 
-      input_order :well_known_introspection_url, :standalone_access_token, :standalone_client_id, :standalone_expires_in,
-                  :standalone_received_scopes, :standalone_id_token, :standalone_patient_id, :standalone_encounter_id,
-                  :introspection_client_id, :introspection_client_secret, :custom_auth_method, :custom_authorization_header
+      input_order :well_known_introspection_url, :custom_authorization_header, :optional_introspection_request_params,
+                  :url, :client_id, :client_secret, :requested_scopes, :smart_authorization_url, :authorization_method,
+                  :use_pkce, :pkce_code_challenge_method
 
       input_instructions %(
-        Executing tests at this level will run both the Issue Introspection Request group and the Validate Introspection
-        Response group.  The HTTP response bodies from the Issue Request group will automatically be sent as inputs to the 
-        Validate Response group.
+        Executing tests at this level will run all three Token Introspection groups back-to-back.  If test groups need
+        to be run independently, exit this window and select a specific test group instead.   
+      
+        Some inputs are re-used from the Standalone Launch tests to request a new access token for Token
+        Introspection.  If Standalone Launch tests were successfully executed, these inputs will auto-populate.
 
-        The Validate Response test for an active token will compare fields and/or values from the introspection response
-        to those from the access token response that provided the token being introspected.  These fields are labeled
-        "Access Token Response" and will need to be manaully input unless an access token from the Standalone Launch 
-        tests are being used. 
+        If the introspection endpoint is protected, testers must enter their own HTTP Authorization header for the introspection request.  See
+        [RFC 7616 The 'Basic' HTTP Authentication Scheme](https://datatracker.ietf.org/doc/html/rfc7617) for the most common
+        approach that uses client credentials.  Testers may also provide any additional parameters needed for their authorization 
+        server to complete the introspection request.  All parameter values for both the header and the body must be input
+        URI-encoded.
       )
 
     end

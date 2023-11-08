@@ -17,20 +17,13 @@ module SMARTAppLaunch
         There are two categories of input for this test group: 
 
         1. The access token response values, which will dictate what the tests will expect to find in the token 
-        introspection response.  If the Token Introspection Request test group was run AND the option to introspect
-        the access token from the Standalone Launch tests was selected, these values will auto-fill; otherwise,
-        the tester will need to run an out-of-band ACCESS TOKEN request and manually input the access token response
-        parameters.   
+        introspection response.  If the Request New Access Token group was run, these inputs will auto-populate.   
         
-        2. The token introspection response bodies. If the Token Introspection Request test group was run, these will
-        auto-fill; otherwise, the tester will need to an run out-of-band INTROSPECTION requests for:
+        2. The token introspection response bodies. If the Issue Introspection Request test group was run, these will
+        auto-populate; otherwise, the tester will need to an run out-of-band INTROSPECTION requests for a. An ACTIVE 
+        access token, AND b. An INACTIVE OR INVALID token 
 
-          a. The ACTIVE access token received from the out-of-band access token request, AND
-
-          b. An INACTIVE OR INVALID token 
-
-        The client making both introspection requests must be authorized to access the introspection endpoint if
-        the endpoint is protected.
+        See [RFC-7662](https://datatracker.ietf.org/doc/html/rfc7662#section-2) for details on active vs inactive tokens.
       )
       
     test do 
@@ -57,15 +50,8 @@ module SMARTAppLaunch
         introspection response
       )
 
-      # Access token value is repeatedly overwritten during refresh token tests and value 
-      # when provided for introspection is from the last refresh token exchange test from standalone launch
-      # But other outputs (id token, received scopes, etc) do not update and are still the same as
-      # they were in the original access token request 
-      # Is there any contexts in which this could cause problems, i.e., the response body values from 
-      # using a refresh token grant are different than the response body values from the authorization code grant?
-
       input :standalone_client_id,
-            title: 'Access Token Response: client_id',
+            title: 'Access Token client_id',
             description: 'ID of the client that requested the access token being introspected'
 
       # TODO delete when verification done
@@ -73,10 +59,6 @@ module SMARTAppLaunch
             title: 'Access Token Introspected',
             locked: true,
             description: 'Included to ensure inputs are populating correctly, will delete later'
-      
-      input :standalone_expires_in,
-            title: 'Access Token Response: expires_in',
-            description: 'The expires_in value from the original access token response body'
 
       input :standalone_received_scopes,
             title: 'Access Token Response: scope',
@@ -99,7 +81,7 @@ module SMARTAppLaunch
             description: 'The value for encounter context from the original access token response body, IF it was present'
 
       input :active_token_introspection_response_body,
-            title: 'Token Introspection Response Body',
+            title: 'Active Token Introspection Response Body',
             type: 'textarea',
             description: 'The JSON body of the token introspection response when provided an ACTIVE token'
 
@@ -121,6 +103,7 @@ module SMARTAppLaunch
       )
 
       input :inactive_token_introspection_response_body,
+            title: 'Inactive Token Introspection Response Body',
             type: 'textarea',
             description: 'The JSON body of the token introspection response when provided an INVALID or INACTIVE token'
     end

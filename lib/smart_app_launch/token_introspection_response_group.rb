@@ -54,14 +54,9 @@ module SMARTAppLaunch
             title: 'Access Token client_id',
             description: 'ID of the client that requested the access token being introspected'
 
-      # TODO delete when verification done
-      input :standalone_access_token,
-            title: 'Access Token Introspected',
-            locked: true,
-            description: 'Included to ensure inputs are populating correctly, will delete later'
 
       input :standalone_received_scopes,
-            title: 'Access Token Response: scope',
+            title: 'Expected Introspection Response Value: scopes',
             description: 'A space-separated list of scopes from the original access token response body'
       
       input :standalone_id_token,
@@ -71,14 +66,14 @@ module SMARTAppLaunch
             description: 'The ID token from the original access token response body, IF it was present'
 
       input :standalone_patient_id,
-            title: 'Access Token Response (launch context): patient',
+            title: 'Expected Introspection Response for Patient Launch Context Paramter',
             optional: true,
-            description: 'The value for patient context from the original access token response body, IF it was present'
+            description: 'The value for patient launch context from the original access token response body, IF it was present'
 
       input :standalone_encounter_id,
-            title: 'Access Token Response (launch context): encounter',
+            title: 'Expected Introspection Response for Encounter Launch Context Parameter',
             optional: true,
-            description: 'The value for encounter context from the original access token response body, IF it was present'
+            description: 'The value for encounter launch context from the original access token response body, IF it was present'
 
       input :active_token_introspection_response_body,
             title: 'Active Token Introspection Response Body',
@@ -102,10 +97,10 @@ module SMARTAppLaunch
         about an inactive token, including why the token is inactive."
       )
 
-      input :inactive_token_introspection_response_body,
-            title: 'Inactive Token Introspection Response Body',
+      input :invalid_token_introspection_response_body,
+            title: 'Invalid Token Introspection Response Body',
             type: 'textarea',
-            description: 'The JSON body of the token introspection response when provided an INVALID or INACTIVE token'
+            description: 'The JSON body of the token introspection response when provided an INVALID token'
     end
   end
 end

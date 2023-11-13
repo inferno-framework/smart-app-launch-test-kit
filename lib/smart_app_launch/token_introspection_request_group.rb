@@ -81,7 +81,7 @@ module SMARTAppLaunch
         body are returned in response. 
       )
 
-      output :inactive_token_introspection_response_body
+      output :invalid_token_introspection_response_body
       run do
         # headers = {'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded'}
         # body = "token=invalid_token_value"

@@ -1,0 +1,99 @@
+require_relative 'token_exchange_test'
+require_relative 'token_refresh_body_test'
+require_relative 'well_known_endpoint_test'
+require_relative 'standalone_launch_group'
+
+module SMARTAppLaunch
+  class TokenIntrospectionRequestGroup < Inferno::TestGroup
+    title 'Issue Token Introspection Request'
+    run_as_group
+
+    id :token_introspection_request_group
+    description %(
+      This group of tests executes the token introspection requests and ensures the correct HTTP response is returned
+      but does not validate the contents of the token introspection response. 
+
+      If Inferno cannot reasonably be configured to be authorized to access the token introspection endpoint, these tests 
+      can be skipped.  Instead, an out-of-band token introspection request must be completed and the response body
+      manually provided as input for the Validate Introspection Response test group.
+      )
+
+    input_instructions %(
+      If the Request New Access Token group was executed, the access token input will auto-populate with that token. 
+      Otherwise an active access token needs to be obtained out-of-band and input.  
+        
+      Per [RFC-7662](https://datatracker.ietf.org/doc/html/rfc7662#section-2), "the definition of an active token is 
+      currently dependent upon the authorization server, but this is commonly a token that has been issued by this 
+      authorization server, is not expired, has not been revoked, and is valid for use at the protected resource making 
+      the introspection call."
+
+      If the introspection endpoint is protected, testers must enter their own HTTP Authorization header for the introspection request.  See
+      [RFC 7616 The 'Basic' HTTP Authentication Scheme](https://datatracker.ietf.org/doc/html/rfc7617) for the most common
+      approach that uses client credentials.  Testers may also provide any additional parameters needed for their authorization 
+      server to complete the introspection request.  All parameter values for both the header and the body must be input 
+      URI-encoded. 
+    )
+
+    input :well_known_introspection_url, 
+          title: 'Token Introspection Endpoint URL', 
+          description: 'The complete URL of the token introspection endpoint.'
+
+    input :custom_authorization_header,
+          title: 'HTTP Authorization Header for Introspection Request',
+          type: 'textarea',
+          optional: true,
+          description: %(
+            Include both header name and encoded value.
+            Ex: 'Authorization: Bearer 23410913-abewfq.123483' 
+            )
+
+    input :optional_introspection_request_params,
+          title: 'Additional Introspection Request Parameters',
+          type: 'textarea',
+          optional: true,
+          description: %(
+            Any additional parameters required for the introspection request to succeed. Will be added to the request body.
+            Must be URI-encoded.  
+          )
+
+    test do
+      title 'Token introspection endpoint returns a response when provided an active token'
+      description %(
+      This test will execute a token introspection request for an active token and ensure a 200 status and valid JSON
+      body are returned in the response. 
+      )
+      
+ 
+
+      input :standalone_access_token, 
+            title: 'Access Token',
+            description: 'The access token to be introspected. MUST be active.'
+
+
+      output :active_token_introspection_response_body
+    
+    end
+
+    test do 
+      title 'Token introspection endpoint returns a response when provided an invalid token'
+      description %(
+        This test will execute a token introspection request for an invalid token and ensure a 200 status and valid JSON
+        body are returned in response. 
+      )
+
+      output :invalid_token_introspection_response_body
+      run do
+        # headers = {'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded'}
+        # body = "token=invalid_token_value"
+        # headers, body = add_credentials(headers, body, client_id, client_secret)
+        # post(token_introspection_endpoint, body: body, headers: headers)
+        
+        # assert_response_status(200)
+        # assert_valid_json(request.response_body)
+        # introspection_response_body = JSON.parse(request.response_body)
+        # assert introspection_response_body['active'] == false, "Failure: expected introspection response for 'active' to be false for invalid token"
+        # assert introspection_response_body.size == 1, "Failure: expected only 'active' field to be present in introspection response for invalid token"
+      end
+    end
+  end
+end

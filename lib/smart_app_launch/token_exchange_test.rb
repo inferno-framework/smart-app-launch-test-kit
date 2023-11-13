@@ -71,6 +71,8 @@ module SMARTAppLaunch
       output token_retrieval_time: Time.now.iso8601
 
       token_response_body = JSON.parse(request.response_body)
+
+
       output smart_credentials: {
                refresh_token: token_response_body['refresh_token'],
                access_token: token_response_body['access_token'],
@@ -80,6 +82,7 @@ module SMARTAppLaunch
                token_retrieval_time: token_retrieval_time,
                token_url: smart_token_url
              }.to_json
+      
     end
   end
 end

@@ -71,6 +71,16 @@ module SMARTAppLaunch
 
 
       output :active_token_introspection_response_body
+
+      run do
+
+        headers = {'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded'}
+        body = "token=#{standalone_access_token}"
+        post(well_known_introspection_url, body: body, headers: headers)
+
+        assert_response_status(200)
+        output active_token_introspection_response_body: request.response_body
+      end
     
     end
 
@@ -83,16 +93,12 @@ module SMARTAppLaunch
 
       output :invalid_token_introspection_response_body
       run do
-        # headers = {'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded'}
-        # body = "token=invalid_token_value"
-        # headers, body = add_credentials(headers, body, client_id, client_secret)
-        # post(token_introspection_endpoint, body: body, headers: headers)
+        headers = {'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded'}
+        body = "token=invalid_token_value"
+        post(well_known_introspection_url, body: body, headers: headers)
         
-        # assert_response_status(200)
-        # assert_valid_json(request.response_body)
-        # introspection_response_body = JSON.parse(request.response_body)
-        # assert introspection_response_body['active'] == false, "Failure: expected introspection response for 'active' to be false for invalid token"
-        # assert introspection_response_body.size == 1, "Failure: expected only 'active' field to be present in introspection response for invalid token"
+        assert_response_status(200)
+        output invalid_token_introspection_response_body: request.response_body
       end
     end
   end

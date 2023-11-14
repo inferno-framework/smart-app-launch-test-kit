@@ -80,6 +80,16 @@ module SMARTAppLaunch
             type: 'textarea',
             description: 'The JSON body of the token introspection response when provided an ACTIVE token'
 
+
+      run do
+        assert_valid_json(active_token_introspection_response_body)
+        active_introspection_response_body_parsed = JSON.parse(active_token_introspection_response_body)
+        assert active_introspection_response_body_parsed['active'] == true, "Failure: expected introspection response for 'active' to be true for valid token"
+
+        assert active_introspection_response_body_parsed['patient'] == standalone_patient_id, "Expected patient context: #{standalone_patient_id}" if standalone_patient_id.present?
+        assert active_introspection_response_body_parsed['encounter'] == standalone_encounter_id, "Expected patient context: #{standalone_encounter_id}" if standalone_encounter_id.present?
+      end
+
     end
 
     test do
@@ -101,6 +111,14 @@ module SMARTAppLaunch
             title: 'Invalid Token Introspection Response Body',
             type: 'textarea',
             description: 'The JSON body of the token introspection response when provided an INVALID token'
+
+      run do
+        assert_valid_json(invalid_token_introspection_response_body)
+        invalid_token_introspection_response_body_parsed = JSON.parse(invalid_token_introspection_response_body)
+        assert invalid_token_introspection_response_body_parsed['active'] == false, "Failure: expected introspection response for 'active' to be false for invalid token"
+        assert invalid_token_introspection_response_body_parsed.size == 1, "Failure: expected only 'active' field to be present in introspection response for invalid token"
+
+      end
     end
   end
 end

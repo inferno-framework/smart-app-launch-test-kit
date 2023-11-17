@@ -38,16 +38,19 @@ module SMARTAppLaunch
         *  `active` claim is set to true 
         * `scope`, `client_id`, and `exp` claim(s) match between introspection response and access token
 
+        It is not possible to know what the expected value for `exp` is in advance, so Inferno tests that the claim is
+        present and represents a time greater than or equal to 10 minutes in the past. 
+
         Conditionally Required:
         * IF launch context parameter(s) included in access token, introspection response includes claim(s) for 
         launch context parameter(s) 
           * Parameters checked for are `patient` and `encounter`
-        * IF identity token was included as part of access token response, `iss` and `sub` claims are present in 
-        introspection response
+        * IF identity token was included as part of access token response, `iss` and `sub` claims are present in the
+        introspection response and match those of the orignal ID token
 
         Optional but Recommended:
         * IF identity token was included as part of access token response, `fhirUser` claim SHOULD be present in 
-        introspection response
+        introspection response and should match the claim in the ID token
       )
 
       input :standalone_client_id,
@@ -56,7 +59,7 @@ module SMARTAppLaunch
 
 
       input :standalone_received_scopes,
-            title: 'Expected Introspection Response Value: scopes',
+            title: 'Expected Introspection Response Value: scope',
             description: 'A space-separated list of scopes from the original access token response body'
       
       input :standalone_id_token,
@@ -80,14 +83,25 @@ module SMARTAppLaunch
             type: 'textarea',
             description: 'The JSON body of the token introspection response when provided an ACTIVE token'
 
+      def assert_introspection_response_match(json_response, claim_key, expected_value)
+        assert json_response[claim_key] == expected_value, 
+            "Failure: expected introspection response value for '#{claim_key}' to match expected value '#{expected_value}'"
+      end
 
       run do
         assert_valid_json(active_token_introspection_response_body)
         active_introspection_response_body_parsed = JSON.parse(active_token_introspection_response_body)
-        assert active_introspection_response_body_parsed['active'] == true, "Failure: expected introspection response for 'active' to be true for valid token"
 
+        # Required Fields
+        assert active_introspection_response_body_parsed['active'] == true, "Failure: expected introspection response for 'active' to be true for valid token"
+        assert_introspection_response_match(active_introspection_response_body_parsed, 'client_id', standalone_client_id)
+        assert_introspection_response_match(active_introspection_response_body_parsed, 'scope', standalone_received_scopes)
+        
+        # Conditional fields
         assert active_introspection_response_body_parsed['patient'] == standalone_patient_id, "Expected patient context: #{standalone_patient_id}" if standalone_patient_id.present?
         assert active_introspection_response_body_parsed['encounter'] == standalone_encounter_id, "Expected patient context: #{standalone_encounter_id}" if standalone_encounter_id.present?
+
+        # ID Token Fields
       end
 
     end

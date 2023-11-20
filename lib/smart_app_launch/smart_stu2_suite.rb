@@ -251,7 +251,7 @@ module SMARTAppLaunch
       group from: :token_introspection_response_group
 
       input_order :well_known_introspection_url, :custom_authorization_header, :optional_introspection_request_params,
-                  :url, :client_id, :client_secret, :requested_scopes, :smart_authorization_url, :authorization_method,
+                  :url, :standalone_client_id, :standalone_client_secret, :smart_authorization_url, :authorization_method,
                   :use_pkce, :pkce_code_challenge_method
 
       input_instructions %(

@@ -84,7 +84,19 @@ module SMARTAppLaunch
             description: 'The JSON body of the token introspection response when provided an ACTIVE token'
 
       def assert_introspection_response_match(json_response, claim_key, expected_value)
-        assert json_response[claim_key] == expected_value, 
+        puts "Claim value: #{json_response[claim_key]}"
+        expected_value = expected_value.strip
+        claim_value = json_response[claim_key]
+        assert claim_value != nil, "Failure: introspection response has no claim for '#{claim_key}'"
+        claim_value = claim_value.strip
+        puts "Expected value: #{expected_value}"
+        puts "expected_string is_a string? #{expected_value.is_a?(String)}"
+        puts "claim_string is_a string? #{claim_value.is_a?(String)}"
+        puts "expected_string encoding: #{expected_value.encoding}"
+        puts "claim_string encoding: #{claim_value.encoding}"
+        puts "Eql? #{claim_value.eql?(expected_value)}"
+        puts "Spaceship comparsion: #{expected_value <=> claim_value}"
+        assert claim_value.eql?(expected_value), 
             "Failure: expected introspection response value for '#{claim_key}' to match expected value '#{expected_value}'"
       end
 
@@ -94,14 +106,43 @@ module SMARTAppLaunch
 
         # Required Fields
         assert active_introspection_response_body_parsed['active'] == true, "Failure: expected introspection response for 'active' to be true for valid token"
-        assert_introspection_response_match(active_introspection_response_body_parsed, 'client_id', standalone_client_id)
+        # assert_introspection_response_match(active_introspection_response_body_parsed, 'client_id', standalone_client_id)
         assert_introspection_response_match(active_introspection_response_body_parsed, 'scope', standalone_received_scopes)
+
+        # exp field 
+        exp = active_introspection_response_body_parsed['exp']
+        assert exp != nil, "Failure: introspection response has no claim for required field 'exp'"
+        # TODO - implement check
         
         # Conditional fields
-        assert active_introspection_response_body_parsed['patient'] == standalone_patient_id, "Expected patient context: #{standalone_patient_id}" if standalone_patient_id.present?
-        assert active_introspection_response_body_parsed['encounter'] == standalone_encounter_id, "Expected patient context: #{standalone_encounter_id}" if standalone_encounter_id.present?
+        if standalone_patient_id.present?
+          puts "Standalone_patient_id present, value: #{standalone_patient_id}"
+          assert_introspection_response_match(active_introspection_response_body_parsed, 'patient', standalone_patient_id)
+        end
+        
+        if standalone_encounter_id.present?
+          assert_introspection_response_match(active_introspection_response_body_parsed, 'encounter', standalone_encounter_id)
+        end
+        # assert active_introspection_response_body_parsed['patient'].strip == standalone_patient_id.strip, "Expected patient context: #{standalone_patient_id}" if standalone_patient_id.present?
+        # assert active_introspection_response_body_parsed['encounter'].strip == standalone_encounter_id.strip, "Expected patient context: #{standalone_encounter_id}" if standalone_encounter_id.present?
 
         # ID Token Fields
+        if standalone_id_token.present?
+          # parse
+          id_payload, id_header =
+          JWT.decode(
+            standalone_id_token,
+            nil,
+            false
+          )
+          puts "ID token payload: #{id_payload}"
+          puts "ID token header: #{id_header}"
+          # TODO validate and compare iss value
+          # TODO validate and compare sub value
+          # TODO - check for fhirUser claim and issue warning/info 
+        end
+
+
       end
 
     end

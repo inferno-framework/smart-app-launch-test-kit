@@ -30,8 +30,8 @@ module SMARTAppLaunch
       If the introspection endpoint is protected, testers must enter their own HTTP Authorization header for the introspection request.  See
       [RFC 7616 The 'Basic' HTTP Authentication Scheme](https://datatracker.ietf.org/doc/html/rfc7617) for the most common
       approach that uses client credentials.  Testers may also provide any additional parameters needed for their authorization 
-      server to complete the introspection request.  All parameter values for both the header and the body must be input 
-      URI-encoded. 
+      server to complete the introspection request.  **For both the Authorization header and request parameters, user-input
+      values will be sent exactly as entered and therefore the tester must URI-encode any appropriate values.** 
     )
 
     input :well_known_introspection_url, 
@@ -43,8 +43,8 @@ module SMARTAppLaunch
           type: 'textarea',
           optional: true,
           description: %(
-            Include both header name and encoded value.
-            Ex: 'Authorization: Bearer 23410913-abewfq.123483' 
+            Include header name, auth scheme, and auth parameters.
+            Ex: 'Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW' 
             )
 
     input :optional_introspection_request_params,
@@ -52,8 +52,7 @@ module SMARTAppLaunch
           type: 'textarea',
           optional: true,
           description: %(
-            Any additional parameters required for the introspection request to succeed. Will be added to the request body.
-            Must be URI-encoded.  
+            Any additional parameters to append to the request body, separated by &. Example: 'param1=abc&param2=def'  
           )
 
     test do
@@ -76,6 +75,18 @@ module SMARTAppLaunch
 
         headers = {'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded'}
         body = "token=#{standalone_access_token}"
+
+        if custom_authorization_header.present?
+          # parse out contents 
+          # get key
+          # get value
+          # add to headers map
+        end
+
+        if optional_introspection_request_params.present?
+          # append to body string with '&' 
+        end
+
         post(well_known_introspection_url, body: body, headers: headers)
 
         assert_response_status(200)

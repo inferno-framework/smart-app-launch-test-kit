@@ -59,16 +59,17 @@ module SMARTAppLaunch
     DESCRIPTION
 
     input_instructions %(
-      When running tests at this level, group 3 Token Introspection will assume the token introspection endpoint 
+      When running tests at this level, the token introspection endpoint is not available as a manual input.
+      Instead, group 3 Token Introspection will assume the token introspection endpoint 
       will be output from group 1 Standalone Launch tests, specifically the SMART On FHIR Discovery tests that query
       the .well-known/smart-configuration endpoint. However, including the token introspection
       endpoint as part of the well-known ouput is NOT required and is not formally checked in the SMART On FHIR Discovery
-      tests.  RFC-7662 says that "The means by which the protected resource discovers the location of the introspection
+      tests.  RFC-7662 on Token Introspection says that "The means by which the protected resource discovers the location of the introspection
       endpoint are outside the scope of this specification" and the Token Introspection IG does not add any further
-      requirements on how the introspection endpoint is made available to the resource server.  
+      requirements to this.  
 
       If the token introspection endpoint of the system under test is NOT available at .well-known/smart-configuration, 
-      please run the test groups individually; group 3 Token Introspection has the introspection as a manual input.  
+      please run the test groups individually and group 3 Token Introspection will include the introspection endpoint as a manual input.  
     )
 
     group do

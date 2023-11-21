@@ -106,13 +106,15 @@ module SMARTAppLaunch
 
         # Required Fields
         assert active_introspection_response_body_parsed['active'] == true, "Failure: expected introspection response for 'active' to be true for valid token"
-        # assert_introspection_response_match(active_introspection_response_body_parsed, 'client_id', standalone_client_id)
+        assert_introspection_response_match(active_introspection_response_body_parsed, 'client_id', standalone_client_id)
         assert_introspection_response_match(active_introspection_response_body_parsed, 'scope', standalone_received_scopes)
 
         # exp field 
         exp = active_introspection_response_body_parsed['exp']
         assert exp != nil, "Failure: introspection response has no claim for required field 'exp'"
-        # TODO - implement check
+        current_time = Time.now.to_i 
+        # Ensure token exp time is within at least 10 minutes of the past
+        assert exp.to_i >= current_time - 6000, "Failure: expired token - exp claim of #{exp} for active token is more than 10 minutes in the past"
         
         # Conditional fields
         if standalone_patient_id.present?
@@ -137,12 +139,26 @@ module SMARTAppLaunch
           )
           puts "ID token payload: #{id_payload}"
           puts "ID token header: #{id_header}"
-          # TODO validate and compare iss value
-          # TODO validate and compare sub value
-          # TODO - check for fhirUser claim and issue warning/info 
+          id_token_iss = id_payload['iss']
+          id_token_sub = id_payload['sub']
+          assert id_token_iss != nil, "Failure: ID token from access token response does not have 'iss' claim"
+          assert id_token_sub != nil, "Failure: ID token from access token response does not have 'sub' claim"
+          assert_introspection_response_match(active_introspection_response_body_parsed, 'iss', id_token_iss)
+          assert_introspection_response_match(active_introspection_response_body_parsed, 'sub', id_token_sub)
+
+          fhirUser_id_claim = id_payload['fhirUser']
+          # TODO issue warning if not present or if introspection response does not have claim for fhirUser
+          fhirUser_intr_claim = active_introspection_response_body_parsed['fhirUser']
+
+          puts "About to enter info do section"
+          info do 
+            puts "Running info assertion, fhirUser_id_claim != nil = #{fhirUser_id_claim != nil}, fhirUser_intr_claim eq? fhirUser_id_claim = #{fhirUser_intr_claim.eql?(fhirUser_id_claim)}"
+            puts "fhirUser_id_claim = #{fhirUser_id_claim}, fhirUser_intr_claim = #{fhirUser_intr_claim}"
+            assert fhirUser_intr_claim.eql?(fhirUser_id_claim), "Introspection response SHOULD include fhirUser claim because ID token included in original access response" if fhirUser_id_claim != nil
+            puts "Finished running assertion"
+          end
+          puts "Now at end of ID token section"
         end
-
-
       end
 
     end

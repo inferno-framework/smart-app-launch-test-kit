@@ -84,18 +84,10 @@ module SMARTAppLaunch
             description: 'The JSON body of the token introspection response when provided an ACTIVE token'
 
       def assert_introspection_response_match(json_response, claim_key, expected_value)
-        puts "Claim value: #{json_response[claim_key]}"
         expected_value = expected_value.strip
         claim_value = json_response[claim_key]
         assert claim_value != nil, "Failure: introspection response has no claim for '#{claim_key}'"
         claim_value = claim_value.strip
-        puts "Expected value: #{expected_value}"
-        puts "expected_string is_a string? #{expected_value.is_a?(String)}"
-        puts "claim_string is_a string? #{claim_value.is_a?(String)}"
-        puts "expected_string encoding: #{expected_value.encoding}"
-        puts "claim_string encoding: #{claim_value.encoding}"
-        puts "Eql? #{claim_value.eql?(expected_value)}"
-        puts "Spaceship comparsion: #{expected_value <=> claim_value}"
         assert claim_value.eql?(expected_value), 
             "Failure: expected introspection response value for '#{claim_key}' to match expected value '#{expected_value}'"
       end
@@ -109,55 +101,41 @@ module SMARTAppLaunch
         assert_introspection_response_match(active_introspection_response_body_parsed, 'client_id', standalone_client_id)
         assert_introspection_response_match(active_introspection_response_body_parsed, 'scope', standalone_received_scopes)
 
-        # exp field 
+        # Cannot verify exact value for exp, so instead ensure its value represents a time >= 10 minutes in the past 
         exp = active_introspection_response_body_parsed['exp']
-        assert exp != nil, "Failure: introspection response has no claim for required field 'exp'"
+        assert exp != nil, "Failure: introspection response has no claim for 'exp'"
         current_time = Time.now.to_i 
-        # Ensure token exp time is within at least 10 minutes of the past
-        assert exp.to_i >= current_time - 6000, "Failure: expired token - exp claim of #{exp} for active token is more than 10 minutes in the past"
+        assert exp.to_i >= current_time - 6000, "Failure: expired token, exp claim of #{exp} for active token is more than 10 minutes in the past"
         
         # Conditional fields
-        if standalone_patient_id.present?
-          puts "Standalone_patient_id present, value: #{standalone_patient_id}"
-          assert_introspection_response_match(active_introspection_response_body_parsed, 'patient', standalone_patient_id)
-        end
-        
-        if standalone_encounter_id.present?
-          assert_introspection_response_match(active_introspection_response_body_parsed, 'encounter', standalone_encounter_id)
-        end
-        # assert active_introspection_response_body_parsed['patient'].strip == standalone_patient_id.strip, "Expected patient context: #{standalone_patient_id}" if standalone_patient_id.present?
-        # assert active_introspection_response_body_parsed['encounter'].strip == standalone_encounter_id.strip, "Expected patient context: #{standalone_encounter_id}" if standalone_encounter_id.present?
+        assert_introspection_response_match(active_introspection_response_body_parsed, 'patient', standalone_patient_id) if standalone_patient_id.present?
+        assert_introspection_response_match(active_introspection_response_body_parsed, 'encounter', standalone_encounter_id) if standalone_encounter_id.present?
 
         # ID Token Fields
         if standalone_id_token.present?
-          # parse
           id_payload, id_header =
           JWT.decode(
             standalone_id_token,
             nil,
             false
           )
-          puts "ID token payload: #{id_payload}"
-          puts "ID token header: #{id_header}"
+         
+          # Required fields if ID token present
           id_token_iss = id_payload['iss']
           id_token_sub = id_payload['sub']
+
           assert id_token_iss != nil, "Failure: ID token from access token response does not have 'iss' claim"
           assert id_token_sub != nil, "Failure: ID token from access token response does not have 'sub' claim"
           assert_introspection_response_match(active_introspection_response_body_parsed, 'iss', id_token_iss)
           assert_introspection_response_match(active_introspection_response_body_parsed, 'sub', id_token_sub)
 
+          # fhirUser not required but recommended
           fhirUser_id_claim = id_payload['fhirUser']
-          # TODO issue warning if not present or if introspection response does not have claim for fhirUser
           fhirUser_intr_claim = active_introspection_response_body_parsed['fhirUser']
 
-          puts "About to enter info do section"
           info do 
-            puts "Running info assertion, fhirUser_id_claim != nil = #{fhirUser_id_claim != nil}, fhirUser_intr_claim eq? fhirUser_id_claim = #{fhirUser_intr_claim.eql?(fhirUser_id_claim)}"
-            puts "fhirUser_id_claim = #{fhirUser_id_claim}, fhirUser_intr_claim = #{fhirUser_intr_claim}"
             assert fhirUser_intr_claim.eql?(fhirUser_id_claim), "Introspection response SHOULD include fhirUser claim because ID token included in original access response" if fhirUser_id_claim != nil
-            puts "Finished running assertion"
           end
-          puts "Now at end of ID token section"
         end
       end
 
@@ -188,7 +166,6 @@ module SMARTAppLaunch
         invalid_token_introspection_response_body_parsed = JSON.parse(invalid_token_introspection_response_body)
         assert invalid_token_introspection_response_body_parsed['active'] == false, "Failure: expected introspection response for 'active' to be false for invalid token"
         assert invalid_token_introspection_response_body_parsed.size == 1, "Failure: expected only 'active' field to be present in introspection response for invalid token"
-
       end
     end
   end

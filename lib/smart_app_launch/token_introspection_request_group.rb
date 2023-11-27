@@ -61,8 +61,6 @@ module SMARTAppLaunch
       This test will execute a token introspection request for an active token and ensure a 200 status and valid JSON
       body are returned in the response. 
       )
-      
- 
 
       input :standalone_access_token, 
             title: 'Access Token',
@@ -77,14 +75,13 @@ module SMARTAppLaunch
         body = "token=#{standalone_access_token}"
 
         if custom_authorization_header.present?
-          # parse out contents 
-          # get key
-          # get value
-          # add to headers map
+          parsed_header = custom_authorization_header.split(':', 2)
+          assert parsed_header.length == 2, "Incorrect custom HTTP header format input, expected: '<header name>: <header value>'"
+          headers[parsed_header[0]] = parsed_header[1].strip
         end
 
         if optional_introspection_request_params.present?
-          # append to body string with '&' 
+          body += "&#{optional_introspection_request_params}"
         end
 
         post(well_known_introspection_url, body: body, headers: headers)

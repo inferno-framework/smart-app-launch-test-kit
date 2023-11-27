@@ -83,10 +83,15 @@ module SMARTAppLaunch
             type: 'textarea',
             description: 'The JSON body of the token introspection response when provided an ACTIVE token'
 
-      def assert_introspection_response_match(json_response, claim_key, expected_value)
-        expected_value = expected_value.strip
+      def get_json_claim_value(json_response, claim_key)
         claim_value = json_response[claim_key]
         assert claim_value != nil, "Failure: introspection response has no claim for '#{claim_key}'"
+        return claim_value
+      end
+      
+      def assert_introspection_response_match(json_response, claim_key, expected_value)
+        expected_value = expected_value.strip
+        claim_value = get_json_claim_value(json_response, claim_key)
         claim_value = claim_value.strip
         assert claim_value.eql?(expected_value), 
             "Failure: expected introspection response value for '#{claim_key}' to match expected value '#{expected_value}'"
@@ -97,15 +102,27 @@ module SMARTAppLaunch
         active_introspection_response_body_parsed = JSON.parse(active_token_introspection_response_body)
 
         # Required Fields
-        assert active_introspection_response_body_parsed['active'] == true, "Failure: expected introspection response for 'active' to be true for valid token"
+        assert active_introspection_response_body_parsed['active'] == true, "Failure: expected introspection response for 'active' to be Boolean value true for valid token"
         assert_introspection_response_match(active_introspection_response_body_parsed, 'client_id', standalone_client_id)
-        assert_introspection_response_match(active_introspection_response_body_parsed, 'scope', standalone_received_scopes)
+
+        response_scope_value = get_json_claim_value(active_introspection_response_body_parsed, 'scope')
+
+        # splitting contents and comparing values allows a scope lists with the same contents but different orders to still pass
+        response_scopes_split = response_scope_value.split()
+        expected_scopes_split = standalone_received_scopes.split()
+
+        assert response_scopes_split.length() == expected_scopes_split.length(), 
+          "Failure: number of scopes in introspection response, #{response_scopes_split.length()}, does not match number of scopes in access token response, #{expected_scopes_split.length()}"
+
+        expected_scopes_split.each do |scope|
+          assert response_scopes_split.include?(scope), "Failure: expected scope '#{scope}' not present in introspection response scopes"
+        end
 
         # Cannot verify exact value for exp, so instead ensure its value represents a time >= 10 minutes in the past 
         exp = active_introspection_response_body_parsed['exp']
         assert exp != nil, "Failure: introspection response has no claim for 'exp'"
         current_time = Time.now.to_i 
-        assert exp.to_i >= current_time - 6000, "Failure: expired token, exp claim of #{exp} for active token is more than 10 minutes in the past"
+        assert exp.to_i >= current_time - 600, "Failure: expired token, exp claim of #{exp} for active token is more than 10 minutes in the past"
         
         # Conditional fields
         assert_introspection_response_match(active_introspection_response_body_parsed, 'patient', standalone_patient_id) if standalone_patient_id.present?
@@ -134,11 +151,11 @@ module SMARTAppLaunch
           fhirUser_intr_claim = active_introspection_response_body_parsed['fhirUser']
 
           info do 
-            assert fhirUser_intr_claim.eql?(fhirUser_id_claim), "Introspection response SHOULD include fhirUser claim because ID token included in original access response" if fhirUser_id_claim != nil
+            assert fhirUser_intr_claim != nil, "Introspection response SHOULD include claim for fhirUser because ID token present in access token response" if fhirUser_id_claim != nil
+            assert fhirUser_intr_claim.eql?(fhirUser_id_claim), "Introspection response claim for fhirUser SHOULD match value in ID token" if fhirUser_id_claim != nil
           end
         end
       end
-
     end
 
     test do
@@ -164,7 +181,7 @@ module SMARTAppLaunch
       run do
         assert_valid_json(invalid_token_introspection_response_body)
         invalid_token_introspection_response_body_parsed = JSON.parse(invalid_token_introspection_response_body)
-        assert invalid_token_introspection_response_body_parsed['active'] == false, "Failure: expected introspection response for 'active' to be false for invalid token"
+        assert invalid_token_introspection_response_body_parsed['active'] == false, "Failure: expected introspection response for 'active' to be Boolean value false for invalid token"
         assert invalid_token_introspection_response_body_parsed.size == 1, "Failure: expected only 'active' field to be present in introspection response for invalid token"
       end
     end

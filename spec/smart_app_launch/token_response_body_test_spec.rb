@@ -116,6 +116,18 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
     end
   end
 
+  context 'when the fhirContext field is present' do
+    it 'fails if fhirContext is not an Array'
+
+    it 'fails if fhirContext contains a non-string element'
+
+    it 'fails if fhirContext contains an absolute reference'
+
+    it 'fails if fhirContext contains a reference with an invalid resource type'
+
+    it 'fails if fhirContext contains a reference with an invalid id'
+  end
+
   it 'persists outputs' do
     inputs = {
       access_token: 'ACCESS_TOKEN',

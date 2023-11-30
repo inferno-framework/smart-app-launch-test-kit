@@ -116,7 +116,7 @@ module SMARTAppLaunch
     def validate_fhir_context(fhir_context)
       return if fhir_context.nil?
 
-      assert fhir_context.is_a?(Array), "`fhirContext` field is a #{fihr_context.class.name}, but should be an Array"
+      assert fhir_context.is_a?(Array), "`fhirContext` field is a #{fhir_context.class.name}, but should be an Array"
 
       fhir_context.each do |reference|
         assert reference.is_a?(String), "`#{reference.inspect}` is not a string"

@@ -119,7 +119,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
   context 'when the fhirContext field is present' do
     it 'passes if fhirContext valid' do
       numericalElement = 123
-      body = valid_body.merge(fhirContext: ["Organization/123", "DiagnosticReport/123"])
+      body = valid_body.merge(fhirContext: ["Organization/123", "DiagnosticReport/123", "Observation/123/_history/2"])
       create_token_request(body: body)
 
       result = run(test, requested_scopes: 'patient/*.*')

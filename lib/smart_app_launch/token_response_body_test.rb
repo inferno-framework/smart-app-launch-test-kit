@@ -11,6 +11,8 @@ module SMARTAppLaunch
       has been denied. `access_token`, `token_type`, and `scope` are required.
       `token_type` must be Bearer. `expires_in` is required for token
       refreshes.
+
+      The format of the optional `fhirContext` field is validated if present.
     )
     id :smart_token_response_body
 
@@ -48,6 +50,8 @@ module SMARTAppLaunch
       assert access_token.present?, 'Token response did not contain an access token'
       assert token_response_body['token_type']&.casecmp('Bearer')&.zero?,
              '`token_type` field must have a value of `Bearer`'
+
+      validate_fhir_context(token_response_body['fhirContext'])
     end
   end
 end

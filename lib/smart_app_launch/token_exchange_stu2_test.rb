@@ -33,6 +33,7 @@ module SMARTAppLaunch
     input :client_auth_type,
           title: 'Client Authentication Method',
           type: 'radio',
+          default: 'public',
           options: {
             list_options: [
               {

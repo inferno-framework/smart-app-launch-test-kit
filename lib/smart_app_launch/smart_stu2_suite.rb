@@ -58,6 +58,20 @@ module SMARTAppLaunch
       * `#{Inferno::Application[:base_url]}/custom/smart_stu2/.well-known/jwks.json`
     DESCRIPTION
 
+    input_instructions %(
+      When running tests at this level, the token introspection endpoint is not available as a manual input.
+      Instead, group 3 Token Introspection will assume the token introspection endpoint 
+      will be output from group 1 Standalone Launch tests, specifically the SMART On FHIR Discovery tests that query
+      the .well-known/smart-configuration endpoint. However, including the token introspection
+      endpoint as part of the well-known ouput is NOT required and is not formally checked in the SMART On FHIR Discovery
+      tests.  RFC-7662 on Token Introspection says that "The means by which the protected resource discovers the location of the introspection
+      endpoint are outside the scope of this specification" and the Token Introspection IG does not add any further
+      requirements to this.  
+
+      If the token introspection endpoint of the system under test is NOT available at .well-known/smart-configuration, 
+      please run the test groups individually and group 3 Token Introspection will include the introspection endpoint as a manual input.  
+    )
+
     group do
       title 'Standalone Launch'
       id :smart_full_standalone_launch
@@ -251,7 +265,7 @@ module SMARTAppLaunch
       group from: :token_introspection_response_group
 
       input_order :well_known_introspection_url, :custom_authorization_header, :optional_introspection_request_params,
-                  :url, :client_id, :client_secret, :requested_scopes, :smart_authorization_url, :authorization_method,
+                  :url, :standalone_client_id, :standalone_client_secret, :smart_authorization_url, :authorization_method,
                   :use_pkce, :pkce_code_challenge_method
 
       input_instructions %(
@@ -262,10 +276,10 @@ module SMARTAppLaunch
         Introspection.  If Standalone Launch tests were successfully executed, these inputs will auto-populate.
 
         If the introspection endpoint is protected, testers must enter their own HTTP Authorization header for the introspection request.  See
-        [RFC 7616 The 'Basic' HTTP Authentication Scheme](https://datatracker.ietf.org/doc/html/rfc7617) for the most common
-        approach that uses client credentials.  Testers may also provide any additional parameters needed for their authorization 
-        server to complete the introspection request.  All parameter values for both the header and the body must be input
-        URI-encoded.
+      [RFC 7616 The 'Basic' HTTP Authentication Scheme](https://datatracker.ietf.org/doc/html/rfc7617) for the most common
+      approach that uses client credentials.  Testers may also provide any additional parameters needed for their authorization 
+      server to complete the introspection request.  **For both the Authorization header and request parameters, user-input
+      values will be sent exactly as entered and therefore the tester must URI-encode any appropriate values.**
       )
 
     end

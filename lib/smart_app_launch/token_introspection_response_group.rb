@@ -98,6 +98,7 @@ module SMARTAppLaunch
       end
 
       run do
+        skip_if active_token_introspection_response_body.nil?, 'No introspection response available to validate.'
         assert_valid_json(active_token_introspection_response_body)
         active_introspection_response_body_parsed = JSON.parse(active_token_introspection_response_body)
 
@@ -179,6 +180,7 @@ module SMARTAppLaunch
             description: 'The JSON body of the token introspection response when provided an INVALID token'
 
       run do
+        skip_if invalid_token_introspection_response_body.nil?, 'No invalid introspection response available to validate.'
         assert_valid_json(invalid_token_introspection_response_body)
         invalid_token_introspection_response_body_parsed = JSON.parse(invalid_token_introspection_response_body)
         assert invalid_token_introspection_response_body_parsed['active'] == false, "Failure: expected introspection response for 'active' to be Boolean value false for invalid token"

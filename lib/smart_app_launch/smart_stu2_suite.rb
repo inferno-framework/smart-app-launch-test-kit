@@ -231,7 +231,7 @@ module SMARTAppLaunch
 
         OAuth 2.0 Token introspection, as described in [RFC-7662](https://datatracker.ietf.org/doc/html/rfc7662), allows
         an authorized resource server to query an OAuth 2.0 authorization server for metadata on a token.  The
-        [SMART App Launch STU 2.1 Implementation Guide Section on Token Introspection](https://hl7.org/fhir/smart-app-launch/token-introspection.html)
+        [SMART App Launch STU2 Implementation Guide Section on Token Introspection](https://hl7.org/fhir/smart-app-launch/STU2/token-introspection.html)
         states that "SMART on FHIR EHRs SHOULD support token introspection, which allows a broader ecosystem of resource servers
         to leverage authorization decisions managed by a single authorization server."
 

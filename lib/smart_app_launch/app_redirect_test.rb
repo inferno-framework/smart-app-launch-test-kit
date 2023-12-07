@@ -75,7 +75,7 @@ module SMARTAppLaunch
     def authorization_url_builder(url, params)
       uri = URI(url)
 
-      # because the URL might have paramters on it
+      # because the URL might have parameters on it
       original_parameters = Hash[URI.decode_www_form(uri.query || '')]
       new_params = original_parameters.merge(params)
 

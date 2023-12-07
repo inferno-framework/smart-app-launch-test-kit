@@ -69,7 +69,7 @@ module SMARTAppLaunch
             description: 'The ID token from the original access token response body, IF it was present'
 
       input :standalone_patient_id,
-            title: 'Expected Introspection Response for Patient Launch Context Paramter',
+            title: 'Expected Introspection Response for Patient Launch Context Parameter',
             optional: true,
             description: 'The value for patient launch context from the original access token response body, IF it was present'
 

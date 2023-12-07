@@ -222,7 +222,6 @@ module SMARTAppLaunch
             }
     end
   
-    # TBD - group token introspection? 
     group do
       title 'Token Introspection'
       id :smart_token_introspection

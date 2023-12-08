@@ -9,11 +9,6 @@
       "value": "https://inferno.healthit.gov/reference-server/r4"
     },
     {
-      "name": "well_known_introspection_url",
-      "type": "text",
-      "value": "https://inferno.healthit.gov/reference-server/oauth/token/introspect"
-    },
-    {
       "name": "standalone_client_id",
       "type": "text",
       "value": "SAMPLE_PUBLIC_CLIENT_ID"

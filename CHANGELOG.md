@@ -1,3 +1,12 @@
+# 0.4.0
+
+* Fix jwt dependency by @Jammjammjamm in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/52
+* Check fhirContext by @emichaud998 in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/56
+* Add Token introspection tests by @arscan in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/57
+
 # 0.3.0
 
 * Add support for asymmetric client auth to SMART v2.

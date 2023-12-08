@@ -1,11 +1,11 @@
 require_relative 'standalone_launch_group_stu2'
 
 module SMARTAppLaunch
-  class TokenIntrospectionAccessTokenGroup < Inferno::TestGroup
+  class SMARTTokenIntrospectionAccessTokenGroup < Inferno::TestGroup
     title 'Request New Access Token to Introspect'
     run_as_group
 
-    id :token_introspection_access_token_group
+    id :smart_token_introspection_access_token_group
 
     description %(
       These tests are repeated from the Standalone Launch tests in order to receive a new, active access token that

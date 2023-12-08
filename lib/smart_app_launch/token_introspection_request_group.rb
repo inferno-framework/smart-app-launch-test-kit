@@ -4,11 +4,11 @@ require_relative 'well_known_endpoint_test'
 require_relative 'standalone_launch_group'
 
 module SMARTAppLaunch
-  class TokenIntrospectionRequestGroup < Inferno::TestGroup
+  class SMARTTokenIntrospectionRequestGroup < Inferno::TestGroup
     title 'Issue Token Introspection Request'
     run_as_group
 
-    id :token_introspection_request_group
+    id :smart_token_introspection_request_group
     description %(
       This group of tests executes the token introspection requests and ensures the correct HTTP response is returned
       but does not validate the contents of the token introspection response. 

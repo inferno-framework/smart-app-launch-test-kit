@@ -2,26 +2,26 @@ require_relative 'token_introspection_request_group'
 require_relative 'token_exchange_test'
 
 module SMARTAppLaunch
-  class TokenIntrospectionResponseGroup < Inferno::TestGroup
+  class SMARTTokenIntrospectionResponseGroup < Inferno::TestGroup
     title 'Validate Token Introspection Response'
     run_as_group
 
-    id :token_introspection_response_group
+    id :smart_token_introspection_response_group
     description %(
-      This group of tests validates the contents of the token introspection response by comparing the fields and/or 
-      values in the token introspection response to the fields and/or values of the original access token response 
-      in which the access token was given to the client.   
+      This group of tests validates the contents of the token introspection response by comparing the fields and/or
+      values in the token introspection response to the fields and/or values of the original access token response
+      in which the access token was given to the client.
       )
 
       input_instructions %(
         There are two categories of input for this test group: 
 
-        1. The access token response values, which will dictate what the tests will expect to find in the token 
-        introspection response.  If the Request New Access Token group was run, these inputs will auto-populate.   
+        1. The access token response values, which will dictate what the tests will expect to find in the token
+        introspection response.  If the Request New Access Token group was run, these inputs will auto-populate.
         
         2. The token introspection response bodies. If the Issue Introspection Request test group was run, these will
-        auto-populate; otherwise, the tester will need to an run out-of-band INTROSPECTION requests for a. An ACTIVE 
-        access token, AND b. An INACTIVE OR INVALID token 
+        auto-populate; otherwise, the tester will need to an run out-of-band INTROSPECTION requests for a. An ACTIVE
+        access token, AND b. An INACTIVE OR INVALID token
 
         See [RFC-7662](https://datatracker.ietf.org/doc/html/rfc7662#section-2) for details on active vs inactive tokens.
       )
@@ -31,11 +31,11 @@ module SMARTAppLaunch
 
       description %(
         This test will check whether the metadata in the token introspection response is correct for an active token and
-         that the response data matches the data in the original access token and/or access token response from the 
-         authorization server, including the following:
-      
+        that the response data matches the data in the original access token and/or access token response from the
+        authorization server, including the following:
+
         Required:
-        *  `active` claim is set to true 
+        * `active` claim is set to true
         * `scope`, `client_id`, and `exp` claim(s) match between introspection response and access token
 
         It is not possible to know what the expected value for `exp` is in advance, so Inferno tests that the claim is

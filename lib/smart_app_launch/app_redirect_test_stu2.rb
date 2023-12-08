@@ -16,7 +16,7 @@ module SMARTAppLaunch
     )
 
     input :authorization_method,
-          title: 'Authorization Method',
+          title: 'Authorization Request Method',
           type: 'radio',
           default: 'get',
           options: {

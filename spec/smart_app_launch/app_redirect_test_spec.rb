@@ -123,7 +123,7 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
     let(:base_url) { 'https://example.com' }
     let(:new_params) { { one: 1, two: 2 } }
 
-    context 'when there are no existing URL paramters' do
+    context 'when there are no existing URL parameters' do
       let(:result) do
         subject.authorization_url_builder(base_url, new_params)
       end
@@ -131,7 +131,7 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
       it { expect(result).to eq "https://example.com?one=1&two=2" }
     end
 
-    context 'when there are existing URL paramters' do
+    context 'when there are existing URL parameters' do
       let(:base_url) { 'https://example.com?keep=me' }
       let(:result) do
         subject.authorization_url_builder(base_url, new_params)

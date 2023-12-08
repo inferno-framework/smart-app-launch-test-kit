@@ -1,0 +1,26 @@
+require_relative 'standalone_launch_group_stu2'
+
+module SMARTAppLaunch
+  class SMARTTokenIntrospectionAccessTokenGroup < Inferno::TestGroup
+    title 'Request New Access Token to Introspect'
+    run_as_group
+
+    id :smart_token_introspection_access_token_group
+
+    description %(
+      These tests are repeated from the Standalone Launch tests in order to receive a new, active access token that
+      will be provided for token introspection. This test group may be skipped if the tester can obtain an access token
+      __and__ the contents of the access token response body by some other means.
+
+      These tests are currently designed such that the token introspection URL must be present in the SMART well-known endpoint.
+
+    )
+    
+    input_instructions %(
+      Register Inferno as a Standalone SMART App and provide the registration details below.
+    )
+    
+    group from: :smart_discovery_stu2
+    group from: :smart_standalone_launch_stu2
+  end
+end

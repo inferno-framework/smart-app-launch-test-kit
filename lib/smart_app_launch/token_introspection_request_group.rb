@@ -73,6 +73,9 @@ module SMARTAppLaunch
 
       run do
 
+        # If this is being chained from an earlier test, it might be blank if not present in the well-known endpoint
+        skip_if well_known_introspection_url.nil?, 'No introspection URL present in SMART well-known endpoint.'
+
         headers = {'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded'}
         body = "token=#{standalone_access_token}"
 
@@ -103,6 +106,10 @@ module SMARTAppLaunch
 
       output :invalid_token_introspection_response_body
       run do
+
+        # If this is being chained from an earlier test, it might be blank if not present in the well-known endpoint
+        skip_if well_known_introspection_url.nil?, 'No introspection URL present in SMART well-known endpoint.'
+
         headers = {'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded'}
         body = "token=invalid_token_value"
         post(well_known_introspection_url, body: body, headers: headers)

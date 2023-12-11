@@ -7,7 +7,7 @@ module SMARTAppLaunch
 
     id :smart_backend_services
 
-    input :bulk_token_endpoint,
+    input :smart_token_url,
           title: 'Backend Services Token Endpoint',
           description: <<~DESCRIPTION
             The OAuth 2.0 Token Endpoint used by the Backend Services specification to provide bearer tokens.
@@ -49,7 +49,7 @@ module SMARTAppLaunch
     output :bearer_token
 
     http_client :token_endpoint do
-      url :bulk_token_endpoint
+      url :smart_token_url
     end
 
     test from: :tls_version_test do
@@ -61,10 +61,10 @@ module SMARTAppLaunch
         server SHALL be secured using Transport Layer Security (TLS) Protocol
         Version 1.2 (RFC5246).
       DESCRIPTION
-      id :g10_bulk_token_tls_version
+      id :smart_backend_services_token_tls_version
 
       config(
-        inputs: { url: { name: :bulk_token_endpoint } },
+        inputs: { url: { name: :smart_token_url } },
         options: {  minimum_allowed_version: OpenSSL::SSL::TLS1_2_VERSION }
       )
     end
@@ -91,7 +91,7 @@ module SMARTAppLaunch
                                                                  scope: bulk_scope,
                                                                  iss: bulk_client_id,
                                                                  sub: bulk_client_id,
-                                                                 aud: bulk_token_endpoint,
+                                                                 aud: smart_token_url,
                                                                  grant_type: 'not_a_grant_type',
                                                                  kid: bulk_jwks_kid)
 
@@ -123,7 +123,7 @@ module SMARTAppLaunch
                                                                  scope: bulk_scope,
                                                                  iss: bulk_client_id,
                                                                  sub: bulk_client_id,
-                                                                 aud: bulk_token_endpoint,
+                                                                 aud: smart_token_url,
                                                                  client_assertion_type: 'not_an_assertion_type',
                                                                  kid: bulk_jwks_kid)
 
@@ -164,7 +164,7 @@ module SMARTAppLaunch
                                                                  scope: bulk_scope,
                                                                  iss: 'not_a_valid_iss',
                                                                  sub: bulk_client_id,
-                                                                 aud: bulk_token_endpoint,
+                                                                 aud: smart_token_url,
                                                                  kid: bulk_jwks_kid)
 
         post(**{ client: :token_endpoint }.merge(post_request_content))
@@ -187,7 +187,7 @@ module SMARTAppLaunch
                                                                  scope: bulk_scope,
                                                                  iss: bulk_client_id,
                                                                  sub: bulk_client_id,
-                                                                 aud: bulk_token_endpoint,
+                                                                 aud: smart_token_url,
                                                                  kid: bulk_jwks_kid)
 
         authentication_response = post(**{ client: :token_endpoint }.merge(post_request_content))

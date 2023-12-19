@@ -221,9 +221,9 @@ module SMARTAppLaunch
             }
     end
 
-    group from: :smart_token_introspection
-
     group from: :smart_backend_services
+
+    group from: :smart_token_introspection
 
   end
 end

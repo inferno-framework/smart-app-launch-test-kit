@@ -68,6 +68,8 @@ module SMARTAppLaunch
         'scope' => scope,
         'grant_type' => grant_type,
         'client_assertion_type' => client_assertion_type,
+        # proposal: call ClientAssertionBuilder here instead
+        # will need to account for kid somehow in client_assertion_builder
         'client_assertion' => client_assertion.to_s
       }.compact
     end

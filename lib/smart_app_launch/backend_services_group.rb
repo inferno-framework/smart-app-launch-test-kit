@@ -17,14 +17,14 @@ module SMARTAppLaunch
           description: <<~DESCRIPTION
             The OAuth 2.0 Token Endpoint used by the Backend Services specification to provide bearer tokens.
           DESCRIPTION
-    input :bulk_client_id,
-          title: 'Bulk Data Client ID',
+    input :backend_services_client_id,
+          title: 'Backend Services Client ID',
           description: 'Client ID provided at registration to the Inferno application.'
-    input :bulk_scope,
-          title: 'Bulk Data Scopes',
-          description: 'Bulk Data Scopes provided at registration to the Inferno application.',
+    input :backend_services_requested_scope,
+          title: 'Backend Services Requested Scopes',
+          description: 'Backend Services Scopes provided at registration to the Inferno application; will be `system/` scopes',
           default: 'system/*.read'
-    input :bulk_encryption_method,
+    input :backend_services_encryption_method,
           title: 'Encryption Method',
           description: <<~DESCRIPTION,
             The server is required to suport either ES384 or RS384 encryption methods for JWT signature verification.
@@ -44,8 +44,8 @@ module SMARTAppLaunch
               }
             ]
           }
-    input :bulk_jwks_kid,
-          title: 'Bulk Data JWKS kid',
+    input :backend_services_jwks_kid,
+          title: 'Backend Services JWKS kid',
           description: <<~DESCRIPTION,
             The key ID of the JWKS private key to use for signing the client assertion when fetching an auth token.
             Defaults to the first JWK in the list if no kid is supplied.

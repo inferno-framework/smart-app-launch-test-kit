@@ -20,13 +20,13 @@ module SMARTAppLaunch
     # link 'http://hl7.org/fhir/uv/bulkdata/STU1.0.1/authorization/index.html#protocol-details'
 
     run do
-      post_request_content = AuthorizationRequestBuilder.build(encryption_method: bulk_encryption_method,
-                                                              scope: bulk_scope,
-                                                              iss: bulk_client_id,
-                                                              sub: bulk_client_id,
+      post_request_content = AuthorizationRequestBuilder.build(encryption_method: backend_services_encryption_method,
+                                                              scope: backend_services_requested_scope,
+                                                              iss: backend_services_client_id,
+                                                              sub: backend_services_client_id,
                                                               aud: smart_token_url,
                                                               grant_type: 'not_a_grant_type',
-                                                              kid: bulk_jwks_kid)
+                                                              kid: backend_services_jwks_kid)
 
       post(**{ client: :token_endpoint }.merge(post_request_content))
 

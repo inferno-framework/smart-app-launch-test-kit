@@ -12,12 +12,12 @@ module SMARTAppLaunch
     output :authentication_response
 
     run do
-      post_request_content = AuthorizationRequestBuilder.build(encryption_method: bulk_encryption_method,
-                                                                scope: bulk_scope,
-                                                                iss: bulk_client_id,
-                                                                sub: bulk_client_id,
+      post_request_content = AuthorizationRequestBuilder.build(encryption_method: backend_services_encryption_method,
+                                                                scope: backend_services_requested_scope,
+                                                                iss: backend_services_client_id,
+                                                                sub: backend_services_client_id,
                                                                 aud: smart_token_url,
-                                                                kid: bulk_jwks_kid)
+                                                                kid: backend_services_jwks_kid)
 
       authentication_response = post(**{ client: :token_endpoint }.merge(post_request_content))
 

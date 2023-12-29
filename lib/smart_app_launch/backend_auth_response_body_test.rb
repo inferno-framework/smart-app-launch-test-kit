@@ -5,16 +5,16 @@ module SMARTAppLaunch
     id :smart_backend_services_auth_response_body
     title 'Authorization request response body contains required information encoded in JSON'
     description <<~DESCRIPTION
-      The access token response SHALL be a JSON object with the following properties:
+      [The SMART Backend Services IG STU 2.0.0](https://hl7.org/fhir/smart-app-launch/STU2/backend-services.html#issue-access-token)
+      states The access token response SHALL be a JSON object with the following properties:
 
       | Token Property | Required? | Description |
       | --- | --- | --- |
-      | access_token | required | The access token issued by the authorization server. |
-      | token_type | required | Fixed value: bearer. |
-      | expires_in | required | The lifetime in seconds of the access token. The recommended value is 300, for a five-minute token lifetime. |
-      | scope | required | Scope of access authorized. Note that this can be different from the scopes requested by the app. |
+      | `access_token` | required | The access token issued by the authorization server. |
+      | `token_type` | required | Fixed value: `bearer`. |
+      | `expires_in` | required | The lifetime in seconds of the access token. The recommended value is `300`, for a five-minute token lifetime. |
+      | `scope` | required | Scope of access authorized. Note that this can be different from the scopes requested by the app. |
     DESCRIPTION
-    # link 'http://hl7.org/fhir/uv/bulkdata/STU1.0.1/authorization/index.html#issuing-access-tokens'
 
     input :authentication_response
     output :bearer_token

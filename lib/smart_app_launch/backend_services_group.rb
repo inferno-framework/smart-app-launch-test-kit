@@ -60,11 +60,12 @@ module SMARTAppLaunch
     test from: :tls_version_test do
       title 'Authorization service token endpoint secured by transport layer security'
       description <<~DESCRIPTION
-        [§170.315(g)(10) Test
-        Procedure](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services)
-        requires that all exchanges described herein between a client and a
-        server SHALL be secured using Transport Layer Security (TLS) Protocol
-        Version 1.2 (RFC5246).
+        The [SMART Backend Services IG STU 2.0.0](https://hl7.org/fhir/smart-app-launch/STU2/backend-services.html#request-1)
+        states "the client SHALL use the Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246) 
+        or a more recent version of TLS to authenticate the identity of the FHIR authorization server and to 
+        establish an encrypted, integrity-protected link for securing all exchanges between the client and the 
+        FHIR authorization server’s token endpoint. All exchanges described herein between the client and the 
+        FHIR server SHALL be secured using TLS V1.2 or a more recent version of TLS."
       DESCRIPTION
       id :smart_backend_services_token_tls_version
 

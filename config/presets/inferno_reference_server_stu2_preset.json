@@ -81,11 +81,6 @@
       }
     },
     {
-      "name": "smart_token_url",
-      "type": "text",
-      "value": "https://inferno.healthit.gov/reference-server/oauth/token"
-    },
-    {
       "name": "backend_services_client_id",
       "type": "text",
       "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InJlZ2lzdHJhdGlvbi10b2tlbiJ9.eyJqd2tzX3VybCI6Imh0dHA6Ly8xMC4xNS4yNTIuNzMvaW5mZXJuby8ud2VsbC1rbm93bi9qd2tzLmpzb24iLCJhY2Nlc3NUb2tlbnNFeHBpcmVJbiI6MTUsImlhdCI6MTU5NzQxMzE5NX0.q4v4Msc74kN506KTZ0q_minyapJw0gwlT6M_uiL73S4"

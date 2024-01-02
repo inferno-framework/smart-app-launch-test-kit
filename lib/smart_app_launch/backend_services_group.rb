@@ -4,6 +4,7 @@ require_relative 'backend_invalid_client_assertion_test'
 require_relative 'backend_invalid_jwt_test'
 require_relative 'backend_auth_request_success_test'
 require_relative 'backend_auth_response_body_test'
+require_relative 'token_exchange_stu2_test'
 
 module SMARTAppLaunch
   class SMARTBackendServices < Inferno::TestGroup
@@ -24,26 +25,27 @@ module SMARTAppLaunch
           title: 'Backend Services Requested Scopes',
           description: 'Backend Services Scopes provided at registration to the Inferno application; will be `system/` scopes',
           default: 'system/*.read'
-    input :backend_services_encryption_method,
-          title: 'Encryption Method',
-          description: <<~DESCRIPTION,
-            The server is required to suport either ES384 or RS384 encryption methods for JWT signature verification.
-            Select which method to use.
-          DESCRIPTION
-          type: 'radio',
-          default: 'ES384',
-          options: {
-            list_options: [
-              {
-                label: 'ES384',
-                value: 'ES384'
-              },
-              {
-                label: 'RS384',
-                value: 'RS384'
-              }
-            ]
+
+    input :asymm_conf_client_encryption_method,
+      title: 'Encryption Method for Asymmetric Confidential Client Authorization',
+      description: <<~DESCRIPTION,
+        The server is required to suport either ES384 or RS384 encryption methods for JWT signature verification.
+        Select which method to use.
+      DESCRIPTION
+      type: 'radio',
+      default: 'ES384',
+      options: {
+        list_options: [
+          {
+            label: 'ES384',
+            value: 'ES384'
+          },
+          {
+            label: 'RS384',
+            value: 'RS384'
           }
+        ]
+      }
     input :backend_services_jwks_kid,
           title: 'Backend Services JWKS kid',
           description: <<~DESCRIPTION,

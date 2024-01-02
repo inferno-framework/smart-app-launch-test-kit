@@ -12,7 +12,7 @@ module SMARTAppLaunch
     output :authentication_response
 
     run do
-      post_request_content = AuthorizationRequestBuilder.build(encryption_method: backend_services_encryption_method,
+      post_request_content = AuthorizationRequestBuilder.build(encryption_method: asymm_conf_client_encryption_method,
                                                                 scope: backend_services_requested_scope,
                                                                 iss: backend_services_client_id,
                                                                 sub: backend_services_client_id,

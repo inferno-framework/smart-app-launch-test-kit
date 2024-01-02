@@ -222,7 +222,7 @@ module SMARTAppLaunch
     end
 
     group do
-      title 'Backend Services'
+      title 'SMART Backend Services'
       id :smart_full_backend_services
 
       input_instructions <<~INSTRUCTIONS

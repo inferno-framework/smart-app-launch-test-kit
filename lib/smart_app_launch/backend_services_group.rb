@@ -8,7 +8,7 @@ require_relative 'token_exchange_stu2_test'
 
 module SMARTAppLaunch
   class SMARTBackendServices < Inferno::TestGroup
-    title 'Backend Services'
+    title 'SMART Backend Services'
     short_description 'Demonstrate SMART Backend Services Authorization'
 
     id :smart_backend_services

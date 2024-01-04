@@ -57,7 +57,8 @@ module SMARTAppLaunch
           client_auth_encryption_method: encryption_method, 
           iss: iss,
           sub: sub,
-          aud: aud
+          aud: aud,
+          kid: kid
           )
     end
 

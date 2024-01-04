@@ -16,7 +16,8 @@ module SMARTAppLaunch
                 :grant_type,
                 :iss,
                 :jti,
-                :sub
+                :sub,
+                :kid
 
     def initialize(
       client_auth_encryption_method:,
@@ -24,7 +25,8 @@ module SMARTAppLaunch
       sub:,
       aud:,
       exp: 5.minutes.from_now.to_i,
-      jti: SecureRandom.hex(32)
+      jti: SecureRandom.hex(32),
+      kid: nil
     )
       @client_auth_encryption_method = client_auth_encryption_method
       @iss = iss
@@ -35,24 +37,27 @@ module SMARTAppLaunch
       @client_assertion_type = client_assertion_type
       @exp = exp
       @jti = jti
+      @kid = kid
     end
 
     def private_key
-      @private_key ||=
-        JWKS.jwks
-          .find { |key| key[:key_ops]&.include?('sign') && key[:alg] == client_auth_encryption_method }
+      @private_key ||= JWKS.jwks
+            .select { |key| key[:key_ops]&.include?('sign') }
+            .select { |key| key[:alg] == client_auth_encryption_method }
+            .find { |key| !kid || key[:kid] == kid }
     end
 
     def jwt_payload
       { iss:, sub:, aud:, exp:, jti: }.compact
     end
 
-    def kid
-      private_key.kid
-    end
-
     def signing_key
-      private_key.signing_key
+      begin
+        private_key.signing_key
+      rescue NoMethodError
+        # Clearer error message for user when inputs are incorrect
+        raise("No signing key found for inputs: encryption method = '#{client_auth_encryption_method}' and kid = '#{kid}'") 
+      end
     end
 
     def client_assertion

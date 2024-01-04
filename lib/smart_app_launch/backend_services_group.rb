@@ -1,4 +1,4 @@
-require_relative 'authorization_request_builder'
+require_relative 'backend_auth_request_builder'
 require_relative 'backend_invalid_grant_type_test'
 require_relative 'backend_invalid_client_assertion_test'
 require_relative 'backend_invalid_jwt_test'

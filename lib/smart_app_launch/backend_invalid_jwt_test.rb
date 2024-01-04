@@ -1,4 +1,4 @@
-require_relative 'authorization_request_builder'
+require_relative 'backend_auth_request_builder'
 
 module SMARTAppLaunch 
   class BackendServicesInvalidJWTTest < Inferno::Test 
@@ -29,7 +29,7 @@ module SMARTAppLaunch
     DESCRIPTION
       
     run do
-      post_request_content = AuthorizationRequestBuilder.build(encryption_method: asymm_conf_client_encryption_method,
+      post_request_content = BackendServicesAuthorizationRequestBuilder.build(encryption_method: asymm_conf_client_encryption_method,
                                                                 scope: backend_services_requested_scope,
                                                                 iss: backend_services_client_id,
                                                                 sub: backend_services_client_id,

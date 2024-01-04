@@ -2,7 +2,7 @@ require 'json/jwt'
 require_relative 'client_assertion_builder'
 
 module SMARTAppLaunch
-  class AuthorizationRequestBuilder
+  class BackendServicesAuthorizationRequestBuilder
     def self.build(...)
       new(...).authorization_request
     end

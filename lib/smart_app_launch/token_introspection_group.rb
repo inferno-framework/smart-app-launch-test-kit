@@ -46,7 +46,7 @@ module SMARTAppLaunch
 
     input_order :url, :standalone_client_id, :standalone_client_secret,
                 :authorization_method, :use_pkce, :pkce_code_challenge_method,
-                :standalone_requested_scopes, :client_auth_encryption_method,
+                :standalone_requested_scopes, :asymm_conf_client_encryption_method,
                 :client_auth_type, :custom_authorization_header,
                 :optional_introspection_request_params
     input_instructions %(

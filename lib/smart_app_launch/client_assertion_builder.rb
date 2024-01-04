@@ -54,7 +54,7 @@ module SMARTAppLaunch
     def signing_key
       begin
         private_key.signing_key
-      rescue NoMethodError
+      rescue NoMethodError => error 
         # Clearer error message for user when inputs are incorrect
         raise("No signing key found for inputs: encryption method = '#{client_auth_encryption_method}' and kid = '#{kid}'") 
       end

@@ -110,7 +110,7 @@ RSpec.describe SMARTAppLaunch::SMARTBackendServices do
       result = run(runnable, input)
 
       expect(result.result).to eq('fail')
-      expect(result.result_message).to eq('Unexpected response status: expected 400, 401, but received 200')
+      expect(result.result_message).to eq('Unexpected response status: expected 400, but received 200')
     end
 
     it 'passes when token endpoint requires valid JWT token' do

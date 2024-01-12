@@ -1,36 +1,38 @@
-require_relative '../../lib/onc_certification_g10_test_kit/bulk_data_authorization'
-require_relative '../../lib/onc_certification_g10_test_kit/authorization_request_builder'
+require_relative '../../lib/smart_app_launch/backend_services_group'
+require_relative '../../lib/smart_app_launch/backend_auth_request_builder'
 
-RSpec.describe ONCCertificationG10TestKit::BulkDataAuthorization do
-  let(:group) { Inferno::Repositories::TestGroups.new.find('bulk_data_authorization') }
+RSpec.describe SMARTAppLaunch::SMARTBackendServices do
+  let(:group) { Inferno::Repositories::TestGroups.new.find('smart_backend_services') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'g10_certification') }
-  let(:bulk_token_endpoint) { 'http://example.com/fhir' }
-  let(:bulk_encryption_method) { 'ES384' }
-  let(:bulk_scope) { 'system/Patient.read' }
-  let(:bulk_client_id) { 'clientID' }
+  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart_stu2') }
+  let(:smart_token_url) { 'http://example.com/fhir' }
+  let(:asymm_conf_client_encryption_method) { 'ES384' }
+  let(:backend_services_requested_scope) { 'system/Patient.read' }
+  let(:backend_services_client_id) { 'clientID' }
+  let(:backend_services_jwks_kid) { nil }
   let(:exp) { 5.minutes.from_now }
   let(:jti) { SecureRandom.hex(32) }
-  let(:request_builder) { AuthorizationRequestBuilder.new(builder_input) }
+  let(:request_builder) { BackendServicesAuthorizationRequestBuilder.new(builder_input) }
   let(:client_assertion) { create_client_assertion(client_assertion_input) }
   let(:body) { request_builder.authorization_request_query_values }
   let(:input) do
     {
-      bulk_token_endpoint:,
-      bulk_encryption_method:,
-      bulk_scope:,
-      bulk_client_id:
+      smart_token_url:,
+      asymm_conf_client_encryption_method:,
+      backend_services_requested_scope:,
+      backend_services_client_id:
     }
   end
   let(:builder_input) do
     {
-      encryption_method: bulk_encryption_method,
-      scope: bulk_scope,
-      iss: bulk_client_id,
-      sub: bulk_client_id,
-      aud: bulk_token_endpoint,
+      encryption_method: asymm_conf_client_encryption_method,
+      scope: backend_services_requested_scope,
+      iss: backend_services_client_id,
+      sub: backend_services_client_id,
+      aud: smart_token_url,
       exp:,
-      jti:
+      jti:,
+      kid:
     }
   end
 
@@ -52,7 +54,7 @@ RSpec.describe ONCCertificationG10TestKit::BulkDataAuthorization do
     let(:runnable) { group.tests[1] }
 
     it 'fails when token endpoint allows invalid grant_type' do
-      stub_request(:post, bulk_token_endpoint)
+      stub_request(:post, smart_token_url)
         .with(body: hash_including(grant_type: 'not_a_grant_type'))
         .to_return(status: 200)
 
@@ -63,7 +65,7 @@ RSpec.describe ONCCertificationG10TestKit::BulkDataAuthorization do
     end
 
     it 'passes when token endpoint requires valid grant_type' do
-      stub_request(:post, bulk_token_endpoint)
+      stub_request(:post, smart_token_url)
         .with(body: hash_including(grant_type: 'not_a_grant_type'))
         .to_return(status: 400)
 
@@ -77,7 +79,7 @@ RSpec.describe ONCCertificationG10TestKit::BulkDataAuthorization do
     let(:runnable) { group.tests[2] }
 
     it 'fails when token endpoint allows invalid client_assertion_type' do
-      stub_request(:post, bulk_token_endpoint)
+      stub_request(:post, smart_token_url)
         .with(body: hash_including(client_assertion_type: 'not_an_assertion_type'))
         .to_return(status: 200)
 
@@ -88,7 +90,7 @@ RSpec.describe ONCCertificationG10TestKit::BulkDataAuthorization do
     end
 
     it 'passes when token endpoint requires valid client_assertion_type' do
-      stub_request(:post, bulk_token_endpoint)
+      stub_request(:post, smart_token_url)
         .with(body: hash_including(client_assertion_type: 'not_an_assertion_type'))
         .to_return(status: 400)
 
@@ -102,7 +104,7 @@ RSpec.describe ONCCertificationG10TestKit::BulkDataAuthorization do
     let(:runnable) { group.tests[3] }
 
     it 'fails when token endpoint allows invalid JWT token' do
-      stub_request(:post, bulk_token_endpoint)
+      stub_request(:post, smart_token_url)
         .to_return(status: 200)
 
       result = run(runnable, input)
@@ -112,7 +114,7 @@ RSpec.describe ONCCertificationG10TestKit::BulkDataAuthorization do
     end
 
     it 'passes when token endpoint requires valid JWT token' do
-      stub_request(:post, bulk_token_endpoint)
+      stub_request(:post, smart_token_url)
         .to_return(status: 400)
 
       result = run(runnable, input)
@@ -125,7 +127,7 @@ RSpec.describe ONCCertificationG10TestKit::BulkDataAuthorization do
     let(:runnable) { group.tests[4] }
 
     it 'fails if the access token request is rejected' do
-      stub_request(:post, bulk_token_endpoint)
+      stub_request(:post, smart_token_url)
         .to_return(status: 400)
 
       result = run(runnable, input)
@@ -135,7 +137,7 @@ RSpec.describe ONCCertificationG10TestKit::BulkDataAuthorization do
     end
 
     it 'passes if the access token request is valid and authorized' do
-      stub_request(:post, bulk_token_endpoint)
+      stub_request(:post, smart_token_url)
         .to_return(status: 200)
 
       result = run(runnable, input)

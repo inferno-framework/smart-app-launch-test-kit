@@ -11,14 +11,14 @@ RSpec.describe SMARTAppLaunch::TokenExchangeSTU2Test do
   let(:url) { 'http://example.com/fhir' }
   let(:token_url) { 'http://example.com/token' }
   let(:client_id) { 'CLIENT_ID' }
-  let(:client_auth_encryption_method) { 'ES384' }
+  let(:asymm_conf_client_encryption_method) { 'ES384' }
   let(:inputs) do
     {
       code: 'CODE',
       smart_token_url: token_url,
       client_id:,
       client_auth_type: 'confidential_asymmetric',
-      client_auth_encryption_method:
+      asymm_conf_client_encryption_method:
     }
   end
 

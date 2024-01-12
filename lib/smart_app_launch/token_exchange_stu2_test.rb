@@ -84,7 +84,7 @@ module SMARTAppLaunch
             iss: client_id,
             sub: client_id,
             aud: smart_token_url,
-            client_auth_encryption_method: client_auth_encryption_method
+            client_auth_encryption_method: asymm_conf_client_encryption_method
           )
         )
       end

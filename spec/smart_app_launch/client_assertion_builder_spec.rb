@@ -45,6 +45,15 @@ RSpec.describe SMARTAppLaunch::ClientAssertionBuilder do
         expect(payload['exp']).to be_present
         expect(payload['jti']).to be_present
       end
+
+      it 'throws exception when key id not found for algorithm' do
+        encryption_method = 'RS384'
+        kid = '4b49a739d1eb115b3225f4cf9beb6d1b'
+
+        expect {
+          build_and_decode_jwt(encryption_method, kid)
+        }.to raise_error(RuntimeError)
+      end
     end
   end
 end

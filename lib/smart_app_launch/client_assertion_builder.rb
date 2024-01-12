@@ -42,9 +42,9 @@ module SMARTAppLaunch
 
     def private_key
       @private_key ||= JWKS.jwks
-            .select { |key| key[:key_ops]&.include?('sign') }
-            .select { |key| key[:alg] == client_auth_encryption_method }
-            .find { |key| !kid || key[:kid] == kid }
+        .select { |key| key[:key_ops]&.include?('sign') }
+        .select { |key| key[:alg] == client_auth_encryption_method }
+        .find { |key| !kid || key[:kid] == kid }
     end
 
     def jwt_payload
@@ -60,9 +60,13 @@ module SMARTAppLaunch
       end
     end
 
+    def key_id
+      @private_key['kid']
+    end
+
     def client_assertion
       @client_assertion ||=
-        JWT.encode jwt_payload, signing_key, client_auth_encryption_method, { alg: client_auth_encryption_method, kid:, typ: 'JWT' }
+        JWT.encode jwt_payload, signing_key, client_auth_encryption_method, { alg: client_auth_encryption_method, kid: key_id, typ: 'JWT' }
     end
   end
 end

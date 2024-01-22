@@ -6,7 +6,7 @@ RSpec.describe SMARTAppLaunch::BackendServicesAuthorizationGroup do
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'smart_stu2') }
   let(:smart_token_url) { 'http://example.com/fhir' }
-  let(:asymm_conf_client_encryption_method) { 'ES384' }
+  let(:client_auth_encryption_method) { 'ES384' }
   let(:backend_services_requested_scope) { 'system/Patient.read' }
   let(:backend_services_client_id) { 'clientID' }
   let(:backend_services_jwks_kid) { nil }
@@ -18,14 +18,14 @@ RSpec.describe SMARTAppLaunch::BackendServicesAuthorizationGroup do
   let(:input) do
     {
       smart_token_url:,
-      asymm_conf_client_encryption_method:,
+      client_auth_encryption_method:,
       backend_services_requested_scope:,
       backend_services_client_id:
     }
   end
   let(:builder_input) do
     {
-      encryption_method: asymm_conf_client_encryption_method,
+      encryption_method: client_auth_encryption_method,
       scope: backend_services_requested_scope,
       iss: backend_services_client_id,
       sub: backend_services_client_id,

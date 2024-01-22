@@ -26,7 +26,7 @@ module SMARTAppLaunch
           description: 'Backend Services Scopes provided at registration to the Inferno application; will be `system/` scopes',
           default: 'system/*.read'
 
-    input :asymm_conf_client_encryption_method,
+    input :client_auth_encryption_method,
       title: 'Encryption Method for Asymmetric Confidential Client Authorization',
       description: <<~DESCRIPTION,
         The server is required to suport either ES384 or RS384 encryption methods for JWT signature verification.

@@ -223,7 +223,7 @@ module SMARTAppLaunch
 
     group do
       title 'Backend Services'
-      id :smart_full_backend_services
+      id :smart_backend_services
 
       input_instructions <<~INSTRUCTIONS
         Please register the Inferno client with the authorization services with the
@@ -235,7 +235,7 @@ module SMARTAppLaunch
       run_as_group
 
       group from: :smart_discovery_stu2
-      group from: :smart_backend_services
+      group from: :smart_backend_services_authorization
     end
 
     group from: :smart_token_introspection

@@ -1,8 +1,8 @@
 require_relative '../../lib/smart_app_launch/backend_services_group'
 require_relative '../../lib/smart_app_launch/backend_auth_request_builder'
 
-RSpec.describe SMARTAppLaunch::SMARTBackendServices do
-  let(:group) { Inferno::Repositories::TestGroups.new.find('smart_backend_services') }
+RSpec.describe SMARTAppLaunch::SMARTBackendServicesAuthorization do
+  let(:group) { Inferno::Repositories::TestGroups.new.find('smart_backend_services_authorization') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'smart_stu2') }
   let(:smart_token_url) { 'http://example.com/fhir' }

@@ -1,4 +1,4 @@
-require_relative '../../lib/smart_app_launch/backend_auth_request_builder'
+require_relative '../../lib/smart_app_launch/backend_services_authorization_request_builder'
 
 RSpec.describe SMARTAppLaunch::BackendServicesAuthorizationRequestBuilder do
   let(:encryption_method) { 'RS384' }

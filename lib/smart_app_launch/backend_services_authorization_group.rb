@@ -1,17 +1,17 @@
-require_relative 'backend_auth_request_builder'
-require_relative 'backend_invalid_grant_type_test'
-require_relative 'backend_invalid_client_assertion_test'
-require_relative 'backend_invalid_jwt_test'
-require_relative 'backend_auth_request_success_test'
-require_relative 'backend_auth_response_body_test'
+require_relative 'backend_services_authorization_request_builder'
+require_relative 'backend_services_invalid_grant_type_test'
+require_relative 'backend_services_invalid_client_assertion_test'
+require_relative 'backend_services_invalid_jwt_test'
+require_relative 'backend_services_authorization_request_success_test'
+require_relative 'backend_services_authorization_response_body_test'
 require_relative 'token_exchange_stu2_test'
 
 module SMARTAppLaunch
-  class SMARTBackendServicesAuthorization < Inferno::TestGroup
+  class BackendServicesAuthorizationGroup < Inferno::TestGroup
     title 'SMART Backend Services Authorization'
     short_description 'Demonstrate SMART Backend Services Authorization'
 
-    id :smart_backend_services_authorization
+    id :backend_services_authorization
 
     input :smart_token_url,
           title: 'Backend Services Token Endpoint',

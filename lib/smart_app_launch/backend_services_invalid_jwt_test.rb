@@ -1,4 +1,4 @@
-require_relative 'backend_auth_request_builder'
+require_relative 'backend_services_authorization_request_builder'
 
 module SMARTAppLaunch 
   class BackendServicesInvalidJWTTest < Inferno::Test 

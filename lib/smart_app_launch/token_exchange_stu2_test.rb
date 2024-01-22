@@ -1,6 +1,5 @@
 require_relative 'client_assertion_builder'
 require_relative 'token_exchange_test'
-require_relative 'backend_services_group'
 
 module SMARTAppLaunch
   class TokenExchangeSTU2Test < TokenExchangeTest

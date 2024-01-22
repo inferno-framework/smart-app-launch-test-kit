@@ -5,7 +5,7 @@ module SMARTAppLaunch
     id :smart_backend_services_auth_request_success
     title 'Authorization request succeeds when supplied correct information'
     description <<~DESCRIPTION
-      [The SMART Backend Services IG STU 2.0.0](https://hl7.org/fhir/smart-app-launch/STU2/backend-services.html#issue-access-token)
+      The [SMART App Launch 2.0.0 IG specification for Backend Services](https://hl7.org/fhir/smart-app-launch/STU2/backend-services.html#issue-access-token)
       states "If the access token request is valid and authorized, the authorization server SHALL issue an access token in response."
     DESCRIPTION
 

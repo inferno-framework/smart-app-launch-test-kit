@@ -5,8 +5,8 @@ module SMARTAppLaunch
     id :smart_backend_services_invalid_jwt
     title 'Authorization request fails when client supplies invalid JWT token'
     description <<~DESCRIPTION
-      The [SMART Backend Services IG STU 2.0.0](https://hl7.org/fhir/smart-app-launch/STU2/backend-services.html#request-1)
-      specification defines the required fields for the authorization request, made via HTTP POST to authorization 
+      The [SMART App Launch 2.0.0 IG section on Backend Services](https://hl7.org/fhir/smart-app-launch/STU2/backend-services.html#request-1)
+      defines the required fields for the authorization request, made via HTTP POST to authorization 
       token endpoint.
       This includes the `client_assertion` parameter, where the value must be
       a valid JWT as specified in 

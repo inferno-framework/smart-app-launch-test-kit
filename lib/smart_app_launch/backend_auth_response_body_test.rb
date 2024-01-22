@@ -5,7 +5,7 @@ module SMARTAppLaunch
     id :smart_backend_services_auth_response_body
     title 'Authorization request response body contains required information encoded in JSON'
     description <<~DESCRIPTION
-      [The SMART Backend Services IG STU 2.0.0](https://hl7.org/fhir/smart-app-launch/STU2/backend-services.html#issue-access-token)
+      The [SMART App Launch 2.0.0 IG specification for Backend Services](https://hl7.org/fhir/smart-app-launch/STU2/backend-services.html#issue-access-token)
       states The access token response SHALL be a JSON object with the following properties:
 
       | Token Property | Required? | Description |

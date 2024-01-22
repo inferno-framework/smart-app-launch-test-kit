@@ -5,8 +5,8 @@ module SMARTAppLaunch
     id :smart_backend_services_invalid_grant_type
     title 'Authorization request fails when client supplies invalid grant_type'
     description <<~DESCRIPTION
-      The [SMART Backend Services IG STU 2.0.0](https://hl7.org/fhir/smart-app-launch/STU2/backend-services.html#request-1)
-      specification defines the required fields for the authorization request, made via HTTP POST to authorization 
+      The [SMART App Launch 2.0.0 IG section on Backend Services](https://hl7.org/fhir/smart-app-launch/STU2/backend-services.html#request-1)
+      defines the required fields for the authorization request, made via HTTP POST to authorization 
       token endpoint.
       This includes the `grant_type` parameter, where the value must be `client_credentials`.
 

@@ -62,7 +62,7 @@ module SMARTAppLaunch
     test from: :tls_version_test do
       title 'Authorization service token endpoint secured by transport layer security'
       description <<~DESCRIPTION
-        The [SMART Backend Services IG STU 2.0.0](https://hl7.org/fhir/smart-app-launch/STU2/backend-services.html#request-1)
+        The [SMART App Launch 2.0.0 IG specification for Backend Services](https://hl7.org/fhir/smart-app-launch/STU2/backend-services.html#request-1)
         states "the client SHALL use the Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246) 
         or a more recent version of TLS to authenticate the identity of the FHIR authorization server and to 
         establish an encrypted, integrity-protected link for securing all exchanges between the client and the 

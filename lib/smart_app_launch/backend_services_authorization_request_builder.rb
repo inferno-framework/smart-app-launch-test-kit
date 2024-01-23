@@ -58,6 +58,8 @@ module SMARTAppLaunch
           iss: iss,
           sub: sub,
           aud: aud,
+          exp: exp.to_i,
+          jti: jti,
           kid: kid
           )
     end

@@ -1,3 +1,4 @@
+require 'pry'
 require_relative '../../lib/smart_app_launch/backend_services_authorization_group'
 require_relative '../../lib/smart_app_launch/backend_services_authorization_request_builder'
 
@@ -40,6 +41,7 @@ RSpec.describe SMARTAppLaunch::BackendServicesAuthorizationGroup do
     test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
     test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
     inputs.each do |name, value|
+      binding.pry
       session_data_repo.save(
         test_session_id: test_session.id,
         name:,

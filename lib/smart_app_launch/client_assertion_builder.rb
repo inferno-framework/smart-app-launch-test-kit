@@ -52,12 +52,11 @@ module SMARTAppLaunch
     end
 
     def signing_key
-      begin
-        private_key.signing_key
-      rescue NoMethodError => error 
-        # Clearer error message for user when inputs are incorrect
-        raise("No signing key found for inputs: encryption method = '#{client_auth_encryption_method}' and kid = '#{kid}'") 
+      private_key()
+      if @private_key.nil?
+        raise Inferno::Exceptions::AssertionException, "No signing key found for inputs: encryption method = '#{client_auth_encryption_method}' and kid = '#{kid}'"
       end
+      return @private_key.signing_key
     end
 
     def key_id

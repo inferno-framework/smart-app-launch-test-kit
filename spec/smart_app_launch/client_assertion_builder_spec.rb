@@ -52,7 +52,7 @@ RSpec.describe SMARTAppLaunch::ClientAssertionBuilder do
 
         expect {
           build_and_decode_jwt(encryption_method, kid)
-        }.to raise_error(RuntimeError)
+        }.to raise_error(Inferno::Exceptions::AssertionException)
       end
     end
   end

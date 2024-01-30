@@ -1,6 +1,5 @@
 require_relative 'backend_services_authorization_request_builder'
 require_relative 'backend_services_authorization_group'
-require 'pry'
 
 module SMARTAppLaunch 
   class BackendServicesAuthorizationRequestSuccessTest < Inferno::Test 

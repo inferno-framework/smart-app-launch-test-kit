@@ -53,11 +53,8 @@ module SMARTAppLaunch
             Defaults to the first JWK in the list if no kid is supplied.
           DESCRIPTION
           optional: true
-    output :bearer_token
 
-    http_client :token_endpoint do
-      url :smart_token_url
-    end
+    output :bearer_token
 
     test from: :tls_version_test do
       title 'Authorization service token endpoint secured by transport layer security'

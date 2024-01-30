@@ -17,6 +17,25 @@ module SMARTAppLaunch
       error response as described in [Section 5.2](https://tools.ietf.org/html/rfc6749#section-5.2)."
     DESCRIPTION
 
+    input :client_auth_encryption_method, 
+          :backend_services_requested_scope, 
+          :backend_services_client_id, 
+          :smart_token_url, 
+          :backend_services_jwks_kid
+
+    # manually input for spec tests, otherwise filled in by output of discovery tests 
+    config(
+      inputs: {
+        token_endpoint: {
+          optional: true
+        }
+      }
+    )
+
+    http_client :token_endpoint do
+      url :smart_token_url
+    end
+
     run do
       post_request_content = BackendServicesAuthorizationRequestBuilder.build(encryption_method: client_auth_encryption_method,
                                                                   scope: backend_services_requested_scope,

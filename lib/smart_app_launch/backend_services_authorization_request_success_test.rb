@@ -1,4 +1,6 @@
 require_relative 'backend_services_authorization_request_builder'
+require_relative 'backend_services_authorization_group'
+require 'pry'
 
 module SMARTAppLaunch 
   class BackendServicesAuthorizationRequestSuccessTest < Inferno::Test 
@@ -9,7 +11,26 @@ module SMARTAppLaunch
       states "If the access token request is valid and authorized, the authorization server SHALL issue an access token in response."
     DESCRIPTION
 
+    input :client_auth_encryption_method, 
+          :backend_services_requested_scope, 
+          :backend_services_client_id, 
+          :smart_token_url, 
+          :backend_services_jwks_kid
+
+    # manually input for spec tests, otherwise filled in by output of discovery tests 
+    config(
+      inputs: {
+        token_endpoint: {
+          optional: true
+        }
+      }
+    )
+
     output :authentication_response
+
+    http_client :token_endpoint do
+      url :smart_token_url
+    end
 
     run do
       post_request_content = BackendServicesAuthorizationRequestBuilder.build(encryption_method: client_auth_encryption_method,

@@ -23,6 +23,7 @@ RSpec.describe SMARTAppLaunch::BackendServicesAuthorizationRequestSuccessTest do
   let(:body) { request_builder.authorization_request_query_values }
   let(:input) do
     {
+      token_endpoint:,
       smart_token_url:, 
       client_auth_encryption_method:,
       backend_services_requested_scope:,
@@ -63,7 +64,6 @@ RSpec.describe SMARTAppLaunch::BackendServicesAuthorizationRequestSuccessTest do
       .to_return(status: 400)
 
     result = run(test, input)
-
 
     expect(result.result).to eq('fail')
     expect(result.result_message).to eq('Unexpected response status: expected 200, 201, but received 400')

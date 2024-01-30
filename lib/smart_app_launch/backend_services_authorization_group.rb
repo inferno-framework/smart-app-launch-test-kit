@@ -18,6 +18,7 @@ module SMARTAppLaunch
           description: <<~DESCRIPTION
             The OAuth 2.0 Token Endpoint used by the Backend Services specification to provide bearer tokens.
           DESCRIPTION
+
     input :backend_services_client_id,
           title: 'Backend Services Client ID',
           description: 'Client ID provided at registration to the Inferno application.'

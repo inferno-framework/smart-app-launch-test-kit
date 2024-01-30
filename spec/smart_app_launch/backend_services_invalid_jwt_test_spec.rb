@@ -6,8 +6,7 @@ RSpec.describe SMARTAppLaunch::BackendServicesInvalidJWTTest do
   let(:test) { Inferno::Repositories::Tests.new.find('smart_backend_services_invalid_jwt') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'smart_stu2') }
-  let(:smart_token_url) { 'http://example.com/fhir' }
-  let(:token_endpoint) { 'http://example.com/fhir/token'}
+  let(:smart_token_url) { 'http://example.com/fhir/token' }
   let(:client_auth_encryption_method) { 'ES384' }
   let(:backend_services_requested_scope) { 'system/Patient.read' }
   let(:backend_services_client_id) { 'clientID' }
@@ -19,7 +18,6 @@ RSpec.describe SMARTAppLaunch::BackendServicesInvalidJWTTest do
   let(:body) { request_builder.authorization_request_query_values }
   let(:input) do
     {
-      token_endpoint:,
       smart_token_url:, 
       client_auth_encryption_method:,
       backend_services_requested_scope:,

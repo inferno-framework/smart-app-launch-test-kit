@@ -23,15 +23,6 @@ module SMARTAppLaunch
           :smart_token_url, 
           :backend_services_jwks_kid
 
-    # manually input for spec tests, otherwise filled in by output of discovery tests 
-    config(
-      inputs: {
-        token_endpoint: {
-          optional: true
-        }
-      }
-    )
-
     http_client :token_endpoint do
       url :smart_token_url
     end

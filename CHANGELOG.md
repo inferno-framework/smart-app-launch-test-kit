@@ -1,3 +1,9 @@
+# 0.4.1
+* FI-2395: Data Rights Legend by @bmath10 in 
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/60
+* FI-2247 backend services migration by @alisawallace in 
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/59
+
 # 0.4.0
 
 * Fix jwt dependency by @Jammjammjamm in

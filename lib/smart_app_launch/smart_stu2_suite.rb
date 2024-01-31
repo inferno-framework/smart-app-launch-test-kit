@@ -8,6 +8,7 @@ require_relative 'ehr_launch_group_stu2'
 require_relative 'openid_connect_group'
 require_relative 'token_introspection_group'
 require_relative 'token_refresh_group'
+require_relative 'backend_services_authorization_group'
 
 module SMARTAppLaunch
   class SMARTSTU2Suite < Inferno::TestSuite
@@ -218,6 +219,23 @@ module SMARTAppLaunch
                 smart_credentials: { name: :ehr_smart_credentials }
               }
             }
+    end
+
+    group do
+      title 'Backend Services'
+      id :smart_backend_services
+
+      input_instructions <<~INSTRUCTIONS
+        Please register the Inferno client with the authorization services with the
+        following JWK Set URL:
+
+        * `#{Inferno::Application[:base_url]}/custom/smart_stu2/.well-known/jwks.json`
+      INSTRUCTIONS
+
+      run_as_group
+
+      group from: :smart_discovery_stu2
+      group from: :backend_services_authorization
     end
 
     group from: :smart_token_introspection

@@ -14,21 +14,21 @@ module SMARTAppLaunch
     id :smart_token_exchange_stu2
 
     input :client_auth_encryption_method,
-          title: 'Encryption Method (Confidential Asymmetric Client Auth Only)',
-          type: 'radio',
-          default: 'ES384',
-          options: {
-            list_options: [
-              {
-                label: 'ES384',
-                value: 'ES384'
-              },
-              {
-                label: 'RS384',
-                value: 'RS384'
-              }
-            ]
+      title: 'Encryption Method (Confidential Asymmetric Client Auth Only)',
+      type: 'radio',
+      default: 'ES384',
+      options: {
+        list_options: [
+          {
+            label: 'ES384',
+            value: 'ES384'
+          },
+          {
+            label: 'RS384',
+            value: 'RS384'
           }
+        ]
+      }
 
     input :client_auth_type,
           title: 'Client Authentication Method',

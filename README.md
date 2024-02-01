@@ -213,15 +213,78 @@ for system resources.
 
 **id:** `backend_services_authorization`
 
-**inputs:** 
-* `smart_token_url` 
-* `backend_services_client_id` 
-* `backend_services_requested_scope` 
-* `client_auth_encryption_method`
-* `backend_services_jwks_kid` (optional)
+**inputs:** `smart_token_url`, `backend_services_client_id`,
+`backend_services_requested_scope`, `client_auth_encryption_method`, `backend_services_jwks_kid` (optional)
 
-**outputs:** 
-* `bearer_token`
+**outputs:**  `bearer_token`
+
+### Token Introspection Group 
+The [Token Introspection Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/token_introspection_group.rb)
+is only part of SMART App Launch STU 2.0 and is divided into three subgroups that
+can be run collectively or independently, depending on the constraints of the environment
+under test. 
+
+**id:** `smart_token_introspection`
+
+#### Token Introspection Access Token Group
+The [Token Introspection Access Token Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/token_introspection_access_token_group.rb) 
+reuses tests from the Discovery and Standalone Launch groups to retrieve the
+token endpoint and an access token for introspection.  This group is optional.   
+
+**id:** `smart_token_introspection_access_token_group`
+
+**inputs:** - if STU2 Discovery and Standalone Launch groups were already run successfully, these
+will all auto-populate with previously used values
+* `url`
+* `client_id`
+* `client_secret`
+* `requested_scopes`
+* `use_pkce`
+* `pkce_code_challenge_method`
+* `authorization_method`
+* `client_auth_type`
+* `client_auth_encryption_method`
+
+**outputs:** `standalone_access_token`
+
+#### Token Introspection Request Group
+The [Token Introspection Request Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/token_introspection_request_group.rb) 
+sends introspection requests for both a valid and invalid access token to the
+authorization server and ensure the appropriate HTTP response is returned.  This
+group is optional but recommended. 
+
+**id:** `smart_token_introspection_request_group`
+
+**inputs:**
+* `well_known_introspection_url` - auto-populated if Token Introspection Access
+  Token Group run successfully
+* `custom_authorization_header`
+* `optional_introspection_request_params`
+* `standalone_access_token` - auto-populated if Token Introspection Access Token
+  Group run successfully 
+
+**outputs:**
+* `active_token_introspection_response_body`
+* `invalid_token_introspection_response_body`
+
+#### Token Introspection Response Group
+The [Token Introspection Response Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/token_introspection_response_group.rb)
+validates the token introspection response returned from the authorization
+server.  This group is required to demonstrate token introspection capabilities. 
+
+**id:** `smart_token_introspection_response_group`
+
+**inputs:** if Token Introspection Response Group was already run
+successfully, these will all auto-populate 
+* `standalone_client_id`
+* `standalone_received_scopes`
+* `standalone_id_token`
+* `standalone_patient_id`
+* `standalone_encounter_id`
+* `active_token_introspection_response_body`
+* `invalid_token_introspection_response_body`
+
+**outputs:** none
 
 
 ## License

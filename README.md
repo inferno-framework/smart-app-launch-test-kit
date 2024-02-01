@@ -202,6 +202,28 @@ performs a token refresh.
 * `include_scopes`: (`true/false`) Whether to include scopes in the refresh
   request
 
+### Backend Services Authorization Group
+The [Backend Services Authorization Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/backend_services_authorization_group.rb)
+is only part of SMART App Launch STU 2.0. It is used when autonomous or
+semi-autonomous backend services (clients) need to access resources from FHIR
+servers that have pre-authorized, defined scopes of access.  This group appplies
+a client credentials flow using confidential client asymmetric
+authentication and JSON Web Token (JWT) assertions to retrieve an access token
+for system resources.
+
+**id:** `backend_services_authorization`
+
+**inputs:** 
+* `smart_token_url` 
+* `backend_services_client_id` 
+* `backend_services_requested_scope` 
+* `client_auth_encryption_method`
+* `backend_services_jwks_kid` (optional)
+
+**outputs:** 
+* `bearer_token`
+
+
 ## License
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use

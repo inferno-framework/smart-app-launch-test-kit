@@ -233,17 +233,8 @@ token endpoint and an access token for introspection.  This group is optional.
 
 **id:** `smart_token_introspection_access_token_group`
 
-**inputs:** - if STU2 Discovery and Standalone Launch groups were already run successfully, these
-will all auto-populate with previously used values
-* `url`
-* `client_id`
-* `client_secret`
-* `requested_scopes`
-* `use_pkce`
-* `pkce_code_challenge_method`
-* `authorization_method`
-* `client_auth_type`
-* `client_auth_encryption_method`
+**inputs:** `url`, `client_id`, `client_secret`, `requested_scopes`, `use_pkce`,
+`pkce_code_challenge_method`, `authorization_method`, `client_auth_type`, `client_auth_encryption_method`
 
 **outputs:** `standalone_access_token`
 
@@ -255,13 +246,8 @@ group is optional but recommended.
 
 **id:** `smart_token_introspection_request_group`
 
-**inputs:**
-* `well_known_introspection_url` - auto-populated if Token Introspection Access
-  Token Group run successfully
-* `custom_authorization_header`
-* `optional_introspection_request_params`
-* `standalone_access_token` - auto-populated if Token Introspection Access Token
-  Group run successfully 
+**inputs:** `well_known_introspection_url`, `custom_authorization_header`,
+`optional_introspection_request_params`, `standalone_access_token` 
 
 **outputs:**
 * `active_token_introspection_response_body`
@@ -269,20 +255,15 @@ group is optional but recommended.
 
 #### Token Introspection Response Group
 The [Token Introspection Response Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/token_introspection_response_group.rb)
-validates the token introspection response returned from the authorization
+validates the token introspection responses returned from the authorization
 server.  This group is required to demonstrate token introspection capabilities. 
 
 **id:** `smart_token_introspection_response_group`
 
-**inputs:** if Token Introspection Response Group was already run
-successfully, these will all auto-populate 
-* `standalone_client_id`
-* `standalone_received_scopes`
-* `standalone_id_token`
-* `standalone_patient_id`
-* `standalone_encounter_id`
-* `active_token_introspection_response_body`
-* `invalid_token_introspection_response_body`
+**inputs:** `standalone_client_id`, `standalone_received_scopes`,
+`standalone_id_token`, `standalone_patient_id`, `standalone_encounter_id`,
+`active_token_introspection_response_body`,
+`invalid_token_introspection_response_body`
 
 **outputs:** none
 

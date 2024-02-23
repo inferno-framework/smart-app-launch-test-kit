@@ -116,18 +116,31 @@ module SMARTAppLaunch
         in the table below to app developers. The server SHALL use both a FHIR
         CapabilityStatement and A Well-Known Uris JSON file.
       )
+
       input :well_known_authorization_url,
-            :well_known_introspection_url,
-            :well_known_management_url,
-            :well_known_registration_url,
-            :well_known_revocation_url,
-            :well_known_token_url,
-            :capability_authorization_url,
-            :capability_introspection_url,
-            :capability_management_url,
-            :capability_registration_url,
-            :capability_revocation_url,
-            :capability_token_url
+            optional: true
+      input :well_known_introspection_url,
+            optional: true
+      input :well_known_management_url,
+            optional: true
+      input :well_known_registration_url,
+            optional: true
+      input :well_known_revocation_url,
+            optional: true
+      input :well_known_token_url,
+            optional: true
+      input :capability_authorization_url,
+            optional: true
+      input :capability_introspection_url,
+            optional: true
+      input :capability_management_url,
+            optional: true
+      input :capability_registration_url,
+            optional: true
+      input :capability_revocation_url,
+            optional: true
+      input :capability_token_url,
+            optional: true
       output :smart_authorization_url,
              :smart_introspection_url,
              :smart_management_url,

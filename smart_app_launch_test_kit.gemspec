@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['inferno@groups.mitre.org']
   spec.summary       = 'Inferno Tests for the SMART Application Launch Framework Implementation Guide'
   spec.description   = 'Inferno Tests for the SMART Application Launch Framework Implementation Guide'
-  spec.homepage      = 'https://github.com/inferno_framework/smart-app-launch-test-kit'
+  spec.homepage      = 'https://github.com/inferno-framework/smart-app-launch-test-kit'
   spec.license       = 'Apache-2.0'
   spec.add_runtime_dependency 'inferno_core', '>= 0.4.2'
   spec.add_runtime_dependency 'json-jwt', '~> 1.15.3'
@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'webmock', '~> 3.11'
   spec.required_ruby_version = Gem::Requirement.new('>= 3.1.2')
   spec.metadata['homepage_uri'] = spec.homepage
-  spec.metadata['source_code_uri'] = 'https://github.com/inferno_framework/smart-app-launch-test-kit'
+  spec.metadata['source_code_uri'] = 'https://github.com/inferno-framework/smart-app-launch-test-kit'
   spec.files = [
     Dir['lib/**/*.rb'],
     Dir['lib/**/*.html'],

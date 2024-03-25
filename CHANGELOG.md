@@ -1,3 +1,14 @@
+# 0.4.2
+* FI-2469 README Updates by @alisawallace in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/62
+* FI-2470: Make Necessary Inputs Optional for New inferno_core Changes by
+  @emichaud998 in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/63
+* Dependency Updates 2024-03-19 by @Jammjammjamm in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/64
+* Fix RubyGems URLs for homepage and source_code by @Shaumik-Ashraf in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/65
+
 # 0.4.1
 * FI-2395: Data Rights Legend by @bmath10 in 
   https://github.com/inferno-framework/smart-app-launch-test-kit/pull/60

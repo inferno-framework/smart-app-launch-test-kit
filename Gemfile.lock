@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    smart_app_launch_test_kit (0.4.1)
+    smart_app_launch_test_kit (0.4.2)
       inferno_core (>= 0.4.2)
       json-jwt (~> 1.15.3)
       jwt (~> 2.6)

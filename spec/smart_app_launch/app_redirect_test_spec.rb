@@ -16,7 +16,8 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
       client_id: 'CLIENT_ID',
       requested_scopes: 'REQUESTED_SCOPES',
       url: url,
-      smart_authorization_url: 'http://example.com/auth'
+      smart_authorization_url: 'http://example.com/auth',
+      use_pkce: 'false'
     }
   end
 
@@ -60,7 +61,8 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
   end
 
   it 'fails if the authorization url is invalid' do
-    result = run(test, smart_authorization_url: 'xyz')
+    inputs[:smart_authorization_url] = 'xyz'
+    result = run(test, inputs)
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/is not a valid URI/)
   end
@@ -87,11 +89,14 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
   end
 
   context 'when PKCE is enabled' do
-    let(:pkce_inputs) { inputs.merge(use_pkce: 'true', pkce_code_challenge_method: 'S256') }
+    let(:pkce_inputs) do
+      pkce_inputs = inputs.merge(pkce_code_challenge_method: 'S256')
+      pkce_inputs[:use_pkce] = true
+      pkce_inputs
+    end
 
     it 'adds code_challenge and code_challenge method to the authorization url' do
       result = run(test, pkce_inputs)
-
       expect(result.result).to eq('wait')
       expect(result.result_message).to match(/code_challenge=[a-zA-Z0-9\-_]+/)
       expect(result.result_message).to match(/code_challenge_method=S256/)

@@ -14,7 +14,8 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
     {
       code: 'CODE',
       smart_token_url: token_url,
-      client_id: 'CLIENT_ID'
+      client_id: 'CLIENT_ID',
+      use_pkce: 'false'
     }
   end
   let(:confidential_inputs) do

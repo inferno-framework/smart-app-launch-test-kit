@@ -67,7 +67,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
   it 'skips if the token request was not successful' do
     create_token_request(body: { access_token: 'ACCESS_TOKEN', token_type: 'bearer' }, status: 500)
 
-    result = run(test)
+    result = run(test, requested_scopes: 'patient/*.*')
 
     expect(result.result).to eq('skip')
     expect(result.result_message).to match(/was unsuccessful/)
@@ -76,8 +76,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
   it 'fails if the body is not valid json' do
     create_token_request(body: '[[')
 
-    result = run(test)
-
+    result = run(test, requested_scopes: 'patient/*.*')
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/Invalid JSON/)
   end
@@ -87,7 +86,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
       bad_body = valid_body.reject { |key, _| key == field }
       create_token_request(body: bad_body)
 
-      result = run(test)
+      result = run(test, requested_scopes: 'patient/*.*')
 
       expect(result.result).to eq('fail')
       expect(result.result_message).to match(/`#{field}`/)

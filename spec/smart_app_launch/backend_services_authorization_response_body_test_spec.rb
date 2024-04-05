@@ -33,7 +33,7 @@ RSpec.describe SMARTAppLaunch::BackendServicesAuthorizationResponseBodyTest do
     result = run(test)
 
     expect(result.result).to eq('skip')
-    expect(result.result_message).to eq('No authentication response received.')
+    expect(result.result_message).to eq("Input 'authentication_response' is nil, skipping test.")
   end
 
   it 'fails when authentication response is invalid JSON' do

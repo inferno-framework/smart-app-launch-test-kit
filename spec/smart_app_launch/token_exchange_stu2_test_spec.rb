@@ -18,7 +18,8 @@ RSpec.describe SMARTAppLaunch::TokenExchangeSTU2Test do
       smart_token_url: token_url,
       client_id:,
       client_auth_type: 'confidential_asymmetric',
-      client_auth_encryption_method:
+      client_auth_encryption_method:,
+      use_pkce: 'false'
     }
   end
 

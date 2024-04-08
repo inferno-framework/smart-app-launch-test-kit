@@ -20,8 +20,9 @@ module SMARTAppLaunch
     input :client_auth_encryption_method, 
           :backend_services_requested_scope, 
           :backend_services_client_id, 
-          :smart_token_url, 
-          :backend_services_jwks_kid
+          :smart_token_url
+    input :backend_services_jwks_kid, 
+          optional: true
 
     http_client :token_endpoint do
       url :smart_token_url

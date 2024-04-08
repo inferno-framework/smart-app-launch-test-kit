@@ -10,7 +10,6 @@ RSpec.describe SMARTAppLaunch::BackendServicesInvalidJWTTest do
   let(:client_auth_encryption_method) { 'ES384' }
   let(:backend_services_requested_scope) { 'system/Patient.read' }
   let(:backend_services_client_id) { 'clientID' }
-  let(:backend_services_jwks_kid) { '4b49a739d1eb115b3225f4cf9beb6d1b' }
   let(:exp) { 5.minutes.from_now }
   let(:jti) { SecureRandom.hex(32) }
   let(:request_builder) { BackendServicesAuthorizationRequestBuilder.new(builder_input) }
@@ -21,8 +20,7 @@ RSpec.describe SMARTAppLaunch::BackendServicesInvalidJWTTest do
       smart_token_url:, 
       client_auth_encryption_method:,
       backend_services_requested_scope:,
-      backend_services_client_id:,
-      backend_services_jwks_kid:
+      backend_services_client_id:
     }
   end
   let(:builder_input) do

@@ -7,7 +7,7 @@ require_relative 'standalone_launch_group_stu2'
 require_relative 'ehr_launch_group_stu2'
 require_relative 'openid_connect_group'
 require_relative 'token_introspection_group'
-require_relative 'token_refresh_group'
+require_relative 'token_refresh_stu2_group'
 require_relative 'backend_services_authorization_group'
 
 module SMARTAppLaunch
@@ -103,7 +103,7 @@ module SMARTAppLaunch
               }
             }
 
-      group from: :smart_token_refresh,
+      group from: :smart_token_refresh_stu2,
             id: :smart_standalone_refresh_without_scopes,
             title: 'SMART Token Refresh Without Scopes',
             config: {
@@ -123,7 +123,7 @@ module SMARTAppLaunch
               }
             }
 
-      group from: :smart_token_refresh,
+      group from: :smart_token_refresh_stu2,
             id: :smart_standalone_refresh_with_scopes,
             title: 'SMART Token Refresh With Scopes',
             config: {
@@ -179,7 +179,7 @@ module SMARTAppLaunch
               }
             }
 
-      group from: :smart_token_refresh,
+      group from: :smart_token_refresh_stu2,
             id: :smart_ehr_refresh_without_scopes,
             title: 'SMART Token Refresh Without Scopes',
             config: {
@@ -199,7 +199,7 @@ module SMARTAppLaunch
               }
             }
 
-      group from: :smart_token_refresh,
+      group from: :smart_token_refresh_stu2,
             id: :smart_ehr_refresh_with_scopes,
             title: 'SMART Token Refresh With Scopes',
             config: {

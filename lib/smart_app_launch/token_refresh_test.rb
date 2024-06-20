@@ -21,6 +21,15 @@ module SMARTAppLaunch
     output :smart_credentials, :token_retrieval_time
     makes_request :token_refresh
 
+    def add_credentials_to_request(oauth2_headers, oauth2_params)
+      if client_secret.present?
+        credentials = Base64.strict_encode64("#{client_id}:#{client_secret}")
+        oauth2_headers['Authorization'] = "Basic #{credentials}"
+      else
+        oauth2_params['client_id'] = client_id
+      end
+    end
+
     run do
       skip_if refresh_token.blank?
 
@@ -32,12 +41,7 @@ module SMARTAppLaunch
 
       oauth2_params['scope'] = received_scopes if config.options[:include_scopes]
 
-      if client_secret.present?
-        credentials = Base64.strict_encode64("#{client_id}:#{client_secret}")
-        oauth2_headers['Authorization'] = "Basic #{credentials}"
-      else
-        oauth2_params['client_id'] = client_id
-      end
+      add_credentials_to_request(oauth2_headers, oauth2_params)
 
       post(smart_token_url, body: oauth2_params, name: :token_refresh, headers: oauth2_headers)
 

@@ -1,3 +1,16 @@
+# 0.4.3
+* Dependency Updates 2024-04-05 by @Jammjammjamm in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/67
+* FI-2429: Disable inferno validator by @dehall in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/68
+* Dependency Updates 2024-06-05 by @Jammjammjamm in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/69
+* Dependency Updates 2024-07-03 by @Jammjammjamm in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/71
+* FI-2479: Asymmetric token refresh by @Jammjammjamm in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/70
+
+
 # 0.4.2
 * FI-2469 README Updates by @alisawallace in
   https://github.com/inferno-framework/smart-app-launch-test-kit/pull/62

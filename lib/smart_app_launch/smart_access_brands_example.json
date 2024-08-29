@@ -1,0 +1,272 @@
+{
+  "resourceType" : "Bundle",
+  "id" : "example2",
+  "type" : "collection",
+  "timestamp" : "2023-09-05T20:18:52.638960-07:00",
+  "entry" : [{
+    "fullUrl" : "https://ehr.fhirserver.com/Organization/examplehealth",
+    "resource" : {
+      "resourceType" : "Organization",
+      "id" : "examplehealth",
+      "extension" : [{
+        "extension" : [{
+          "url" : "brandLogo",
+          "valueUrl" : "https://fhirserver.org/examplehealth/logo/main.1024x1024.png"
+        }],
+        "url" : "http://hl7.org/fhir/StructureDefinition/organization-brand"
+      },
+      {
+        "extension" : [{
+          "url" : "portalName",
+          "valueString" : "My ExampleHealth Portal"
+        },
+        {
+          "url" : "portalLogo",
+          "valueUrl" : "https://fhirserver.org/examplehealth/logo/main.1024x1024.png"
+        },
+        {
+          "url" : "portalUrl",
+          "valueUrl" : "https://fhirserver.org/examplehealth/patient-portal-url"
+        },
+        {
+          "url" : "portalEndpoint",
+          "valueReference" : {
+            "reference" : "Endpoint/examplehealth-r4",
+            "display" : "FHIR R4 Endpoint for ExampleHealth Brand"
+          }
+        },
+        {
+          "url" : "portalEndpoint",
+          "valueReference" : {
+            "reference" : "Endpoint/examplehealth-r2",
+            "display" : "FHIR R2 Endpoint for ExampleHealth Brand"
+          }
+        }],
+        "url" : "http://hl7.org/fhir/StructureDefinition/organization-portal"
+      }],
+      "identifier" : [{
+        "system" : "urn:ietf:rfc:3986",
+        "value" : "https://examplehealth.org"
+      }],
+      "active" : true,
+      "type" : [{
+        "coding" : [{
+          "system" : "http://terminology.hl7.org/CodeSystem/organization-type",
+          "code" : "prov",
+          "display" : "Healthcare Provider"
+        }]
+      }],
+      "name" : "ExampleHealth",
+      "alias" : ["GoodHealth Hospital",
+      "GoodHealth Mental Health"],
+      "telecom" : [{
+        "system" : "url",
+        "value" : "https://health.example.com"
+      }],
+      "address" : [{
+        "city" : "Madison",
+        "state" : "WI",
+        "country" : "US"
+      },
+      {
+        "city" : "Anamosa",
+        "state" : "IA",
+        "country" : "US"
+      },
+      {
+        "city" : "Cedar Rapids",
+        "state" : "IA",
+        "country" : "US"
+      },
+      {
+        "city" : "Des Moines",
+        "state" : "IA",
+        "country" : "US"
+      },
+      {
+        "city" : "Dubuque",
+        "state" : "IA",
+        "country" : "US"
+      },
+      {
+        "city" : "Fort Dodge",
+        "state" : "IA",
+        "country" : "US"
+      },
+      {
+        "city" : "Grinnell",
+        "state" : "IA",
+        "country" : "US"
+      },
+      {
+        "city" : "Marshalltown",
+        "state" : "IA",
+        "country" : "US"
+      },
+      {
+        "city" : "Peoria",
+        "state" : "IA",
+        "country" : "US"
+      },
+      {
+        "city" : "Pekin",
+        "state" : "IA",
+        "country" : "US"
+      },
+      {
+        "city" : "Muscatine",
+        "state" : "IA",
+        "country" : "US"
+      },
+      {
+        "city" : "Sioux City",
+        "state" : "IA",
+        "country" : "US"
+      }],
+      "endpoint" : [{
+        "reference" : "Endpoint/examplehealth-r2",
+        "display" : "FHIR R2 Endpoint for ExampleHealth Brand"
+      },
+      {
+        "reference" : "Endpoint/examplehealth-r4",
+        "display" : "FHIR R4 Endpoint for ExampleHealth Brand"
+      }]
+    }
+  },
+  {
+    "fullUrl" : "https://ehr.fhirserver.com/Organization/ehchospital",
+    "resource" : {
+      "resourceType" : "Organization",
+      "id" : "ehchospital",
+      "extension" : [{
+        "extension" : [{
+          "url" : "brandLogo",
+          "valueUrl" : "data:image/svg+xml;base64,PHN2ZyB0aXRsZT0iU3Rld2FydCBNZW1vcmlhbCBIb3Nw...+IDwvc3ZnPgo="
+        }],
+        "url" : "http://hl7.org/fhir/StructureDefinition/organization-brand"
+      }],
+      "identifier" : [{
+        "system" : "urn:ietf:rfc:3986",
+        "value" : "https://ehchospital.fhirserver.org"
+      }],
+      "active" : true,
+      "type" : [{
+        "coding" : [{
+          "system" : "http://terminology.hl7.org/CodeSystem/organization-type",
+          "code" : "prov",
+          "display" : "Healthcare Provider"
+        }]
+      }],
+      "name" : "ExampleHealth Community Hospital",
+      "alias" : ["GoodHealth Madison"],
+      "telecom" : [{
+        "system" : "url",
+        "value" : "https://www.ehchospital.example.com"
+      }],
+      "address" : [{
+        "city" : "Lake City",
+        "state" : "IA",
+        "country" : "US"
+      }],
+      "partOf" : {
+        "reference" : "Organization/examplehealth"
+      }
+    }
+  },
+  {
+    "fullUrl" : "https://ehr.fhirserver.com/Organization/ehpmadison",
+    "resource" : {
+      "resourceType" : "Organization",
+      "id" : "ehpmadison",
+      "extension" : [{
+        "extension" : [{
+          "url" : "brandLogo",
+          "valueUrl" : "https://ehpmadison.fhirserver.com/logo.png"
+        }],
+        "url" : "http://hl7.org/fhir/StructureDefinition/organization-brand"
+      }],
+      "identifier" : [{
+        "system" : "urn:ietf:rfc:3986",
+        "value" : "https://ehpmadison.example.com"
+      }],
+      "active" : true,
+      "type" : [{
+        "coding" : [{
+          "system" : "http://terminology.hl7.org/CodeSystem/organization-type",
+          "code" : "prov",
+          "display" : "Healthcare Provider"
+        }]
+      }],
+      "name" : "ExampleHealth Physicians of Madison",
+      "alias" : ["GoodHealth Madison"],
+      "telecom" : [{
+        "system" : "url",
+        "value" : "https://www.ehpmadison.example.com"
+      }],
+      "address" : [{
+        "city" : "Madison",
+        "state" : "WI",
+        "country" : "US"
+      }],
+      "partOf" : {
+        "reference" : "Organization/examplehealth"
+      }
+    }
+  },
+  {
+    "fullUrl" : "https://ehr.fhirserver.com/Endpoint/examplehealth-r2",
+    "resource" : {
+      "resourceType" : "Endpoint",
+      "id" : "examplehealth-r2",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/endpoint-fhir-version",
+        "valueCode" : "1.0.2"
+      }],
+      "status" : "active",
+      "connectionType" : {
+        "system" : "http://terminology.hl7.org/CodeSystem/endpoint-connection-type",
+        "code" : "hl7-fhir-rest"
+      },
+      "name" : "FHIR DSTU2 Endpoint for ExampleHealth",
+      "contact" : [{
+        "system" : "url",
+        "value" : "https://open.ehr.example.com"
+      }],
+      "payloadType" : [{
+        "coding" : [{
+          "system" : "http://terminology.hl7.org/CodeSystem/endpoint-payload-type",
+          "code" : "none"
+        }]
+      }],
+      "address" : "https://ehr.fhirserver.com/ProdFHIR/api/FHIR/R2"
+    }
+  },
+  {
+    "fullUrl" : "https://ehr.fhirserver.com/Endpoint/examplehealth-r4",
+    "resource" : {
+      "resourceType" : "Endpoint",
+      "id" : "examplehealth-r4",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/endpoint-fhir-version",
+        "valueCode" : "4.0.1"
+      }],
+      "status" : "active",
+      "connectionType" : {
+        "system" : "http://terminology.hl7.org/CodeSystem/endpoint-connection-type",
+        "code" : "hl7-fhir-rest"
+      },
+      "name" : "FHIR R4 Endpoint for ExampleHealth",
+      "contact" : [{
+        "system" : "url",
+        "value" : "https://open.ehr.example.com"
+      }],
+      "payloadType" : [{
+        "coding" : [{
+          "system" : "http://terminology.hl7.org/CodeSystem/endpoint-payload-type",
+          "code" : "none"
+        }]
+      }],
+      "address" : "https://ehr.fhirserver.com/ProdFHIR/api/FHIR/R4"
+    }
+  }]
+}

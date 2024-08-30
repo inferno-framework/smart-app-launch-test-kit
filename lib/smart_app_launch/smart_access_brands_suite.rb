@@ -30,9 +30,22 @@ module SMARTAppLaunch
       end
     end
 
-    smart_access_brands_bundle = File.read(File.join(__dir__, 'smart_access_brands_example.json'))
-    bundle_route_handler = proc { [200, { 'Content-Type' => 'application/json' }, [smart_access_brands_bundle]] }
-    route :get, File.join('/examples/', 'smart_access_brands_example.json'), bundle_route_handler
+    Dir.each_child(File.join(__dir__, '/smart_access_brands_examples/')) do |filename|
+      resource_example = File.read(File.join(__dir__, '/smart_access_brands_examples/', filename))
+      if filename.end_with?('.erb')
+        erb_template = ERB.new(resource_example)
+        resource_example = JSON.parse(erb_template.result).to_json
+        filename = "#{filename.delete_suffix('.erb')}.json"
+        headers = { 'Content-Type' => 'application/json', 'Access-Control-Allow-Origin' => '*',
+                    'Etag' => SecureRandom.hex(32) }
+      else
+        filename = "#{filename.delete_suffix('.json')}/metadata"
+        headers = { 'Content-Type' => 'application/json' }
+      end
+      route_handler = proc { [200, headers, [resource_example]] }
+
+      route :get, File.join('/examples/', filename), route_handler
+    end
 
     group from: :smart_access_brands_test_group
   end

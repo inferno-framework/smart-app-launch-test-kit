@@ -12,10 +12,10 @@ module SMARTAppLaunch
     run do
       get(tags: ['smart_access_brands_bundle'])
       assert_response_status(200)
-      assert(response.headers.include?('Access-Control-Allow-Origin'), %(
+      assert(request.headers.any? { |header| header.name == 'access-control-allow-origin' }, %(
         All GET requests must support Cross-Origin Resource Sharing (CORS) for all GET requests to the artifacts
         described in this guide.))
-      unless response.headers.include?('Etag')
+      unless request.headers.any? { |header| header.name == 'etag' }
         add_message('warning', 'Brand Bundle HTTP responses should include an Etag header')
       end
     end

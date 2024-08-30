@@ -22,11 +22,18 @@ module SMARTAppLaunch
       contain valid resources.
     DESCRIPTION
 
+    VALIDATION_MESSAGE_FILTERS = [
+      /\A\S+: \S+: URL value '.*' does not resolve/,
+      %r{\A\S+: \S+: Bundled or contained reference not found within the bundle/resource} # Validator issue with Brand profile: https://chat.fhir.org/#narrow/stream/291844-FHIR-Validator/topic/SMART.20v2.2E2.20Us[…]ss.20Brands.3A.20Brand.20validation.20error.3F/near/466321024)
+    ].freeze
+
     fhir_resource_validator do
       igs 'hl7.fhir.uv.smart-app-launch#2.2.0'
 
+      message_filters = VALIDATION_MESSAGE_FILTERS
+
       exclude_message do |message|
-        message.message.match?(/\A\S+: \S+: URL value '.*' does not resolve/)
+        message_filters.any? { |filter| filter.match? message.message }
       end
     end
 

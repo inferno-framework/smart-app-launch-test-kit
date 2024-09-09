@@ -3,16 +3,16 @@ require 'tls_test_kit'
 require_relative 'jwks'
 require_relative 'version'
 require_relative 'discovery_stu2_group'
-require_relative 'standalone_launch_group_stu2.2'
-require_relative 'ehr_launch_group_stu2.2'
+require_relative 'standalone_launch_group_stu2_2'
+require_relative 'ehr_launch_group_stu2_2'
 require_relative 'openid_connect_group'
-require_relative 'token_introspection_group_stu2.2'
+require_relative 'token_introspection_group_stu2_2'
 require_relative 'token_refresh_stu2_group'
 require_relative 'backend_services_authorization_group'
 
 module SMARTAppLaunch
   class SMARTSTU22Suite < Inferno::TestSuite
-    id 'smart_stu2.2'
+    id 'smart_stu2_2'
     title 'SMART App Launch STU2.2'
     version VERSION
 
@@ -36,9 +36,9 @@ module SMARTAppLaunch
     route :get, '/post_auth', post_auth_handler
 
     config options: {
-      redirect_uri: "#{Inferno::Application['base_url']}/custom/smart_stu2.2/redirect",
-      launch_uri: "#{Inferno::Application['base_url']}/custom/smart_stu2.2/launch",
-      post_authorization_uri: "#{Inferno::Application['base_url']}/custom/smart_stu2.2/post_auth"
+      redirect_uri: "#{Inferno::Application['base_url']}/custom/smart_stu2_2/redirect",
+      launch_uri: "#{Inferno::Application['base_url']}/custom/smart_stu2_2/launch",
+      post_authorization_uri: "#{Inferno::Application['base_url']}/custom/smart_stu2_2/post_auth"
     }
 
     description <<~DESCRIPTION
@@ -54,7 +54,7 @@ module SMARTAppLaunch
       If using asymmetric client authentication, register Inferno with the
       following JWK Set URL:
 
-      * `#{Inferno::Application[:base_url]}/custom/smart_stu2.2/.well-known/jwks.json`
+      * `#{Inferno::Application[:base_url]}/custom/smart_stu2_2/.well-known/jwks.json`
     DESCRIPTION
 
     input_instructions %(
@@ -84,7 +84,7 @@ module SMARTAppLaunch
         If using asymmetric client authentication, register Inferno with the
         following JWK Set URL:
 
-        * `#{Inferno::Application[:base_url]}/custom/smart_stu2.2/.well-known/jwks.json`
+        * `#{Inferno::Application[:base_url]}/custom/smart_stu2_2/.well-known/jwks.json`
       INSTRUCTIONS
 
       run_as_group
@@ -159,7 +159,7 @@ module SMARTAppLaunch
         If using asymmetric client authentication, register Inferno with the
         following JWK Set URL:
 
-        * `#{Inferno::Application[:base_url]}/custom/smart_stu2.2/.well-known/jwks.json`
+        * `#{Inferno::Application[:base_url]}/custom/smart_stu2_2/.well-known/jwks.json`
       INSTRUCTIONS
 
       run_as_group
@@ -229,7 +229,7 @@ module SMARTAppLaunch
         Please register the Inferno client with the authorization services with the
         following JWK Set URL:
 
-        * `#{Inferno::Application[:base_url]}/custom/smart_stu2.2/.well-known/jwks.json`
+        * `#{Inferno::Application[:base_url]}/custom/smart_stu2_2/.well-known/jwks.json`
       INSTRUCTIONS
 
       run_as_group

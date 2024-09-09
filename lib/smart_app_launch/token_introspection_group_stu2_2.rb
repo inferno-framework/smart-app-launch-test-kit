@@ -1,4 +1,4 @@
-require_relative 'token_introspection_access_token_group_stu2.2'
+require_relative 'token_introspection_access_token_group_stu2_2'
 require_relative 'token_introspection_group'
 
 module SMARTAppLaunch

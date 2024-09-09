@@ -2,8 +2,6 @@ require_relative 'token_payload_validation'
 
 module SMARTAppLaunch
   class TokenResponseBodyTestSTU22 < TokenResponseBodyTest
-    include TokenPayloadValidation
-
     title 'Token exchange response body contains required information encoded in JSON'
     description %(
       The EHR authorization server shall return a JSON structure that includes

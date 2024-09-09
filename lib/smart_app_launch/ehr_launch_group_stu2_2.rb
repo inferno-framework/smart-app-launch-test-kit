@@ -1,5 +1,5 @@
 require_relative 'ehr_launch_group_stu2'
-require_relative 'token_response_body_test_stu2.2'
+require_relative 'token_response_body_test_stu2_2'
 
 module SMARTAppLaunch
   class EHRLaunchGroupSTU22 < EHRLaunchGroupSTU2

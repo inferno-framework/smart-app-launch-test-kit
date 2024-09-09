@@ -124,13 +124,44 @@ module SMARTAppLaunch
 
       fhir_context.each do |reference|
         assert !reference.start_with?('http'), "`#{reference}` is not a relative reference"
-
-        resource_type, id = reference.split('/')
-        assert FHIR_RESOURCE_TYPES.include?(resource_type),
-               "`#{resource_type}` is not a valid FHIR resource type"
-
-        assert id.match?(FHIR_ID_REGEX), "`#{id}` is not a valid FHIR id"
+        check_fhir_context_reference(reference)
       end
+    end
+
+    def check_fhir_context_reference(reference)
+      assert reference.is_a?(String), "`#{reference.inspect}` is not a String"
+      assert !reference.start_with?('http'), "`#{reference}` is not a relative reference"
+
+      resource_type, id = reference.split('/')
+
+      assert FHIR_RESOURCE_TYPES.include?(resource_type),
+             "`#{resource_type}` in `reference` is not a valid FHIR resource type"
+
+      assert id.match?(FHIR_ID_REGEX), "`#{id}` in `reference` is not a valid FHIR id"
+    end
+
+    def check_fhir_context_canonical(canonical)
+      assert canonical.is_a?(String), "`#{canonical.inspect}` is not a String"
+      assert canonical.start_with?('http'), "`#{canonical}` is not a canonical reference"
+
+      split_canonical = canonical.split('/')
+
+      if split_canonical.last.start_with?(/&|\|/)
+        resource_type = split_canonical[-3]
+        id = split_canonical[-2]
+      else
+        resource_type = split_canonical[-2]
+        id = split_canonical.last.split(/&|\|/).first
+      end
+
+      assert FHIR_RESOURCE_TYPES.include?(resource_type),
+             "`#{resource_type}` in `canonical` is not a valid FHIR resource type"
+
+      assert id.match?(FHIR_ID_REGEX), "`#{id}` in `canonical` is not a valid FHIR id"
+    end
+
+    def check_fhir_context_identifier(identifier)
+      assert identifier.is_a?(Hash), "`#{identifier.inspect}` is not an Object"
     end
 
     def validate_fhir_context_stu2_2(fhir_context)
@@ -139,23 +170,31 @@ module SMARTAppLaunch
       assert fhir_context.is_a?(Array), "`fhirContext` field is a #{fhir_context.class.name}, but should be an Array"
 
       fhir_context.each do |reference|
-        assert reference.is_a?(Hash), "`#{reference.inspect}` is not a Hash"
+        assert reference.is_a?(Hash), "`#{reference.inspect}` is not an Object"
       end
 
-      fhir_context.each do |reference_obj|
-        reference = reference_obj['reference']
+      fhir_context.each do |context|
+        reference = context['reference']
+        canonical = context['canonical']
+        identifier = context['identifier']
 
-        assert reference.present?,
-               '`fhirContext` field does not contain values in the format: {"reference": "<resource_reference>"}'
+        type = context['type']
 
-        assert reference.is_a?(String), "`#{reference.inspect}` is not a String"
-        assert !reference.start_with?('http'), "`#{reference}` is not a relative reference"
+        assert reference.present? || canonical.present? || identifier.present?,
+               '`fhirContext` array SHALL include at least one of "reference", "canonical", or "identifier"'
 
-        resource_type, id = reference.split('/')
-        assert FHIR_RESOURCE_TYPES.include?(resource_type),
-               "`#{resource_type}` is not a valid FHIR resource type"
+        check_fhir_context_reference(reference) if reference.present?
+        check_fhir_context_canonical(canonical) if canonical.present?
+        check_fhir_context_identifier(identifier) if identifier.present?
 
-        assert id.match?(FHIR_ID_REGEX), "`#{id}` is not a valid FHIR id"
+        if (canonical.present? || identifier.present?) && type.blank?
+          info 'The `type` field is recommended when "canonical" or "identifier" is present in `fhirContext` object'
+        end
+
+        next unless type.present?
+
+        assert FHIR_RESOURCE_TYPES.include?(type),
+               "`#{type}` in `type` is not a valid FHIR resource type"
       end
     end
   end

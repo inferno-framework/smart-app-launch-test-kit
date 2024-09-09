@@ -15,7 +15,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
     }
   end
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart_stu2.2') }
+  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart_stu2_2') }
 
   def run(runnable, inputs = {})
     test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
@@ -117,8 +117,17 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
 
   context 'when the fhirContext field is present' do
     it 'passes if fhirContext valid' do
+      canonicalURL = 'https://example.org/Organization/123/|v2023-05-03'
+      canonicalURL2 = 'https://example.org/Organization/456|v2023-05-03'
+      canonicalURL3 = 'https://example.org/Organization/890&version=0.8'
+      identifierObj = {
+        'system' => 'http://www.acme.org.au/units',
+        'value' => 'ClinLab'
+      }
       body = valid_body.merge(fhirContext: [{ reference: 'Organization/123' }, { reference: 'DiagnosticReport/123' },
-                                            { reference: 'Observation/123/_history/2' }])
+                                            { reference: 'Observation/123/_history/2' }, { canonical: canonicalURL },
+                                            { canonical: canonicalURL2 }, { canonical: canonicalURL3 },
+                                            { identifier: identifierObj, type: 'Organization' }])
       create_token_request(body:)
 
       result = run(test, requested_scopes: 'patient/*.*')
@@ -140,7 +149,18 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
 
       result = run(test, requested_scopes: 'patient/*.*')
       expect(result.result).to eq('fail')
-      expect(result.result_message).to match('`\"Organization/123\"` is not a Hash')
+      expect(result.result_message).to match('`\"Organization/123\"` is not an Object')
+    end
+
+    it 'fails if fhirContext does not include a reference, canonical, or identifier field' do
+      body = valid_body.merge(fhirContext: [{ resource: 'Organization/123' }])
+      create_token_request(body:)
+
+      result = run(test, requested_scopes: 'patient/*.*')
+      expect(result.result).to eq('fail')
+      expect(result.result_message).to match(
+        '`fhirContext` array SHALL include at least one of "reference", "canonical", or "identifier"'
+      )
     end
 
     it 'fails if fhirContext reference contains a non-String element' do
@@ -153,18 +173,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
       expect(result.result_message).to match("`#{numericalElement}` is not a String")
     end
 
-    it 'fails if fhirContext reference has incorrect field name' do
-      body = valid_body.merge(fhirContext: [{ resource: 'Organization/123' }])
-      create_token_request(body:)
-
-      result = run(test, requested_scopes: 'patient/*.*')
-      expect(result.result).to eq('fail')
-      expect(result.result_message).to match(
-        '`fhirContext` field does not contain values in the format: {\"reference\": \"<resource_reference>\"}'
-      )
-    end
-
-    it 'fails if fhirContext contains an absolute reference' do
+    it 'fails if fhirContext contains a reference that is not a relative reference' do
       canonicalURL = 'https://example.org/Organization/123/|v2023-05-03'
       body = valid_body.merge(fhirContext: [{ reference: canonicalURL }])
       create_token_request(body:)
@@ -181,7 +190,9 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
 
       result = run(test, requested_scopes: 'patient/*.*')
       expect(result.result).to eq('fail')
-      expect(result.result_message).to match("`#{invalidResourceType}` is not a valid FHIR resource type")
+      expect(result.result_message).to match(
+        "`#{invalidResourceType}` in `reference` is not a valid FHIR resource type"
+      )
     end
 
     it 'fails if fhirContext contains a reference with an invalid id' do
@@ -191,7 +202,65 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
 
       result = run(test, requested_scopes: 'patient/*.*')
       expect(result.result).to eq('fail')
-      expect(result.result_message).to match("`#{invalidFhirID}` is not a valid FHIR id")
+      expect(result.result_message).to match("`#{invalidFhirID}` in `reference` is not a valid FHIR id")
+    end
+
+    it 'fails if fhirContext canonical contains a non-String element' do
+      numericalElement = 123
+      body = valid_body.merge(fhirContext: [{ reference: 'Organization/123' }, { canonical: numericalElement }])
+      create_token_request(body:)
+
+      result = run(test, requested_scopes: 'patient/*.*')
+      expect(result.result).to eq('fail')
+      expect(result.result_message).to match("`#{numericalElement}` is not a String")
+    end
+
+    it 'fails if fhirContext contains a canonical that is not an absolute reference' do
+      body = valid_body.merge(fhirContext: [{ canonical: 'Organization/123' }])
+      create_token_request(body:)
+
+      result = run(test, requested_scopes: 'patient/*.*')
+      expect(result.result).to eq('fail')
+      expect(result.result_message).to match('`Organization/123` is not a canonical reference')
+    end
+
+    it 'fails if fhirContext contains a canonical with an invalid resource type' do
+      canonicalURL = 'https://example.org/Hospital/123/|v2023-05-03'
+      body = valid_body.merge(fhirContext: [{ canonical: canonicalURL }])
+      create_token_request(body:)
+
+      result = run(test, requested_scopes: 'patient/*.*')
+      expect(result.result).to eq('fail')
+      expect(result.result_message).to match('`Hospital` in `canonical` is not a valid FHIR resource type')
+    end
+
+    it 'fails if fhirContext contains a canonical with an invalid id' do
+      invalidFhirID = '@#'
+      canonicalURL = "https://example.org/Organization/#{invalidFhirID}/|v2023-05-03"
+      body = valid_body.merge(fhirContext: [{ canonical: canonicalURL }])
+      create_token_request(body:)
+
+      result = run(test, requested_scopes: 'patient/*.*')
+      expect(result.result).to eq('fail')
+      expect(result.result_message).to match("`#{invalidFhirID}` in `canonical` is not a valid FHIR id")
+    end
+
+    it 'fails if fhirContext identifier contains a non-Hash element' do
+      body = valid_body.merge(fhirContext: [{ reference: 'Organization/123' }, { identifier: 'Organization/123' }])
+      create_token_request(body:)
+
+      result = run(test, requested_scopes: 'patient/*.*')
+      expect(result.result).to eq('fail')
+      expect(result.result_message).to match('`"Organization/123"` is not an Object')
+    end
+
+    it 'fails if fhirContext type contains an invalid resource type' do
+      body = valid_body.merge(fhirContext: [{ reference: 'Organization/123', type: 'Hospital' }])
+      create_token_request(body:)
+
+      result = run(test, requested_scopes: 'patient/*.*')
+      expect(result.result).to eq('fail')
+      expect(result.result_message).to match('`Hospital` in `type` is not a valid FHIR resource type')
     end
   end
 

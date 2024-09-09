@@ -1,4 +1,4 @@
-require_relative 'standalone_launch_group_stu2.2'
+require_relative 'standalone_launch_group_stu2_2'
 
 module SMARTAppLaunch
   class SMARTTokenIntrospectionAccessTokenGroupSTU22 < SMARTTokenIntrospectionAccessTokenGroup

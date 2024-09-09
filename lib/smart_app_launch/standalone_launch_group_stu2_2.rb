@@ -1,4 +1,4 @@
-require_relative 'token_response_body_test_stu2.2'
+require_relative 'token_response_body_test_stu2_2'
 require_relative 'standalone_launch_group_stu2'
 
 module SMARTAppLaunch

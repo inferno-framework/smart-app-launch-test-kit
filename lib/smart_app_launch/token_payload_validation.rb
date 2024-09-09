@@ -124,7 +124,11 @@ module SMARTAppLaunch
 
       fhir_context.each do |reference|
         assert !reference.start_with?('http'), "`#{reference}` is not a relative reference"
-        check_fhir_context_reference(reference)
+        resource_type, id = reference.split('/')
+        assert FHIR_RESOURCE_TYPES.include?(resource_type),
+               "`#{resource_type}` is not a valid FHIR resource type"
+
+        assert id.match?(FHIR_ID_REGEX), "`#{id}` is not a valid FHIR id"
       end
     end
 

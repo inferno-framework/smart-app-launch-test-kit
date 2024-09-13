@@ -1,4 +1,5 @@
 require_relative 'token_response_body_test_stu2_2'
+require_relative 'token_response_headers_test_stu2_2'
 require_relative 'standalone_launch_group_stu2'
 
 module SMARTAppLaunch
@@ -48,5 +49,10 @@ module SMARTAppLaunch
 
     token_response_body_index = children.find_index { |child| child.id.to_s.end_with? 'token_response_body' }
     children[token_response_body_index] = children.pop
+
+    test from: :smart_token_response_headers_stu2_2
+
+    token_response_headers_index = children.find_index { |child| child.id.to_s.end_with? 'token_response_headers' }
+    children[token_response_headers_index] = children.pop
   end
 end

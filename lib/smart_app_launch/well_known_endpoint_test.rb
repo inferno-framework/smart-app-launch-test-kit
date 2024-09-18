@@ -13,18 +13,9 @@ module SMARTAppLaunch
     input :url,
           title: 'FHIR Endpoint',
           description: 'URL of the FHIR endpoint used by SMART applications'
-    input :well_known_introspection_url,
-          title: 'Token Introspection Endpoint',
-          description: <<~DESCRIPTION,
-            The complete URL of the token introspection endpoint. This will be
-            populated automatically if included in the server's discovery
-            endpoint.
-          DESCRIPTION
-          optional: true
 
     output :well_known_configuration,
            :well_known_authorization_url,
-           :well_known_introspection_url,
            :well_known_management_url,
            :well_known_registration_url,
            :well_known_revocation_url,

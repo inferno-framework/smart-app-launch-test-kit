@@ -16,6 +16,7 @@ module SMARTAppLaunch
 
     output :well_known_configuration,
            :well_known_authorization_url,
+           :well_known_introspection_url,
            :well_known_management_url,
            :well_known_registration_url,
            :well_known_revocation_url,

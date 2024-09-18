@@ -13,6 +13,15 @@ module SMARTAppLaunch
     input :url,
           title: 'FHIR Endpoint',
           description: 'URL of the FHIR endpoint used by SMART applications'
+    input :well_known_introspection_url,
+          title: 'Token Introspection Endpoint',
+          description: <<~DESCRIPTION,
+            The complete URL of the token introspection endpoint. This will be
+            populated automatically if included in the server's discovery
+            endpoint.
+          DESCRIPTION
+          optional: true
+
     output :well_known_configuration,
            :well_known_authorization_url,
            :well_known_introspection_url,
@@ -34,9 +43,12 @@ module SMARTAppLaunch
       base_url = "#{url.chomp('/')}/"
       config = JSON.parse(request.response_body)
 
+      if config['introspection_endpoint'].present?
+        output well_known_introspection_url: make_url_absolute(base_url, config['introspection_endpoint'])
+      end
+
       output well_known_configuration: request.response_body,
              well_known_authorization_url: make_url_absolute(base_url, config['authorization_endpoint']),
-             well_known_introspection_url: make_url_absolute(base_url, config['introspection_endpoint']),
              well_known_management_url: make_url_absolute(base_url, config['management_endpoint']),
              well_known_registration_url: make_url_absolute(base_url, config['registration_endpoint']),
              well_known_revocation_url: make_url_absolute(base_url, config['revocation_endpoint']),

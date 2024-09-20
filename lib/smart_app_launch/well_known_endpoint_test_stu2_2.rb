@@ -40,9 +40,12 @@ module SMARTAppLaunch
       base_url = "#{url.chomp('/')}/"
       config = JSON.parse(request.response_body)
 
+      if config['introspection_endpoint'].present?
+        output well_known_introspection_url: make_url_absolute(base_url, config['introspection_endpoint'])
+      end
+
       output well_known_configuration: request.response_body,
              well_known_authorization_url: make_url_absolute(base_url, config['authorization_endpoint']),
-             well_known_introspection_url: make_url_absolute(base_url, config['introspection_endpoint']),
              well_known_management_url: make_url_absolute(base_url, config['management_endpoint']),
              well_known_registration_url: make_url_absolute(base_url, config['registration_endpoint']),
              well_known_revocation_url: make_url_absolute(base_url, config['revocation_endpoint']),

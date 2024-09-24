@@ -6,8 +6,6 @@ services:
       # Defines how long validator sessions last if unused, in minutes:
       # Negative values mean sessions never expire, 0 means sessions immediately expire
       SESSION_CACHE_DURATION: -1
-    volumes:
-      - ./lib/service_base_url_test_kit/igs:/home/igs
       # To let the service share your local FHIR package cache,
       # uncomment the below line
       # - ~/.fhir:/home/ktor/.fhir

@@ -3,7 +3,7 @@ require_relative 'smart_access_brands_retrieval_group'
 
 module SMARTAppLaunch
   class SMARTAccessBrandsGroup < Inferno::TestGroup
-    id :smart_access_brands_test_group
+    id :retrieve_and_validate_smart_access_brands
     title 'Retrieve and Validate SMART Access Brands Bundle'
     description %(
       Verify that the Brand Bundle Publisher makes its User-access Brands publication publicly available
@@ -17,7 +17,7 @@ module SMARTAppLaunch
       Brands and User Access Endpoints.
     )
 
-    group from: :smart_access_brands_retrieval_group
-    group from: :smart_access_brands_validation_group
+    group from: :smart_access_brands_retrieval
+    group from: :smart_access_brands_validation
   end
 end

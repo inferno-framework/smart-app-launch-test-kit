@@ -2,7 +2,7 @@ require_relative 'smart_access_brands_retrieve_bundle_test'
 
 module SMARTAppLaunch
   class SMARTAccessBrandsRetrievalGroup < Inferno::TestGroup
-    id :smart_access_brands_retrieval_group
+    id :smart_access_brands_retrieval
     title 'Retrieve SMART Access Brands Bundle'
     description %(
       A publisher's User Access Brand Bundle must be publicly available.  This test
@@ -23,6 +23,6 @@ module SMARTAppLaunch
       headers Accept: 'application/json, application/fhir+json'
     end
 
-    test from: :smart_access_brands_retrieve_bundle_test
+    test from: :smart_access_brands_retrieve_bundle
   end
 end

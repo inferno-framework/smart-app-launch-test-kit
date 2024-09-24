@@ -5,7 +5,7 @@ require_relative 'smart_access_brands_validate_brands_test'
 
 module SMARTAppLaunch
   class SMARTAccessBrandsValidationGroup < Inferno::TestGroup
-    id :smart_access_brands_validation_group
+    id :smart_access_brands_validation
     title 'Validate SMART Access Brands Bundle'
     description %(
       These tests ensure that the publisher's User Access Brands publication is in

@@ -42,7 +42,7 @@ module SMARTAppLaunch
       if filename.end_with?('.erb')
         erb_template = ERB.new(resource_example)
         resource_example = JSON.parse(erb_template.result).to_json
-        filename = "#{filename.delete_suffix('.erb')}.json"
+        filename = filename.delete_suffix('.erb')
         headers = { 'Content-Type' => 'application/json', 'Access-Control-Allow-Origin' => '*',
                     'Etag' => SecureRandom.hex(32) }
       else
@@ -54,6 +54,6 @@ module SMARTAppLaunch
       route :get, File.join('/examples/', filename), route_handler
     end
 
-    group from: :smart_access_brands_test_group
+    group from: :retrieve_and_validate_smart_access_brands
   end
 end

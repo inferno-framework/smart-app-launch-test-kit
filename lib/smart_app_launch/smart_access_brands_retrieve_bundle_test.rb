@@ -1,6 +1,6 @@
 module SMARTAppLaunch
   class SMARTAccessBrandsRetrievalTest < Inferno::Test
-    id :smart_access_brands_retrieve_bundle_test
+    id :smart_access_brands_retrieve_bundle
     title 'Server returns publicly accessible SMART Access Brands Bundle'
     description %(
         Verify that the publisher's User Access Brands Bundle can be publicly

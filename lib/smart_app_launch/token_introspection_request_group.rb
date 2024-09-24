@@ -45,12 +45,11 @@ module SMARTAppLaunch
           type: 'textarea',
           optional: true,
           description: %(
-            Create an array of header name and value strings.
+            Add custom headers for the introspection request by adding each header's name and value with a new line
+            between each header.
             Ex:
-              [
-                "<Header 1 Name>: <Value 1>",
-                "<Header 2 Name>: <Value 2>"
-              ]
+              <Header 1 Name>: <Value 1>
+              <Header 2 Name>: <Value 2>
             )
 
     input :optional_introspection_request_params,
@@ -82,13 +81,7 @@ module SMARTAppLaunch
         body = "token=#{standalone_access_token}"
 
         if custom_token_introspection_request_headers.present?
-          assert_valid_json(custom_token_introspection_request_headers)
-          custom_headers = JSON.parse(custom_token_introspection_request_headers)
-
-          assert(custom_headers.is_a?(Array), %(
-            Incorrect custom HTTP headers input format, expected:
-            ["<header 1 name>: <header 1 value>", "<header 2 name>: <header 2 value>", etc.]))
-
+          custom_headers = custom_token_introspection_request_headers.split("\n")
           custom_headers.each do |custom_header|
             parsed_header = custom_header.split(':', 2)
             assert parsed_header.length == 2,

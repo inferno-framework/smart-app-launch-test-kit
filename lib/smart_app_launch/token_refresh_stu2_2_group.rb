@@ -1,5 +1,6 @@
 require_relative 'token_refresh_stu2_group'
-require_relative 'token_response_headers_test_stu2_2'
+require_relative 'cors_support_stu2_2_test'
+require_relative 'token_refresh_stu2_2_test'
 
 module SMARTAppLaunch
   class TokenRefreshSTU22Group < TokenRefreshSTU2Group
@@ -33,14 +34,22 @@ module SMARTAppLaunch
         token](https://www.hl7.org/fhir/smart-app-launch/STU2.2/index.html#step-5-later-app-uses-a-refresh-token-to-obtain-a-new-access-token)
     )
 
-    test from: :smart_token_response_headers_stu2_2,
+    test from: :smart_token_refresh_stu2_2
+
+    token_refresh_index = children.find_index { |child| child.id.to_s.end_with? 'smart_token_refresh_stu2' }
+    children[token_refresh_index] = children.pop
+
+    test from: :cors_support_stu2_2,
+         title: 'SMART Token Endpoint Enables Cross-Origin Resource Sharing (CORS)',
+         description: %(
+                For requests from a client's registered origin(s), CORS configuration permits access to the token
+                endpoint. This test verifies that the token endpoint contains the appropriate CORS header in the
+                response.
+              ),
          config: {
            requests: {
-             token: { name: :token_refresh }
+             cors_request: { name: :token_refresh }
            }
          }
-
-    token_response_headers_index = children.find_index { |child| child.id.to_s.end_with? 'token_response_headers' }
-    children[token_response_headers_index] = children.pop
   end
 end

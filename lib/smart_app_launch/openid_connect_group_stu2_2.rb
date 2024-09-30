@@ -1,5 +1,6 @@
-require_relative 'openid_fhir_user_claim_test_stu2_2'
+require_relative 'openid_fhir_user_claim_stu2_2_test'
 require_relative 'openid_connect_group'
+require_relative 'cors_support_stu2_2_test'
 
 module SMARTAppLaunch
   class OpenIDConnectGroupSTU22 < OpenIDConnectGroup
@@ -39,5 +40,18 @@ module SMARTAppLaunch
 
     fhir_user_claim_index = children.find_index { |child| child.id.to_s.end_with? 'fhir_user_claim' }
     children[fhir_user_claim_index] = children.pop
+
+    test from: :cors_support_stu2_2,
+         title: 'SMART FHIR User REST API Endpoint Enables Cross-Origin Resource Sharing (CORS)',
+         description: %(
+           For requests from a client's registered origin(s), CORS configuration permits access to the token endpoint
+           and to FHIR REST API endpoints. This test verifies that a request to the FHIR REST API endpoint for the FHIR
+           user is returned with the appropriate CORS header.
+         ),
+         config: {
+           requests: {
+             cors_request: { name: :fhir_user }
+           }
+         }
   end
 end

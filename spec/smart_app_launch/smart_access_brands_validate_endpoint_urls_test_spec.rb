@@ -19,10 +19,10 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
                          )))
   end
 
-  let(:smart_access_brands_bundle_url) { 'http://fhirserver.org/smart_access_brands_example.json' }
+  let(:user_access_brands_publication_url) { 'http://fhirserver.org/smart_access_brands_example.json' }
   let(:base_url) { 'http://example.com/api/FHIR/R4' }
 
-  def create_user_access_brands_request(url: smart_access_brands_bundle_url, body: nil, status: 200)
+  def create_user_access_brands_request(url: user_access_brands_publication_url, body: nil, status: 200)
     repo_create(
       :request,
       name: 'retrieve_smart_access_brands_bundle',
@@ -70,11 +70,11 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
     let(:test) do
       Class.new(SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs) do
         http_client do
-          url :smart_access_brands_bundle_url
+          url :user_access_brands_publication_url
           headers Accept: 'application/json, application/fhir+json'
         end
 
-        input :smart_access_brands_bundle_url
+        input :user_access_brands_publication_url
       end
     end
 
@@ -85,7 +85,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
 
       create_user_access_brands_request(body: smart_access_brands_bundle)
 
-      result = run(test, smart_access_brands_bundle_url:, endpoint_availability_success_rate: 'all')
+      result = run(test, user_access_brands_publication_url:, endpoint_availability_success_rate: 'all')
 
       expect(result.result).to eq('pass')
       expect(capability_statement_request).to have_been_made.times(2)
@@ -96,7 +96,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
 
       create_user_access_brands_request(body: smart_access_brands_bundle)
 
-      result = run(test, smart_access_brands_bundle_url:, endpoint_availability_success_rate: 'all')
+      result = run(test, user_access_brands_publication_url:, endpoint_availability_success_rate: 'all')
 
       expect(result.result).to eq('fail')
       expect(result.result_message).to eq('"invalid_url" is not a valid URI')
@@ -109,7 +109,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
 
       create_user_access_brands_request(body: smart_access_brands_bundle)
 
-      result = run(test, smart_access_brands_bundle_url:, endpoint_availability_success_rate: 'all')
+      result = run(test, user_access_brands_publication_url:, endpoint_availability_success_rate: 'all')
 
       expect(result.result).to eq('fail')
       expect(result.result_message).to eq('Unexpected response status: expected 200, but received 404')
@@ -123,7 +123,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
 
       create_user_access_brands_request(body: smart_access_brands_bundle)
 
-      result = run(test, smart_access_brands_bundle_url:, endpoint_availability_success_rate: 'all')
+      result = run(test, user_access_brands_publication_url:, endpoint_availability_success_rate: 'all')
 
       expect(result.result).to eq('fail')
       expect(result.result_message).to eq('The content received does not appear to be a valid FHIR resource')
@@ -138,7 +138,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
 
       create_user_access_brands_request(body: smart_access_brands_bundle)
 
-      result = run(test, smart_access_brands_bundle_url:, endpoint_availability_success_rate: 'all')
+      result = run(test, user_access_brands_publication_url:, endpoint_availability_success_rate: 'all')
 
       expect(result.result).to eq('fail')
       expect(result.result_message).to eq(
@@ -154,7 +154,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
 
       create_user_access_brands_request(body: smart_access_brands_bundle)
 
-      result = run(test, smart_access_brands_bundle_url:, endpoint_availability_success_rate: 'all',
+      result = run(test, user_access_brands_publication_url:, endpoint_availability_success_rate: 'all',
                          endpoint_availability_limit: 1)
 
       expect(result.result).to eq('pass')
@@ -174,7 +174,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
 
       create_user_access_brands_request(body: smart_access_brands_bundle)
 
-      result = run(test, smart_access_brands_bundle_url:, endpoint_availability_success_rate: 'at_least_1')
+      result = run(test, user_access_brands_publication_url:, endpoint_availability_success_rate: 'at_least_1')
 
       expect(result.result).to eq('pass')
       expect(entity_result_message(test)).to match('Unexpected response status: expected 200, but received 404')
@@ -190,7 +190,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
 
       create_user_access_brands_request(body: smart_access_brands_bundle)
 
-      result = run(test, smart_access_brands_bundle_url:, endpoint_availability_success_rate: 'none')
+      result = run(test, user_access_brands_publication_url:, endpoint_availability_success_rate: 'none')
 
       expect(result.result).to eq('pass')
       expect(capability_statement_request).to have_been_made.times(0)

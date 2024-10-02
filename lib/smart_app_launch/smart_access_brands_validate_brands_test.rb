@@ -4,12 +4,15 @@ module SMARTAppLaunch
     title 'Service Base URL List contains valid Brand resources'
     description %(
       Verify that Bundle of User Access Brands and Endpoints contains Brands that are valid
-      Organization resources according to the [User Access Brand Profile](https://build.fhir.org/ig/HL7/smart-app-launch/StructureDefinition-user-access-brand.html).
+      Organization resources according to the [User Access Brand Profile](https://hl7.org/fhir/smart-app-launch/StructureDefinition-user-access-brand.html).
 
       Along with validating the Organization resources, this test also ensures:
         - Each endpoint referenced in the Organization portal extension also appear in Organization.endpoint
         - Any endpoints referenced by the Organization must appear in the Bundle
     )
+
+    input :user_access_brands_bundle,
+          optional: true
 
     def find_referenced_endpoint(bundle_resource, endpoint_id_ref)
       bundle_resource
@@ -43,10 +46,22 @@ module SMARTAppLaunch
       end
     end
 
+    def skip_message
+      %(
+        No User Access Brands request was made in the previous test, and no User Access Brands Bundle was provided as
+        input instead. Either provide a User Access Brands Publication URL to retrieve the Bundle via a HTTP GET
+        request, or provide the Bundle as an input.
+      )
+    end
+
     run do
-      load_tagged_requests('smart_access_brands_bundle')
-      skip_if requests.length != 1, 'No SMART Access Brands request was made in the previous test.'
-      bundle_response = requests.first.response_body
+      bundle_response = if user_access_brands_bundle.blank?
+                          load_tagged_requests('smart_access_brands_bundle')
+                          skip skip_message if requests.length != 1
+                          requests.first.response_body
+                        else
+                          user_access_brands_bundle
+                        end
 
       skip_if bundle_response.blank?, 'No SMART Access Brands Bundle contained in the response'
 

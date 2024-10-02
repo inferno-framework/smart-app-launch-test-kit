@@ -9,7 +9,15 @@ module SMARTAppLaunch
 
     makes_request :bundle_request
 
+    input :user_access_brands_publication_url,
+          optional: true
+
     run do
+      skip_if user_access_brands_publication_url.blank?, %(
+        No User Access Brands Publication endpoint URL inputted. It is an expectation of the specification for the
+        User Access Brands Bundle to be publicly available'
+      )
+
       get(tags: ['smart_access_brands_bundle'])
       assert_response_status(200)
       assert(request.headers.any? { |header| header.name == 'access-control-allow-origin' }, %(

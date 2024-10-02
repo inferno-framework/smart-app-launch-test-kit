@@ -11,15 +11,8 @@ module SMARTAppLaunch
     )
     run_as_group
 
-    input :smart_access_brands_bundle_url,
-          title: 'SMART Access Brands Bundle URL',
-          description: %(
-      The URL to the publisher's public SMART Access Brands List. Insert the SMART Access Brands URL
-      if you host your Bundle at a public-facing endpoint and want Inferno to retrieve the Bundle from there.
-    )
-
     http_client do
-      url :smart_access_brands_bundle_url
+      url :user_access_brands_publication_url
       headers Accept: 'application/json, application/fhir+json'
     end
 

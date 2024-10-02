@@ -9,10 +9,10 @@ module SMARTAppLaunch
     title 'Validate SMART Access Brands Bundle'
     description %(
       These tests ensure that the publisher's User Access Brands publication is in
-      a valid Bundle according to the [User Access Brand Bundle Profile](https://build.fhir.org/ig/HL7/smart-app-launch/StructureDefinition-user-access-brands-bundle.html).
+      a valid Bundle according to the [User Access Brand Bundle Profile](https://hl7.org/fhir/smart-app-launch/StructureDefinition-user-access-brands-bundle.html).
       It ensures that this User Access Brand Bundle has its brand and endpoint
-      details contained in valid Endpoints according to the [User Access Endpoint Profile](https://build.fhir.org/ig/HL7/smart-app-launch/StructureDefinition-user-access-endpoint.html)
-      and valid Brands (Organizations) according to the [User Access Brand Profile](https://build.fhir.org/ig/HL7/smart-app-launch/StructureDefinition-user-access-brand.html).
+      details contained in valid Endpoints according to the [User Access Endpoint Profile](https://hl7.org/fhir/smart-app-launch/StructureDefinition-user-access-endpoint.html)
+      and valid Brands (Organizations) according to the [User Access Brand Profile](https://hl7.org/fhir/smart-app-launch/StructureDefinition-user-access-brand.html).
     )
     run_as_group
 

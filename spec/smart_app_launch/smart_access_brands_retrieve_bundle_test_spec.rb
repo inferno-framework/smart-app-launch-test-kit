@@ -12,7 +12,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsRetrievalTest do
                          )))
   end
 
-  let(:smart_access_brands_bundle_url) { 'http://fhirserver.org/smart_access_brands_example.json' }
+  let(:user_access_brands_publication_url) { 'http://fhirserver.org/smart_access_brands_example.json' }
 
   let(:headers) do
     { 'Content-Type' => 'application/json',
@@ -54,29 +54,36 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsRetrievalTest do
     let(:test) do
       Class.new(SMARTAppLaunch::SMARTAccessBrandsRetrievalTest) do
         http_client do
-          url :smart_access_brands_bundle_url
+          url :user_access_brands_publication_url
           headers Accept: 'application/json, application/fhir+json'
         end
 
-        input :smart_access_brands_bundle_url
+        input :user_access_brands_publication_url
       end
     end
 
     it 'passes if successfully retrieves user-Access Brands Bundle' do
-      user_access_brands_request = stub_request(:get, smart_access_brands_bundle_url)
+      user_access_brands_request = stub_request(:get, user_access_brands_publication_url)
         .to_return(status: 200, headers:, body: smart_access_brands_bundle.to_json)
 
-      result = run(test, smart_access_brands_bundle_url:)
+      result = run(test, user_access_brands_publication_url:)
 
       expect(result.result).to eq('pass')
       expect(user_access_brands_request).to have_been_made
     end
 
+    it 'skips if no user-Access Brands Bundle URL inputted' do
+      result = run(test)
+
+      expect(result.result).to eq('skip')
+      expect(result.result_message).to match('No User Access Brands Publication endpoint URL inputted')
+    end
+
     it 'fails if retrieving user-Access Brands Bundle returns non 200' do
-      user_access_brands_request = stub_request(:get, smart_access_brands_bundle_url)
+      user_access_brands_request = stub_request(:get, user_access_brands_publication_url)
         .to_return(status: 404)
 
-      result = run(test, smart_access_brands_bundle_url:)
+      result = run(test, user_access_brands_publication_url:)
 
       expect(result.result).to eq('fail')
       expect(result.result_message).to eq('Unexpected response status: expected 200, but received 404')
@@ -85,10 +92,10 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsRetrievalTest do
 
     it 'fails if user-Access Brands Bundle response does not contain CORs header' do
       headers.delete('Access-Control-Allow-Origin')
-      user_access_brands_request = stub_request(:get, smart_access_brands_bundle_url)
+      user_access_brands_request = stub_request(:get, user_access_brands_publication_url)
         .to_return(status: 200, headers:, body: smart_access_brands_bundle.to_json)
 
-      result = run(test, smart_access_brands_bundle_url:)
+      result = run(test, user_access_brands_publication_url:)
 
       expect(result.result).to eq('fail')
       expect(result.result_message).to match('All GET requests must support Cross-Origin Resource Sharing')
@@ -97,10 +104,10 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsRetrievalTest do
 
     it 'produces warning if user-Access Brands Bundle response does not contain Etag header' do
       headers.delete('Etag')
-      user_access_brands_request = stub_request(:get, smart_access_brands_bundle_url)
+      user_access_brands_request = stub_request(:get, user_access_brands_publication_url)
         .to_return(status: 200, headers:, body: smart_access_brands_bundle.to_json)
 
-      result = run(test, smart_access_brands_bundle_url:)
+      result = run(test, user_access_brands_publication_url:)
 
       expect(result.result).to eq('pass')
       expect(entity_result_message(test)).to match(

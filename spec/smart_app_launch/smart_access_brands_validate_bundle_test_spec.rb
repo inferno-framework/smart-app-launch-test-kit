@@ -35,9 +35,9 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBundle do
   end
 
   let(:validator_url) { ENV.fetch('FHIR_RESOURCE_VALIDATOR_URL') }
-  let(:smart_access_brands_bundle_url) { 'http://fhirserver.org/smart_access_brands_example.json' }
+  let(:user_access_brands_publication_url) { 'http://fhirserver.org/smart_access_brands_example.json' }
 
-  def create_user_access_brands_request(url: smart_access_brands_bundle_url, body: nil, status: 200)
+  def create_user_access_brands_request(url: user_access_brands_publication_url, body: nil, status: 200)
     repo_create(
       :request,
       name: 'retrieve_smart_access_brands_bundle',
@@ -94,11 +94,23 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBundle do
       expect(validation_request).to have_been_made
     end
 
+    it 'passes if inputted User Access Brands Bundle is valid' do
+      validation_request = stub_request(:post, "#{validator_url}/validate")
+        .to_return(status: 200, body: operation_outcome_success.to_json)
+
+      result = run(test, user_access_brands_bundle: smart_access_brands_bundle.to_json)
+
+      expect(result.result).to eq('pass')
+      expect(validation_request).to have_been_made
+    end
+
     it 'skips if no User Access Brands Bundle requests were made' do
       result = run(test)
 
       expect(result.result).to eq('skip')
-      expect(result.result_message).to eq('No SMART Access Brands request was made in the previous test.')
+      expect(result.result_message).to match(
+        'No User Access Brands request was made in the previous test, and no User Access Brands Bundle was provided'
+      )
     end
 
     it 'skips if User Access Brands Bundle request does not contain a response body' do

@@ -4,7 +4,7 @@ module SMARTAppLaunch
     title 'SMART Access Brands Bundle contains valid User Access Endpoints'
     description %(
       Verify that Bundle of User Access Brands and Endpoints contains Endpoints that are valid
-      Endpoint resources according to the [User Access Endpoint Profile](https://build.fhir.org/ig/HL7/smart-app-launch/StructureDefinition-user-access-endpoint.html).
+      Endpoint resources according to the [User Access Endpoint Profile](https://hl7.org/fhir/smart-app-launch/StructureDefinition-user-access-endpoint.html).
 
       Along with validating the Endpoint resources, this test also ensures that each endpoint contains a primary brand
       by checking if it is referenced by at least 1 Organization resource.
@@ -21,10 +21,25 @@ module SMARTAppLaunch
         .select { |reference| reference.include? endpoint_id }
     end
 
+    def skip_message
+      %(
+        No User Access Brands request was made in the previous test, and no User Access Brands Bundle was provided as
+        input instead. Either provide a User Access Brands Publication URL to retrieve the Bundle via a HTTP GET
+        request, or provide the Bundle as an input.
+      )
+    end
+
+    input :user_access_brands_bundle,
+          optional: true
+
     run do
-      load_tagged_requests('smart_access_brands_bundle')
-      skip_if requests.length != 1, 'No SMART Access Brands request was made in the previous test.'
-      bundle_response = requests.first.response_body
+      bundle_response = if user_access_brands_bundle.blank?
+                          load_tagged_requests('smart_access_brands_bundle')
+                          skip skip_message if requests.length != 1
+                          requests.first.response_body
+                        else
+                          user_access_brands_bundle
+                        end
 
       skip_if bundle_response.blank?, 'No SMART Access Brands Bundle contained in the response'
 

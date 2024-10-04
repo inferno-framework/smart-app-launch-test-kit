@@ -3,6 +3,8 @@
   https://github.com/inferno-framework/smart-app-launch-test-kit/pull/74
 * FI-3053: Introspection URL Fix by @emichaud998 in
   https://github.com/inferno-framework/smart-app-launch-test-kit/pull/76
+* FI-3037: SMART User Access Brands Suite by @emichaud998 in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/73
 
 # 0.4.3
 * Dependency Updates 2024-04-05 by @Jammjammjamm in

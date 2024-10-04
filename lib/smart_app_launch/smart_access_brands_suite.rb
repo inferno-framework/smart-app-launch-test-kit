@@ -18,8 +18,9 @@ module SMARTAppLaunch
       name, logo, and user access details. Apps present branded Organizations to help users select the right data
       providers.
 
-      This Test Suite provides conformance testing to ensure the published User-access Brands Bundles are publicly
-      available and contain valid resources.
+      This test suite is currently designed to fetch and validate a single User-Access Brand Bundle. It does not
+      currently evaluate the system's ability to allow Health Data Providers to manage all data elements marked
+      "Must-Support" in the "User Access Brand" and "User Access Endpoint" profiles.
     DESCRIPTION
 
     input_instructions <<~INSTRUCTIONS

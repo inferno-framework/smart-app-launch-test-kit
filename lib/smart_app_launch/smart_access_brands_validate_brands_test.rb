@@ -4,11 +4,13 @@ module SMARTAppLaunch
     title 'Service Base URL List contains valid Brand resources'
     description %(
       Verify that Bundle of User Access Brands and Endpoints contains Brands that are valid
-      Organization resources according to the [User Access Brand Profile](https://hl7.org/fhir/smart-app-launch/StructureDefinition-user-access-brand.html).
+      Organization resources according to the [User Access Brand Profile](https://hl7.org/fhir/smart-app-launch/STU2.2/StructureDefinition-user-access-brand.html).
 
       Along with validating the Organization resources, this test also ensures:
         - Each endpoint referenced in the Organization portal extension also appear in Organization.endpoint
         - Any endpoints referenced by the Organization must appear in the Bundle
+
+      This test does not currently validate availability or format of Brand or Portal logos.
     )
 
     input :user_access_brands_bundle,

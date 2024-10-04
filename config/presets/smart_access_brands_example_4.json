@@ -5,7 +5,7 @@
   "inputs": [
     {
       "name": "user_access_brands_publication_url",
-      "value": "https://hl7.org/fhir/smart-app-launch/Bundle-example4.json",
+      "value": "https://hl7.org/fhir/smart-app-launch/STU2.2/Bundle-example4.json",
       "title": "User Access Brands Publication URL",
       "type": "text"
     },

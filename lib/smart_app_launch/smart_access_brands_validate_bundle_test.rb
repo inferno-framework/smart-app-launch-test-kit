@@ -4,7 +4,7 @@ module SMARTAppLaunch
     title 'Server returns valid Bundle resource according to the User Access Brands Bundle Profile'
     description %(
         Verify that the returned Bundle is a valid User Access Brands Bundle according to the
-        [User Access Brand Bundle Profile](https://hl7.org/fhir/smart-app-launch/StructureDefinition-user-access-brands-bundle.html).
+        [User Access Brand Bundle Profile](https://hl7.org/fhir/smart-app-launch/STU2.2/StructureDefinition-user-access-brands-bundle.html).
 
         This test also ensures the Bundle is the 'collection' type and that it is not empty.
       )

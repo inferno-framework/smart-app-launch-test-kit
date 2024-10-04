@@ -4,7 +4,7 @@ module SMARTAppLaunch
     title 'SMART Access Brands Bundle contains valid User Access Endpoints'
     description %(
       Verify that Bundle of User Access Brands and Endpoints contains Endpoints that are valid
-      Endpoint resources according to the [User Access Endpoint Profile](https://hl7.org/fhir/smart-app-launch/StructureDefinition-user-access-endpoint.html).
+      Endpoint resources according to the [User Access Endpoint Profile](https://hl7.org/fhir/smart-app-launch/STU2.2/StructureDefinition-user-access-endpoint.html).
 
       Along with validating the Endpoint resources, this test also ensures that each endpoint contains a primary brand
       by checking if it is referenced by at least 1 Organization resource.

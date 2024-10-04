@@ -3,13 +3,14 @@ require_relative 'smart_access_brands_group'
 module SMARTAppLaunch
   class SMARTAccessBrandsSuite < Inferno::TestSuite
     id 'smart_access_brands'
-    title 'SMART Access Brands STU2.2'
+    title 'SMART User-access Brands and Endpoints STU2.2'
+    short_title 'SMART User-access Brands'
     version VERSION
 
     description <<~DESCRIPTION
       The SMART User-access Brands Test Suite verifies that Brand Bundle Publishers publish valid User-access
       Brand Bundles according to the SMART App Launch IG
-      [User-access Brands and Endpoints](https://hl7.org/fhir/smart-app-launch/brands.html#user-access-brands-and-endpoints)
+      [User-access Brands and Endpoints](https://hl7.org/fhir/smart-app-launch/STU2.2/brands.html#user-access-brands-and-endpoints)
       requirements.
 
       The specification defines FHIR profiles for Endpoint, Organization, and Bundle resources that help users connect

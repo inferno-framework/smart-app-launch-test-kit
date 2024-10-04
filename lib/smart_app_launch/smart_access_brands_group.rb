@@ -7,10 +7,10 @@ module SMARTAppLaunch
     title 'Retrieve and Validate SMART Access Brands Bundle'
     description %(
       Verify that the Brand Bundle Publisher makes its User-access Brands publication publicly available
-      in the format defined by the [User Access Brand Bundle Profile](https://hl7.org/fhir/smart-app-launch/StructureDefinition-user-access-brands-bundle.html)
+      in the format defined by the [User Access Brand Bundle Profile](https://hl7.org/fhir/smart-app-launch/STU2.2/StructureDefinition-user-access-brands-bundle.html)
       with valid Endpoint and Organization entries according to the
-      [User Access Endpoint Profile](https://hl7.org/fhir/smart-app-launch/StructureDefinition-user-access-endpoint.html)
-      and the [User Access Brand Profile](https://hl7.org/fhir/smart-app-launch/StructureDefinition-user-access-brand.html)
+      [User Access Endpoint Profile](https://hl7.org/fhir/smart-app-launch/STU2.2/StructureDefinition-user-access-endpoint.html)
+      and the [User Access Brand Profile](https://hl7.org/fhir/smart-app-launch/STU2.2/StructureDefinition-user-access-brand.html)
       respectively. This test group will issue a HTTP GET request against the supplied URL to retrieve the publisher's
       User-access Brands list and ensure the list is publicly accessible. It will then ensure that the returned
       User-access Brands list publication is in the User Access Brand Bundle Profile format with valid User Access

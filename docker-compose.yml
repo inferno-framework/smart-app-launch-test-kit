@@ -5,8 +5,9 @@ services:
       context: ./
     volumes:
       - ./data:/opt/inferno/data
-    # depends_on:
-    #   - validator_service
+    depends_on:
+      # - validator_service
+      - hl7_validator_service
   worker:
     build:
       context: ./
@@ -15,6 +16,10 @@ services:
     command: bundle exec sidekiq -r ./worker.rb
     depends_on:
       - redis
+  hl7_validator_service:
+    extends:
+      file: docker-compose.background.yml
+      service: hl7_validator_service
   # validator_service:
   #   extends:
   #     file: docker-compose.background.yml

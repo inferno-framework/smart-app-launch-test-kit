@@ -5,7 +5,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
   include Rack::Test::Methods
   include RequestHelpers
 
-  let(:test) { Inferno::Repositories::Tests.new.find('cors_support_stu2_2') }
+  let(:test) { Inferno::Repositories::Tests.new.find('smart_cors_support_stu2_2') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
 

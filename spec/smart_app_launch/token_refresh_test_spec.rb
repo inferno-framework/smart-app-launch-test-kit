@@ -30,12 +30,12 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
     inputs.each do |name, value|
       session_data_repo.save(
         test_session_id: test_session.id,
-        name: name,
-        value: value,
+        name:,
+        value:,
         type: runnable.config.input_type(name)
       )
     end
-    Inferno::TestRunner.new(test_session: test_session, test_run: test_run).run(runnable)
+    Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
   end
 
   it 'skips if no refresh_token is available' do
@@ -58,9 +58,9 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
       result = run(
         test,
         smart_token_url: token_url,
-        refresh_token: refresh_token,
-        client_id: client_id,
-        received_scopes: received_scopes
+        refresh_token:,
+        client_id:,
+        received_scopes:
       )
 
       expect(result.result).to eq('pass')
@@ -87,10 +87,10 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
       result = run(
         test,
         smart_token_url: token_url,
-        refresh_token: refresh_token,
-        client_id: client_id,
-        client_secret: client_secret,
-        received_scopes: received_scopes
+        refresh_token:,
+        client_id:,
+        client_secret:,
+        received_scopes:
       )
 
       expect(result.result).to eq('pass')
@@ -110,9 +110,9 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
     result = run(
       test,
       smart_token_url: token_url,
-      refresh_token: refresh_token,
-      client_id: client_id,
-      received_scopes: received_scopes
+      refresh_token:,
+      client_id:,
+      received_scopes:
     )
 
     expect(result.result).to eq('fail')
@@ -132,9 +132,9 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
     result = run(
       test,
       smart_token_url: token_url,
-      refresh_token: refresh_token,
-      client_id: client_id,
-      received_scopes: received_scopes
+      refresh_token:,
+      client_id:,
+      received_scopes:
     )
 
     expect(result.result).to eq('fail')
@@ -154,9 +154,9 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
     result = run(
       test,
       smart_token_url: token_url,
-      refresh_token: refresh_token,
-      client_id: client_id,
-      received_scopes: received_scopes
+      refresh_token:,
+      client_id:,
+      received_scopes:
     )
 
     expect(result.result).to eq('pass')
@@ -179,9 +179,9 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
       result = run(
         test,
         smart_token_url: token_url,
-        refresh_token: refresh_token,
-        client_id: client_id,
-        received_scopes: received_scopes
+        refresh_token:,
+        client_id:,
+        received_scopes:
       )
 
       expect(result.result).to eq('pass')

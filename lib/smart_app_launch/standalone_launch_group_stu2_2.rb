@@ -56,7 +56,7 @@ module SMARTAppLaunch
     token_response_body_index = children.find_index { |child| child.id.to_s.end_with? 'token_response_body' }
     children[token_response_body_index] = children.pop
 
-    test from: :cors_support_stu2_2,
+    test from: :smart_cors_support_stu2_2,
          title: 'SMART Token Endpoint Enables Cross-Origin Resource Sharing (CORS)',
          description: %(
                 For requests from a client's registered origin(s), CORS configuration permits access to the token

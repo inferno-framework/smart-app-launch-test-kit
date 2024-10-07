@@ -1,6 +1,6 @@
 module SMARTAppLaunch
   class CORSSupportTestSTU22 < Inferno::Test
-    title 'Request includes correct HTTP CORS headers'
+    title 'Endpoint Enables Cross-Origin Resource Sharing (CORS)'
     description %(
       Servers that support purely browser-based apps SHALL enable Cross-Origin Resource Sharing (CORS) as follows:
 
@@ -8,8 +8,10 @@ module SMARTAppLaunch
         (.well-known/smart-configuration and metadata)
         - For requests from a client's registered origin(s), CORS configuration permits access to the token endpoint
         and to FHIR REST API endpoints
+
+        This test ensures the response contains the correct HTTP CORS headers.
     )
-    id :cors_support_stu2_2
+    id :smart_cors_support_stu2_2
 
     uses_request :cors_request
 

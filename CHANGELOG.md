@@ -1,3 +1,7 @@
+# 0.4.5
+* FI-3247: Add note that CORS is not yet tested by @Jammjammjamm in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/79
+
 # 0.4.4
 * FI-2874: Create New SMART v2.2 Suite and Update fhirContext by @emichaud998 in
   https://github.com/inferno-framework/smart-app-launch-test-kit/pull/74

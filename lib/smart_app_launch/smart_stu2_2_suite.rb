@@ -55,6 +55,9 @@ module SMARTAppLaunch
       following JWK Set URL:
 
       * `#{Inferno::Application[:base_url]}/custom/smart_stu2_2/.well-known/jwks.json`
+
+      **NOTE:** This suite does not currently test [CORS
+        support](http://hl7.org/fhir/smart-app-launch/app-launch.html#considerations-for-cross-origin-resource-sharing-cors-support).
     DESCRIPTION
 
     input_instructions %(

@@ -49,8 +49,6 @@ module SMARTAppLaunch
             between each header.
             Ex:
               <Header 1 Name>: <Value 1>
-
-
               <Header 2 Name>: <Value 2>
             )
 

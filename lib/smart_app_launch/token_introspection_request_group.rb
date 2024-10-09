@@ -40,7 +40,7 @@ module SMARTAppLaunch
           title: 'Token Introspection Endpoint URL',
           description: 'The complete URL of the token introspection endpoint.'
 
-    input :custom_token_introspection_request_headers,
+    input :custom_authorization_header,
           title: 'Custom HTTP Headers for Introspection Request',
           type: 'textarea',
           optional: true,
@@ -49,6 +49,8 @@ module SMARTAppLaunch
             between each header.
             Ex:
               <Header 1 Name>: <Value 1>
+
+
               <Header 2 Name>: <Value 2>
             )
 
@@ -80,8 +82,8 @@ module SMARTAppLaunch
         headers = { 'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded' }
         body = "token=#{standalone_access_token}"
 
-        if custom_token_introspection_request_headers.present?
-          custom_headers = custom_token_introspection_request_headers.split("\n")
+        if custom_authorization_header.present?
+          custom_headers = custom_authorization_header.split("\n")
           custom_headers.each do |custom_header|
             parsed_header = custom_header.split(':', 2)
             assert parsed_header.length == 2,

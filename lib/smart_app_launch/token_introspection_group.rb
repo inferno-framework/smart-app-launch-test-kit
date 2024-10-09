@@ -47,7 +47,7 @@ module SMARTAppLaunch
     input_order :url, :standalone_client_id, :standalone_client_secret,
                 :authorization_method, :use_pkce, :pkce_code_challenge_method,
                 :standalone_requested_scopes, :client_auth_encryption_method,
-                :client_auth_type, :custom_token_introspection_request_headers,
+                :client_auth_type, :custom_authorization_header,
                 :optional_introspection_request_params
     input_instructions %(
       Executing tests at this level will run all three Token Introspection groups back-to-back.  If test groups need

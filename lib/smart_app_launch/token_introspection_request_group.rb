@@ -47,7 +47,9 @@ module SMARTAppLaunch
           description: %(
             Add custom headers for the introspection request by adding each header's name and value with a new line
             between each header.
-          )
+            Ex:
+              <Header 1 Name>: <Value 1>
+            )
 
     input :optional_introspection_request_params,
           title: 'Additional Introspection Request Parameters',

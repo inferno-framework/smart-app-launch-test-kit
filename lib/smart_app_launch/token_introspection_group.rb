@@ -57,13 +57,12 @@ module SMARTAppLaunch
 
       If the introspection endpoint is protected, testers must enter their own HTTP Authorization header for the introspection request.  See
       [RFC 7616 The 'Basic' HTTP Authentication Scheme](https://datatracker.ietf.org/doc/html/rfc7617) for the most common
-      approach that uses client credentials.  Testers may also provide any additional parameters needed for their authorization 
+      approach that uses client credentials.  Testers may also provide any additional parameters needed for their authorization
       server to complete the introspection request.
 
       **Note:** For both the Authorization header and request parameters, user-input
       values will be sent exactly as entered and therefore the tester must
       URI-encode any appropriate values.
     )
-
   end
 end

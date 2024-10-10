@@ -112,6 +112,17 @@ module SMARTAppLaunch
 
         headers = { 'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded' }
         body = 'token=invalid_token_value'
+
+        if custom_authorization_header.present?
+          custom_headers = custom_authorization_header.split("\n")
+          custom_headers.each do |custom_header|
+            parsed_header = custom_header.split(':', 2)
+            assert parsed_header.length == 2,
+                   'Incorrect custom HTTP header format input, expected: "<header name>: <header value>"'
+            headers[parsed_header[0]] = parsed_header[1].strip
+          end
+        end
+
         post(well_known_introspection_url, body:, headers:)
 
         assert_response_status(200)

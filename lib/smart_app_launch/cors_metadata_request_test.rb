@@ -1,17 +1,18 @@
 require_relative 'url_helpers'
 
 module SMARTAppLaunch
-  class CORSEnabledMetadataRequest < Inferno::Test
-    id :smart_cors_enabled_metadata_request
+  class CORSMetadataRequest < Inferno::Test
+    id :smart_cors_metadata_request
 
     include URLHelpers
 
     title 'SMART metadata Endpoint Enables Cross-Origin Resource Sharing (CORS)'
     description %(
-    For requests from any origin, CORS configuration permits access to the public discovery endpoints
-    (.well-known/smart-configuration and metadata). This test verifies that the metadata
-    request is returned with the appropriate CORS header.
-  )
+      For requests from any origin, CORS configuration permits access to the public discovery endpoints
+      (.well-known/smart-configuration and metadata). This test verifies that the metadata
+      request is returned with the appropriate CORS header.
+    )
+    optional
 
     input :url
 

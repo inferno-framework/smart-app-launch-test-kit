@@ -47,10 +47,6 @@ module SMARTAppLaunch
       end
     end
 
-    def make_auth_token_request(smart_token_url, oauth2_params, oauth2_headers)
-      post(smart_token_url, body: oauth2_params, name: :token, headers: oauth2_headers)
-    end
-
     run do
       skip_if request.query_parameters['error'].present?, 'Error during authorization request'
 
@@ -65,7 +61,7 @@ module SMARTAppLaunch
 
       oauth2_params[:code_verifier] = pkce_code_verifier if use_pkce == 'true'
 
-      make_auth_token_request(smart_token_url, oauth2_params, oauth2_headers)
+      post(smart_token_url, body: oauth2_params, name: :token, headers: oauth2_headers)
 
       assert_response_status(200)
       assert_valid_json(request.response_body)

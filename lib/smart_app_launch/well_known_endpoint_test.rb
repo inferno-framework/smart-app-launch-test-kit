@@ -23,15 +23,11 @@ module SMARTAppLaunch
            :well_known_token_url
     makes_request :smart_well_known_configuration
 
-    def get_well_known_configuration(well_known_configuration_url)
+    run do
+      well_known_configuration_url = "#{url.chomp('/')}/.well-known/smart-configuration"
       get(well_known_configuration_url,
           name: :smart_well_known_configuration,
           headers: { 'Accept' => 'application/json' })
-    end
-
-    run do
-      well_known_configuration_url = "#{url.chomp('/')}/.well-known/smart-configuration"
-      get_well_known_configuration(well_known_configuration_url)
       assert_response_status(200)
 
       assert_valid_json(request.response_body)

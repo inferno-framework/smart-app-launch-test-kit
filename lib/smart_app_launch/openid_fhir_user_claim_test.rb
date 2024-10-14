@@ -17,10 +17,6 @@ module SMARTAppLaunch
       oauth_credentials :smart_credentials
     end
 
-    def perform_fhir_read(fhir_user_resource_type, fhir_user_id)
-      fhir_read(fhir_user_resource_type, fhir_user_id)
-    end
-
     run do
       skip_if id_token_payload_json.blank?
       skip_if !requested_scopes&.include?('fhirUser'), '`fhirUser` scope not requested'
@@ -42,7 +38,7 @@ module SMARTAppLaunch
 
       output id_token_fhir_user: fhir_user
 
-      perform_fhir_read(fhir_user_resource_type, fhir_user_id)
+      fhir_read(fhir_user_resource_type, fhir_user_id)
 
       assert_response_status(200)
       assert_resource_type(fhir_user_resource_type)

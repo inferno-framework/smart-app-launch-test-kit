@@ -1,8 +1,8 @@
-require_relative '../../lib/smart_app_launch/cors_enababled_metadata_request_test'
+require_relative '../../lib/smart_app_launch/cors_metadata_request_test'
 
-RSpec.describe SMARTAppLaunch::CORSEnabledMetadataRequest do
+RSpec.describe SMARTAppLaunch::CORSMetadataRequest do
   let(:suite) { Inferno::Repositories::TestSuites.new.find('smart_stu2_2') }
-  let(:test) { Inferno::Repositories::Tests.new.find('smart_cors_enabled_metadata_request') }
+  let(:test) { Inferno::Repositories::Tests.new.find('smart_cors_metadata_request') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'smart_stu2_2') }
   let(:url) { 'http://example.com/fhir' }

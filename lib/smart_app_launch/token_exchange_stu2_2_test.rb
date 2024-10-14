@@ -1,5 +1,7 @@
+require_relative 'token_exchange_stu2_test'
+
 module SMARTAppLaunch
-  class TokenExchangeSTU22Test < TokenExchangeTest
+  class TokenExchangeSTU22Test < TokenExchangeSTU2Test
     id :smart_token_exchange_stu2_2
 
     def make_auth_token_request(smart_token_url, oauth2_params, oauth2_headers)

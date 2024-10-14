@@ -1,7 +1,6 @@
 require_relative 'token_response_body_test_stu2_2'
-require_relative 'cors_support_stu2_2_test'
 require_relative 'standalone_launch_group_stu2'
-require_relative 'token_exchange_stu2_2_test'
+require_relative 'cors_token_exchange_test'
 
 module SMARTAppLaunch
   class StandaloneLaunchGroupSTU22 < StandaloneLaunchGroupSTU2
@@ -46,27 +45,11 @@ module SMARTAppLaunch
       }
     )
 
-    test from: :smart_token_exchange_stu2_2
-
-    token_exchange_index = children.find_index { |child| child.id.to_s.end_with? 'token_exchange' }
-    children[token_exchange_index] = children.pop
-
     test from: :smart_token_response_body_stu2_2
 
     token_response_body_index = children.find_index { |child| child.id.to_s.end_with? 'token_response_body' }
     children[token_response_body_index] = children.pop
 
-    test from: :smart_cors_support_stu2_2,
-         title: 'SMART Token Endpoint Enables Cross-Origin Resource Sharing (CORS)',
-         description: %(
-                For requests from a client's registered origin(s), CORS configuration permits access to the token
-                endpoint. This test verifies that the token endpoint contains the appropriate CORS header in the
-                response.
-              ),
-         config: {
-           requests: {
-             cors_request: { name: :standalone_token }
-           }
-         }
+    test from: :smart_cors_token_exchange
   end
 end

@@ -1,35 +1,24 @@
 require_relative '../../lib/smart_app_launch/cors_token_exchange_test'
+require_relative '../request_helper'
 
 RSpec.describe SMARTAppLaunch::CORSTokenExchangeTest do
-  let(:suite) { Inferno::Repositories::TestSuites.new.find('smart_stu2_2') }
+  include Rack::Test::Methods
+  include RequestHelpers
+
   let(:test) { Inferno::Repositories::Tests.new.find('smart_cors_token_exchange') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart_stu2_2') }
-  let(:url) { 'http://example.com/fhir' }
-  let(:token_url) { 'http://example.com/token' }
-  let(:client_id) { 'CLIENT_ID' }
-  let(:client_auth_encryption_method) { 'ES384' }
+  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
 
-  let(:inputs) do
+  let(:valid_body) do
     {
-      code: 'CODE',
-      smart_token_url: token_url,
-      client_id:,
-      client_auth_type: 'confidential_asymmetric',
-      client_auth_encryption_method:,
-      use_pkce: 'false'
+      access_token: 'ACCESS_TOKEN',
+      token_type: 'bearer',
+      expires_in: 3600,
+      scope: 'patient/*.*'
     }
   end
 
-  def create_redirect_request(url)
-    repo_create(
-      :request,
-      direction: 'incoming',
-      name: 'redirect',
-      url:,
-      test_session_id: test_session.id
-    )
-  end
+  let(:client_auth_type) { 'public' }
 
   def run(runnable, inputs = {})
     test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
@@ -47,117 +36,72 @@ RSpec.describe SMARTAppLaunch::CORSTokenExchangeTest do
     Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
   end
 
-  def cors_header(value)
-    {
-      'Access-Control-Allow-Origin' => value
-    }
+  def cors_header_origin(value)
+    [
+      {
+        type: 'response',
+        name: 'Access-Control-Allow-Origin',
+        value:
+      }
+    ]
   end
 
-  it 'passes if the token response is returned with valid origin cors header' do
-    create_redirect_request('http://example.com/redirect?code=CODE')
-    token_exchange = stub_request(:post, token_url)
-      .with(
-        body: hash_including(
-          {
-            grant_type: 'authorization_code',
-            code: 'CODE',
-            redirect_uri: "#{Inferno::Application['base_url']}/custom/smart/redirect",
-            client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
-          }
-        )
-      )
-      .to_return(status: 200, body: {}.to_json, headers: cors_header(Inferno::Application['inferno_host']))
+  def create_cors_token_request(body: nil, status: 200, headers: nil)
+    repo_create(
+      :request,
+      direction: 'outgoing',
+      name: 'cors_token_request',
+      url: 'http://example.com/token',
+      test_session_id: test_session.id,
+      response_body: body.is_a?(Hash) ? body.to_json : body,
+      status:,
+      headers:
+    )
+  end
 
-    result = run(test, inputs)
+  it 'passes if the token request contains a valid cors header with Inferno Origin' do
+    create_cors_token_request(body: valid_body, headers: cors_header_origin(Inferno::Application['inferno_host']))
+
+    result = run(test, client_auth_type:)
 
     expect(result.result).to eq('pass')
-    expect(token_exchange).to have_been_made
   end
 
-  it 'passes if the token response is returned with valid wildcard cors header' do
-    create_redirect_request('http://example.com/redirect?code=CODE')
-    token_exchange = stub_request(:post, token_url)
-      .with(
-        body: hash_including(
-          {
-            grant_type: 'authorization_code',
-            code: 'CODE',
-            redirect_uri: "#{Inferno::Application['base_url']}/custom/smart/redirect",
-            client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
-          }
-        )
-      )
-      .to_return(status: 200, body: {}.to_json, headers: cors_header('*'))
+  it 'passes if the token request contains a valid wildcard cors header' do
+    create_cors_token_request(body: valid_body, headers: cors_header_origin('*'))
 
-    result = run(test, inputs)
+    result = run(test, client_auth_type:)
 
     expect(result.result).to eq('pass')
-    expect(token_exchange).to have_been_made
   end
 
-  it 'fails when a non-200 response is received' do
-    create_redirect_request('http://example.com/redirect?code=CODE')
-    token_exchange = stub_request(:post, token_url)
-      .with(
-        body: hash_including(
-          {
-            grant_type: 'authorization_code',
-            code: 'CODE',
-            redirect_uri: "#{Inferno::Application['base_url']}/custom/smart/redirect",
-            client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
-          }
-        )
-      )
-      .to_return(status: 500, body: {}.to_json, headers: cors_header(Inferno::Application['inferno_host']))
+  it 'skips if the previous token request was not made' do
+    result = run(test, client_auth_type:)
 
-    result = run(test, inputs)
-
-    expect(result.result).to eq('fail')
-    expect(token_exchange).to have_been_made
-    expect(result.result_message).to match(/Unexpected response status/)
+    expect(result.result).to eq('skip')
+    expect(result.result_message).to match(/was not made/)
   end
 
-  it 'fails if the token response with no cors header is received' do
-    create_redirect_request('http://example.com/redirect?code=CODE')
-    token_exchange = stub_request(:post, token_url)
-      .with(
-        body: hash_including(
-          {
-            grant_type: 'authorization_code',
-            code: 'CODE',
-            redirect_uri: "#{Inferno::Application['base_url']}/custom/smart/redirect",
-            client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
-          }
-        )
-      )
-      .to_return(status: 200, body: {}.to_json)
+  it 'omits if the client auth type is not public' do
+    result = run(test, client_auth_type: 'confidential_symmetric')
 
-    result = run(test, inputs)
-
-    expect(result.result).to eq('fail')
-    expect(token_exchange).to have_been_made
-    expect(result.result_message).to match('No `Access-Control-Allow-Origin` header received')
+    expect(result.result).to eq('skip')
+    expect(result.result_message).to match(/was not made/)
   end
 
-  it 'fails if the token response with incorrect cors header is received' do
-    create_redirect_request('http://example.com/redirect?code=CODE')
-    token_exchange = stub_request(:post, token_url)
-      .with(
-        body: hash_including(
-          {
-            grant_type: 'authorization_code',
-            code: 'CODE',
-            redirect_uri: "#{Inferno::Application['base_url']}/custom/smart/redirect",
-            client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
-          }
-        )
-      )
-      .to_return(status: 200, body: {}.to_json, headers: cors_header('https://incorrect-origin.com'))
+  it 'fails if the CORS header is not included in response' do
+    create_cors_token_request(body: valid_body, headers: [])
 
-    result = run(test, inputs)
-
+    result = run(test, client_auth_type:)
     expect(result.result).to eq('fail')
-    expect(token_exchange).to have_been_made
-    expect(result.result_message).to match(/`Access-Control-Allow-Origin` must be/)
+    expect(result.result_message).to match(/Request must have `Access-Control-Allow-Origin`/)
+  end
+
+  it 'fails if the CORS header is not valid' do
+    create_cors_token_request(body: valid_body, headers: cors_header_origin('incorrect_origin'))
+
+    result = run(test, client_auth_type:)
+    expect(result.result).to eq('fail')
+    expect(result.result_message).to match(/Request must have `Access-Control-Allow-Origin`/)
   end
 end

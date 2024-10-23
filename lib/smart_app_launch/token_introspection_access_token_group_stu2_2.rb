@@ -1,7 +1,7 @@
 require_relative 'standalone_launch_group_stu2_2'
 
 module SMARTAppLaunch
-  class SMARTTokenIntrospectionAccessTokenGroupSTU22 < SMARTTokenIntrospectionAccessTokenGroup
+  class SMARTTokenIntrospectionAccessTokenGroupSTU22 < Inferno::TestGroup
     title 'Request New Access Token to Introspect'
     run_as_group
 
@@ -20,9 +20,7 @@ module SMARTAppLaunch
       Register Inferno as a Standalone SMART App and provide the registration details below.
     )
 
+    group from: :smart_discovery_stu2_2
     group from: :smart_standalone_launch_stu2_2
-
-    standalone_launch_index = children.find_index { |child| child.id.to_s.end_with? 'standalone_launch_stu2' }
-    children[standalone_launch_index] = children.pop
   end
 end

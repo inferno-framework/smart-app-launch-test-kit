@@ -30,6 +30,10 @@ module SMARTAppLaunch
       end
     end
 
+    def make_auth_token_request(smart_token_url, oauth2_params, oauth2_headers)
+      post(smart_token_url, body: oauth2_params, name: :token_refresh, headers: oauth2_headers)
+    end
+
     run do
       skip_if refresh_token.blank?
 
@@ -43,7 +47,7 @@ module SMARTAppLaunch
 
       add_credentials_to_request(oauth2_headers, oauth2_params)
 
-      post(smart_token_url, body: oauth2_params, name: :token_refresh, headers: oauth2_headers)
+      make_auth_token_request(smart_token_url, oauth2_params, oauth2_headers)
 
       assert_response_status(200)
       assert_valid_json(request.response_body)
@@ -52,14 +56,14 @@ module SMARTAppLaunch
 
       token_response_body = JSON.parse(request.response_body)
       output smart_credentials: {
-               refresh_token: token_response_body['refresh_token'].presence || refresh_token,
-               access_token: token_response_body['access_token'],
-               expires_in: token_response_body['expires_in'],
-               client_id: client_id,
-               client_secret: client_secret,
-               token_retrieval_time: token_retrieval_time,
-               token_url: smart_token_url
-             }.to_json
+        refresh_token: token_response_body['refresh_token'].presence || refresh_token,
+        access_token: token_response_body['access_token'],
+        expires_in: token_response_body['expires_in'],
+        client_id:,
+        client_secret:,
+        token_retrieval_time:,
+        token_url: smart_token_url
+      }.to_json
     end
   end
 end

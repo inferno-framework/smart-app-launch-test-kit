@@ -43,26 +43,5 @@ module SMARTAppLaunch
 
     access_token_group_index = children.find_index { |child| child.id.to_s.end_with? 'access_token_group' }
     children[access_token_group_index] = children.pop
-
-    input_order :url, :standalone_client_id, :standalone_client_secret,
-                :authorization_method, :use_pkce, :pkce_code_challenge_method,
-                :standalone_requested_scopes, :client_auth_encryption_method,
-                :client_auth_type, :custom_authorization_header,
-                :optional_introspection_request_params
-    input_instructions %(
-      Executing tests at this level will run all three Token Introspection groups back-to-back.  If test groups need
-      to be run independently, exit this window and select a specific test group instead.
-
-      These tests are currently designed such that the token introspection URL must be present in the SMART well-known endpoint.
-
-      If the introspection endpoint is protected, testers must enter their own HTTP Authorization header for the introspection request.  See
-      [RFC 7616 The 'Basic' HTTP Authentication Scheme](https://datatracker.ietf.org/doc/html/rfc7617) for the most common
-      approach that uses client credentials.  Testers may also provide any additional parameters needed for their authorization
-      server to complete the introspection request.
-
-      **Note:** For both the Authorization header and request parameters, user-input
-      values will be sent exactly as entered and therefore the tester must
-      URI-encode any appropriate values.
-    )
   end
 end

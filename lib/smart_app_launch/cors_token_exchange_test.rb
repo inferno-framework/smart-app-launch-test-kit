@@ -2,19 +2,21 @@ module SMARTAppLaunch
   class CORSTokenExchangeTest < Inferno::Test
     title 'SMART Token Endpoint Enables Cross-Origin Resource Sharing (CORS)'
     description %(
-      For requests from a client's registered origin(s), CORS configuration permits access to the token
-      endpoint. This test verifies that the token endpoint contains the appropriate CORS header in the
-      response.
+      The SMART [Considerations for Cross-Origin Resource Sharing (CORS) support](http://hl7.org/fhir/smart-app-launch/STU2.2/app-launch.html#considerations-for-cross-origin-resource-sharing-cors-support)
+      specifies that for requests from a client's registered origin(s), CORS configuration permits access to the token
+      endpoint. This test verifies that the token endpoint contains the appropriate CORS header in the response.
     )
     id :smart_cors_token_exchange
-    optional
 
     uses_request :cors_token_request
 
     input :client_auth_type
 
     run do
-      omit_if client_auth_type != 'public'
+      omit_if client_auth_type != 'public', %(
+        Client type is not public, Cross-Origin Resource Sharing (CORS) is not required to be supported for
+        non-public client types
+      )
 
       skip_if request.status != 200, 'Previous request was unsuccessful, cannot check for CORS support'
 

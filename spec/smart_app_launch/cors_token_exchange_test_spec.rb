@@ -83,10 +83,11 @@ RSpec.describe SMARTAppLaunch::CORSTokenExchangeTest do
   end
 
   it 'omits if the client auth type is not public' do
+    create_cors_token_request(body: valid_body, headers: cors_header_origin('*'))
     result = run(test, client_auth_type: 'confidential_symmetric')
 
-    expect(result.result).to eq('skip')
-    expect(result.result_message).to match(/was not made/)
+    expect(result.result).to eq('omit')
+    expect(result.result_message).to match(/Client type is not public/)
   end
 
   it 'fails if the CORS header is not included in response' do

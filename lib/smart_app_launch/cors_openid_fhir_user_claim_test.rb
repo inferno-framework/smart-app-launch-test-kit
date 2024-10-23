@@ -3,9 +3,10 @@ module SMARTAppLaunch
     id :smart_cors_openid_fhir_user_claim
     title 'SMART FHIR User REST API Endpoint Enables Cross-Origin Resource Sharing (CORS)'
     description %(
-      For requests from a client's registered origin(s), CORS configuration permits access to the token endpoint
-      and to FHIR REST API endpoints. This test verifies that a request to the FHIR REST API endpoint for the FHIR
-      user is returned with the appropriate CORS header.
+      The SMART [Considerations for Cross-Origin Resource Sharing (CORS) support](http://hl7.org/fhir/smart-app-launch/STU2.2/app-launch.html#considerations-for-cross-origin-resource-sharing-cors-support)
+      specifies that for requests from a client's registered origin(s), CORS configuration permits access to the token
+      endpoint and to FHIR REST API endpoints. This test verifies that a request to the FHIR REST API endpoint for the
+      FHIR user is returned with the appropriate CORS header.
     )
     optional
 

@@ -4,9 +4,14 @@ module SMARTAppLaunch
     title 'SMART FHIR User REST API Endpoint Enables Cross-Origin Resource Sharing (CORS)'
     description %(
       The SMART [Considerations for Cross-Origin Resource Sharing (CORS) support](http://hl7.org/fhir/smart-app-launch/STU2.2/app-launch.html#considerations-for-cross-origin-resource-sharing-cors-support)
-      specifies that for requests from a client's registered origin(s), CORS configuration permits access to the token
-      endpoint and to FHIR REST API endpoints. This test verifies that a request to the FHIR REST API endpoint for the
-      FHIR user is returned with the appropriate CORS header.
+      specifies that servers that support purely browser-based apps SHALL enable Cross-Origin Resource Sharing (CORS)
+      as follows:
+
+        - For requests from a client's registered origin(s), CORS configuration permits access to the token
+          endpoint and to FHIR REST API endpoints.
+
+      This test verifies that a request to the FHIR REST API endpoint for the FHIR user is returned with the appropriate
+      CORS header.
     )
     optional
 

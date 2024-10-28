@@ -3,8 +3,13 @@ module SMARTAppLaunch
     title 'SMART Token Endpoint Enables Cross-Origin Resource Sharing (CORS)'
     description %(
       The SMART [Considerations for Cross-Origin Resource Sharing (CORS) support](http://hl7.org/fhir/smart-app-launch/STU2.2/app-launch.html#considerations-for-cross-origin-resource-sharing-cors-support)
-      specifies that for requests from a client's registered origin(s), CORS configuration permits access to the token
-      endpoint. This test verifies that the token endpoint contains the appropriate CORS header in the response.
+      specifies that servers that support purely browser-based apps SHALL enable Cross-Origin Resource Sharing (CORS)
+      as follows:
+
+        - For requests from a client's registered origin(s), CORS configuration permits access to the token
+          endpoint
+
+      This test verifies that the token endpoint contains the appropriate CORS header in the response.
     )
     id :smart_cors_token_exchange
 

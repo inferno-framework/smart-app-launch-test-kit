@@ -9,9 +9,13 @@ module SMARTAppLaunch
     title 'SMART metadata Endpoint Enables Cross-Origin Resource Sharing (CORS)'
     description %(
       The SMART [Considerations for Cross-Origin Resource Sharing (CORS) support](http://hl7.org/fhir/smart-app-launch/STU2.2/app-launch.html#considerations-for-cross-origin-resource-sharing-cors-support)
-      specifies that for requests from any origin, CORS configuration permits access to the public discovery endpoints
-      (.well-known/smart-configuration and metadata). This test verifies that the metadata
-      request is returned with the appropriate CORS header.
+      specifies that servers that support purely browser-based apps SHALL enable Cross-Origin Resource Sharing (CORS)
+      as follows:
+
+        - For requests from any origin, CORS configuration permits access to the public discovery endpoints
+          (.well-known/smart-configuration and metadata).
+
+      This test verifies that the metadata request is returned with the appropriate CORS header.
     )
     optional
 

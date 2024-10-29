@@ -2,12 +2,11 @@ require 'tls_test_kit'
 
 require_relative 'jwks'
 require_relative 'version'
-require_relative 'discovery_stu2_group'
+require_relative 'discovery_stu2_2_group'
 require_relative 'standalone_launch_group_stu2_2'
 require_relative 'ehr_launch_group_stu2_2'
-require_relative 'openid_connect_group'
+require_relative 'openid_connect_group_stu2_2'
 require_relative 'token_introspection_group_stu2_2'
-require_relative 'token_refresh_stu2_group'
 require_relative 'backend_services_authorization_group'
 
 module SMARTAppLaunch
@@ -92,10 +91,10 @@ module SMARTAppLaunch
 
       run_as_group
 
-      group from: :smart_discovery_stu2
+      group from: :smart_discovery_stu2_2
       group from: :smart_standalone_launch_stu2_2
 
-      group from: :smart_openid_connect,
+      group from: :smart_openid_connect_stu2_2,
             config: {
               inputs: {
                 id_token: { name: :standalone_id_token },
@@ -167,11 +166,11 @@ module SMARTAppLaunch
 
       run_as_group
 
-      group from: :smart_discovery_stu2
+      group from: :smart_discovery_stu2_2
 
       group from: :smart_ehr_launch_stu2_2
 
-      group from: :smart_openid_connect,
+      group from: :smart_openid_connect_stu2_2,
             config: {
               inputs: {
                 id_token: { name: :ehr_id_token },
@@ -237,7 +236,7 @@ module SMARTAppLaunch
 
       run_as_group
 
-      group from: :smart_discovery_stu2
+      group from: :smart_discovery_stu2_2
       group from: :backend_services_authorization
     end
 

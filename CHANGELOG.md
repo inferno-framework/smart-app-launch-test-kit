@@ -1,3 +1,8 @@
+# 0.4.6
+* * FI-3018: Allow multi-line custom headers in token introspection request by @emichaud998 in https://github.com/inferno-framework/smart-app-launch-test-kit/pull/77
+* FI-3257: Use Custom Authorization Header Input in Invalid Token Test by @emichaud998 in https://github.com/inferno-framework/smart-app-launch-test-kit/pull/81
+* FI-2919: SMART CORS Support Tests by @emichaud998 in https://github.com/inferno-framework/smart-app-launch-test-kit/pull/75
+
 # 0.4.5
 * FI-3247: Add note that CORS is not yet tested by @Jammjammjamm in
   https://github.com/inferno-framework/smart-app-launch-test-kit/pull/79
@@ -35,9 +40,9 @@
   https://github.com/inferno-framework/smart-app-launch-test-kit/pull/65
 
 # 0.4.1
-* FI-2395: Data Rights Legend by @bmath10 in 
+* FI-2395: Data Rights Legend by @bmath10 in
   https://github.com/inferno-framework/smart-app-launch-test-kit/pull/60
-* FI-2247 backend services migration by @alisawallace in 
+* FI-2247 backend services migration by @alisawallace in
   https://github.com/inferno-framework/smart-app-launch-test-kit/pull/59
 
 # 0.4.0

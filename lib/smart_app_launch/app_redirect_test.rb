@@ -1,4 +1,5 @@
 require 'uri'
+require_relative 'feature'
 
 module SMARTAppLaunch
   class AppRedirectTest < Inferno::Test
@@ -9,40 +10,81 @@ module SMARTAppLaunch
     )
     id :smart_app_redirect
 
-    input :client_id, :requested_scopes, :url, :smart_authorization_url
-    input :use_pkce,
-          title: 'Proof Key for Code Exchange (PKCE)',
-          type: 'radio',
-          default: 'false',
-          options: {
-            list_options: [
-              {
-                label: 'Enabled',
-                value: 'true'
-              },
-              {
-                label: 'Disabled',
-                value: 'false'
-              }
-            ]
-          }
-    input :pkce_code_challenge_method,
-          optional: true,
-          title: 'PKCE Code Challenge Method',
-          type: 'radio',
-          default: 'S256',
-          options: {
-            list_options: [
-              {
-                label: 'S256',
-                value: 'S256'
-              },
-              {
-                label: 'plain',
-                value: 'plain'
-              }
-            ]
-          }
+    input :url, :smart_authorization_url
+
+    if Feature.use_auth_info?
+      input :auth_info,
+            type: :auth_info,
+            options: {
+              mode: 'auth',
+              components: [
+                {
+                  name: :auth_type,
+                  type: 'select',
+                  default: 'public',
+                  options: {
+                    list_options: [
+                      {
+                        label: 'Public',
+                        value: 'public'
+                      },
+                      {
+                        label: 'Confidential Symmetric',
+                        value: 'symmetric'
+                      }
+                    ]
+                  }
+                },
+                {
+                  name: :pkce_support,
+                  default: 'disabled'
+                },
+                {
+                  name: :requested_scopes,
+                  type: 'textarea'
+                },
+                {
+                  name: :use_discovery,
+                  locked: true
+                }
+              ]
+            }
+    else
+      input :client_id, :requested_scopes
+      input :pkce_support,
+            title: 'Proof Key for Code Exchange (PKCE)',
+            type: 'radio',
+            default: 'false',
+            options: {
+              list_options: [
+                {
+                  label: 'Enabled',
+                  value: 'enabled'
+                },
+                {
+                  label: 'Disabled',
+                  value: 'disabled'
+                }
+              ]
+            }
+      input :pkce_code_challenge_method,
+            optional: true,
+            title: 'PKCE Code Challenge Method',
+            type: 'radio',
+            default: 'S256',
+            options: {
+              list_options: [
+                {
+                  label: 'S256',
+                  value: 'S256'
+                },
+                {
+                  label: 'plain',
+                  value: 'plain'
+                }
+              ]
+            }
+    end
 
     output :state, :pkce_code_challenge, :pkce_code_verifier
     receives_request :redirect
@@ -97,6 +139,12 @@ module SMARTAppLaunch
 
       output state: SecureRandom.uuid
 
+      auth_config = Feature.use_auth_info? ? auth_info : self
+      client_id = auth_config.client_id
+      requested_scopes = auth_config.requested_scopes
+      pkce_support = auth_config.pkce_support
+      pkce_code_challenge_method = auth_config.pkce_code_challenge_method
+
       oauth2_params = {
         'response_type' => 'code',
         'client_id' => client_id,
@@ -112,9 +160,9 @@ module SMARTAppLaunch
         oauth2_params['launch'] = launch
       end
 
-      if use_pkce == 'true'
+      if pkce_support == 'enabled'
         # code verifier must be between 43 and 128 characters
-        code_verifier = SecureRandom.uuid + '-' + SecureRandom.uuid
+        code_verifier = "#{SecureRandom.uuid}-#{SecureRandom.uuid}"
         code_challenge =
           if pkce_code_challenge_method == 'S256'
             self.class.calculate_s256_challenge(code_verifier)

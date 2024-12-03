@@ -1,4 +1,5 @@
 require_relative 'token_payload_validation'
+require_relative 'feature'
 
 module SMARTAppLaunch
   class TokenRefreshTest < Inferno::Test
@@ -16,12 +17,19 @@ module SMARTAppLaunch
       the Pragma response header field with a value of no-cache to be
       consistent with the requirements of the inital access token exchange.
     )
-    input :smart_token_url, :refresh_token, :client_id, :received_scopes
-    input :client_secret, optional: true
+    input :smart_token_url, :refresh_token, :received_scopes
+
+    if Feature.use_auth_info?
+      input :auth_info, type: :auth_info, options: { mode: 'auth' }
+    else
+      input :client_id
+      input :client_secret, optional: true
+    end
+
     output :smart_credentials, :token_retrieval_time
     makes_request :token_refresh
 
-    def add_credentials_to_request(oauth2_headers, oauth2_params)
+    def add_credentials_to_request(oauth2_headers, oauth2_params, client_id, client_secret)
       if client_secret.present?
         credentials = Base64.strict_encode64("#{client_id}:#{client_secret}")
         oauth2_headers['Authorization'] = "Basic #{credentials}"
@@ -37,6 +45,10 @@ module SMARTAppLaunch
     run do
       skip_if refresh_token.blank?
 
+      auth_config = Feature.use_auth_info? ? auth_info : self
+      client_id = auth_config.client_id
+      client_secret = auth_config.client_secret
+
       oauth2_params = {
         'grant_type' => 'refresh_token',
         'refresh_token' => refresh_token
@@ -45,7 +57,7 @@ module SMARTAppLaunch
 
       oauth2_params['scope'] = received_scopes if config.options[:include_scopes]
 
-      add_credentials_to_request(oauth2_headers, oauth2_params)
+      add_credentials_to_request(oauth2_headers, oauth2_params, client_id, client_secret)
 
       make_auth_token_request(smart_token_url, oauth2_params, oauth2_headers)
 

@@ -22,12 +22,17 @@ module SMARTAppLaunch
       REQUIRED_CLAIMS.dup
     end
 
-    input :id_token,
-          :openid_configuration_json,
-          :id_token_jwk_json,
-          :client_id
+    input :id_token, :openid_configuration_json, :id_token_jwk_json
+
+    if Feature.use_auth_info?
+      input :auth_info, type: :auth_info, options: { mode: 'auth' }
+    else
+      input :client_id
+    end
 
     run do
+      client_id = Feature.use_auth_info? ? auth_info.client_id : self.client_id
+
       skip_if id_token.blank?, 'No ID Token'
       skip_if openid_configuration_json.blank?, 'No OpenID Configuration found'
       skip_if id_token_jwk_json.blank?, 'No ID Token jwk found'

@@ -3,6 +3,7 @@ require_relative 'code_received_test'
 require_relative 'token_exchange_test'
 require_relative 'token_response_body_test'
 require_relative 'token_response_headers_test'
+require_relative 'feature'
 
 module SMARTAppLaunch
   class StandaloneLaunchGroup < Inferno::TestGroup
@@ -34,60 +35,102 @@ module SMARTAppLaunch
       * [Standalone Launch Sequence](https://www.hl7.org/fhir/smart-app-launch/1.0.0/index.html#standalone-launch-sequence)
     )
 
-    config(
-      inputs: {
-        client_id: {
-          name: :standalone_client_id,
-          title: 'Standalone Client ID',
-          description: 'Client ID provided during registration of Inferno as a standalone application'
+    if Feature.use_auth_info?
+      config(
+        inputs: {
+          auth_info: {
+            name: :standalone_auth_info,
+            default: { requested_scopes: 'launch/patient openid fhirUser offline_access patient/*.read' }.to_json
+          },
+          url: {
+            title: 'Standalone FHIR Endpoint',
+            description: 'URL of the FHIR endpoint used by standalone applications'
+          },
+          code: {
+            name: :standalone_code
+          },
+          state: {
+            name: :standalone_state
+          },
+          smart_credentials: {
+            name: :standalone_smart_credentials
+          }
         },
-        client_secret: {
-          name: :standalone_client_secret,
-          title: 'Standalone Client Secret',
-          description: 'Client Secret provided during registration of Inferno as a standalone application. ' \
-                       'Only for clients using confidential symmetric authentication.'
+        outputs: {
+          code: { name: :standalone_code },
+          token_retrieval_time: { name: :standalone_token_retrieval_time },
+          state: { name: :standalone_state },
+          id_token: { name: :standalone_id_token },
+          refresh_token: { name: :standalone_refresh_token },
+          access_token: { name: :standalone_access_token },
+          expires_in: { name: :standalone_expires_in },
+          patient_id: { name: :standalone_patient_id },
+          encounter_id: { name: :standalone_encounter_id },
+          received_scopes: { name: :standalone_received_scopes },
+          intent: { name: :standalone_intent },
+          smart_credentials: { name: :standalone_smart_credentials }
         },
-        requested_scopes: {
-          name: :standalone_requested_scopes,
-          title: 'Standalone Scope',
-          description: 'OAuth 2.0 scope provided by system to enable all required functionality',
-          type: 'textarea',
-          default: 'launch/patient openid fhirUser offline_access patient/*.read'
-        },
-        url: {
-          title: 'Standalone FHIR Endpoint',
-          description: 'URL of the FHIR endpoint used by standalone applications'
-        },
-        code: {
-          name: :standalone_code
-        },
-        state: {
-          name: :standalone_state
-        },
-        smart_credentials: {
-          name: :standalone_smart_credentials
+        requests: {
+          redirect: { name: :standalone_redirect },
+          token: { name: :standalone_token }
         }
+      )
+    else
+      config(
+        inputs: {
+          client_id: {
+            name: :standalone_client_id,
+            title: 'Standalone Client ID',
+            description: 'Client ID provided during registration of Inferno as a standalone application'
+          },
+          client_secret: {
+            name: :standalone_client_secret,
+            title: 'Standalone Client Secret',
+            description: 'Client Secret provided during registration of Inferno as a standalone application. ' \
+                        'Only for clients using confidential symmetric authentication.'
+          },
+          requested_scopes: {
+            name: :standalone_requested_scopes,
+            title: 'Standalone Scope',
+            description: 'OAuth 2.0 scope provided by system to enable all required functionality',
+            type: 'textarea',
+            default: 'launch/patient openid fhirUser offline_access patient/*.read'
+          },
+          url: {
+            title: 'Standalone FHIR Endpoint',
+            description: 'URL of the FHIR endpoint used by standalone applications'
+          },
+          code: {
+            name: :standalone_code
+          },
+          state: {
+            name: :standalone_state
+          },
+          smart_credentials: {
+            name: :standalone_smart_credentials
+          }
 
-      },
-      outputs: {
-        code: { name: :standalone_code },
-        token_retrieval_time: { name: :standalone_token_retrieval_time },
-        state: { name: :standalone_state },
-        id_token: { name: :standalone_id_token },
-        refresh_token: { name: :standalone_refresh_token },
-        access_token: { name: :standalone_access_token },
-        expires_in: { name: :standalone_expires_in },
-        patient_id: { name: :standalone_patient_id },
-        encounter_id: { name: :standalone_encounter_id },
-        received_scopes: { name: :standalone_received_scopes },
-        intent: { name: :standalone_intent },
-        smart_credentials: { name: :standalone_smart_credentials }
-      },
-      requests: {
-        redirect: { name: :standalone_redirect },
-        token: { name: :standalone_token }
-      }
-    )
+        },
+        outputs: {
+          code: { name: :standalone_code },
+          token_retrieval_time: { name: :standalone_token_retrieval_time },
+          state: { name: :standalone_state },
+          id_token: { name: :standalone_id_token },
+          refresh_token: { name: :standalone_refresh_token },
+          access_token: { name: :standalone_access_token },
+          expires_in: { name: :standalone_expires_in },
+          patient_id: { name: :standalone_patient_id },
+          encounter_id: { name: :standalone_encounter_id },
+          received_scopes: { name: :standalone_received_scopes },
+          intent: { name: :standalone_intent },
+          smart_credentials: { name: :standalone_smart_credentials }
+        },
+        requests: {
+          redirect: { name: :standalone_redirect },
+          token: { name: :standalone_token }
+        }
+      )
+    end
 
     test from: :tls_version_test,
          id: :standalone_auth_tls,

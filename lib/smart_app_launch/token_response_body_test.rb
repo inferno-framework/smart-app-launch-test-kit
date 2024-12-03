@@ -1,4 +1,5 @@
 require_relative 'token_payload_validation'
+require_relative 'feature'
 
 module SMARTAppLaunch
   class TokenResponseBodyTest < Inferno::Test
@@ -16,7 +17,12 @@ module SMARTAppLaunch
     )
     id :smart_token_response_body
 
-    input :requested_scopes
+    if Feature.use_auth_info?
+      input :auth_info, type: :auth_info, options: { mode: 'auth' }
+    else
+      input :requested_scopes
+    end
+
     output :id_token,
            :refresh_token,
            :access_token,
@@ -29,6 +35,8 @@ module SMARTAppLaunch
 
     run do
       skip_if request.status != 200, 'Token exchange was unsuccessful'
+
+      requested_scopes = Feature.use_auth_info? ? auth_info.requested_scopes : self.requested_scopes
 
       assert_valid_json(request.response_body)
       token_response_body = JSON.parse(request.response_body)

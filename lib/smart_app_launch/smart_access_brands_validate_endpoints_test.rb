@@ -33,34 +33,21 @@ module SMARTAppLaunch
           optional: true
 
     run do
-      bundle_response = if user_access_brands_bundle.blank?
-                          load_tagged_requests('smart_access_brands_bundle')
-                          skip skip_message if requests.length != 1
-                          requests.first.response_body
-                        else
-                          user_access_brands_bundle
-                        end
+      bundle_resource = scratch[:bundle_resource]
 
-      skip_if bundle_response.blank?, 'No SMART Access Brands Bundle contained in the response'
-
-      assert_valid_json(bundle_response)
-      bundle_resource = FHIR.from_contents(bundle_response)
-
+      skip_if bundle_resource.blank?, 'No SMART Access Brands Bundle contained in the response'
       skip_if bundle_resource.entry.empty?, 'The given Bundle does not contain any resources'
 
-      assert_valid_bundle_entries(bundle: bundle_resource,
-                                  resource_types: {
-                                    Endpoint: 'http://hl7.org/fhir/smart-app-launch/StructureDefinition/user-access-endpoint'
-                                  })
-
-      endpoint_ids =
+      endpoint_resources =
         bundle_resource
           .entry
           .map(&:resource)
           .select { |resource| resource.resourceType == 'Endpoint' }
-          .map(&:id)
 
-      endpoint_ids.each do |endpoint_id|
+      endpoint_resources.each do |endpoint|
+        assert_valid_resource(resource: endpoint,
+                              profile_url: 'http://hl7.org/fhir/smart-app-launch/StructureDefinition/user-access-endpoint')
+        endpoint_id = endpoint.id
         endpoint_referenced_orgs = find_referenced_org(bundle_resource, endpoint_id)
         assert !endpoint_referenced_orgs.empty?,
                "Endpoint with id: #{endpoint_id} does not have any associated Organizations in the Bundle."

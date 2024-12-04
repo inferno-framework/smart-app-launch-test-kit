@@ -58,19 +58,9 @@ module SMARTAppLaunch
     end
 
     run do
-      bundle_response = if user_access_brands_bundle.blank?
-                          load_tagged_requests('smart_access_brands_bundle')
-                          skip skip_message if requests.length != 1
-                          requests.first.response_body
-                        else
-                          user_access_brands_bundle
-                        end
+      bundle_resource = scratch[:bundle_resource]
 
-      skip_if bundle_response.blank?, 'No SMART Access Brands Bundle contained in the response'
-
-      assert_valid_json(bundle_response)
-      bundle_resource = FHIR.from_contents(bundle_response)
-
+      skip_if bundle_resource.blank?, 'No SMART Access Brands Bundle contained in the response'
       skip_if bundle_resource.entry.empty?, 'The given Bundle does not contain any resources'
 
       endpoint_list = bundle_resource

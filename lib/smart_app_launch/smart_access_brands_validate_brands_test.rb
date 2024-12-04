@@ -62,14 +62,17 @@ module SMARTAppLaunch
       skip_if bundle_resource.blank?, 'No SMART Access Brands Bundle contained in the response'
       skip_if bundle_resource.entry.empty?, 'The given Bundle does not contain any resources'
 
+      assert_valid_bundle_entries(bundle: bundle_resource,
+                                  resource_types: {
+                                    Organization: 'http://hl7.org/fhir/smart-app-launch/StructureDefinition/user-access-brand'
+                                  })
+
       organization_resources = bundle_resource
         .entry
         .map(&:resource)
         .select { |resource| resource.resourceType == 'Organization' }
 
       organization_resources.each do |organization|
-        assert_valid_resource(resource: organization,
-                              profile_url: 'http://hl7.org/fhir/smart-app-launch/StructureDefinition/user-access-brand')
         endpoint_references = organization.endpoint.map(&:reference)
 
         if organization.extension.present?

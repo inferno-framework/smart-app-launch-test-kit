@@ -23,6 +23,21 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
       refresh_token: 'REFRESH_TOKEN2'
     }
   end
+  let(:inputs) do
+    base_inputs = {
+      smart_token_url: token_url,
+      refresh_token:,
+      client_id:,
+      received_scopes:
+    }
+    if SMARTAppLaunch::Feature.use_auth_info?
+      base_inputs.merge(
+        auth_info: Inferno::DSL::AuthInfo.new(client_id: base_inputs[:client_id])
+      ).except(:client_id)
+    else
+      base_inputs
+    end
+  end
 
   def run(runnable, inputs = {})
     test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
@@ -55,13 +70,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
           body: valid_response.to_json
         )
 
-      result = run(
-        test,
-        smart_token_url: token_url,
-        refresh_token:,
-        client_id:,
-        received_scopes:
-      )
+      result = run(test, inputs)
 
       expect(result.result).to eq('pass')
     end
@@ -84,14 +93,12 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
           body: valid_response.to_json
         )
 
-      result = run(
-        test,
-        smart_token_url: token_url,
-        refresh_token:,
-        client_id:,
-        client_secret:,
-        received_scopes:
-      )
+      if SMARTAppLaunch::Feature.use_auth_info?
+        inputs[:auth_info].client_secret = client_secret
+      else
+        inputs[:client_secret] = client_secret
+      end
+      result = run(test, inputs)
 
       expect(result.result).to eq('pass')
     end
@@ -107,13 +114,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
         body: valid_response.to_json
       )
 
-    result = run(
-      test,
-      smart_token_url: token_url,
-      refresh_token:,
-      client_id:,
-      received_scopes:
-    )
+    result = run(test, inputs)
 
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/202/)
@@ -129,13 +130,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
         body: '[['
       )
 
-    result = run(
-      test,
-      smart_token_url: token_url,
-      refresh_token:,
-      client_id:,
-      received_scopes:
-    )
+    result = run(test, inputs)
 
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/Invalid JSON/)
@@ -151,13 +146,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
         body: valid_response.to_json
       )
 
-    result = run(
-      test,
-      smart_token_url: token_url,
-      refresh_token:,
-      client_id:,
-      received_scopes:
-    )
+    result = run(test, inputs)
 
     expect(result.result).to eq('pass')
 
@@ -176,13 +165,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
           body: valid_response.except(:refresh_token).to_json
         )
 
-      result = run(
-        test,
-        smart_token_url: token_url,
-        refresh_token:,
-        client_id:,
-        received_scopes:
-      )
+      result = run(test, inputs)
 
       expect(result.result).to eq('pass')
 

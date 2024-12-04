@@ -24,9 +24,9 @@ RSpec.describe SMARTAppLaunch::OpenIDTokenPayloadTest do
     {
       registration_endpoint: 'https://www.example.com/register',
       token_endpoint: 'https://www.example.com/token',
-      token_endpoint_auth_methods_supported: ['client_secret_post', 'client_secret_basic', 'none'],
+      token_endpoint_auth_methods_supported: %w[client_secret_post client_secret_basic none],
       jwks_uri: 'https://www.example.com/jwk',
-      id_token_signing_alg_values_supported: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'none'],
+      id_token_signing_alg_values_supported: %w[HS256 HS384 HS512 RS256 RS384 RS512 none],
       authorization_endpoint: 'https://www.example.com/authorize',
       introspection_endpoint: 'https://www.example.com/introspect',
       response_types_supported: ['code'],
@@ -36,6 +36,23 @@ RSpec.describe SMARTAppLaunch::OpenIDTokenPayloadTest do
       issuer: url,
       subject_types_supported: 'public'
     }
+  end
+  let(:inputs) do
+    base_inputs = {
+      id_token: id_token,
+      openid_configuration_json: config.to_json,
+      id_token_jwk_json: jwk.export.to_json,
+      client_id: client_id
+    }
+    if SMARTAppLaunch::Feature.use_auth_info?
+      base_inputs.merge(
+        auth_info: Inferno::DSL::AuthInfo.new(
+          client_id: base_inputs[:client_id]
+        )
+      ).except(:client_id)
+    else
+      base_inputs
+    end
   end
 
   def run(runnable, inputs = {})
@@ -53,74 +70,59 @@ RSpec.describe SMARTAppLaunch::OpenIDTokenPayloadTest do
   end
 
   it 'skips if no id token is available' do
-    result = run(test, id_token: nil)
+    inputs[:id_token] = nil
+    result = run(test, inputs)
 
     expect(result.result).to eq('skip')
   end
 
   it 'skips if no openid configuration is available' do
-    result = run(test, id_token: id_token, openid_configuration_json: nil)
+    inputs[:openid_configuration_json] = nil
+    result = run(test, inputs)
 
     expect(result.result).to eq('skip')
   end
 
   it 'skips if no jwk is available' do
-    result = run(
-      test,
-      id_token: id_token,
-      openid_configuration_json: config.to_json,
-      id_token_jwk_json: nil
-    )
+    inputs[:id_token_jwk_json] = nil
+    result = run(test, inputs)
 
     expect(result.result).to eq('skip')
   end
 
   it 'skips if no client id is available' do
-    result = run(
-      test,
-      id_token: id_token,
-      openid_configuration_json: config.to_json,
-      id_token_jwk_json: jwk.to_json,
-      client_id: nil
-    )
+    if SMARTAppLaunch::Feature.use_auth_info?
+      inputs[:auth_info].client_id = nil
+    else
+      inputs[:client_id] = nil
+    end
+    result = run(test, inputs)
 
     expect(result.result).to eq('skip')
   end
 
   it 'passes when the id token is valid' do
-    result = run(
-      test,
-      id_token: id_token,
-      openid_configuration_json: config.to_json,
-      id_token_jwk_json: jwk.export.to_json,
-      client_id: client_id
-    )
+    result = run(test, inputs)
 
     expect(result.result).to eq('pass')
   end
 
   it 'fails if the iss does not match the issuer from the configuration' do
     config[:issuer] += 'abc'
-    result = run(
-      test,
-      id_token: id_token,
-      openid_configuration_json: config.to_json,
-      id_token_jwk_json: jwk.export.to_json,
-      client_id: client_id
-    )
+    inputs[:openid_configuration_json] = config.to_json
+    result = run(test, inputs)
 
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/issuer/)
   end
 
   it 'fails if the aud does not match the client id' do
-    result = run(
-      test,
-      id_token: id_token,
-      openid_configuration_json: config.to_json,
-      id_token_jwk_json: jwk.export.to_json,
-      client_id: "#{client_id}abc"
-    )
+    if SMARTAppLaunch::Feature.use_auth_info?
+      inputs[:auth_info].client_id = "#{client_id}abc"
+    else
+      inputs[:client_id] = "#{client_id}abc"
+    end
+    result = run(test, inputs)
 
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/aud/)
@@ -129,14 +131,8 @@ RSpec.describe SMARTAppLaunch::OpenIDTokenPayloadTest do
   it 'fails if the exp does not represent a time in the future' do
     payload[:exp] = 1.hour.ago.to_i
     token = JWT.encode(payload, key_pair, 'RS256', kid: jwk.kid)
-
-    result = run(
-      test,
-      id_token: token,
-      openid_configuration_json: config.to_json,
-      id_token_jwk_json: jwk.export.to_json,
-      client_id: client_id
-    )
+    inputs[:id_token] = token
+    result = run(test, inputs)
 
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/exp/)
@@ -145,33 +141,21 @@ RSpec.describe SMARTAppLaunch::OpenIDTokenPayloadTest do
   it 'fails if the sub is blank' do
     payload[:sub] = ' '
     token = JWT.encode(payload, key_pair, 'RS256', kid: jwk.kid)
-
-    result = run(
-      test,
-      id_token: token,
-      openid_configuration_json: config.to_json,
-      id_token_jwk_json: jwk.export.to_json,
-      client_id: client_id
-    )
+    inputs[:id_token] = token
+    result = run(test, inputs)
 
     expect(result.result).to eq('fail')
-    expect(result.result_message).to match("ID token `sub` claim is blank")
+    expect(result.result_message).to match('ID token `sub` claim is blank')
   end
 
   it 'fails if the sub exceeds 255 characters' do
     payload[:sub] = '0' * 256
     token = JWT.encode(payload, key_pair, 'RS256', kid: jwk.kid)
-
-    result = run(
-      test,
-      id_token: token,
-      openid_configuration_json: config.to_json,
-      id_token_jwk_json: jwk.export.to_json,
-      client_id: client_id
-    )
+    inputs[:id_token] = token
+    result = run(test, inputs)
 
     expect(result.result).to eq('fail')
-    expect(result.result_message).to match("ID token `sub` claim exceeds 255 characters in length")
+    expect(result.result_message).to match('ID token `sub` claim exceeds 255 characters in length')
   end
 
   it 'fails if any required fields are missing' do
@@ -180,13 +164,8 @@ RSpec.describe SMARTAppLaunch::OpenIDTokenPayloadTest do
       bad_payload.delete(claim.to_sym)
       token = JWT.encode(bad_payload, key_pair, 'RS256', kid: jwk.kid)
 
-      result = run(
-        test,
-        id_token: token,
-        openid_configuration_json: config.to_json,
-        id_token_jwk_json: jwk.export.to_json,
-        client_id: client_id
-      )
+      inputs[:id_token] = token
+      result = run(test, inputs)
 
       expect(result.result).to eq('fail')
       expect(result.result_message).to include(claim)

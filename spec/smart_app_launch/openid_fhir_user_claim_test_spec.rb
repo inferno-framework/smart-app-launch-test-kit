@@ -13,7 +13,7 @@ RSpec.describe SMARTAppLaunch::OpenIDFHIRUserClaimTest do
       refresh_token: 'REFRESH_TOKEN',
       expires_in: 3600,
       client_id: client_id,
-      token_retrieval_time: Time.now.iso8601,
+      issue_time: Time.now.iso8601,
       token_url: 'http://example.com/token'
     }.to_json
   end
@@ -21,6 +21,24 @@ RSpec.describe SMARTAppLaunch::OpenIDFHIRUserClaimTest do
     {
       fhirUser: "#{url}/Patient/123"
     }
+  end
+  let(:inputs) do
+    base_inputs = {
+      id_token_payload_json: payload.to_json,
+      requested_scopes: scopes,
+      url: url,
+      smart_credentials: smart_credentials
+    }
+
+    if SMARTAppLaunch::Feature.use_auth_info?
+      base_inputs.merge(
+        auth_info: Inferno::DSL::AuthInfo.new(
+          requested_scopes: base_inputs[:requested_scopes]
+        )
+      ).except(:requested_scopes)
+    else
+      base_inputs
+    end
   end
 
   def run(runnable, inputs = {})
@@ -41,57 +59,42 @@ RSpec.describe SMARTAppLaunch::OpenIDFHIRUserClaimTest do
     result = run(test, id_token_payload_json: nil, url: url, smart_credentials: smart_credentials)
 
     expect(result.result).to eq('skip')
+    expect(result.result_message).to match(/Input 'id_token_payload_json' is nil/)
   end
 
   it 'skips if no fhirUser scope was requested' do
-    result = run(
-      test,
-      id_token_payload_json: nil,
-      requested_scopes: 'launch',
-      url: url,
-      smart_credentials: smart_credentials
-    )
+    if SMARTAppLaunch::Feature.use_auth_info?
+      inputs[:auth_info].requested_scopes = 'launch'
+    else
+      inputs[:requested_scopes] = 'launch'
+    end
+    result = run(test, inputs)
 
     expect(result.result).to eq('skip')
+    expect(result.result_message).to match(/`fhirUser` scope not requested/)
   end
 
   it 'passes when the fhirUser claim is present and the user can be retrieved' do
     user_request =
       stub_request(:get, payload[:fhirUser])
-        .to_return(status: 200, body: FHIR::Patient.new(id: '123').to_json)
-    result = run(
-      test,
-      id_token_payload_json: payload.to_json,
-      requested_scopes: scopes,
-      url: url,
-      smart_credentials: smart_credentials
-    )
+      .to_return(status: 200, body: FHIR::Patient.new(id: '123').to_json)
 
+    result = run(test, inputs)
     expect(result.result).to eq('pass')
     expect(user_request).to have_been_made
   end
 
   it 'fails if the fhirUser claim is blank' do
-    result = run(
-      test,
-      id_token_payload_json: { fhirUser: '' }.to_json,
-      requested_scopes: scopes,
-      url: url,
-      smart_credentials: smart_credentials
-    )
+    inputs[:id_token_payload_json] = { fhirUser: '' }.to_json
+    result = run(test, inputs)
 
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/does not contain/)
   end
 
   it 'fails if the fhirUser claim does not refer to a valid resource type' do
-    result = run(
-      test,
-      id_token_payload_json: { fhirUser: "#{url}/Observation/123" }.to_json,
-      requested_scopes: scopes,
-      url: url,
-      smart_credentials: smart_credentials
-    )
+    inputs[:id_token_payload_json] = { fhirUser: "#{url}/Observation/123" }.to_json
+    result = run(test, inputs)
 
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/resource type/)
@@ -100,14 +103,10 @@ RSpec.describe SMARTAppLaunch::OpenIDFHIRUserClaimTest do
   it 'fails if the incorrect resource type is returned' do
     user_request =
       stub_request(:get, payload[:fhirUser])
-        .to_return(status: 200, body: FHIR::Person.new(id: '123').to_json)
-    result = run(
-      test,
-      id_token_payload_json: { fhirUser: "#{url}/Patient/123" }.to_json,
-      requested_scopes: scopes,
-      url: url,
-      smart_credentials: smart_credentials
-    )
+      .to_return(status: 200, body: FHIR::Person.new(id: '123').to_json)
+
+    inputs[:id_token_payload_json] = { fhirUser: "#{url}/Patient/123" }.to_json
+    result = run(test, inputs)
 
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/Patient/)
@@ -117,14 +116,8 @@ RSpec.describe SMARTAppLaunch::OpenIDFHIRUserClaimTest do
   it 'fails when the fhirUser can not be retrieved' do
     user_request =
       stub_request(:get, payload[:fhirUser])
-        .to_return(status: 404)
-    result = run(
-      test,
-      id_token_payload_json: payload.to_json,
-      requested_scopes: scopes,
-      url: url,
-      smart_credentials: smart_credentials
-    )
+      .to_return(status: 404)
+    result = run(test, inputs)
 
     expect(result.result).to eq('fail')
     expect(result.result_message).to include('200')
@@ -134,13 +127,7 @@ RSpec.describe SMARTAppLaunch::OpenIDFHIRUserClaimTest do
   it 'persists outputs' do
     stub_request(:get, payload[:fhirUser])
       .to_return(status: 200, body: FHIR::Patient.new(id: '123').to_json)
-    result = run(
-      test,
-      id_token_payload_json: payload.to_json,
-      requested_scopes: scopes,
-      url: url,
-      smart_credentials: smart_credentials
-    )
+    result = run(test, inputs)
 
     expect(result.result).to eq('pass')
 

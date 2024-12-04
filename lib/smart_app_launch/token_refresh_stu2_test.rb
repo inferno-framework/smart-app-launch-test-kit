@@ -20,13 +20,13 @@ module SMARTAppLaunch
     input :client_auth_encryption_method, optional: true
     input :client_secret, optional: true
 
-    def add_credentials_to_request(oauth2_headers, oauth2_params)
+    def add_credentials_to_request(oauth2_headers, oauth2_params, client_id, client_secret)
       case client_auth_type
       when 'public'
         oauth2_params['client_id'] = client_id
       when 'confidential_symmetric'
         assert client_secret.present?,
-               "A client secret must be provided when using confidential symmetric client authentication."
+               'A client secret must be provided when using confidential symmetric client authentication.'
 
         credentials = Base64.strict_encode64("#{client_id}:#{client_secret}")
         oauth2_headers['Authorization'] = "Basic #{credentials}"

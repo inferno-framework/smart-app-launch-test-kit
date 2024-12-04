@@ -13,14 +13,24 @@ RSpec.describe SMARTAppLaunch::TokenExchangeSTU2Test do
   let(:client_id) { 'CLIENT_ID' }
   let(:client_auth_encryption_method) { 'ES384' }
   let(:inputs) do
-    {
+    base_inputs = {
       code: 'CODE',
       smart_token_url: token_url,
       client_id:,
       client_auth_type: 'confidential_asymmetric',
       client_auth_encryption_method:,
-      use_pkce: 'false'
+      pkce_support: 'disabled'
     }
+    if SMARTAppLaunch::Feature.use_auth_info?
+      base_inputs.merge(
+        auth_info: Inferno::DSL::AuthInfo.new(
+          client_id: base_inputs[:client_id],
+          pkce_support: base_inputs[:pkce_support]
+        )
+      ).except(:client_id, :pkce_support)
+    else
+      base_inputs
+    end
   end
 
   def run(runnable, inputs = {})

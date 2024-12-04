@@ -11,17 +11,33 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
   let(:url) { 'http://example.com/fhir' }
   let(:token_url) { 'http://example.com/token' }
   let(:public_inputs) do
-    {
+    base_inputs = {
       code: 'CODE',
       smart_token_url: token_url,
       client_id: 'CLIENT_ID',
-      use_pkce: 'false'
+      pkce_support: 'disabled'
     }
+
+    if SMARTAppLaunch::Feature.use_auth_info?
+      base_inputs.merge(
+        auth_info: Inferno::DSL::AuthInfo.new(
+          client_id: base_inputs[:client_id],
+          pkce_support: base_inputs[:pkce_support]
+        )
+      ).except(:client_id, :pkce_support)
+    else
+      base_inputs
+    end
   end
   let(:confidential_inputs) do
-    public_inputs.merge(
-      client_secret: 'CLIENT_SECRET'
-    )
+    if SMARTAppLaunch::Feature.use_auth_info?
+      public_inputs[:auth_info].client_secret = 'CLIENT_SECRET'
+      public_inputs
+    else
+      public_inputs.merge(
+        client_secret: 'CLIENT_SECRET'
+      )
+    end
   end
 
   def run(runnable, inputs = {})
@@ -126,19 +142,25 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
       create_redirect_request('http://example.com/redirect?code=CODE')
       token_request =
         stub_request(:post, token_url)
-          .with(
-            body:
-              {
-                grant_type: 'authorization_code',
-                code: 'CODE',
-                client_id: 'CLIENT_ID',
-                redirect_uri: described_class.config.options[:redirect_uri],
-                code_verifier: 'CODE_VERIFIER'
-              }
-          )
-          .to_return(status: 200, body: {}.to_json)
+        .with(
+          body:
+            {
+              grant_type: 'authorization_code',
+              code: 'CODE',
+              client_id: 'CLIENT_ID',
+              redirect_uri: described_class.config.options[:redirect_uri],
+              code_verifier: 'CODE_VERIFIER'
+            }
+        )
+        .to_return(status: 200, body: {}.to_json)
 
-      result = run(test, public_inputs.merge(use_pkce: 'true', pkce_code_verifier: 'CODE_VERIFIER'))
+      if SMARTAppLaunch::Feature.use_auth_info?
+        public_inputs[:auth_info].pkce_support = 'enabled'
+      else
+        public_inputs[:pkce_support] = 'enabled'
+      end
+      public_inputs[:pkce_code_verifier] = 'CODE_VERIFIER'
+      result = run(test, public_inputs)
 
       expect(result.result).to eq('pass')
       expect(token_request).to have_been_made

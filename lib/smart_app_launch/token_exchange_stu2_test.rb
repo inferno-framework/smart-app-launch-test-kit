@@ -14,21 +14,21 @@ module SMARTAppLaunch
     id :smart_token_exchange_stu2
 
     input :client_auth_encryption_method,
-      title: 'Encryption Method (Confidential Asymmetric Client Auth Only)',
-      type: 'radio',
-      default: 'ES384',
-      options: {
-        list_options: [
-          {
-            label: 'ES384',
-            value: 'ES384'
-          },
-          {
-            label: 'RS384',
-            value: 'RS384'
+          title: 'Encryption Method (Confidential Asymmetric Client Auth Only)',
+          type: 'radio',
+          default: 'ES384',
+          options: {
+            list_options: [
+              {
+                label: 'ES384',
+                value: 'ES384'
+              },
+              {
+                label: 'RS384',
+                value: 'RS384'
+              }
+            ]
           }
-        ]
-      }
 
     input :client_auth_type,
           title: 'Client Authentication Method',
@@ -53,13 +53,13 @@ module SMARTAppLaunch
 
     config(
       inputs: {
-        use_pkce: {
-          default: 'true',
+        pkce_support: {
+          default: 'enabled',
           options: {
             list_options: [
               {
                 label: 'Enabled',
-                value: 'true'
+                value: 'enabled'
               }
             ]
           }
@@ -67,10 +67,10 @@ module SMARTAppLaunch
       }
     )
 
-    def add_credentials_to_request(oauth2_params, oauth2_headers)
+    def add_credentials_to_request(oauth2_params, oauth2_headers, client_id, client_secret)
       if client_auth_type == 'confidential_symmetric'
         assert client_secret.present?,
-               "A client secret must be provided when using confidential symmetric client authentication."
+               'A client secret must be provided when using confidential symmetric client authentication.'
 
         client_credentials = "#{client_id}:#{client_secret}"
         oauth2_headers['Authorization'] = "Basic #{Base64.strict_encode64(client_credentials)}"

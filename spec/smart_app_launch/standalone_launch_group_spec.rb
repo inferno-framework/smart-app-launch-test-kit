@@ -14,15 +14,26 @@ RSpec.describe SMARTAppLaunch::StandaloneLaunchGroup do
   let(:url) { 'http://example.com/fhir' }
   let(:token_url) { "#{url}/token" }
   let(:inputs) do
-    {
+    base_inputs = {
       url: url,
       smart_authorization_url: "#{url}/auth",
       smart_token_url: token_url,
       client_id: 'CLIENT_ID',
       requested_scopes: 'launch/patient patient/*.*',
       client_auth_type: 'public',
-      use_pkce: 'false'
+      pkce_support: 'disabled'
     }
+    if SMARTAppLaunch::Feature.use_auth_info?
+      base_inputs.merge(
+        auth_info: Inferno::DSL::AuthInfo.new(
+          client_id: base_inputs[:client_id],
+          requested_scopes: base_inputs[:requested_scopes],
+          pkce_support: base_inputs[:pkce_support]
+        )
+      ).except(:client_id, :requested_scopes, :pkce_support)
+    else
+      base_inputs
+    end
   end
   let(:token_response) do
     {
@@ -92,7 +103,7 @@ RSpec.describe SMARTAppLaunch::StandaloneLaunchGroup do
       standalone_received_scopes: token_response[:scope],
       standalone_intent: token_response[:intent]
     }
-    other_outputs = [:standalone_code, :standalone_state, :standalone_token_retrieval_time]
+    other_outputs = %i[standalone_code standalone_state standalone_token_retrieval_time]
 
     expected_outputs.each do |name, value|
       expect(session_data_repo.load(test_session_id: test_session.id, name: name)).to eq(value.to_s)
@@ -102,7 +113,7 @@ RSpec.describe SMARTAppLaunch::StandaloneLaunchGroup do
       expect(session_data_repo.load(test_session_id: test_session.id, name: name)).to be_present
     end
 
-    [:standalone_redirect, :standalone_token].each do |name|
+    %i[standalone_redirect standalone_token].each do |name|
       expect(requests_repo.find_named_request(test_session.id, name)).to be_present
     end
   end

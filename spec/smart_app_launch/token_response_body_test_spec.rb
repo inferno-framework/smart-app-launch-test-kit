@@ -16,6 +16,13 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
   end
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
+  let(:input) do
+    if SMARTAppLaunch::Feature.use_auth_info?
+      { auth_info: Inferno::DSL::AuthInfo.new(requested_scopes: 'patient/*.*') }
+    else
+      { requested_scopes: 'patient/*.*' }
+    end
+  end
 
   def run(runnable, inputs = {})
     test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
@@ -59,7 +66,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
   it 'passes if the body contains the required fields' do
     create_token_request(body: valid_body)
 
-    result = run(test, requested_scopes: 'patient/*.*')
+    result = run(test, input)
 
     expect(result.result).to eq('pass')
   end
@@ -67,7 +74,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
   it 'skips if the token request was not successful' do
     create_token_request(body: { access_token: 'ACCESS_TOKEN', token_type: 'bearer' }, status: 500)
 
-    result = run(test, requested_scopes: 'patient/*.*')
+    result = run(test, input)
 
     expect(result.result).to eq('skip')
     expect(result.result_message).to match(/was unsuccessful/)
@@ -76,7 +83,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
   it 'fails if the body is not valid json' do
     create_token_request(body: '[[')
 
-    result = run(test, requested_scopes: 'patient/*.*')
+    result = run(test, input)
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/Invalid JSON/)
   end
@@ -86,7 +93,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
       bad_body = valid_body.reject { |key, _| key == field }
       create_token_request(body: bad_body)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, input)
 
       expect(result.result).to eq('fail')
       expect(result.result_message).to match(/`#{field}`/)
@@ -98,7 +105,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
       body = valid_body.merge(field => 123)
       create_token_request(body: body)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, input)
 
       expect(result.result).to eq('fail')
       expect(result.result_message).to match(/String/)
@@ -108,7 +115,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
       body = valid_body.merge(field => '123')
       create_token_request(body: body)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, input)
 
       expect(result.result).to eq('fail')
       expect(result.result_message).to match(/Numeric/)
@@ -118,48 +125,48 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
   context 'when the fhirContext field is present' do
     it 'passes if fhirContext valid' do
       numericalElement = 123
-      body = valid_body.merge(fhirContext: ["Organization/123", "DiagnosticReport/123", "Observation/123/_history/2"])
+      body = valid_body.merge(fhirContext: ['Organization/123', 'DiagnosticReport/123', 'Observation/123/_history/2'])
       create_token_request(body: body)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, input)
       expect(result.result).to eq('pass')
     end
 
     it 'fails if fhirContext is not an Array' do
-      body = valid_body.merge(fhirContext: "Organization/123")
+      body = valid_body.merge(fhirContext: 'Organization/123')
       create_token_request(body: body)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, input)
       expect(result.result).to eq('fail')
-      expect(result.result_message).to match("`fhirContext` field is a String, but should be an Array")
+      expect(result.result_message).to match('`fhirContext` field is a String, but should be an Array')
     end
 
     it 'fails if fhirContext contains a non-string element' do
       numericalElement = 123
-      body = valid_body.merge(fhirContext: ["Organization/123", numericalElement])
+      body = valid_body.merge(fhirContext: ['Organization/123', numericalElement])
       create_token_request(body: body)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, input)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match("`#{numericalElement}` is not a string")
     end
 
     it 'fails if fhirContext contains an absolute reference' do
-      canonicalURL = "https://example.org/Organization/123/|v2023-05-03"
+      canonicalURL = 'https://example.org/Organization/123/|v2023-05-03'
       body = valid_body.merge(fhirContext: [canonicalURL])
       create_token_request(body: body)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, input)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match("`#{canonicalURL}` is not a relative reference")
     end
 
     it 'fails if fhirContext contains a reference with an invalid resource type' do
-      invalidResourceType = "Hospital"
+      invalidResourceType = 'Hospital'
       body = valid_body.merge(fhirContext: ["#{invalidResourceType}/123"])
       create_token_request(body: body)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, input)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match("`#{invalidResourceType}` is not a valid FHIR resource type")
     end
@@ -169,7 +176,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
       body = valid_body.merge(fhirContext: ["Organization/#{invalidFhirID}"])
       create_token_request(body: body)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, input)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match("`#{invalidFhirID}` is not a valid FHIR id")
     end
@@ -199,7 +206,12 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
     }
     create_token_request(body: inputs)
 
-    result = run(test, requested_scopes: 'SCOPE')
+    if SMARTAppLaunch::Feature.use_auth_info?
+      input[:auth_info].requested_scopes = 'SCOPE'
+    else
+      input[:requested_scopes] = 'SCOPE'
+    end
+    result = run(test, input)
 
     expect(result.result).to eq('pass')
 

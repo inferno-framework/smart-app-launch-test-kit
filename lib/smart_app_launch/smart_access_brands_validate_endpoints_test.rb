@@ -29,13 +29,17 @@ module SMARTAppLaunch
       )
     end
 
-    input :user_access_brands_bundle,
-          optional: true
+    def scratch_bundle_resource
+      scratch[:bundle_resource] ||= {}
+    end
 
     run do
-      bundle_resource = scratch[:bundle_resource]
+      bundle_resource = scratch_bundle_resource
 
-      skip_if bundle_resource.blank?, 'No SMART Access Brands Bundle contained in the response'
+      skip_if bundle_resource.blank?, %(
+        No successful User Access Brands request was made in the previous test, or no User Access Brands Bundle was
+        provided
+      )
       skip_if bundle_resource.entry.empty?, 'The given Bundle does not contain any resources'
 
       assert_valid_bundle_entries(bundle: bundle_resource,

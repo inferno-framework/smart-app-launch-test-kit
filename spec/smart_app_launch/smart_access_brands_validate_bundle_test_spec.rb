@@ -83,25 +83,17 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBundle do
     end
 
     it 'passes if User Access Brands Bundle is valid' do
-      validation_request = stub_request(:post, "#{validator_url}/validate")
-        .to_return(status: 200, body: operation_outcome_success.to_json)
-
       create_user_access_brands_request(body: smart_access_brands_bundle)
 
       result = run(test)
 
       expect(result.result).to eq('pass')
-      expect(validation_request).to have_been_made
     end
 
     it 'passes if inputted User Access Brands Bundle is valid' do
-      validation_request = stub_request(:post, "#{validator_url}/validate")
-        .to_return(status: 200, body: operation_outcome_success.to_json)
-
       result = run(test, user_access_brands_bundle: smart_access_brands_bundle.to_json)
 
       expect(result.result).to eq('pass')
-      expect(validation_request).to have_been_made
     end
 
     it 'skips if no User Access Brands Bundle requests were made' do
@@ -118,7 +110,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBundle do
       result = run(test)
 
       expect(result.result).to eq('skip')
-      expect(result.result_message).to eq('No SMART Access Brands Bundle contained in the response')
+      expect(result.result_message).to match('No successful User Access Brands request was made in the previous test')
     end
 
     it 'fails if User Access Brands Bundle is an invalid JSON' do
@@ -140,25 +132,43 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBundle do
       expect(result.result_message).to eq('Unexpected resource type: expected Bundle, but received Patient')
     end
 
-    it 'fails if the User Access Brands Bundle fails validation' do
-      validation_request = stub_request(:post, "#{validator_url}/validate")
-        .to_return(status: 200, body: operation_outcome_failure.to_json)
-
+    it 'fails if the User Access Brands Bundle contains duplicate fullUrls' do
+      smart_access_brands_bundle['entry'].first['fullUrl'] = 'https://ehr1.fhirserver.com/Endpoint/examplehospital-ehr1'
       create_user_access_brands_request(body: smart_access_brands_bundle)
 
       result = run(test)
 
       expect(result.result).to eq('fail')
-      expect(result.result_message).to eq(
-        'Resource does not conform to the profile: http://hl7.org/fhir/smart-app-launch/StructureDefinition/user-access-brands-bundle'
+      expect(result.result_message).to match(
+        'The SMART Access Brands Bundle contains entries with duplicate fullUrls'
       )
-      expect(validation_request).to have_been_made
+    end
+
+    it 'fails if the User Access Brands Bundle contains an entry with the request field' do
+      smart_access_brands_bundle['entry'].first['request'] = { 'method' => 'GET', 'url' => 'examplerequest.com' }
+      create_user_access_brands_request(body: smart_access_brands_bundle)
+
+      result = run(test)
+
+      expect(result.result).to eq('fail')
+      expect(result.result_message).to match(
+        'Bundle entry 1 contains the `request` field'
+      )
+    end
+
+    it 'fails if the User Access Brands Bundle contains an entry with a version specific fullUrl reference' do
+      smart_access_brands_bundle['entry'].first['fullUrl'] = 'examplerequest.com/_history/2'
+      create_user_access_brands_request(body: smart_access_brands_bundle)
+
+      result = run(test)
+
+      expect(result.result).to eq('fail')
+      expect(result.result_message).to match(
+        'Bundle entry 1 contains a version specific reference'
+      )
     end
 
     it 'fails if User Access Brands Bundle is not type collection' do
-      validation_request = stub_request(:post, "#{validator_url}/validate")
-        .to_return(status: 200, body: operation_outcome_success.to_json)
-
       smart_access_brands_bundle['type'] = 'history'
       create_user_access_brands_request(body: smart_access_brands_bundle)
 
@@ -166,13 +176,9 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBundle do
 
       expect(result.result).to eq('fail')
       expect(result.result_message).to eq('The SMART Access Brands Bundle must be type `collection`')
-      expect(validation_request).to have_been_made
     end
 
     it 'fails if User Access Brands Bundle does not have the timestamp field populated' do
-      validation_request = stub_request(:post, "#{validator_url}/validate")
-        .to_return(status: 200, body: operation_outcome_success.to_json)
-
       smart_access_brands_bundle.delete('timestamp')
       create_user_access_brands_request(body: smart_access_brands_bundle)
 
@@ -182,20 +188,15 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBundle do
       expect(result.result_message).to eq(
         'Bundle.timestamp must be populated to advertise the timestamp of the last change to the contents'
       )
-      expect(validation_request).to have_been_made
     end
 
     it 'fails if User Access Brands Bundle is empty' do
-      validation_request = stub_request(:post, "#{validator_url}/validate")
-        .to_return(status: 200, body: operation_outcome_success.to_json)
-
       smart_access_brands_bundle['entry'] = []
       create_user_access_brands_request(body: smart_access_brands_bundle)
       result = run(test)
 
       expect(result.result).to eq('fail')
       expect(result.result_message).to eq('The given Bundle does not contain any brands or endpoints.')
-      expect(validation_request).to have_been_made
     end
   end
 end

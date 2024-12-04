@@ -13,9 +13,6 @@ module SMARTAppLaunch
       This test does not currently validate availability or format of Brand or Portal logos.
     )
 
-    input :user_access_brands_bundle,
-          optional: true
-
     def find_referenced_endpoint(bundle_resource, endpoint_id_ref)
       bundle_resource
         .entry
@@ -56,10 +53,17 @@ module SMARTAppLaunch
       )
     end
 
-    run do
-      bundle_resource = scratch[:bundle_resource]
+    def scratch_bundle_resource
+      scratch[:bundle_resource] ||= {}
+    end
 
-      skip_if bundle_resource.blank?, 'No SMART Access Brands Bundle contained in the response'
+    run do
+      bundle_resource = scratch_bundle_resource
+
+      skip_if bundle_resource.blank?, %(
+        No successful User Access Brands request was made in the previous test, or no User Access Brands Bundle was
+        provided
+      )
       skip_if bundle_resource.entry.empty?, 'The given Bundle does not contain any resources'
 
       assert_valid_bundle_entries(bundle: bundle_resource,

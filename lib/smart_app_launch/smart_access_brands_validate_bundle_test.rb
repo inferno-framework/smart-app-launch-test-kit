@@ -106,7 +106,10 @@ module SMARTAppLaunch
                           user_access_brands_bundle
                         end
 
-      skip_if bundle_response.blank?, 'No SMART Access Brands Bundle contained in the response'
+      skip_if bundle_response.blank?, %(
+        No successful User Access Brands request was made in the previous test, or no User Access Brands Bundle was
+        provided
+      )
 
       assert_valid_json(bundle_response)
       bundle_resource = FHIR.from_contents(bundle_response)
@@ -130,25 +133,26 @@ module SMARTAppLaunch
       entry_full_urls = []
 
       bundle_resource.entry.each_with_index do |entry, index|
+        entry_num = index + 1
         assert(entry.resource.present?, %(
-          Bundle entry #{index} missing the `resource` field. For Bundles of type collection, all entries must contain
-          resources.
+          Bundle entry #{entry_num} missing the `resource` field. For Bundles of type collection, all entries must
+          contain resources.
         ))
 
         assert(entry.request.blank?, %(
-          Bundle entry #{index} contains the `request` field. For Bundles of type collection, all entries must not have
-          request or response elements
+          Bundle entry #{entry_num} contains the `request` field. For Bundles of type collection, all entries must not
+          have request or response elements
         ))
         assert(entry.response.blank?, %(
-          Bundle entry #{index} contains the `response` field. For Bundles of type collection, all entries must not have
-          request or response elements
+          Bundle entry #{entry_num} contains the `response` field. For Bundles of type collection, all entries must not
+          have request or response elements
         ))
         assert(entry.search.blank?, %(
-          Bundle entry #{index} contains the `search` field. Entry.search is allowed only for `search` type Bundles.
+          Bundle entry #{entry_num} contains the `search` field. Entry.search is allowed only for `search` type Bundles.
         ))
 
         assert(entry.fullUrl.exclude?('/_history/'), %(
-          Bundle entry #{index} contains a version specific reference in the `fullUrl` field
+          Bundle entry #{entry_num} contains a version specific reference in the `fullUrl` field
         ))
 
         full_url_exists = entry_full_urls.any? do |hash|

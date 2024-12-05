@@ -1,5 +1,4 @@
 require_relative 'token_payload_validation'
-require_relative 'feature'
 
 module SMARTAppLaunch
   class TokenRefreshTest < Inferno::Test
@@ -18,23 +17,17 @@ module SMARTAppLaunch
       consistent with the requirements of the inital access token exchange.
     )
     input :smart_token_url, :refresh_token, :received_scopes
-
-    if Feature.use_auth_info?
-      input :auth_info, type: :auth_info, options: { mode: 'auth' }
-    else
-      input :client_id
-      input :client_secret, optional: true
-    end
+    input :auth_info, type: :auth_info, options: { mode: 'auth' }
 
     output :smart_credentials, :token_retrieval_time
     makes_request :token_refresh
 
-    def add_credentials_to_request(oauth2_headers, oauth2_params, client_id, client_secret)
-      if client_secret.present?
-        credentials = Base64.strict_encode64("#{client_id}:#{client_secret}")
+    def add_credentials_to_request(oauth2_headers, oauth2_params)
+      if auth_info.client_secret.present?
+        credentials = Base64.strict_encode64("#{auth_info.client_id}:#{auth_info.client_secret}")
         oauth2_headers['Authorization'] = "Basic #{credentials}"
       else
-        oauth2_params['client_id'] = client_id
+        oauth2_params['client_id'] = auth_info.client_id
       end
     end
 
@@ -45,10 +38,6 @@ module SMARTAppLaunch
     run do
       skip_if refresh_token.blank?
 
-      auth_config = Feature.use_auth_info? ? auth_info : self
-      client_id = auth_config.client_id
-      client_secret = auth_config.client_secret
-
       oauth2_params = {
         'grant_type' => 'refresh_token',
         'refresh_token' => refresh_token
@@ -57,7 +46,7 @@ module SMARTAppLaunch
 
       oauth2_params['scope'] = received_scopes if config.options[:include_scopes]
 
-      add_credentials_to_request(oauth2_headers, oauth2_params, client_id, client_secret)
+      add_credentials_to_request(oauth2_headers, oauth2_params)
 
       make_auth_token_request(smart_token_url, oauth2_params, oauth2_headers)
 
@@ -68,12 +57,12 @@ module SMARTAppLaunch
 
       token_response_body = JSON.parse(request.response_body)
       output smart_credentials: {
-        auth_type: client_secret.present? ? 'symmetric' : 'public',
+        auth_type: auth_info.auth_type,
         refresh_token: token_response_body['refresh_token'].presence || refresh_token,
         access_token: token_response_body['access_token'],
         expires_in: token_response_body['expires_in'],
-        client_id:,
-        client_secret:,
+        client_id: auth_info.client_id,
+        client_secret: auth_info.client_secret,
         issue_time: token_retrieval_time,
         token_url: smart_token_url
       }.to_json

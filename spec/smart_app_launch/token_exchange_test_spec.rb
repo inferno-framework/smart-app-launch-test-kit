@@ -12,33 +12,18 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
   let(:token_url) { 'http://example.com/token' }
   let(:redirect_uri) { "#{Inferno::Application['base_url']}/custom/smart/redirect" }
   let(:public_inputs) do
-    base_inputs = {
+    {
       code: 'CODE',
       smart_token_url: token_url,
-      client_id: 'CLIENT_ID',
-      pkce_support: 'disabled'
+      auth_info: Inferno::DSL::AuthInfo.new(
+        client_id: 'CLIENT_ID',
+        pkce_support: 'disabled'
+      )
     }
-
-    if SMARTAppLaunch::Feature.use_auth_info?
-      base_inputs.merge(
-        auth_info: Inferno::DSL::AuthInfo.new(
-          client_id: base_inputs[:client_id],
-          pkce_support: base_inputs[:pkce_support]
-        )
-      ).except(:client_id, :pkce_support)
-    else
-      base_inputs
-    end
   end
   let(:confidential_inputs) do
-    if SMARTAppLaunch::Feature.use_auth_info?
-      public_inputs[:auth_info].client_secret = 'CLIENT_SECRET'
-      public_inputs
-    else
-      public_inputs.merge(
-        client_secret: 'CLIENT_SECRET'
-      )
-    end
+    public_inputs[:auth_info].client_secret = 'CLIENT_SECRET'
+    public_inputs
   end
 
   def run(runnable, inputs = {})
@@ -155,11 +140,7 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
           )
           .to_return(status: 200, body: {}.to_json)
 
-      if SMARTAppLaunch::Feature.use_auth_info?
-        public_inputs[:auth_info].pkce_support = 'enabled'
-      else
-        public_inputs[:pkce_support] = 'enabled'
-      end
+      public_inputs[:auth_info].pkce_support = 'enabled'
       public_inputs[:pkce_code_verifier] = 'CODE_VERIFIER'
       result = run(test, public_inputs)
 

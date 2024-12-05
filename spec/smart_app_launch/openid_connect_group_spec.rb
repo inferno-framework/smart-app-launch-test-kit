@@ -80,23 +80,15 @@ RSpec.describe SMARTAppLaunch::OpenIDConnectGroup do
     stub_request(:get, payload[:fhirUser])
       .to_return(status: 200, body: FHIR::Patient.new(id: '123').to_json)
 
-    base_inputs = {
+    inputs = {
       id_token: id_token,
-      client_id: client_id,
-      requested_scopes: 'openid fhirUser',
       url: url,
-      smart_credentials: smart_credentials
+      smart_credentials: smart_credentials,
+      auth_info: Inferno::DSL::AuthInfo.new(
+        client_id:,
+        requested_scopes: 'openid fhirUser'
+      )
     }
-    inputs = if SMARTAppLaunch::Feature.use_auth_info?
-               base_inputs.merge(
-                 auth_info: Inferno::DSL::AuthInfo.new(
-                   client_id: base_inputs[:client_id],
-                   requested_scopes: base_inputs[:requested_scopes]
-                 )
-               ).except(:client_id, :requested_scopes)
-             else
-               base_inputs
-             end
 
     run(group, inputs)
     results = results_repo.current_results_for_test_session(test_session.id)

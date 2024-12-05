@@ -14,26 +14,17 @@ RSpec.describe SMARTAppLaunch::StandaloneLaunchGroup do
   let(:url) { 'http://example.com/fhir' }
   let(:token_url) { "#{url}/token" }
   let(:inputs) do
-    base_inputs = {
+    {
       url: url,
       smart_authorization_url: "#{url}/auth",
       smart_token_url: token_url,
-      client_id: 'CLIENT_ID',
-      requested_scopes: 'launch/patient patient/*.*',
       client_auth_type: 'public',
-      pkce_support: 'disabled'
+      auth_info: Inferno::DSL::AuthInfo.new(
+        client_id: 'CLIENT_ID',
+        requested_scopes: 'launch/patient patient/*.*',
+        pkce_support: 'disabled'
+      )
     }
-    if SMARTAppLaunch::Feature.use_auth_info?
-      base_inputs.merge(
-        auth_info: Inferno::DSL::AuthInfo.new(
-          client_id: base_inputs[:client_id],
-          requested_scopes: base_inputs[:requested_scopes],
-          pkce_support: base_inputs[:pkce_support]
-        )
-      ).except(:client_id, :requested_scopes, :pkce_support)
-    else
-      base_inputs
-    end
   end
   let(:token_response) do
     {

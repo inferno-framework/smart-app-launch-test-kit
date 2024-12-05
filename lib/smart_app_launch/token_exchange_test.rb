@@ -1,4 +1,3 @@
-require_relative 'feature'
 module SMARTAppLaunch
   class TokenExchangeTest < Inferno::Test
     title 'OAuth token exchange request succeeds when supplied correct information'
@@ -12,29 +11,7 @@ module SMARTAppLaunch
     id :smart_token_exchange
     input :code, :smart_token_url
     input :pkce_code_verifier, optional: true
-
-    if Feature.use_auth_info?
-      input :auth_info, type: :auth_info, options: { mode: 'auth' }
-    else
-      input :client_id
-      input :client_secret, optional: true
-      input :pkce_support,
-            title: 'Proof Key for Code Exchange (PKCE)',
-            type: 'radio',
-            default: 'false',
-            options: {
-              list_options: [
-                {
-                  label: 'Enabled',
-                  value: 'enabled'
-                },
-                {
-                  label: 'Disabled',
-                  value: 'disabled'
-                }
-              ]
-            }
-    end
+    input :auth_info, type: :auth_info, options: { mode: 'auth' }
 
     output :token_retrieval_time
     output :smart_credentials
@@ -49,22 +26,17 @@ module SMARTAppLaunch
       config.options[:redirect_uri].presence || default_redirect_uri
     end
 
-    def add_credentials_to_request(oauth2_params, oauth2_headers, client_id, client_secret)
-      if client_secret.present?
-        client_credentials = "#{client_id}:#{client_secret}"
+    def add_credentials_to_request(oauth2_params, oauth2_headers)
+      if auth_info.client_secret.present?
+        client_credentials = "#{auth_info.client_id}:#{auth_info.client_secret}"
         oauth2_headers['Authorization'] = "Basic #{Base64.strict_encode64(client_credentials)}"
       else
-        oauth2_params[:client_id] = client_id
+        oauth2_params[:client_id] = auth_info.client_id
       end
     end
 
     run do
       skip_if request.query_parameters['error'].present?, 'Error during authorization request'
-
-      auth_config = Feature.use_auth_info? ? auth_info : self
-      client_id = auth_config.client_id
-      client_secret = auth_config.client_secret
-      pkce_support = auth_config.pkce_support
 
       oauth2_params = {
         code:,
@@ -73,9 +45,9 @@ module SMARTAppLaunch
       }
       oauth2_headers = { 'Content-Type' => 'application/x-www-form-urlencoded' }
 
-      add_credentials_to_request(oauth2_params, oauth2_headers, client_id, client_secret)
+      add_credentials_to_request(oauth2_params, oauth2_headers)
 
-      oauth2_params[:code_verifier] = pkce_code_verifier if pkce_support == 'enabled'
+      oauth2_params[:code_verifier] = pkce_code_verifier if auth_info.pkce_support == 'enabled'
 
       post(smart_token_url, body: oauth2_params, name: :token, headers: oauth2_headers)
 
@@ -87,12 +59,12 @@ module SMARTAppLaunch
       token_response_body = JSON.parse(request.response_body)
 
       output smart_credentials: {
-        auth_type: client_secret.present? ? 'symmetric' : 'public',
+        auth_type: auth_info.auth_type,
         refresh_token: token_response_body['refresh_token'],
         access_token: token_response_body['access_token'],
         expires_in: token_response_body['expires_in'],
-        client_id:,
-        client_secret:,
+        client_id: auth_info.client_id,
+        client_secret: auth_info.client_secret,
         issue_time: token_retrieval_time,
         token_url: smart_token_url
       }.to_json

@@ -24,19 +24,12 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
     }
   end
   let(:inputs) do
-    base_inputs = {
+    {
       smart_token_url: token_url,
       refresh_token:,
-      client_id:,
-      received_scopes:
+      received_scopes:,
+      auth_info: Inferno::DSL::AuthInfo.new(client_id:)
     }
-    if SMARTAppLaunch::Feature.use_auth_info?
-      base_inputs.merge(
-        auth_info: Inferno::DSL::AuthInfo.new(client_id: base_inputs[:client_id])
-      ).except(:client_id)
-    else
-      base_inputs
-    end
   end
 
   def run(runnable, inputs = {})
@@ -93,11 +86,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
           body: valid_response.to_json
         )
 
-      if SMARTAppLaunch::Feature.use_auth_info?
-        inputs[:auth_info].client_secret = client_secret
-      else
-        inputs[:client_secret] = client_secret
-      end
+      inputs[:auth_info].client_secret = client_secret
       result = run(test, inputs)
 
       expect(result.result).to eq('pass')

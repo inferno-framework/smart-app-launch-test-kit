@@ -38,21 +38,12 @@ RSpec.describe SMARTAppLaunch::OpenIDTokenPayloadTest do
     }
   end
   let(:inputs) do
-    base_inputs = {
+    {
       id_token: id_token,
       openid_configuration_json: config.to_json,
       id_token_jwk_json: jwk.export.to_json,
-      client_id: client_id
+      auth_info: Inferno::DSL::AuthInfo.new(client_id:)
     }
-    if SMARTAppLaunch::Feature.use_auth_info?
-      base_inputs.merge(
-        auth_info: Inferno::DSL::AuthInfo.new(
-          client_id: base_inputs[:client_id]
-        )
-      ).except(:client_id)
-    else
-      base_inputs
-    end
   end
 
   def run(runnable, inputs = {})
@@ -91,11 +82,7 @@ RSpec.describe SMARTAppLaunch::OpenIDTokenPayloadTest do
   end
 
   it 'skips if no client id is available' do
-    if SMARTAppLaunch::Feature.use_auth_info?
-      inputs[:auth_info].client_id = nil
-    else
-      inputs[:client_id] = nil
-    end
+    inputs[:auth_info].client_id = nil
     result = run(test, inputs)
 
     expect(result.result).to eq('skip')
@@ -117,11 +104,7 @@ RSpec.describe SMARTAppLaunch::OpenIDTokenPayloadTest do
   end
 
   it 'fails if the aud does not match the client id' do
-    if SMARTAppLaunch::Feature.use_auth_info?
-      inputs[:auth_info].client_id = "#{client_id}abc"
-    else
-      inputs[:client_id] = "#{client_id}abc"
-    end
+    inputs[:auth_info].client_id = "#{client_id}abc"
     result = run(test, inputs)
 
     expect(result.result).to eq('fail')

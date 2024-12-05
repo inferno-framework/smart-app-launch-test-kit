@@ -1,5 +1,4 @@
 require_relative 'token_payload_validation'
-require_relative 'feature'
 
 module SMARTAppLaunch
   class TokenResponseBodyTest < Inferno::Test
@@ -17,12 +16,7 @@ module SMARTAppLaunch
     )
     id :smart_token_response_body
 
-    if Feature.use_auth_info?
-      input :auth_info, type: :auth_info, options: { mode: 'auth' }
-    else
-      input :requested_scopes
-    end
-
+    input :auth_info, type: :auth_info, options: { mode: 'auth' }
     output :id_token,
            :refresh_token,
            :access_token,
@@ -36,8 +30,6 @@ module SMARTAppLaunch
     run do
       skip_if request.status != 200, 'Token exchange was unsuccessful'
 
-      requested_scopes = Feature.use_auth_info? ? auth_info.requested_scopes : self.requested_scopes
-
       assert_valid_json(request.response_body)
       token_response_body = JSON.parse(request.response_body)
 
@@ -50,10 +42,13 @@ module SMARTAppLaunch
              received_scopes: token_response_body['scope'],
              intent: token_response_body['intent']
 
-      validate_required_fields_present(token_response_body, ['access_token', 'token_type', 'expires_in', 'scope'])
+      validate_required_fields_present(token_response_body, %w[access_token token_type expires_in scope])
       validate_token_field_types(token_response_body)
       validate_token_type(token_response_body)
-      check_for_missing_scopes(requested_scopes, token_response_body) unless config.options[:ignore_missing_scopes_check]
+      unless config.options[:ignore_missing_scopes_check]
+        check_for_missing_scopes(auth_info.requested_scopes,
+                                 token_response_body)
+      end
 
       assert access_token.present?, 'Token response did not contain an access token'
       assert token_response_body['token_type']&.casecmp('Bearer')&.zero?,

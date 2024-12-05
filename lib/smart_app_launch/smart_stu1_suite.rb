@@ -7,7 +7,6 @@ require_relative 'standalone_launch_group'
 require_relative 'ehr_launch_group'
 require_relative 'openid_connect_group'
 require_relative 'token_refresh_group'
-require_relative 'feature'
 
 module SMARTAppLaunch
   class SMARTSTU1Suite < Inferno::TestSuite
@@ -61,110 +60,54 @@ module SMARTAppLaunch
       group from: :smart_discovery
       group from: :smart_standalone_launch
 
-      group from: :smart_openid_connect do
-        if Feature.use_auth_info?
-          config(
-            inputs: {
-              id_token: { name: :standalone_id_token },
-              auth_info: { name: :standalone_auth_info },
-              access_token: { name: :standalone_access_token },
-              smart_credentials: { name: :standalone_smart_credentials }
+      group from: :smart_openid_connect,
+            config: {
+              inputs: {
+                id_token: { name: :standalone_id_token },
+                auth_info: { name: :standalone_auth_info },
+                access_token: { name: :standalone_access_token },
+                smart_credentials: { name: :standalone_smart_credentials }
+              }
             }
-          )
-        else
-          config(
-            inputs: {
-              id_token: { name: :standalone_id_token },
-              client_id: { name: :standalone_client_id },
-              requested_scopes: { name: :standalone_requested_scopes },
-              access_token: { name: :standalone_access_token },
-              smart_credentials: { name: :standalone_smart_credentials }
-            }
-          )
-        end
-      end
 
-      group from: :smart_token_refresh do
-        id :smart_standalone_refresh_without_scopes
-        title 'SMART Token Refresh Without Scopes'
+      group from: :smart_token_refresh,
+            id: :smart_standalone_refresh_without_scopes,
+            title: 'SMART Token Refresh Without Scopes',
+            config: {
+              inputs: {
+                refresh_token: { name: :standalone_refresh_token },
+                auth_info: { name: :standalone_auth_info },
+                received_scopes: { name: :standalone_received_scopes }
+              },
+              outputs: {
+                refresh_token: { name: :standalone_refresh_token },
+                received_scopes: { name: :standalone_received_scopes },
+                access_token: { name: :standalone_access_token },
+                token_retrieval_time: { name: :standalone_token_retrieval_time },
+                expires_in: { name: :standalone_expires_in },
+                smart_credentials: { name: :standalone_smart_credentials }
+              }
+            }
 
-        if Feature.use_auth_info?
-          config(
-            inputs: {
-              refresh_token: { name: :standalone_refresh_token },
-              auth_info: { name: :standalone_auth_info },
-              received_scopes: { name: :standalone_received_scopes }
-            },
-            outputs: {
-              refresh_token: { name: :standalone_refresh_token },
-              received_scopes: { name: :standalone_received_scopes },
-              access_token: { name: :standalone_access_token },
-              token_retrieval_time: { name: :standalone_token_retrieval_time },
-              expires_in: { name: :standalone_expires_in },
-              smart_credentials: { name: :standalone_smart_credentials }
+      group from: :smart_token_refresh,
+            id: :smart_standalone_refresh_with_scopes,
+            title: 'SMART Token Refresh With Scopes',
+            config: {
+              options: { include_scopes: true },
+              inputs: {
+                refresh_token: { name: :standalone_refresh_token },
+                auth_info: { name: :standalone_auth_info },
+                received_scopes: { name: :standalone_received_scopes }
+              },
+              outputs: {
+                refresh_token: { name: :standalone_refresh_token },
+                received_scopes: { name: :standalone_received_scopes },
+                access_token: { name: :standalone_access_token },
+                token_retrieval_time: { name: :standalone_token_retrieval_time },
+                expires_in: { name: :standalone_expires_in },
+                smart_credentials: { name: :standalone_smart_credentials }
+              }
             }
-          )
-        else
-          config(
-            inputs: {
-              refresh_token: { name: :standalone_refresh_token },
-              client_id: { name: :standalone_client_id },
-              client_secret: { name: :standalone_client_secret },
-              received_scopes: { name: :standalone_received_scopes }
-            },
-            outputs: {
-              refresh_token: { name: :standalone_refresh_token },
-              received_scopes: { name: :standalone_received_scopes },
-              access_token: { name: :standalone_access_token },
-              token_retrieval_time: { name: :standalone_token_retrieval_time },
-              expires_in: { name: :standalone_expires_in },
-              smart_credentials: { name: :standalone_smart_credentials }
-            }
-          )
-        end
-      end
-
-      group from: :smart_token_refresh do
-        id :smart_standalone_refresh_with_scopes
-        title 'SMART Token Refresh With Scopes'
-
-        if Feature.use_auth_info?
-          config(
-            options: { include_scopes: true },
-            inputs: {
-              refresh_token: { name: :standalone_refresh_token },
-              auth_info: { name: :standalone_auth_info },
-              received_scopes: { name: :standalone_received_scopes }
-            },
-            outputs: {
-              refresh_token: { name: :standalone_refresh_token },
-              received_scopes: { name: :standalone_received_scopes },
-              access_token: { name: :standalone_access_token },
-              token_retrieval_time: { name: :standalone_token_retrieval_time },
-              expires_in: { name: :standalone_expires_in },
-              smart_credentials: { name: :standalone_smart_credentials }
-            }
-          )
-        else
-          config(
-            options: { include_scopes: true },
-            inputs: {
-              refresh_token: { name: :standalone_refresh_token },
-              client_id: { name: :standalone_client_id },
-              client_secret: { name: :standalone_client_secret },
-              received_scopes: { name: :standalone_received_scopes }
-            },
-            outputs: {
-              refresh_token: { name: :standalone_refresh_token },
-              received_scopes: { name: :standalone_received_scopes },
-              access_token: { name: :standalone_access_token },
-              token_retrieval_time: { name: :standalone_token_retrieval_time },
-              expires_in: { name: :standalone_expires_in },
-              smart_credentials: { name: :standalone_smart_credentials }
-            }
-          )
-        end
-      end
     end
 
     group do
@@ -185,110 +128,54 @@ module SMARTAppLaunch
 
       group from: :smart_ehr_launch
 
-      group from: :smart_openid_connect do
-        if Feature.use_auth_info?
-          config(
-            inputs: {
-              id_token: { name: :ehr_id_token },
-              auth_info: { name: :ehr_auth_info },
-              access_token: { name: :ehr_access_token },
-              smart_credentials: { name: :ehr_smart_credentials }
+      group from: :smart_openid_connect,
+            config: {
+              inputs: {
+                id_token: { name: :ehr_id_token },
+                auth_info: { name: :ehr_auth_info },
+                access_token: { name: :ehr_access_token },
+                smart_credentials: { name: :ehr_smart_credentials }
+              }
             }
-          )
-        else
-          config(
-            inputs: {
-              id_token: { name: :ehr_id_token },
-              client_id: { name: :ehr_client_id },
-              requested_scopes: { name: :ehr_requested_scopes },
-              access_token: { name: :ehr_access_token },
-              smart_credentials: { name: :ehr_smart_credentials }
-            }
-          )
-        end
-      end
 
-      group from: :smart_token_refresh do
-        id :smart_ehr_refresh_without_scopes
-        title 'SMART Token Refresh Without Scopes'
+      group from: :smart_token_refresh,
+            id: :smart_ehr_refresh_without_scopes,
+            title: 'SMART Token Refresh Without Scopes',
+            config: {
+              inputs: {
+                refresh_token: { name: :ehr_refresh_token },
+                auth_info: { name: :ehr_auth_info },
+                received_scopes: { name: :ehr_received_scopes }
+              },
+              outputs: {
+                refresh_token: { name: :ehr_refresh_token },
+                received_scopes: { name: :ehr_received_scopes },
+                access_token: { name: :ehr_access_token },
+                token_retrieval_time: { name: :ehr_token_retrieval_time },
+                expires_in: { name: :ehr_expires_in },
+                smart_credentials: { name: :ehr_smart_credentials }
+              }
+            }
 
-        if Feature.use_auth_info?
-          config(
-            inputs: {
-              refresh_token: { name: :ehr_refresh_token },
-              auth_info: { name: :ehr_auth_info },
-              received_scopes: { name: :ehr_received_scopes }
-            },
-            outputs: {
-              refresh_token: { name: :ehr_refresh_token },
-              received_scopes: { name: :ehr_received_scopes },
-              access_token: { name: :ehr_access_token },
-              token_retrieval_time: { name: :ehr_token_retrieval_time },
-              expires_in: { name: :ehr_expires_in },
-              smart_credentials: { name: :ehr_smart_credentials }
+      group from: :smart_token_refresh,
+            id: :smart_ehr_refresh_with_scopes,
+            title: 'SMART Token Refresh With Scopes',
+            config: {
+              options: { include_scopes: true },
+              inputs: {
+                refresh_token: { name: :ehr_refresh_token },
+                auth_info: { name: :ehr_auth_info },
+                received_scopes: { name: :ehr_received_scopes }
+              },
+              outputs: {
+                refresh_token: { name: :ehr_refresh_token },
+                received_scopes: { name: :ehr_received_scopes },
+                access_token: { name: :ehr_access_token },
+                token_retrieval_time: { name: :ehr_token_retrieval_time },
+                expires_in: { name: :ehr_expires_in },
+                smart_credentials: { name: :ehr_smart_credentials }
+              }
             }
-          )
-        else
-          config(
-            inputs: {
-              refresh_token: { name: :ehr_refresh_token },
-              client_id: { name: :ehr_client_id },
-              client_secret: { name: :ehr_client_secret },
-              received_scopes: { name: :ehr_received_scopes }
-            },
-            outputs: {
-              refresh_token: { name: :ehr_refresh_token },
-              received_scopes: { name: :ehr_received_scopes },
-              access_token: { name: :ehr_access_token },
-              token_retrieval_time: { name: :ehr_token_retrieval_time },
-              expires_in: { name: :ehr_expires_in },
-              smart_credentials: { name: :ehr_smart_credentials }
-            }
-          )
-        end
-      end
-
-      group from: :smart_token_refresh do
-        id :smart_ehr_refresh_with_scopes
-        title 'SMART Token Refresh With Scopes'
-
-        if Feature.use_auth_info?
-          config(
-            options: { include_scopes: true },
-            inputs: {
-              refresh_token: { name: :ehr_refresh_token },
-              auth_info: { name: :ehr_auth_info },
-              received_scopes: { name: :ehr_received_scopes }
-            },
-            outputs: {
-              refresh_token: { name: :ehr_refresh_token },
-              received_scopes: { name: :ehr_received_scopes },
-              access_token: { name: :ehr_access_token },
-              token_retrieval_time: { name: :ehr_token_retrieval_time },
-              expires_in: { name: :ehr_expires_in },
-              smart_credentials: { name: :ehr_smart_credentials }
-            }
-          )
-        else
-          config(
-            options: { include_scopes: true },
-            inputs: {
-              refresh_token: { name: :ehr_refresh_token },
-              client_id: { name: :ehr_client_id },
-              client_secret: { name: :ehr_client_secret },
-              received_scopes: { name: :ehr_received_scopes }
-            },
-            outputs: {
-              refresh_token: { name: :ehr_refresh_token },
-              received_scopes: { name: :ehr_received_scopes },
-              access_token: { name: :ehr_access_token },
-              token_retrieval_time: { name: :ehr_token_retrieval_time },
-              expires_in: { name: :ehr_expires_in },
-              smart_credentials: { name: :ehr_smart_credentials }
-            }
-          )
-        end
-      end
     end
   end
 end

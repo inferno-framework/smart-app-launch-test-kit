@@ -10,12 +10,7 @@ module SMARTAppLaunch
 
     input :id_token_payload_json, :url
     input :smart_credentials, type: :auth_info
-
-    if Feature.use_auth_info?
-      input :auth_info, type: :auth_info, options: { mode: 'auth' }
-    else
-      input :requested_scopes
-    end
+    input :auth_info, type: :auth_info, options: { mode: 'auth' }
 
     output :id_token_fhir_user
 
@@ -25,16 +20,14 @@ module SMARTAppLaunch
     end
 
     run do
-      requested_scopes = Feature.use_auth_info? ? auth_info.requested_scopes : self.requested_scopes
-
       skip_if id_token_payload_json.blank?
-      skip_if !requested_scopes&.include?('fhirUser'), '`fhirUser` scope not requested'
+      skip_if !auth_info.requested_scopes&.include?('fhirUser'), '`fhirUser` scope not requested'
 
       assert_valid_json(id_token_payload_json)
       payload = JSON.parse(id_token_payload_json)
       fhir_user = payload['fhirUser']
 
-      valid_fhir_user_resource_types = ['Patient', 'Practitioner', 'RelatedPerson', 'Person']
+      valid_fhir_user_resource_types = %w[Patient Practitioner RelatedPerson Person]
 
       assert fhir_user.present?, 'ID token does not contain `fhirUser` claim'
 

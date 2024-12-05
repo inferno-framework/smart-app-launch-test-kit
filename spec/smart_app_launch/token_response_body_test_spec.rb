@@ -17,11 +17,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
   let(:input) do
-    if SMARTAppLaunch::Feature.use_auth_info?
-      { auth_info: Inferno::DSL::AuthInfo.new(requested_scopes: 'patient/*.*') }
-    else
-      { requested_scopes: 'patient/*.*' }
-    end
+    { auth_info: Inferno::DSL::AuthInfo.new(requested_scopes: 'patient/*.*') }
   end
 
   def run(runnable, inputs = {})
@@ -124,7 +120,6 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
 
   context 'when the fhirContext field is present' do
     it 'passes if fhirContext valid' do
-      numericalElement = 123
       body = valid_body.merge(fhirContext: ['Organization/123', 'DiagnosticReport/123', 'Observation/123/_history/2'])
       create_token_request(body: body)
 
@@ -206,11 +201,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
     }
     create_token_request(body: inputs)
 
-    if SMARTAppLaunch::Feature.use_auth_info?
-      input[:auth_info].requested_scopes = 'SCOPE'
-    else
-      input[:requested_scopes] = 'SCOPE'
-    end
+    input[:auth_info].requested_scopes = 'SCOPE'
     result = run(test, input)
 
     expect(result.result).to eq('pass')

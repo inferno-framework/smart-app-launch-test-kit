@@ -1,8 +1,8 @@
 require_relative 'backend_services_authorization_request_builder'
 require_relative 'backend_services_authorization_group'
 
-module SMARTAppLaunch 
-  class BackendServicesAuthorizationRequestSuccessTest < Inferno::Test 
+module SMARTAppLaunch
+  class BackendServicesAuthorizationRequestSuccessTest < Inferno::Test
     id :smart_backend_services_auth_request_success
     title 'Authorization request succeeds when supplied correct information'
     description <<~DESCRIPTION
@@ -10,12 +10,20 @@ module SMARTAppLaunch
       states "If the access token request is valid and authorized, the authorization server SHALL issue an access token in response."
     DESCRIPTION
 
-    input :client_auth_encryption_method, 
-          :backend_services_requested_scope, 
-          :backend_services_client_id, 
-          :smart_token_url
-    input :backend_services_jwks_kid,
-          optional: true
+    input :smart_token_url
+    input :auth_info,
+          type: :auth_info,
+          options: {
+            mode: 'auth',
+            components: [
+              {
+                name: :auth_type,
+                type: 'select',
+                default: 'backend_services',
+                locked: 'true'
+              }
+            ]
+          }
 
     output :authentication_response
 
@@ -24,12 +32,14 @@ module SMARTAppLaunch
     end
 
     run do
-      post_request_content = BackendServicesAuthorizationRequestBuilder.build(encryption_method: client_auth_encryption_method,
-                                                                scope: backend_services_requested_scope,
-                                                                iss: backend_services_client_id,
-                                                                sub: backend_services_client_id,
-                                                                aud: smart_token_url,
-                                                                kid: backend_services_jwks_kid)
+      post_request_content = BackendServicesAuthorizationRequestBuilder.build(
+        encryption_method: auth_info.encryption_algorithm,
+        scope: auth_info.requested_scopes,
+        iss: auth_info.client_id,
+        sub: auth_info.client_id,
+        aud: smart_token_url,
+        kid: auth_info.kid
+      )
 
       authentication_response = post(**{ client: :token_endpoint }.merge(post_request_content))
 

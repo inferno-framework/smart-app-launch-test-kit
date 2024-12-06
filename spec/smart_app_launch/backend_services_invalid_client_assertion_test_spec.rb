@@ -2,7 +2,6 @@ require_relative '../../lib/smart_app_launch/backend_services_invalid_client_ass
 require_relative '../../lib/smart_app_launch/backend_services_authorization_request_builder'
 
 RSpec.describe SMARTAppLaunch::BackendServicesInvalidClientAssertionTest do
-
   let(:test) { Inferno::Repositories::Tests.new.find('smart_backend_services_invalid_client_assertion') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:suite_id) { 'smart_stu2'}
@@ -18,9 +17,12 @@ RSpec.describe SMARTAppLaunch::BackendServicesInvalidClientAssertionTest do
   let(:input) do
     {
       smart_token_url:,
-      client_auth_encryption_method:,
-      backend_services_requested_scope:,
-      backend_services_client_id:
+      auth_info: Inferno::DSL::AuthInfo.new(
+        auth_type: 'backend_services',
+        client_id: backend_services_client_id,
+        requested_scopes: backend_services_requested_scope,
+        encryption_algorithm: client_auth_encryption_method
+      )
     }
   end
   let(:builder_input) do

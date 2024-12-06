@@ -33,16 +33,9 @@ module SMARTAppLaunch
 
     config(
       inputs: {
-        use_pkce: {
-          default: 'true',
-          locked: true
-        },
-        pkce_code_challenge_method: {
-          default: 'S256',
-          locked: true
-        },
-        requested_scopes: {
-          default: 'launch openid fhirUser offline_access user/*.rs'
+        auth_info: {
+          name: :ehr_auth_info,
+          default: { requested_scopes: 'launch openid fhirUser offline_access user/*.rs' }.to_json
         }
       }
     )

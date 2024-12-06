@@ -26,7 +26,7 @@ module SMARTAppLaunch
       body = JSON.parse(response[:body])
       output refresh_token: body['refresh_token'] if body.key? 'refresh_token'
 
-      required_fields = ['access_token', 'token_type', 'expires_in', 'scope']
+      required_fields = %w[access_token token_type expires_in scope]
       validate_required_fields_present(body, required_fields)
 
       old_received_scopes = received_scopes

@@ -98,8 +98,7 @@ module SMARTAppLaunch
             config: {
               inputs: {
                 id_token: { name: :standalone_id_token },
-                client_id: { name: :standalone_client_id },
-                requested_scopes: { name: :standalone_requested_scopes },
+                auth_info: { name: :standalone_auth_info },
                 access_token: { name: :standalone_access_token },
                 smart_credentials: { name: :standalone_smart_credentials }
               }
@@ -111,8 +110,7 @@ module SMARTAppLaunch
             config: {
               inputs: {
                 refresh_token: { name: :standalone_refresh_token },
-                client_id: { name: :standalone_client_id },
-                client_secret: { name: :standalone_client_secret },
+                auth_info: { name: :standalone_auth_info },
                 received_scopes: { name: :standalone_received_scopes }
               },
               outputs: {
@@ -132,8 +130,7 @@ module SMARTAppLaunch
               options: { include_scopes: true },
               inputs: {
                 refresh_token: { name: :standalone_refresh_token },
-                client_id: { name: :standalone_client_id },
-                client_secret: { name: :standalone_client_secret },
+                auth_info: { name: :standalone_auth_info },
                 received_scopes: { name: :standalone_received_scopes }
               },
               outputs: {
@@ -174,8 +171,7 @@ module SMARTAppLaunch
             config: {
               inputs: {
                 id_token: { name: :ehr_id_token },
-                client_id: { name: :ehr_client_id },
-                requested_scopes: { name: :ehr_requested_scopes },
+                auth_info: { name: :ehr_auth_info },
                 access_token: { name: :ehr_access_token },
                 smart_credentials: { name: :ehr_smart_credentials }
               }
@@ -187,8 +183,7 @@ module SMARTAppLaunch
             config: {
               inputs: {
                 refresh_token: { name: :ehr_refresh_token },
-                client_id: { name: :ehr_client_id },
-                client_secret: { name: :ehr_client_secret },
+                auth_info: { name: :ehr_auth_info },
                 received_scopes: { name: :ehr_received_scopes }
               },
               outputs: {
@@ -208,8 +203,7 @@ module SMARTAppLaunch
               options: { include_scopes: true },
               inputs: {
                 refresh_token: { name: :ehr_refresh_token },
-                client_id: { name: :ehr_client_id },
-                client_secret: { name: :ehr_client_secret },
+                auth_info: { name: :ehr_auth_info },
                 received_scopes: { name: :ehr_received_scopes }
               },
               outputs: {
@@ -237,7 +231,12 @@ module SMARTAppLaunch
       run_as_group
 
       group from: :smart_discovery_stu2_2
-      group from: :backend_services_authorization
+      group from: :backend_services_authorization,
+            config: {
+              inputs: {
+                auth_info: { name: :backend_services_auth_info }
+              }
+            }
     end
 
     group from: :smart_token_introspection_stu2_2

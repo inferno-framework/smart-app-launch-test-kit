@@ -18,10 +18,12 @@ RSpec.describe SMARTAppLaunch::EHRLaunchGroup do
       url: url,
       smart_authorization_url: "#{url}/auth",
       smart_token_url: token_url,
-      client_id: 'CLIENT_ID',
-      requested_scopes: 'launch/patient patient/*.*',
       client_auth_type: 'public',
-      use_pkce: 'false'
+      auth_info: Inferno::DSL::AuthInfo.new(
+        client_id: 'CLIENT_ID',
+        requested_scopes: 'launch/patient patient/*.*',
+        pkce_support: 'disabled'
+      )
     }
   end
   let(:token_response) do
@@ -94,7 +96,7 @@ RSpec.describe SMARTAppLaunch::EHRLaunchGroup do
       ehr_received_scopes: token_response[:scope],
       ehr_intent: token_response[:intent]
     }
-    other_outputs = [:ehr_code, :ehr_state, :ehr_token_retrieval_time]
+    other_outputs = %i[ehr_code ehr_state ehr_token_retrieval_time]
 
     expected_outputs.each do |name, value|
       expect(session_data_repo.load(test_session_id: test_session.id, name: name)).to eq(value.to_s)
@@ -104,7 +106,7 @@ RSpec.describe SMARTAppLaunch::EHRLaunchGroup do
       expect(session_data_repo.load(test_session_id: test_session.id, name: name)).to be_present
     end
 
-    [:ehr_launch, :ehr_redirect, :ehr_token].each do |name|
+    %i[ehr_launch ehr_redirect ehr_token].each do |name|
       expect(requests_repo.find_named_request(test_session.id, name)).to be_present
     end
   end

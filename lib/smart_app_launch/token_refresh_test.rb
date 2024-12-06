@@ -16,17 +16,18 @@ module SMARTAppLaunch
       the Pragma response header field with a value of no-cache to be
       consistent with the requirements of the inital access token exchange.
     )
-    input :smart_token_url, :refresh_token, :client_id, :received_scopes
-    input :client_secret, optional: true
+    input :smart_token_url, :refresh_token, :received_scopes
+    input :auth_info, type: :auth_info, options: { mode: 'auth' }
+
     output :smart_credentials, :token_retrieval_time
     makes_request :token_refresh
 
     def add_credentials_to_request(oauth2_headers, oauth2_params)
-      if client_secret.present?
-        credentials = Base64.strict_encode64("#{client_id}:#{client_secret}")
+      if auth_info.client_secret.present?
+        credentials = Base64.strict_encode64("#{auth_info.client_id}:#{auth_info.client_secret}")
         oauth2_headers['Authorization'] = "Basic #{credentials}"
       else
-        oauth2_params['client_id'] = client_id
+        oauth2_params['client_id'] = auth_info.client_id
       end
     end
 
@@ -56,12 +57,13 @@ module SMARTAppLaunch
 
       token_response_body = JSON.parse(request.response_body)
       output smart_credentials: {
+        auth_type: auth_info.auth_type,
         refresh_token: token_response_body['refresh_token'].presence || refresh_token,
         access_token: token_response_body['access_token'],
         expires_in: token_response_body['expires_in'],
-        client_id:,
-        client_secret:,
-        token_retrieval_time:,
+        client_id: auth_info.client_id,
+        client_secret: auth_info.client_secret,
+        issue_time: token_retrieval_time,
         token_url: smart_token_url
       }.to_json
     end

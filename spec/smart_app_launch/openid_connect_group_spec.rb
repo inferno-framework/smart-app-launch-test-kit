@@ -27,7 +27,7 @@ RSpec.describe SMARTAppLaunch::OpenIDConnectGroup do
       refresh_token: 'REFRESH_TOKEN',
       expires_in: 3600,
       client_id: client_id,
-      token_retrieval_time: Time.now.iso8601,
+      issue_time: Time.now.iso8601,
       token_url: 'http://example.com/token'
     }.to_json
   end
@@ -35,9 +35,9 @@ RSpec.describe SMARTAppLaunch::OpenIDConnectGroup do
     {
       registration_endpoint: 'https://www.example.com/register',
       token_endpoint: 'https://www.example.com/token',
-      token_endpoint_auth_methods_supported: ['client_secret_post', 'client_secret_basic', 'none'],
+      token_endpoint_auth_methods_supported: %w[client_secret_post client_secret_basic none],
       jwks_uri: 'https://www.example.com/jwk',
-      id_token_signing_alg_values_supported: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'none'],
+      id_token_signing_alg_values_supported: %w[HS256 HS384 HS512 RS256 RS384 RS512 none],
       authorization_endpoint: 'https://www.example.com/authorize',
       introspection_endpoint: 'https://www.example.com/introspect',
       response_types_supported: ['code'],
@@ -80,14 +80,17 @@ RSpec.describe SMARTAppLaunch::OpenIDConnectGroup do
     stub_request(:get, payload[:fhirUser])
       .to_return(status: 200, body: FHIR::Patient.new(id: '123').to_json)
 
-    run(
-      group,
+    inputs = {
       id_token: id_token,
-      client_id: client_id,
-      requested_scopes: 'openid fhirUser',
       url: url,
-      smart_credentials: smart_credentials
-    )
+      smart_credentials: smart_credentials,
+      auth_info: Inferno::DSL::AuthInfo.new(
+        client_id:,
+        requested_scopes: 'openid fhirUser'
+      )
+    }
+
+    run(group, inputs)
     results = results_repo.current_results_for_test_session(test_session.id)
 
     expect(results.map(&:result)).to all(eq('pass'))

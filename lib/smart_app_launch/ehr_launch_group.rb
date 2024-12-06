@@ -40,23 +40,9 @@ module SMARTAppLaunch
 
     config(
       inputs: {
-        client_id: {
-          name: :ehr_client_id,
-          title: 'EHR Launch Client ID',
-          description: 'Client ID provided during registration of Inferno as an EHR launch application'
-        },
-        client_secret: {
-          name: :ehr_client_secret,
-          title: 'EHR Launch Client Secret',
-          description: 'Client Secret provided during registration of Inferno as an EHR launch application. ' \
-                       'Only for clients using confidential symmetric authentication.'
-        },
-        requested_scopes: {
-          name: :ehr_requested_scopes,
-          title: 'EHR Launch Scope',
-          description: 'OAuth 2.0 scope provided by system to enable all required functionality',
-          type: 'textarea',
-          default: 'launch openid fhirUser offline_access user/*.read'
+        auth_info: {
+          name: :ehr_auth_info,
+          default: { requested_scopes: 'launch openid fhirUser offline_access user/*.read' }.to_json
         },
         url: {
           title: 'EHR Launch FHIR Endpoint',
@@ -109,7 +95,7 @@ module SMARTAppLaunch
          ),
          config: {
            inputs: { url: { name: :smart_authorization_url } },
-           options: {  minimum_allowed_version: OpenSSL::SSL::TLS1_2_VERSION }
+           options: { minimum_allowed_version: OpenSSL::SSL::TLS1_2_VERSION }
          }
     test from: :smart_app_redirect do
       input :launch
@@ -125,7 +111,7 @@ module SMARTAppLaunch
          ),
          config: {
            inputs: { url: { name: :smart_token_url } },
-           options: {  minimum_allowed_version: OpenSSL::SSL::TLS1_2_VERSION }
+           options: { minimum_allowed_version: OpenSSL::SSL::TLS1_2_VERSION }
          }
     test from: :smart_token_exchange
     test from: :smart_token_response_body

@@ -34,10 +34,10 @@ module SMARTAppLaunch
     }
 
     description <<~DESCRIPTION
-      The SMART App Launch Test Suite verifies that systems correctly implement 
-      the [SMART App Launch IG](http://hl7.org/fhir/smart-app-launch/1.0.0/) 
-      for providing authorization and/or authentication services to client 
-      applications accessing HL7® FHIR® APIs. To get started, please first register 
+      The SMART App Launch Test Suite verifies that systems correctly implement
+      the [SMART App Launch IG](http://hl7.org/fhir/smart-app-launch/1.0.0/)
+      for providing authorization and/or authentication services to client
+      applications accessing HL7® FHIR® APIs. To get started, please first register
       the Inferno client as a SMART App with the following information:
 
       * SMART Launch URI: `#{config.options[:launch_uri]}`
@@ -64,8 +64,7 @@ module SMARTAppLaunch
             config: {
               inputs: {
                 id_token: { name: :standalone_id_token },
-                client_id: { name: :standalone_client_id },
-                requested_scopes: { name: :standalone_requested_scopes },
+                auth_info: { name: :standalone_auth_info },
                 access_token: { name: :standalone_access_token },
                 smart_credentials: { name: :standalone_smart_credentials }
               }
@@ -77,8 +76,7 @@ module SMARTAppLaunch
             config: {
               inputs: {
                 refresh_token: { name: :standalone_refresh_token },
-                client_id: { name: :standalone_client_id },
-                client_secret: { name: :standalone_client_secret },
+                auth_info: { name: :standalone_auth_info },
                 received_scopes: { name: :standalone_received_scopes }
               },
               outputs: {
@@ -98,8 +96,7 @@ module SMARTAppLaunch
               options: { include_scopes: true },
               inputs: {
                 refresh_token: { name: :standalone_refresh_token },
-                client_id: { name: :standalone_client_id },
-                client_secret: { name: :standalone_client_secret },
+                auth_info: { name: :standalone_auth_info },
                 received_scopes: { name: :standalone_received_scopes }
               },
               outputs: {
@@ -135,8 +132,7 @@ module SMARTAppLaunch
             config: {
               inputs: {
                 id_token: { name: :ehr_id_token },
-                client_id: { name: :ehr_client_id },
-                requested_scopes: { name: :ehr_requested_scopes },
+                auth_info: { name: :ehr_auth_info },
                 access_token: { name: :ehr_access_token },
                 smart_credentials: { name: :ehr_smart_credentials }
               }
@@ -148,8 +144,7 @@ module SMARTAppLaunch
             config: {
               inputs: {
                 refresh_token: { name: :ehr_refresh_token },
-                client_id: { name: :ehr_client_id },
-                client_secret: { name: :ehr_client_secret },
+                auth_info: { name: :ehr_auth_info },
                 received_scopes: { name: :ehr_received_scopes }
               },
               outputs: {
@@ -169,8 +164,7 @@ module SMARTAppLaunch
               options: { include_scopes: true },
               inputs: {
                 refresh_token: { name: :ehr_refresh_token },
-                client_id: { name: :ehr_client_id },
-                client_secret: { name: :ehr_client_secret },
+                auth_info: { name: :ehr_auth_info },
                 received_scopes: { name: :ehr_received_scopes }
               },
               outputs: {

@@ -1,7 +1,7 @@
 require_relative 'backend_services_authorization_request_builder'
 
-module SMARTAppLaunch 
-  class BackendServicesAuthorizationResponseBodyTest < Inferno::Test 
+module SMARTAppLaunch
+  class BackendServicesAuthorizationResponseBodyTest < Inferno::Test
     id :smart_backend_services_auth_response_body
     title 'Authorization request response body contains required information encoded in JSON'
     description <<~DESCRIPTION
@@ -30,7 +30,7 @@ module SMARTAppLaunch
 
       output bearer_token: access_token
 
-      required_keys = ['token_type', 'expires_in', 'scope']
+      required_keys = %w[token_type expires_in scope]
 
       required_keys.each do |key|
         assert response_body[key].present?, "Token response did not contain #{key} as required"

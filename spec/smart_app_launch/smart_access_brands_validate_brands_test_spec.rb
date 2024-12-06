@@ -135,6 +135,22 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBrands do
       expect(validation_request).to have_been_made.times(2)
     end
 
+    it 'fails if Brand partOf references an Organization that does not exist' do
+      validation_request = stub_request(:post, "#{validator_url}/validate")
+        .to_return(status: 200, body: operation_outcome_success.to_json)
+
+      smart_access_brands_bundle.entry.shift
+      allow_any_instance_of(test).to receive(:scratch_bundle_resource).and_return(smart_access_brands_bundle)
+
+      result = run(test)
+
+      expect(result.result).to eq('fail')
+      expect(entity_result_message.message).to match(
+        'Organization with id: ehchospital references parent Organization not found in the Bundle'
+      )
+      expect(validation_request).to have_been_made.times(1)
+    end
+
     it 'fails if Brand contains Endpoint in portal extension but not Organization.endpoint' do
       validation_request = stub_request(:post, "#{validator_url}/validate")
         .to_return(status: 200, body: operation_outcome_success.to_json)

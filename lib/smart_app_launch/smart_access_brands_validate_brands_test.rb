@@ -39,9 +39,12 @@ module SMARTAppLaunch
         portal_endpoint_found = organization_endpoints.any? do |endpoint_reference|
           portal_endpoint.valueReference.reference == endpoint_reference
         end
-        assert(portal_endpoint_found, %(
+        next if portal_endpoint_found
+
+        add_message('error', %(
           Portal endpoints must also appear at Organization.endpoint. The portal endpoint with reference
-          #{portal_endpoint.valueReference.reference} was not found at Organization.endpoint.))
+          #{portal_endpoint.valueReference.reference} was not found at Organization.endpoint.
+        ))
       end
     end
 
@@ -66,17 +69,14 @@ module SMARTAppLaunch
       )
       skip_if bundle_resource.entry.empty?, 'The given Bundle does not contain any resources'
 
-      assert_valid_bundle_entries(bundle: bundle_resource,
-                                  resource_types: {
-                                    Organization: 'http://hl7.org/fhir/smart-app-launch/StructureDefinition/user-access-brand'
-                                  })
-
       organization_resources = bundle_resource
         .entry
         .map(&:resource)
         .select { |resource| resource.resourceType == 'Organization' }
 
       organization_resources.each do |organization|
+        resource_is_valid?(resource: organization)
+
         endpoint_references = organization.endpoint.map(&:reference)
 
         if organization.extension.present?
@@ -89,11 +89,30 @@ module SMARTAppLaunch
 
         endpoint_references.each do |endpoint_id_ref|
           organization_referenced_endpts = find_referenced_endpoint(bundle_resource, endpoint_id_ref)
-          assert !organization_referenced_endpts.empty?,
-                 "Organization with id: #{organization.id} references an Endpoint that is not contained in this
-                   bundle."
+          next unless organization_referenced_endpts.empty?
+
+          add_message('error', %(
+            Organization with id: #{organization.id} references an Endpoint that is not contained in this
+            bundle.
+          ))
         end
       end
+
+      error_messages = messages.select { |msg| msg[:type] == 'error' }
+      non_error_messages = messages.reject { |msg| msg[:type] == 'error' }
+
+      @messages = []
+      @messages += error_messages.first(20) unless error_messages.empty?
+      @messages += non_error_messages.first(50) unless non_error_messages.empty?
+
+      if error_messages.count > 20 || non_error_messages.count > 50
+        info_message = 'Inferno is only showing the first 20 error and 50 warning/information validation messages'
+        add_message('info', info_message)
+      end
+
+      assert messages.empty? || messages.none? { |msg| msg[:type] == 'error' }, %(
+        Some Organizations in the Service Base URL Bundle are invalid
+      )
     end
   end
 end

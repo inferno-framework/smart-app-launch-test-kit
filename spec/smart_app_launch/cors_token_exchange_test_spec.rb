@@ -18,7 +18,9 @@ RSpec.describe SMARTAppLaunch::CORSTokenExchangeTest do
     }
   end
 
-  let(:client_auth_type) { 'public' }
+  let(:inputs) do
+    { auth_info: Inferno::DSL::AuthInfo.new(auth_type: 'public') }
+  end
 
   def run(runnable, inputs = {})
     test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
@@ -62,7 +64,7 @@ RSpec.describe SMARTAppLaunch::CORSTokenExchangeTest do
   it 'passes if the token request contains a valid cors header with Inferno Origin' do
     create_cors_token_request(body: valid_body, headers: cors_header_origin(Inferno::Application['inferno_host']))
 
-    result = run(test, client_auth_type:)
+    result = run(test, inputs)
 
     expect(result.result).to eq('pass')
   end
@@ -70,13 +72,13 @@ RSpec.describe SMARTAppLaunch::CORSTokenExchangeTest do
   it 'passes if the token request contains a valid wildcard cors header' do
     create_cors_token_request(body: valid_body, headers: cors_header_origin('*'))
 
-    result = run(test, client_auth_type:)
+    result = run(test, inputs)
 
     expect(result.result).to eq('pass')
   end
 
   it 'skips if the previous token request was not made' do
-    result = run(test, client_auth_type:)
+    result = run(test, inputs)
 
     expect(result.result).to eq('skip')
     expect(result.result_message).to match(/was not made/)
@@ -84,7 +86,9 @@ RSpec.describe SMARTAppLaunch::CORSTokenExchangeTest do
 
   it 'omits if the client auth type is not public' do
     create_cors_token_request(body: valid_body, headers: cors_header_origin('*'))
-    result = run(test, client_auth_type: 'confidential_symmetric')
+
+    inputs[:auth_info].auth_type = 'symmetric'
+    result = run(test, inputs)
 
     expect(result.result).to eq('omit')
     expect(result.result_message).to match(/Client type is not public/)
@@ -93,7 +97,7 @@ RSpec.describe SMARTAppLaunch::CORSTokenExchangeTest do
   it 'fails if the CORS header is not included in response' do
     create_cors_token_request(body: valid_body, headers: [])
 
-    result = run(test, client_auth_type:)
+    result = run(test, inputs)
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/Request must have `Access-Control-Allow-Origin`/)
   end
@@ -101,7 +105,7 @@ RSpec.describe SMARTAppLaunch::CORSTokenExchangeTest do
   it 'fails if the CORS header is not valid' do
     create_cors_token_request(body: valid_body, headers: cors_header_origin('incorrect_origin'))
 
-    result = run(test, client_auth_type:)
+    result = run(test, inputs)
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/Request must have `Access-Control-Allow-Origin`/)
   end

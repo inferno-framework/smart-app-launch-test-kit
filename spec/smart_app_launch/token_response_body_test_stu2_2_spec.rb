@@ -16,6 +16,9 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
   end
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'smart_stu2_2') }
+  let(:runnable_inputs) do
+    { auth_info: Inferno::DSL::AuthInfo.new(requested_scopes: 'patient/*.*') }
+  end
 
   def run(runnable, inputs = {})
     test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
@@ -59,7 +62,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
   it 'passes if the body contains the required fields' do
     create_token_request(body: valid_body)
 
-    result = run(test, requested_scopes: 'patient/*.*')
+    result = run(test, runnable_inputs)
 
     expect(result.result).to eq('pass')
   end
@@ -67,7 +70,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
   it 'skips if the token request was not successful' do
     create_token_request(body: { access_token: 'ACCESS_TOKEN', token_type: 'bearer' }, status: 500)
 
-    result = run(test, requested_scopes: 'patient/*.*')
+    result = run(test, runnable_inputs)
 
     expect(result.result).to eq('skip')
     expect(result.result_message).to match(/was unsuccessful/)
@@ -76,7 +79,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
   it 'fails if the body is not valid json' do
     create_token_request(body: '[[')
 
-    result = run(test, requested_scopes: 'patient/*.*')
+    result = run(test, runnable_inputs)
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/Invalid JSON/)
   end
@@ -86,7 +89,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
       bad_body = valid_body.reject { |key, _| key == field }
       create_token_request(body: bad_body)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, runnable_inputs)
 
       expect(result.result).to eq('fail')
       expect(result.result_message).to match(/`#{field}`/)
@@ -98,7 +101,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
       body = valid_body.merge(field => 123)
       create_token_request(body:)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, runnable_inputs)
 
       expect(result.result).to eq('fail')
       expect(result.result_message).to match(/String/)
@@ -108,7 +111,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
       body = valid_body.merge(field => '123')
       create_token_request(body:)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, runnable_inputs)
 
       expect(result.result).to eq('fail')
       expect(result.result_message).to match(/Numeric/)
@@ -130,7 +133,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
                                             { identifier: identifierObj, type: 'Organization' }])
       create_token_request(body:)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, runnable_inputs)
       expect(result.result).to eq('pass')
     end
 
@@ -138,7 +141,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
       body = valid_body.merge(fhirContext: 'Organization/123')
       create_token_request(body:)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, runnable_inputs)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match('`fhirContext` field is a String, but should be an Array')
     end
@@ -147,7 +150,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
       body = valid_body.merge(fhirContext: [{ reference: 'Organization/123' }, 'Organization/123'])
       create_token_request(body:)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, runnable_inputs)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match('`\"Organization/123\"` is not an Object')
     end
@@ -156,7 +159,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
       body = valid_body.merge(fhirContext: [{ resource: 'Organization/123' }])
       create_token_request(body:)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, runnable_inputs)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match(
         '`fhirContext` array SHALL include at least one of "reference", "canonical", or "identifier"'
@@ -168,7 +171,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
       body = valid_body.merge(fhirContext: [{ reference: 'Organization/123' }, { reference: numericalElement }])
       create_token_request(body:)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, runnable_inputs)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match("`#{numericalElement}` is not a String")
     end
@@ -178,7 +181,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
       body = valid_body.merge(fhirContext: [{ reference: canonicalURL }])
       create_token_request(body:)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, runnable_inputs)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match("`#{canonicalURL}` is not a relative reference")
     end
@@ -188,7 +191,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
       body = valid_body.merge(fhirContext: [{ reference: "#{invalidResourceType}/123" }])
       create_token_request(body:)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, runnable_inputs)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match(
         "`#{invalidResourceType}` in `reference` is not a valid FHIR resource type"
@@ -200,7 +203,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
       body = valid_body.merge(fhirContext: [{ reference: "Organization/#{invalidFhirID}" }])
       create_token_request(body:)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, runnable_inputs)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match("`#{invalidFhirID}` in `reference` is not a valid FHIR id")
     end
@@ -210,7 +213,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
       body = valid_body.merge(fhirContext: [{ reference: 'Organization/123' }, { canonical: numericalElement }])
       create_token_request(body:)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, runnable_inputs)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match("`#{numericalElement}` is not a String")
     end
@@ -219,7 +222,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
       body = valid_body.merge(fhirContext: [{ canonical: 'Organization/123' }])
       create_token_request(body:)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, runnable_inputs)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match('`Organization/123` is not a canonical reference')
     end
@@ -229,7 +232,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
       body = valid_body.merge(fhirContext: [{ canonical: canonicalURL }])
       create_token_request(body:)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, runnable_inputs)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match('`Hospital` in `canonical` is not a valid FHIR resource type')
     end
@@ -240,7 +243,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
       body = valid_body.merge(fhirContext: [{ canonical: canonicalURL }])
       create_token_request(body:)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, runnable_inputs)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match("`#{invalidFhirID}` in `canonical` is not a valid FHIR id")
     end
@@ -249,7 +252,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
       body = valid_body.merge(fhirContext: [{ reference: 'Organization/123' }, { identifier: 'Organization/123' }])
       create_token_request(body:)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, runnable_inputs)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match('`"Organization/123"` is not an Object')
     end
@@ -258,7 +261,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
       body = valid_body.merge(fhirContext: [{ reference: 'Organization/123', type: 'Hospital' }])
       create_token_request(body:)
 
-      result = run(test, requested_scopes: 'patient/*.*')
+      result = run(test, runnable_inputs)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match('`Hospital` in `type` is not a valid FHIR resource type')
     end
@@ -288,7 +291,8 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
     }
     create_token_request(body: inputs)
 
-    result = run(test, requested_scopes: 'SCOPE')
+    runnable_inputs[:auth_info].requested_scopes = 'SCOPE'
+    result = run(test, runnable_inputs)
 
     expect(result.result).to eq('pass')
 

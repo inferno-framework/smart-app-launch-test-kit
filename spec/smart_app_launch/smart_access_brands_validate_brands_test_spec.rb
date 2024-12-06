@@ -6,6 +6,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBrands do
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'smart_access_brands') }
   let(:result) { repo_create(:result, test_session_id: test_session.id) }
+  let(:runnable) { Inferno::Repositories::Tests.new.find('smart_access_brands_valid_brands') }
 
   let(:smart_access_brands_bundle) do
     FHIR.from_contents(File.read(File.join(
@@ -35,6 +36,13 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBrands do
   end
 
   let(:validator_url) { ENV.fetch('FHIR_RESOURCE_VALIDATOR_URL') }
+
+  def entity_result_message
+    results_repo.current_results_for_test_session_and_runnables(test_session.id, [runnable])
+      .first
+      .messages
+      .first
+  end
 
   def run(runnable, inputs = {})
     test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
@@ -106,7 +114,9 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBrands do
       result = run(test)
 
       expect(result.result).to eq('fail')
-      expect(result.result_message).to eq('The following bundle entries are invalid: Organization#examplehospital')
+      expect(entity_result_message.message).to match(
+        'Resource does not conform to profile'
+      )
       expect(validation_request).to have_been_made
     end
 
@@ -120,7 +130,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBrands do
       result = run(test)
 
       expect(result.result).to eq('fail')
-      expect(result.result_message).to match('Portal endpoints must also appear at Organization.endpoint')
+      expect(entity_result_message.message).to match('Portal endpoints must also appear at Organization.endpoint')
       expect(validation_request).to have_been_made
     end
 
@@ -134,7 +144,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBrands do
       result = run(test)
 
       expect(result.result).to eq('fail')
-      expect(result.result_message).to match(
+      expect(entity_result_message.message).to match(
         'Organization with id: examplehospital references an Endpoint that is not contained'
       )
       expect(validation_request).to have_been_made

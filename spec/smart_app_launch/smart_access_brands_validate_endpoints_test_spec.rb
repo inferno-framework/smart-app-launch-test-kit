@@ -6,6 +6,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpoints do
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'smart_access_brands') }
   let(:result) { repo_create(:result, test_session_id: test_session.id) }
+  let(:runnable) { Inferno::Repositories::Tests.new.find('smart_access_brands_valid_endpoints') }
 
   let(:smart_access_brands_bundle) do
     FHIR.from_contents(File.read(File.join(
@@ -35,6 +36,13 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpoints do
   end
 
   let(:validator_url) { ENV.fetch('FHIR_RESOURCE_VALIDATOR_URL') }
+
+  def entity_result_message
+    results_repo.current_results_for_test_session_and_runnables(test_session.id, [runnable])
+      .first
+      .messages
+      .first
+  end
 
   def run(runnable, inputs = {})
     test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
@@ -117,9 +125,11 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpoints do
       result = run(test)
 
       expect(result.result).to eq('fail')
-      expect(result.result_message).to eq(
-        'The following bundle entries are invalid: Endpoint#examplehospital-ehr1, Endpoint#examplehospital-ehr2'
+
+      expect(entity_result_message.message).to match(
+        'Resource does not conform to profile'
       )
+
       expect(validation_request).to have_been_made.times(2)
     end
 
@@ -133,7 +143,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpoints do
       result = run(test)
 
       expect(result.result).to eq('fail')
-      expect(result.result_message).to match(
+      expect(entity_result_message.message).to match(
         'Endpoint with id: examplehospital-ehr2 does not have any associated Organizations in the Bundle'
       )
       expect(validation_request).to have_been_made.times(2)

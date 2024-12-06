@@ -14,7 +14,7 @@ module SMARTAppLaunch
     )
     id :smart_token_response_body_stu2_2
 
-    input :requested_scopes
+    input :auth_info, type: :auth_info, options: { mode: 'auth' }
     output :id_token,
            :refresh_token,
            :access_token,

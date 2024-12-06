@@ -13,7 +13,7 @@ RSpec.describe SMARTAppLaunch::CORSOpenIDFHIRUserClaimTest do
       refresh_token: 'REFRESH_TOKEN',
       expires_in: 3600,
       client_id:,
-      token_retrieval_time: Time.now.iso8601,
+      issue_time: Time.now.iso8601,
       token_url: 'http://example.com/token'
     }.to_json
   end
@@ -43,8 +43,8 @@ RSpec.describe SMARTAppLaunch::CORSOpenIDFHIRUserClaimTest do
   it 'passes when the fhir user can be retrieved with valid origin cors header' do
     user_request =
       stub_request(:get, id_token_fhir_user)
-        .to_return(status: 200, body: FHIR::Patient.new(id: '123').to_json,
-                   headers: cors_header(Inferno::Application['inferno_host']))
+      .to_return(status: 200, body: FHIR::Patient.new(id: '123').to_json,
+                 headers: cors_header(Inferno::Application['inferno_host']))
 
     result = run(
       test,
@@ -60,8 +60,8 @@ RSpec.describe SMARTAppLaunch::CORSOpenIDFHIRUserClaimTest do
   it 'passes when the fhir user can be retrieved with valid wildcard cors header' do
     user_request =
       stub_request(:get, id_token_fhir_user)
-        .to_return(status: 200, body: FHIR::Patient.new(id: '123').to_json,
-                   headers: cors_header('*'))
+      .to_return(status: 200, body: FHIR::Patient.new(id: '123').to_json,
+                 headers: cors_header('*'))
     result = run(
       test,
       url:,
@@ -76,8 +76,8 @@ RSpec.describe SMARTAppLaunch::CORSOpenIDFHIRUserClaimTest do
   it 'fails when a non-200 response is received' do
     user_request =
       stub_request(:get, id_token_fhir_user)
-        .to_return(status: 500, body: FHIR::Patient.new(id: '123').to_json,
-                   headers: cors_header(Inferno::Application['inferno_host']))
+      .to_return(status: 500, body: FHIR::Patient.new(id: '123').to_json,
+                 headers: cors_header(Inferno::Application['inferno_host']))
 
     result = run(
       test,
@@ -94,7 +94,7 @@ RSpec.describe SMARTAppLaunch::CORSOpenIDFHIRUserClaimTest do
   it 'fails when a response with no cors header is received' do
     user_request =
       stub_request(:get, id_token_fhir_user)
-        .to_return(status: 200, body: FHIR::Patient.new(id: '123').to_json)
+      .to_return(status: 200, body: FHIR::Patient.new(id: '123').to_json)
 
     result = run(
       test,
@@ -111,8 +111,8 @@ RSpec.describe SMARTAppLaunch::CORSOpenIDFHIRUserClaimTest do
   it 'fails when a response with incorrect cors header is received' do
     user_request =
       stub_request(:get, id_token_fhir_user)
-        .to_return(status: 200, body: FHIR::Patient.new(id: '123').to_json,
-                   headers: cors_header('https://incorrect-origin.com'))
+      .to_return(status: 200, body: FHIR::Patient.new(id: '123').to_json,
+                 headers: cors_header('https://incorrect-origin.com'))
 
     result = run(
       test,

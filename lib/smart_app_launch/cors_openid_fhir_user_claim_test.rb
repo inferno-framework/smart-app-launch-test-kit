@@ -16,16 +16,16 @@ module SMARTAppLaunch
     optional
 
     input :url, :id_token_fhir_user
-    input :smart_credentials, type: :oauth_credentials
+    input :smart_credentials, type: :auth_info
 
     fhir_client do
       url :url
-      oauth_credentials :smart_credentials
+      auth_info :smart_credentials
       headers 'Origin' => Inferno::Application['inferno_host']
     end
 
     run do
-      valid_fhir_user_resource_types = ['Patient', 'Practitioner', 'RelatedPerson', 'Person']
+      valid_fhir_user_resource_types = %w[Patient Practitioner RelatedPerson Person]
 
       fhir_user_segments = id_token_fhir_user.split('/')
       fhir_user_resource_type = fhir_user_segments[-2]

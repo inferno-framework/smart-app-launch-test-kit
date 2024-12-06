@@ -84,7 +84,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBrands do
       result = run(test)
 
       expect(result.result).to eq('pass')
-      expect(validation_request).to have_been_made
+      expect(validation_request).to have_been_made.times(2)
     end
 
     it 'skips if no User Access Brands Bundle requests were made' do
@@ -117,7 +117,22 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBrands do
       expect(entity_result_message.message).to match(
         'Resource does not conform to profile'
       )
-      expect(validation_request).to have_been_made
+      expect(validation_request).to have_been_made.times(2)
+    end
+
+    it 'fails if Brand missing endpoint and partOf fields' do
+      validation_request = stub_request(:post, "#{validator_url}/validate")
+        .to_return(status: 200, body: operation_outcome_success.to_json)
+      smart_access_brands_bundle.entry.last.resource.partOf = nil
+      allow_any_instance_of(test).to receive(:scratch_bundle_resource).and_return(smart_access_brands_bundle)
+
+      result = run(test)
+
+      expect(result.result).to eq('fail')
+      expect(entity_result_message.message).to match(
+        'Organization with id: ehchospital does not have the endpoint or partOf field populated'
+      )
+      expect(validation_request).to have_been_made.times(2)
     end
 
     it 'fails if Brand contains Endpoint in portal extension but not Organization.endpoint' do
@@ -131,7 +146,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBrands do
 
       expect(result.result).to eq('fail')
       expect(entity_result_message.message).to match('Portal endpoints must also appear at Organization.endpoint')
-      expect(validation_request).to have_been_made
+      expect(validation_request).to have_been_made.times(2)
     end
 
     it 'fails if Brand contains Endpoint reference not found in Bundle' do
@@ -147,7 +162,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBrands do
       expect(entity_result_message.message).to match(
         'Organization with id: examplehospital references an Endpoint that is not contained'
       )
-      expect(validation_request).to have_been_made
+      expect(validation_request).to have_been_made.times(2)
     end
   end
 end

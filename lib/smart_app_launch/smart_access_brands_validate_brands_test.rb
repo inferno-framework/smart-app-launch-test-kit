@@ -22,6 +22,14 @@ module SMARTAppLaunch
         .select { |endpoint_id| endpoint_id_ref.include? endpoint_id }
     end
 
+    def find_parent_organization(bundle_resource, org_reference)
+      bundle_resource
+        .entry
+        .map(&:resource)
+        .select { |resource| resource.resourceType == 'Organization' }
+        .find { |parent_org| org_reference.include? parent_org.id }
+    end
+
     def find_extension(extension_array, extension_name)
       extension_array.find do |extension|
         extension.url.ends_with?(extension_name)
@@ -78,7 +86,6 @@ module SMARTAppLaunch
         resource_is_valid?(resource: organization)
 
         endpoint_references = organization.endpoint.map(&:reference)
-
         if organization.extension.present?
           portal_extension = find_extension(organization.extension, '/organization-portal')
           if portal_extension.present?
@@ -87,14 +94,40 @@ module SMARTAppLaunch
           end
         end
 
-        endpoint_references.each do |endpoint_id_ref|
-          organization_referenced_endpts = find_referenced_endpoint(bundle_resource, endpoint_id_ref)
-          next unless organization_referenced_endpts.empty?
+        if organization.endpoint.empty?
+          if organization.partOf.blank?
+            add_message('error', %(
+              Organization with id: #{organization.id} does not have the endpoint or partOf field populated
+            ))
+            next
+          end
 
-          add_message('error', %(
-            Organization with id: #{organization.id} references an Endpoint that is not contained in this
-            bundle.
-          ))
+          parent_organization = find_parent_organization(bundle_resource, organization.partOf.reference)
+
+          if parent_organization.blank?
+            add_message('error', %(
+              Organization with id: #{organization.id} references parent Organization not found in the Bundle:
+              #{organization.partOf.reference}
+            ))
+            next
+          end
+
+          if parent_organization.endpoint.empty?
+            add_message('error', %(
+              Organization with id: #{organization.id} has parent Organization with id: #{parent_organization.id} that
+              does not have the `endpoint` field populated.
+            ))
+          end
+        else
+          endpoint_references.each do |endpoint_id_ref|
+            organization_referenced_endpts = find_referenced_endpoint(bundle_resource, endpoint_id_ref)
+            next unless organization_referenced_endpts.empty?
+
+            add_message('error', %(
+              Organization with id: #{organization.id} references an Endpoint that is not contained in this
+              bundle.
+            ))
+          end
         end
       end
 

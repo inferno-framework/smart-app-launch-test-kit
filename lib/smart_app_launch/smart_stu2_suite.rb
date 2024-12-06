@@ -42,10 +42,10 @@ module SMARTAppLaunch
     }
 
     description <<~DESCRIPTION
-      The SMART App Launch Test Suite verifies that systems correctly implement 
-      the [SMART App Launch IG](http://hl7.org/fhir/smart-app-launch/STU2/) 
-      for providing authorization and/or authentication services to client 
-      applications accessing HL7® FHIR® APIs. To get started, please first register 
+      The SMART App Launch Test Suite verifies that systems correctly implement
+      the [SMART App Launch IG](http://hl7.org/fhir/smart-app-launch/STU2/)
+      for providing authorization and/or authentication services to client
+      applications accessing HL7® FHIR® APIs. To get started, please first register
       the Inferno client as a SMART App with the following information:
 
       * SMART Launch URI: `#{config.options[:launch_uri]}`
@@ -59,16 +59,16 @@ module SMARTAppLaunch
 
     input_instructions %(
       When running tests at this level, the token introspection endpoint is not available as a manual input.
-      Instead, group 3 Token Introspection will assume the token introspection endpoint 
+      Instead, group 3 Token Introspection will assume the token introspection endpoint
       will be output from group 1 Standalone Launch tests, specifically the SMART On FHIR Discovery tests that query
       the .well-known/smart-configuration endpoint. However, including the token introspection
       endpoint as part of the well-known ouput is NOT required and is not formally checked in the SMART On FHIR Discovery
       tests.  RFC-7662 on Token Introspection says that "The means by which the protected resource discovers the location of the introspection
       endpoint are outside the scope of this specification" and the Token Introspection IG does not add any further
-      requirements to this.  
+      requirements to this.
 
-      If the token introspection endpoint of the system under test is NOT available at .well-known/smart-configuration, 
-      please run the test groups individually and group 3 Token Introspection will include the introspection endpoint as a manual input.  
+      If the token introspection endpoint of the system under test is NOT available at .well-known/smart-configuration,
+      please run the test groups individually and group 3 Token Introspection will include the introspection endpoint as a manual input.
     )
 
     group do
@@ -96,8 +96,7 @@ module SMARTAppLaunch
             config: {
               inputs: {
                 id_token: { name: :standalone_id_token },
-                client_id: { name: :standalone_client_id },
-                requested_scopes: { name: :standalone_requested_scopes },
+                auth_info: { name: :standalone_auth_info },
                 access_token: { name: :standalone_access_token },
                 smart_credentials: { name: :standalone_smart_credentials }
               }
@@ -109,8 +108,7 @@ module SMARTAppLaunch
             config: {
               inputs: {
                 refresh_token: { name: :standalone_refresh_token },
-                client_id: { name: :standalone_client_id },
-                client_secret: { name: :standalone_client_secret },
+                auth_info: { name: :standalone_auth_info },
                 received_scopes: { name: :standalone_received_scopes }
               },
               outputs: {
@@ -130,8 +128,7 @@ module SMARTAppLaunch
               options: { include_scopes: true },
               inputs: {
                 refresh_token: { name: :standalone_refresh_token },
-                client_id: { name: :standalone_client_id },
-                client_secret: { name: :standalone_client_secret },
+                auth_info: { name: :standalone_auth_info },
                 received_scopes: { name: :standalone_received_scopes }
               },
               outputs: {
@@ -172,8 +169,7 @@ module SMARTAppLaunch
             config: {
               inputs: {
                 id_token: { name: :ehr_id_token },
-                client_id: { name: :ehr_client_id },
-                requested_scopes: { name: :ehr_requested_scopes },
+                auth_info: { name: :ehr_auth_info },
                 access_token: { name: :ehr_access_token },
                 smart_credentials: { name: :ehr_smart_credentials }
               }
@@ -185,8 +181,7 @@ module SMARTAppLaunch
             config: {
               inputs: {
                 refresh_token: { name: :ehr_refresh_token },
-                client_id: { name: :ehr_client_id },
-                client_secret: { name: :ehr_client_secret },
+                auth_info: { name: :ehr_auth_info },
                 received_scopes: { name: :ehr_received_scopes }
               },
               outputs: {
@@ -206,8 +201,7 @@ module SMARTAppLaunch
               options: { include_scopes: true },
               inputs: {
                 refresh_token: { name: :ehr_refresh_token },
-                client_id: { name: :ehr_client_id },
-                client_secret: { name: :ehr_client_secret },
+                auth_info: { name: :ehr_auth_info },
                 received_scopes: { name: :ehr_received_scopes }
               },
               outputs: {
@@ -235,10 +229,14 @@ module SMARTAppLaunch
       run_as_group
 
       group from: :smart_discovery_stu2
-      group from: :backend_services_authorization
+      group from: :backend_services_authorization,
+            config: {
+              inputs: {
+                auth_info: { name: :backend_services_auth_info }
+              }
+            }
     end
 
     group from: :smart_token_introspection
-
   end
 end

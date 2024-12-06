@@ -37,6 +37,10 @@ module SMARTAppLaunch
                 default: 'disabled'
               },
               {
+                name: :auth_request_method,
+                locked: true
+              },
+              {
                 name: :requested_scopes,
                 type: 'textarea'
               },

@@ -13,77 +13,23 @@ module SMARTAppLaunch
     )
     id :smart_token_exchange_stu2
 
-    input :client_auth_encryption_method,
-          title: 'Encryption Method (Confidential Asymmetric Client Auth Only)',
-          type: 'radio',
-          default: 'ES384',
-          options: {
-            list_options: [
-              {
-                label: 'ES384',
-                value: 'ES384'
-              },
-              {
-                label: 'RS384',
-                value: 'RS384'
-              }
-            ]
-          }
-
-    input :client_auth_type,
-          title: 'Client Authentication Method',
-          type: 'radio',
-          default: 'public',
-          options: {
-            list_options: [
-              {
-                label: 'Public',
-                value: 'public'
-              },
-              {
-                label: 'Confidential Symmetric',
-                value: 'confidential_symmetric'
-              },
-              {
-                label: 'Confidential Asymmetric',
-                value: 'confidential_asymmetric'
-              }
-            ]
-          }
-
-    config(
-      inputs: {
-        pkce_support: {
-          default: 'enabled',
-          options: {
-            list_options: [
-              {
-                label: 'Enabled',
-                value: 'enabled'
-              }
-            ]
-          }
-        }
-      }
-    )
-
-    def add_credentials_to_request(oauth2_params, oauth2_headers, client_id, client_secret)
-      if client_auth_type == 'confidential_symmetric'
-        assert client_secret.present?,
+    def add_credentials_to_request(oauth2_params, oauth2_headers)
+      if auth_info.auth_type == 'symmetric'
+        assert auth_info.client_secret.present?,
                'A client secret must be provided when using confidential symmetric client authentication.'
 
-        client_credentials = "#{client_id}:#{client_secret}"
+        client_credentials = "#{auth_info.client_id}:#{auth_info.client_secret}"
         oauth2_headers['Authorization'] = "Basic #{Base64.strict_encode64(client_credentials)}"
-      elsif client_auth_type == 'public'
-        oauth2_params[:client_id] = client_id
+      elsif auth_info.auth_type == 'public'
+        oauth2_params[:client_id] = auth_info.client_id
       else
         oauth2_params.merge!(
           client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
           client_assertion: ClientAssertionBuilder.build(
-            iss: client_id,
-            sub: client_id,
+            iss: auth_info.client_id,
+            sub: auth_info.client_id,
             aud: smart_token_url,
-            client_auth_encryption_method: client_auth_encryption_method
+            client_auth_encryption_method: auth_info.encryption_algorithm
           )
         )
       end

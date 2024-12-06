@@ -44,11 +44,9 @@ module SMARTAppLaunch
     group from: :smart_token_introspection_request_group
     group from: :smart_token_introspection_response_group
 
-    input_order :url, :standalone_client_id, :standalone_client_secret,
-                :authorization_method, :use_pkce, :pkce_code_challenge_method,
-                :standalone_requested_scopes, :client_auth_encryption_method,
-                :client_auth_type, :custom_authorization_header,
+    input_order :url, :standalone_auth_info, :custom_authorization_header,
                 :optional_introspection_request_params
+
     input_instructions %(
       Executing tests at this level will run all three Token Introspection groups back-to-back.  If test groups need
       to be run independently, exit this window and select a specific test group instead.

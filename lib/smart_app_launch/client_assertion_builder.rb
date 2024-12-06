@@ -37,14 +37,14 @@ module SMARTAppLaunch
       @client_assertion_type = client_assertion_type
       @exp = exp
       @jti = jti
-      @kid = kid
+      @kid = kid.presence
     end
 
     def private_key
       @private_key ||= JWKS.jwks
-        .select { |key| key[:key_ops]&.include?('sign') }
-        .select { |key| key[:alg] == client_auth_encryption_method }
-        .find { |key| !kid || key[:kid] == kid }
+                           .select { |key| key[:key_ops]&.include?('sign') }
+                           .select { |key| key[:alg] == client_auth_encryption_method }
+                           .find { |key| !kid || key[:kid] == kid }
     end
 
     def jwt_payload
@@ -52,11 +52,13 @@ module SMARTAppLaunch
     end
 
     def signing_key
-      private_key()
+      private_key
       if @private_key.nil?
-        raise Inferno::Exceptions::AssertionException, "No signing key found for inputs: encryption method = '#{client_auth_encryption_method}' and kid = '#{kid}'"
+        raise Inferno::Exceptions::AssertionException,
+              "No signing key found for inputs: encryption method = '#{client_auth_encryption_method}' and kid = '#{kid}'"
       end
-      return @private_key.signing_key
+
+      @private_key.signing_key
     end
 
     def key_id
@@ -65,7 +67,8 @@ module SMARTAppLaunch
 
     def client_assertion
       @client_assertion ||=
-        JWT.encode jwt_payload, signing_key, client_auth_encryption_method, { alg: client_auth_encryption_method, kid: key_id, typ: 'JWT' }
+        JWT.encode jwt_payload, signing_key, client_auth_encryption_method,
+                   { alg: client_auth_encryption_method, kid: key_id, typ: 'JWT' }
     end
   end
 end

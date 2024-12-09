@@ -10,6 +10,12 @@ module SMARTAppLaunch
       by checking if it is referenced by at least 1 Organization resource.
       )
 
+    def regex_match?(resource_id, reference)
+      return false if resource_id.blank?
+
+      %r{#{resource_id}(?:/[^\/]*|\|[^\/]*)*/?$}.match?(reference)
+    end
+
     def find_referenced_org(bundle_resource, endpoint_id)
       bundle_resource
         .entry
@@ -18,7 +24,7 @@ module SMARTAppLaunch
         .map(&:endpoint)
         .flatten
         .map(&:reference)
-        .select { |reference| reference.include? endpoint_id }
+        .select { |reference| regex_match?(endpoint_id, reference) }
     end
 
     def skip_message

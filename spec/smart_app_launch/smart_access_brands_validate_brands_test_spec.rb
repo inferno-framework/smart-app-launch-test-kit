@@ -176,7 +176,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBrands do
 
       expect(result.result).to eq('fail')
       expect(entity_result_message.message).to match(
-        'Organization with id: examplehospital references an Endpoint that is not contained'
+        'Organization with id: examplehospital references an Endpoint'
       )
       expect(validation_request).to have_been_made.times(2)
     end

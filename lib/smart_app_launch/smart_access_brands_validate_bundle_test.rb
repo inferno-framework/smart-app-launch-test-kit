@@ -88,16 +88,22 @@ module SMARTAppLaunch
       new_entries
     end
 
+    def regex_match?(resource_id, reference)
+      return false if resource_id.blank?
+
+      %r{#{resource_id}(?:/[^\/]*|\|[^\/]*)*/?$}.match?(reference)
+    end
+
     def find_parent_organization_entry(organization_entries, org_reference)
       organization_entries
-        .find { |parent_org_entry| org_reference.include? parent_org_entry.resource.id }
+        .find { |parent_org_entry| regex_match?(parent_org_entry.resource.id, org_reference) }
     end
 
     def find_referenced_endpoints(organization_endpoints, endpoint_entries)
       endpoints = []
       organization_endpoints.each do |endpoint_ref|
         found_endpoint = endpoint_entries.find do |endpoint_entry|
-          endpoint_ref.reference.include?(endpoint_entry.resource.id)
+          regex_match?(endpoint_entry.resource.id, endpoint_ref.reference)
         end
         endpoints.append(found_endpoint) if found_endpoint.present?
       end

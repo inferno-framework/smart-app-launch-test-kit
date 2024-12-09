@@ -96,6 +96,14 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBundle do
       expect(result.result).to eq('pass')
     end
 
+    it 'passes if a valid User Access Brands Bundle was received and resource_validation_limit input is entered' do
+      create_user_access_brands_request(body: smart_access_brands_bundle)
+
+      result = run(test, resource_validation_limit: 2)
+
+      expect(result.result).to eq('pass')
+    end
+
     it 'skips if no User Access Brands Bundle requests were made' do
       result = run(test)
 

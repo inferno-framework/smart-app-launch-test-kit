@@ -13,13 +13,19 @@ module SMARTAppLaunch
       This test does not currently validate availability or format of Brand or Portal logos.
     )
 
+    def regex_match?(resource_id, reference)
+      return false if resource_id.blank?
+
+      %r{#{resource_id}(?:/[^\/]*|\|[^\/]*)*/?$}.match?(reference)
+    end
+
     def find_referenced_endpoint(bundle_resource, endpoint_id_ref)
       bundle_resource
         .entry
         .map(&:resource)
         .select { |resource| resource.resourceType == 'Endpoint' }
         .map(&:id)
-        .select { |endpoint_id| endpoint_id_ref.include? endpoint_id }
+        .select { |endpoint_id| regex_match?(endpoint_id, endpoint_id_ref) }
     end
 
     def find_parent_organization(bundle_resource, org_reference)
@@ -27,7 +33,7 @@ module SMARTAppLaunch
         .entry
         .map(&:resource)
         .select { |resource| resource.resourceType == 'Organization' }
-        .find { |parent_org| org_reference.include? parent_org.id }
+        .find { |parent_org| regex_match?(parent_org.id, org_reference) }
     end
 
     def find_extension(extension_array, extension_name)
@@ -124,8 +130,8 @@ module SMARTAppLaunch
             next unless organization_referenced_endpts.empty?
 
             add_message('error', %(
-              Organization with id: #{organization.id} references an Endpoint that is not contained in this
-              bundle.
+              Organization with id: #{organization.id} references an Endpoint endpoint_id_ref that is not contained in
+              this bundle.
             ))
           end
         end

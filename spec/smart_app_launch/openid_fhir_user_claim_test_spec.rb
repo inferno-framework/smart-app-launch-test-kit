@@ -27,7 +27,7 @@ RSpec.describe SMARTAppLaunch::OpenIDFHIRUserClaimTest do
       id_token_payload_json: payload.to_json,
       url: url,
       smart_credentials: smart_credentials,
-      auth_info: Inferno::DSL::AuthInfo.new(
+      smart_auth_info: Inferno::DSL::AuthInfo.new(
         requested_scopes: scopes
       )
     }
@@ -55,7 +55,7 @@ RSpec.describe SMARTAppLaunch::OpenIDFHIRUserClaimTest do
   end
 
   it 'skips if no fhirUser scope was requested' do
-    inputs[:auth_info].requested_scopes = 'launch'
+    inputs[:smart_auth_info].requested_scopes = 'launch'
     result = run(test, inputs)
 
     expect(result.result).to eq('skip')

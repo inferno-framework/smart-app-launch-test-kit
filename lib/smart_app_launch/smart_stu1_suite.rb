@@ -57,15 +57,22 @@ module SMARTAppLaunch
 
       run_as_group
 
-      group from: :smart_discovery
+      group from: :smart_discovery,
+            config: {
+              inputs: {
+                smart_auth_info: { name: :standalone_smart_auth_info }
+              },
+              outputs: {
+                smart_auth_info: { name: :standalone_smart_auth_info }
+              }
+            }
       group from: :smart_standalone_launch
 
       group from: :smart_openid_connect,
             config: {
               inputs: {
                 id_token: { name: :standalone_id_token },
-                auth_info: { name: :standalone_auth_info },
-                access_token: { name: :standalone_access_token },
+                smart_auth_info: { name: :standalone_smart_auth_info },
                 smart_credentials: { name: :standalone_smart_credentials }
               }
             }
@@ -75,8 +82,7 @@ module SMARTAppLaunch
             title: 'SMART Token Refresh Without Scopes',
             config: {
               inputs: {
-                refresh_token: { name: :standalone_refresh_token },
-                auth_info: { name: :standalone_auth_info },
+                smart_auth_info: { name: :standalone_smart_auth_info },
                 received_scopes: { name: :standalone_received_scopes }
               },
               outputs: {
@@ -85,7 +91,8 @@ module SMARTAppLaunch
                 access_token: { name: :standalone_access_token },
                 token_retrieval_time: { name: :standalone_token_retrieval_time },
                 expires_in: { name: :standalone_expires_in },
-                smart_credentials: { name: :standalone_smart_credentials }
+                smart_credentials: { name: :standalone_smart_credentials },
+                smart_auth_info: { name: :standalone_smart_auth_info }
               }
             }
 
@@ -95,8 +102,7 @@ module SMARTAppLaunch
             config: {
               options: { include_scopes: true },
               inputs: {
-                refresh_token: { name: :standalone_refresh_token },
-                auth_info: { name: :standalone_auth_info },
+                smart_auth_info: { name: :standalone_smart_auth_info },
                 received_scopes: { name: :standalone_received_scopes }
               },
               outputs: {
@@ -105,7 +111,8 @@ module SMARTAppLaunch
                 access_token: { name: :standalone_access_token },
                 token_retrieval_time: { name: :standalone_token_retrieval_time },
                 expires_in: { name: :standalone_expires_in },
-                smart_credentials: { name: :standalone_smart_credentials }
+                smart_credentials: { name: :standalone_smart_credentials },
+                smart_auth_info: { name: :standalone_smart_auth_info }
               }
             }
     end
@@ -124,7 +131,15 @@ module SMARTAppLaunch
 
       run_as_group
 
-      group from: :smart_discovery
+      group from: :smart_discovery,
+            config: {
+              inputs: {
+                smart_auth_info: { name: :ehr_smart_auth_info }
+              },
+              outputs: {
+                smart_auth_info: { name: :ehr_smart_auth_info }
+              }
+            }
 
       group from: :smart_ehr_launch
 
@@ -132,8 +147,7 @@ module SMARTAppLaunch
             config: {
               inputs: {
                 id_token: { name: :ehr_id_token },
-                auth_info: { name: :ehr_auth_info },
-                access_token: { name: :ehr_access_token },
+                smart_auth_info: { name: :ehr_smart_auth_info },
                 smart_credentials: { name: :ehr_smart_credentials }
               }
             }
@@ -143,8 +157,7 @@ module SMARTAppLaunch
             title: 'SMART Token Refresh Without Scopes',
             config: {
               inputs: {
-                refresh_token: { name: :ehr_refresh_token },
-                auth_info: { name: :ehr_auth_info },
+                smart_auth_info: { name: :ehr_smart_auth_info },
                 received_scopes: { name: :ehr_received_scopes }
               },
               outputs: {
@@ -153,7 +166,8 @@ module SMARTAppLaunch
                 access_token: { name: :ehr_access_token },
                 token_retrieval_time: { name: :ehr_token_retrieval_time },
                 expires_in: { name: :ehr_expires_in },
-                smart_credentials: { name: :ehr_smart_credentials }
+                smart_credentials: { name: :ehr_smart_credentials },
+                smart_auth_info: { name: :ehr_smart_auth_info }
               }
             }
 
@@ -163,8 +177,7 @@ module SMARTAppLaunch
             config: {
               options: { include_scopes: true },
               inputs: {
-                refresh_token: { name: :ehr_refresh_token },
-                auth_info: { name: :ehr_auth_info },
+                smart_auth_info: { name: :ehr_smart_auth_info },
                 received_scopes: { name: :ehr_received_scopes }
               },
               outputs: {
@@ -173,7 +186,8 @@ module SMARTAppLaunch
                 access_token: { name: :ehr_access_token },
                 token_retrieval_time: { name: :ehr_token_retrieval_time },
                 expires_in: { name: :ehr_expires_in },
-                smart_credentials: { name: :ehr_smart_credentials }
+                smart_credentials: { name: :ehr_smart_credentials },
+                smart_auth_info: { name: :ehr_smart_auth_info }
               }
             }
     end

@@ -13,15 +13,15 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
   let(:public_inputs) do
     {
       code: 'CODE',
-      smart_token_url: token_url,
-      auth_info: Inferno::DSL::AuthInfo.new(
+      smart_auth_info: Inferno::DSL::AuthInfo.new(
         client_id: 'CLIENT_ID',
-        pkce_support: 'disabled'
+        pkce_support: 'disabled',
+        token_url:
       )
     }
   end
   let(:confidential_inputs) do
-    public_inputs[:auth_info].client_secret = 'CLIENT_SECRET'
+    public_inputs[:smart_auth_info].client_secret = 'CLIENT_SECRET'
     public_inputs
   end
 
@@ -139,7 +139,7 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
         )
         .to_return(status: 200, body: {}.to_json)
 
-      public_inputs[:auth_info].pkce_support = 'enabled'
+      public_inputs[:smart_auth_info].pkce_support = 'enabled'
       public_inputs[:pkce_code_verifier] = 'CODE_VERIFIER'
       result = run(test, public_inputs)
 

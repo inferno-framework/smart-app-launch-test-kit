@@ -13,7 +13,7 @@ module SMARTAppLaunch
 
     id :backend_services_authorization
 
-    input :auth_info,
+    input :smart_auth_info,
           type: :auth_info,
           options: {
             mode: 'auth',
@@ -23,33 +23,9 @@ module SMARTAppLaunch
                 type: 'select',
                 default: 'backend_services',
                 locked: 'true'
-              },
-              {
-                name: :pkce_support,
-                default: 'enabled',
-                locked: true
-              },
-              {
-                name: :pkce_code_challenge_method,
-                default: 'S256',
-                locked: true
-              },
-              {
-                name: :requested_scopes,
-                default: 'system/*.read'
-              },
-              {
-                name: :use_discovery,
-                locked: true
               }
             ]
           }
-
-    input :smart_token_url,
-          title: 'Backend Services Token Endpoint',
-          description: <<~DESCRIPTION
-            The OAuth 2.0 Token Endpoint used by the Backend Services specification to provide bearer tokens.
-          DESCRIPTION
 
     output :bearer_token
 

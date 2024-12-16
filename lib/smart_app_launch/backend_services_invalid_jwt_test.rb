@@ -28,8 +28,7 @@ module SMARTAppLaunch
       error response as described in [Section 5.2](https://tools.ietf.org/html/rfc6749#section-5.2)."
     DESCRIPTION
 
-    input :smart_token_url
-    input :auth_info,
+    input :smart_auth_info,
           type: :auth_info,
           options: {
             mode: 'auth',
@@ -43,22 +42,18 @@ module SMARTAppLaunch
             ]
           }
 
-    http_client :token_endpoint do
-      url :smart_token_url
-    end
-
     run do
       post_request_content = BackendServicesAuthorizationRequestBuilder.build(
-        encryption_method: auth_info.encryption_algorithm,
-        scope: auth_info.requested_scopes,
-        iss: auth_info.client_id,
-        sub: auth_info.client_id,
-        aud: smart_token_url,
+        encryption_method: smart_auth_info.encryption_algorithm,
+        scope: smart_auth_info.requested_scopes,
+        iss: smart_auth_info.client_id,
+        sub: smart_auth_info.client_id,
+        aud: smart_auth_info.token_url,
         client_assertion_type: 'not_an_assertion_type',
-        kid: auth_info.kid
+        kid: smart_auth_info.kid
       )
 
-      post(**{ client: :token_endpoint }.merge(post_request_content))
+      post(smart_auth_info.token_url, **post_request_content)
 
       assert_response_status(400)
     end

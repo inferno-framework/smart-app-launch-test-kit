@@ -44,7 +44,7 @@ module SMARTAppLaunch
     group from: :smart_token_introspection_request_group
     group from: :smart_token_introspection_response_group
 
-    input_order :url, :standalone_auth_info, :custom_authorization_header,
+    input_order :url, :standalone_smart_auth_info, :custom_authorization_header,
                 :optional_introspection_request_params
 
     input_instructions %(

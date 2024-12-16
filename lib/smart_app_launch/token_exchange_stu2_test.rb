@@ -14,22 +14,22 @@ module SMARTAppLaunch
     id :smart_token_exchange_stu2
 
     def add_credentials_to_request(oauth2_params, oauth2_headers)
-      if auth_info.auth_type == 'symmetric'
-        assert auth_info.client_secret.present?,
+      if smart_auth_info.auth_type == 'symmetric'
+        assert smart_auth_info.client_secret.present?,
                'A client secret must be provided when using confidential symmetric client authentication.'
 
-        client_credentials = "#{auth_info.client_id}:#{auth_info.client_secret}"
+        client_credentials = "#{smart_auth_info.client_id}:#{smart_auth_info.client_secret}"
         oauth2_headers['Authorization'] = "Basic #{Base64.strict_encode64(client_credentials)}"
-      elsif auth_info.auth_type == 'public'
-        oauth2_params[:client_id] = auth_info.client_id
+      elsif smart_auth_info.auth_type == 'public'
+        oauth2_params[:client_id] = smart_auth_info.client_id
       else
         oauth2_params.merge!(
           client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
           client_assertion: ClientAssertionBuilder.build(
-            iss: auth_info.client_id,
-            sub: auth_info.client_id,
-            aud: smart_token_url,
-            client_auth_encryption_method: auth_info.encryption_algorithm
+            iss: smart_auth_info.client_id,
+            sub: smart_auth_info.client_id,
+            aud: smart_auth_info.token_url,
+            client_auth_encryption_method: smart_auth_info.encryption_algorithm
           )
         )
       end

@@ -84,7 +84,7 @@ RSpec.describe SMARTAppLaunch::OpenIDConnectGroup do
       id_token: id_token,
       url: url,
       smart_credentials: smart_credentials,
-      auth_info: Inferno::DSL::AuthInfo.new(
+      smart_auth_info: Inferno::DSL::AuthInfo.new(
         client_id:,
         requested_scopes: 'openid fhirUser'
       )

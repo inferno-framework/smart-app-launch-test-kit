@@ -9,48 +9,8 @@ module SMARTAppLaunch
     )
     id :smart_app_redirect
 
-    input :url, :smart_authorization_url
-    input :auth_info,
-          type: :auth_info,
-          options: {
-            mode: 'auth',
-            components: [
-              {
-                name: :auth_type,
-                type: 'select',
-                default: 'public',
-                options: {
-                  list_options: [
-                    {
-                      label: 'Public',
-                      value: 'public'
-                    },
-                    {
-                      label: 'Confidential Symmetric',
-                      value: 'symmetric'
-                    }
-                  ]
-                }
-              },
-              {
-                name: :pkce_support,
-                default: 'disabled'
-              },
-              {
-                name: :auth_request_method,
-                locked: true
-              },
-              {
-                name: :requested_scopes,
-                type: 'textarea'
-              },
-              {
-                name: :use_discovery,
-                locked: true
-              }
-            ]
-          }
-
+    input :url
+    input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
     output :state, :pkce_code_challenge, :pkce_code_verifier
     receives_request :redirect
 
@@ -98,17 +58,17 @@ module SMARTAppLaunch
 
     run do
       assert_valid_http_uri(
-        smart_authorization_url,
-        "OAuth2 Authorization Endpoint '#{smart_authorization_url}' is not a valid URI"
+        smart_auth_info.auth_url,
+        "OAuth2 Authorization Endpoint '#{smart_auth_info.auth_url}' is not a valid URI"
       )
 
       output state: SecureRandom.uuid
 
       oauth2_params = {
         'response_type' => 'code',
-        'client_id' => auth_info.client_id,
+        'client_id' => smart_auth_info.client_id,
         'redirect_uri' => redirect_uri,
-        'scope' => auth_info.requested_scopes,
+        'scope' => smart_auth_info.requested_scopes,
         'state' => state,
         'aud' => aud
       }
@@ -119,11 +79,11 @@ module SMARTAppLaunch
         oauth2_params['launch'] = launch
       end
 
-      if auth_info.pkce_support == 'enabled'
+      if smart_auth_info.pkce_support == 'enabled'
         # code verifier must be between 43 and 128 characters
         code_verifier = "#{SecureRandom.uuid}-#{SecureRandom.uuid}"
         code_challenge =
-          if auth_info.pkce_code_challenge_method == 'S256'
+          if smart_auth_info.pkce_code_challenge_method == 'S256'
             self.class.calculate_s256_challenge(code_verifier)
           else
             code_verifier
@@ -132,11 +92,11 @@ module SMARTAppLaunch
         output pkce_code_verifier: code_verifier, pkce_code_challenge: code_challenge
 
         oauth2_params.merge!('code_challenge' => code_challenge,
-                             'code_challenge_method' => auth_info.pkce_code_challenge_method)
+                             'code_challenge_method' => smart_auth_info.pkce_code_challenge_method)
       end
 
       authorization_url = authorization_url_builder(
-        smart_authorization_url,
+        smart_auth_info.auth_url,
         oauth2_params
       )
 

@@ -18,7 +18,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
   let(:suite_id) { 'smart'}
   let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
   let(:input) do
-    { auth_info: Inferno::DSL::AuthInfo.new(requested_scopes: 'patient/*.*') }
+    { smart_auth_info: Inferno::DSL::AuthInfo.new(requested_scopes: 'patient/*.*') }
   end
 
   def run(runnable, inputs = {})
@@ -202,7 +202,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
     }
     create_token_request(body: inputs)
 
-    input[:auth_info].requested_scopes = 'SCOPE'
+    input[:smart_auth_info].requested_scopes = 'SCOPE'
     result = run(test, input)
 
     expect(result.result).to eq('pass')

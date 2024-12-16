@@ -23,13 +23,13 @@ module SMARTAppLaunch
     end
 
     input :id_token, :openid_configuration_json, :id_token_jwk_json
-    input :auth_info, type: :auth_info, options: { mode: 'auth' }
+    input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
 
     run do
       skip_if id_token.blank?, 'No ID Token'
       skip_if openid_configuration_json.blank?, 'No OpenID Configuration found'
       skip_if id_token_jwk_json.blank?, 'No ID Token jwk found'
-      skip_if auth_info.client_id.blank?, 'No Client ID'
+      skip_if smart_auth_info.client_id.blank?, 'No Client ID'
 
       begin
         configuration = JSON.parse(openid_configuration_json)
@@ -42,7 +42,7 @@ module SMARTAppLaunch
             algorithms: ['RS256'],
             exp_leeway: 60,
             iss: configuration['issuer'],
-            aud: auth_info.client_id,
+            aud: smart_auth_info.client_id,
             verify_not_before: false,
             verify_iat: false,
             verify_jti: false,

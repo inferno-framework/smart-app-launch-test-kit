@@ -16,7 +16,7 @@ module SMARTAppLaunch
     )
     id :smart_token_response_body
 
-    input :auth_info, type: :auth_info, options: { mode: 'auth' }
+    input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
     output :id_token,
            :refresh_token,
            :access_token,
@@ -24,7 +24,9 @@ module SMARTAppLaunch
            :patient_id,
            :encounter_id,
            :received_scopes,
-           :intent
+           :intent,
+           :smart_auth_info
+
     uses_request :token
 
     run do
@@ -33,6 +35,10 @@ module SMARTAppLaunch
       assert_valid_json(request.response_body)
       token_response_body = JSON.parse(request.response_body)
 
+      smart_auth_info.refresh_token = token_response_body['refresh_token']
+      smart_auth_info.access_token = token_response_body['access_token']
+      smart_auth_info.expires_in = token_response_body['expires_in']
+
       output id_token: token_response_body['id_token'],
              refresh_token: token_response_body['refresh_token'],
              access_token: token_response_body['access_token'],
@@ -40,13 +46,14 @@ module SMARTAppLaunch
              patient_id: token_response_body['patient'],
              encounter_id: token_response_body['encounter'],
              received_scopes: token_response_body['scope'],
-             intent: token_response_body['intent']
+             intent: token_response_body['intent'],
+             smart_auth_info: smart_auth_info
 
-      validate_required_fields_present(token_response_body, %w[access_token token_type expires_in scope])
+      validate_required_fields_present(token_response_body, ['access_token', 'token_type', 'expires_in', 'scope'])
       validate_token_field_types(token_response_body)
       validate_token_type(token_response_body)
       unless config.options[:ignore_missing_scopes_check]
-        check_for_missing_scopes(auth_info.requested_scopes,
+        check_for_missing_scopes(smart_auth_info.requested_scopes,
                                  token_response_body)
       end
 

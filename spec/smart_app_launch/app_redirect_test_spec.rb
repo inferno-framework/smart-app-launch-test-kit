@@ -14,11 +14,11 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
   let(:inputs) do
     {
       url: url,
-      smart_authorization_url: 'http://example.com/auth',
-      auth_info: Inferno::DSL::AuthInfo.new(
+      smart_auth_info: Inferno::DSL::AuthInfo.new(
         client_id: 'CLIENT_ID',
         requested_scopes: 'REQUESTED_SCOPES',
-        pkce_support: 'disabled'
+        pkce_support: 'disabled',
+        auth_url: 'http://example.com/auth'
       )
     }
   end
@@ -63,7 +63,7 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
   end
 
   it 'fails if the authorization url is invalid' do
-    inputs[:smart_authorization_url] = 'xyz'
+    inputs[:smart_auth_info].auth_url = 'xyz'
     result = run(test, inputs)
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/is not a valid URI/)
@@ -92,9 +92,9 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
 
   context 'when PKCE is enabled' do
     let(:pkce_inputs) do
-      auth_info = inputs[:auth_info]
-      auth_info.pkce_support = 'enabled'
-      auth_info.pkce_code_challenge_method = 'S256'
+      smart_auth_info = inputs[:smart_auth_info]
+      smart_auth_info.pkce_support = 'enabled'
+      smart_auth_info.pkce_code_challenge_method = 'S256'
       inputs
     end
 
@@ -106,7 +106,7 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
     end
 
     it 'sends the verifier as the challenge when challenge method is plain' do
-      pkce_inputs[:auth_info].pkce_code_challenge_method = 'plain'
+      pkce_inputs[:smart_auth_info].pkce_code_challenge_method = 'plain'
       result = run(test, pkce_inputs)
 
       expect(result.result).to eq('wait')

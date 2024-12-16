@@ -19,7 +19,7 @@ RSpec.describe SMARTAppLaunch::CORSTokenExchangeTest do
   end
 
   let(:inputs) do
-    { auth_info: Inferno::DSL::AuthInfo.new(auth_type: 'public') }
+    { smart_auth_info: Inferno::DSL::AuthInfo.new(auth_type: 'public') }
   end
 
   def run(runnable, inputs = {})
@@ -65,7 +65,6 @@ RSpec.describe SMARTAppLaunch::CORSTokenExchangeTest do
     create_cors_token_request(body: valid_body, headers: cors_header_origin(Inferno::Application['inferno_host']))
 
     result = run(test, inputs)
-
     expect(result.result).to eq('pass')
   end
 
@@ -87,7 +86,7 @@ RSpec.describe SMARTAppLaunch::CORSTokenExchangeTest do
   it 'omits if the client auth type is not public' do
     create_cors_token_request(body: valid_body, headers: cors_header_origin('*'))
 
-    inputs[:auth_info].auth_type = 'symmetric'
+    inputs[:smart_auth_info].auth_type = 'symmetric'
     result = run(test, inputs)
 
     expect(result.result).to eq('omit')

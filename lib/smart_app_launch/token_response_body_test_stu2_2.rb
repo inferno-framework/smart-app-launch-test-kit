@@ -14,7 +14,7 @@ module SMARTAppLaunch
     )
     id :smart_token_response_body_stu2_2
 
-    input :auth_info, type: :auth_info, options: { mode: 'auth' }
+    input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
     output :id_token,
            :refresh_token,
            :access_token,
@@ -22,7 +22,8 @@ module SMARTAppLaunch
            :patient_id,
            :encounter_id,
            :received_scopes,
-           :intent
+           :intent,
+           :smart_auth_info
     uses_request :token
 
     def validate_fhir_context(fhir_context)

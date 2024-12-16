@@ -40,8 +40,50 @@ module SMARTAppLaunch
       * [OpenID Connect Core](https://openid.net/specs/openid-connect-core-1_0.html)
     )
 
-    test from: :well_known_endpoint,
-         id: 'Test01'
+    test from: :well_known_endpoint do
+      id 'Test01'
+      input :smart_auth_info,
+            type: :auth_info,
+            options: {
+              mode: 'auth',
+              components: [
+                {
+                  name: :auth_type,
+                  type: 'select',
+                  default: 'public',
+                  options: {
+                    list_options: [
+                      {
+                        label: 'Public',
+                        value: 'public'
+                      },
+                      {
+                        label: 'Confidential Symmetric',
+                        value: 'symmetric'
+                      }
+                    ]
+                  }
+                },
+                {
+                  name: :pkce_support,
+                  default: 'disabled'
+                },
+                {
+                  name: :auth_request_method,
+                  locked: true
+                },
+                {
+                  name: :requested_scopes,
+                  type: 'textarea'
+                },
+                {
+                  name: :use_discovery,
+                  locked: true
+                }
+              ]
+            }
+    end
+
     test from: :well_known_capabilities_stu1,
          id: 'Test02'
 
@@ -141,54 +183,12 @@ module SMARTAppLaunch
             optional: true
       input :capability_token_url,
             optional: true
-      input :smart_auth_info,
-            type: :auth_info,
-            options: {
-              mode: 'auth',
-              components: [
-                {
-                  name: :auth_type,
-                  type: 'select',
-                  default: 'public',
-                  options: {
-                    list_options: [
-                      {
-                        label: 'Public',
-                        value: 'public'
-                      },
-                      {
-                        label: 'Confidential Symmetric',
-                        value: 'symmetric'
-                      }
-                    ]
-                  }
-                },
-                {
-                  name: :pkce_support,
-                  default: 'disabled'
-                },
-                {
-                  name: :auth_request_method,
-                  locked: true
-                },
-                {
-                  name: :requested_scopes,
-                  type: 'textarea'
-                },
-                {
-                  name: :use_discovery,
-                  locked: true
-                }
-              ]
-            }
-
       output :smart_authorization_url,
              :smart_introspection_url,
              :smart_management_url,
              :smart_registration_url,
              :smart_revocation_url,
-             :smart_token_url,
-             :smart_auth_info
+             :smart_token_url
 
       run do
         mismatched_urls = []
@@ -199,13 +199,6 @@ module SMARTAppLaunch
           output "smart_#{type}_url": well_known_url.presence || capability_url.presence
 
           mismatched_urls << type if well_known_url != capability_url
-        end
-
-        if smart_auth_info.use_discovery
-          smart_auth_info.auth_url = smart_authorization_url
-          smart_auth_info.token_url = smart_token_url
-
-          output smart_auth_info: smart_auth_info
         end
 
         pass_if mismatched_urls.empty?

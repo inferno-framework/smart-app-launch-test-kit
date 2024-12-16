@@ -16,12 +16,12 @@ RSpec.describe SMARTAppLaunch::BackendServicesInvalidJWTTest do
   let(:body) { request_builder.authorization_request_query_values }
   let(:input) do
     {
-      smart_token_url:,
-      auth_info: Inferno::DSL::AuthInfo.new(
+      smart_auth_info: Inferno::DSL::AuthInfo.new(
         auth_type: 'backend_services',
         client_id: backend_services_client_id,
         requested_scopes: backend_services_requested_scope,
-        encryption_algorithm: client_auth_encryption_method
+        encryption_algorithm: client_auth_encryption_method,
+        token_url: smart_token_url
       )
     }
   end

@@ -31,8 +31,8 @@ module SMARTAppLaunch
 
     config(
       inputs: {
-        auth_info: {
-          name: :standalone_auth_info,
+        smart_auth_info: {
+          name: :standalone_smart_auth_info,
           default: { requested_scopes: 'launch/patient openid fhirUser offline_access patient/*.rs' }.to_json
         }
       }

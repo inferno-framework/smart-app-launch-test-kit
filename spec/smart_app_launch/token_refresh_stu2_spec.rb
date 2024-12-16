@@ -59,10 +59,8 @@ RSpec.describe SMARTAppLaunch::TokenRefreshSTU2Test do
 
       result = run(
         test,
-        smart_token_url: token_url,
-        refresh_token:,
         received_scopes:,
-        auth_info: Inferno::DSL::AuthInfo.new(client_id:, auth_type:)
+        smart_auth_info: Inferno::DSL::AuthInfo.new(client_id:, auth_type:, refresh_token:, token_url:)
       )
 
       expect(result.result).to eq('pass')
@@ -89,10 +87,8 @@ RSpec.describe SMARTAppLaunch::TokenRefreshSTU2Test do
         )
 
       inputs = {
-        smart_token_url: token_url,
-        refresh_token:,
         received_scopes:,
-        auth_info: Inferno::DSL::AuthInfo.new(client_id:, client_secret:, auth_type:)
+        smart_auth_info: Inferno::DSL::AuthInfo.new(client_id:, client_secret:, auth_type:, refresh_token:, token_url:)
       }
       result = run(test, inputs)
       expect(result.result).to eq('pass')
@@ -115,10 +111,10 @@ RSpec.describe SMARTAppLaunch::TokenRefreshSTU2Test do
 
       result = run(
         test,
-        smart_token_url: token_url,
-        refresh_token:,
         received_scopes:,
-        auth_info: Inferno::DSL::AuthInfo.new(client_id:, auth_type:, encryption_algorithm:)
+        smart_auth_info: Inferno::DSL::AuthInfo.new(
+          client_id:, auth_type:, encryption_algorithm:, refresh_token:, token_url:
+        )
       )
 
       expect(result.result).to eq('pass')
@@ -137,10 +133,8 @@ RSpec.describe SMARTAppLaunch::TokenRefreshSTU2Test do
 
     result = run(
       test,
-      smart_token_url: token_url,
-      refresh_token:,
       received_scopes:,
-      auth_info: Inferno::DSL::AuthInfo.new(client_id:, auth_type: 'public')
+      smart_auth_info: Inferno::DSL::AuthInfo.new(client_id:, auth_type: 'public', refresh_token:, token_url:)
     )
 
     expect(result.result).to eq('fail')
@@ -159,10 +153,8 @@ RSpec.describe SMARTAppLaunch::TokenRefreshSTU2Test do
 
     result = run(
       test,
-      smart_token_url: token_url,
-      refresh_token:,
       received_scopes:,
-      auth_info: Inferno::DSL::AuthInfo.new(client_id:, auth_type: 'public')
+      smart_auth_info: Inferno::DSL::AuthInfo.new(client_id:, auth_type: 'public', refresh_token:, token_url:)
     )
 
     expect(result.result).to eq('fail')
@@ -181,10 +173,8 @@ RSpec.describe SMARTAppLaunch::TokenRefreshSTU2Test do
 
     result = run(
       test,
-      smart_token_url: token_url,
-      refresh_token:,
       received_scopes:,
-      auth_info: Inferno::DSL::AuthInfo.new(client_id:, auth_type: 'public')
+      smart_auth_info: Inferno::DSL::AuthInfo.new(client_id:, auth_type: 'public', refresh_token:, token_url:)
     )
 
     expect(result.result).to eq('pass')
@@ -206,10 +196,8 @@ RSpec.describe SMARTAppLaunch::TokenRefreshSTU2Test do
 
       result = run(
         test,
-        smart_token_url: token_url,
-        refresh_token:,
         received_scopes:,
-        auth_info: Inferno::DSL::AuthInfo.new(client_id:, auth_type: 'public')
+        smart_auth_info: Inferno::DSL::AuthInfo.new(client_id:, auth_type: 'public', refresh_token:, token_url:)
       )
 
       expect(result.result).to eq('pass')

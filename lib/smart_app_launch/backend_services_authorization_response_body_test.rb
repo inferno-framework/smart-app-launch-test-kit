@@ -17,7 +17,20 @@ module SMARTAppLaunch
     DESCRIPTION
 
     input :authentication_response
-    output :bearer_token
+    input :smart_auth_info,
+          type: :auth_info,
+          options: {
+            mode: 'auth',
+            components: [
+              {
+                name: :auth_type,
+                type: 'select',
+                default: 'backend_services',
+                locked: 'true'
+              }
+            ]
+          }
+    output :bearer_token, :smart_auth_info
 
     run do
       skip_if authentication_response.blank?, 'No authentication response received.'
@@ -28,9 +41,11 @@ module SMARTAppLaunch
       access_token = response_body['access_token']
       assert access_token.present?, 'Token response did not contain access_token as required'
 
-      output bearer_token: access_token
+      smart_auth_info.access_token = access_token
 
-      required_keys = %w[token_type expires_in scope]
+      output bearer_token: access_token, smart_auth_info: smart_auth_info
+
+      required_keys = ['token_type', 'expires_in', 'scope']
 
       required_keys.each do |key|
         assert response_body[key].present?, "Token response did not contain #{key} as required"

@@ -66,9 +66,7 @@ module SMARTAppLaunch
       body are returned in the response.
       )
 
-      input :standalone_access_token,
-            title: 'Access Token',
-            description: 'The access token to be introspected. MUST be active.'
+      input :standalone_smart_auth_info, type: :auth_info, options: { mode: 'auth' }
 
       output :active_token_introspection_response_body
 
@@ -77,7 +75,7 @@ module SMARTAppLaunch
         skip_if well_known_introspection_url.nil?, 'No introspection URL present in SMART well-known endpoint.'
 
         headers = { 'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded' }
-        body = "token=#{standalone_access_token}"
+        body = "token=#{standalone_smart_auth_info.access_token}"
 
         if custom_authorization_header.present?
           custom_headers = custom_authorization_header.split("\n")

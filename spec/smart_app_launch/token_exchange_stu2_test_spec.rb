@@ -14,12 +14,12 @@ RSpec.describe SMARTAppLaunch::TokenExchangeSTU2Test do
   let(:inputs) do
     {
       code: 'CODE',
-      smart_token_url: token_url,
-      auth_info: Inferno::DSL::AuthInfo.new(
+      smart_auth_info: Inferno::DSL::AuthInfo.new(
         auth_type: 'asymmetric',
         client_id:,
         pkce_support: 'disabled',
-        encryption_algorithm: 'ES384'
+        encryption_algorithm: 'ES384',
+        token_url:
       )
     }
   end

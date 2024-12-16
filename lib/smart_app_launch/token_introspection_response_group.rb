@@ -53,7 +53,7 @@ module SMARTAppLaunch
         introspection response and should match the claim in the ID token
       )
 
-      input :standalone_auth_info, type: :auth_info, options: { mode: 'auth' }
+      input :standalone_smart_auth_info, type: :auth_info, options: { mode: 'auth' }
 
       input :standalone_received_scopes,
             title: 'Expected Introspection Response Value: scope',
@@ -103,7 +103,7 @@ module SMARTAppLaunch
         assert active_introspection_response_body_parsed['active'] == true,
                "Failure: expected introspection response for 'active' to be Boolean value true for valid token"
         assert_introspection_response_match(active_introspection_response_body_parsed, 'client_id',
-                                            standalone_auth_info.client_id)
+                                            standalone_smart_auth_info.client_id)
 
         response_scope_value = get_json_claim_value(active_introspection_response_body_parsed, 'scope')
 

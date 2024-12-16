@@ -36,8 +36,8 @@ module SMARTAppLaunch
 
     config(
       inputs: {
-        auth_info: {
-          name: :standalone_auth_info,
+        smart_auth_info: {
+          name: :standalone_smart_auth_info,
           default: { requested_scopes: 'launch/patient openid fhirUser offline_access patient/*.read' }.to_json
         },
         url: {
@@ -66,7 +66,8 @@ module SMARTAppLaunch
         encounter_id: { name: :standalone_encounter_id },
         received_scopes: { name: :standalone_received_scopes },
         intent: { name: :standalone_intent },
-        smart_credentials: { name: :standalone_smart_credentials }
+        smart_credentials: { name: :standalone_smart_credentials },
+        smart_auth_info: { name: :standalone_smart_auth_info }
       },
       requests: {
         redirect: { name: :standalone_redirect },

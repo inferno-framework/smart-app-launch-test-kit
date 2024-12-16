@@ -40,8 +40,8 @@ module SMARTAppLaunch
 
     config(
       inputs: {
-        auth_info: {
-          name: :ehr_auth_info,
+        smart_auth_info: {
+          name: :ehr_smart_auth_info,
           default: { requested_scopes: 'launch openid fhirUser offline_access user/*.read' }.to_json
         },
         url: {
@@ -74,7 +74,8 @@ module SMARTAppLaunch
         encounter_id: { name: :ehr_encounter_id },
         received_scopes: { name: :ehr_received_scopes },
         intent: { name: :ehr_intent },
-        smart_credentials: { name: :ehr_smart_credentials }
+        smart_credentials: { name: :ehr_smart_credentials },
+        smart_auth_info: { name: :ehr_smart_auth_info }
       },
       requests: {
         launch: { name: :ehr_launch },

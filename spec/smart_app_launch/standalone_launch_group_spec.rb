@@ -18,11 +18,13 @@ RSpec.describe SMARTAppLaunch::StandaloneLaunchGroup do
       url: url,
       smart_authorization_url: "#{url}/auth",
       smart_token_url: token_url,
-      client_auth_type: 'public',
-      auth_info: Inferno::DSL::AuthInfo.new(
+      smart_auth_info: Inferno::DSL::AuthInfo.new(
+        auth_type: 'public',
         client_id: 'CLIENT_ID',
         requested_scopes: 'launch/patient patient/*.*',
-        pkce_support: 'disabled'
+        pkce_support: 'disabled',
+        auth_url: "#{url}/auth",
+        token_url:
       )
     }
   end

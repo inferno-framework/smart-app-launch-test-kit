@@ -25,10 +25,8 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
   end
   let(:inputs) do
     {
-      smart_token_url: token_url,
-      refresh_token:,
       received_scopes:,
-      auth_info: Inferno::DSL::AuthInfo.new(client_id:)
+      smart_auth_info: Inferno::DSL::AuthInfo.new(client_id:, token_url:, refresh_token:)
     }
   end
 
@@ -47,7 +45,8 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
   end
 
   it 'skips if no refresh_token is available' do
-    result = run(test, refresh_token: nil)
+    inputs[:smart_auth_info].refresh_token = nil
+    result = run(test, inputs)
 
     expect(result.result).to eq('skip')
   end
@@ -86,7 +85,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
           body: valid_response.to_json
         )
 
-      inputs[:auth_info].client_secret = client_secret
+      inputs[:smart_auth_info].client_secret = client_secret
       result = run(test, inputs)
 
       expect(result.result).to eq('pass')

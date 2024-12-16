@@ -17,7 +17,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'smart_stu2_2') }
   let(:runnable_inputs) do
-    { auth_info: Inferno::DSL::AuthInfo.new(requested_scopes: 'patient/*.*') }
+    { smart_auth_info: Inferno::DSL::AuthInfo.new(requested_scopes: 'patient/*.*') }
   end
 
   def run(runnable, inputs = {})
@@ -291,7 +291,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
     }
     create_token_request(body: inputs)
 
-    runnable_inputs[:auth_info].requested_scopes = 'SCOPE'
+    runnable_inputs[:smart_auth_info].requested_scopes = 'SCOPE'
     result = run(test, runnable_inputs)
 
     expect(result.result).to eq('pass')
@@ -301,5 +301,11 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
 
       expect(persisted_data).to eq(value.to_s)
     end
+
+    persisted_auth_info = JSON.parse(session_data_repo.load(test_session_id: test_session.id, name: :smart_auth_info))
+
+    expect(persisted_auth_info['refresh_token']).to eq(inputs[:refresh_token])
+    expect(persisted_auth_info['access_token']).to eq(inputs[:access_token])
+    expect(persisted_auth_info['expires_in']).to eq(inputs[:expires_in])
   end
 end

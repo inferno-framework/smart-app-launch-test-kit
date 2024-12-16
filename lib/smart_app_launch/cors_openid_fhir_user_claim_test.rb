@@ -25,7 +25,7 @@ module SMARTAppLaunch
     end
 
     run do
-      valid_fhir_user_resource_types = %w[Patient Practitioner RelatedPerson Person]
+      valid_fhir_user_resource_types = ['Patient', 'Practitioner', 'RelatedPerson', 'Person']
 
       fhir_user_segments = id_token_fhir_user.split('/')
       fhir_user_resource_type = fhir_user_segments[-2]

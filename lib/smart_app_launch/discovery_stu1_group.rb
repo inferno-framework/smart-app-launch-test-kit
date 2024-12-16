@@ -181,13 +181,14 @@ module SMARTAppLaunch
                 }
               ]
             }
-      output :smart_auth_info, type: :auth_info
+
       output :smart_authorization_url,
              :smart_introspection_url,
              :smart_management_url,
              :smart_registration_url,
              :smart_revocation_url,
-             :smart_token_url
+             :smart_token_url,
+             :smart_auth_info
 
       run do
         mismatched_urls = []
@@ -204,7 +205,7 @@ module SMARTAppLaunch
           smart_auth_info.auth_url = smart_authorization_url
           smart_auth_info.token_url = smart_token_url
 
-          output smart_auth_info:
+          output smart_auth_info: smart_auth_info
         end
 
         pass_if mismatched_urls.empty?

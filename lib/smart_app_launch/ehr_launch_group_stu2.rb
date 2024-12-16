@@ -33,8 +33,8 @@ module SMARTAppLaunch
 
     config(
       inputs: {
-        auth_info: {
-          name: :ehr_auth_info,
+        smart_auth_info: {
+          name: :ehr_smart_auth_info,
           default: { requested_scopes: 'launch openid fhirUser offline_access user/*.rs' }.to_json
         }
       }

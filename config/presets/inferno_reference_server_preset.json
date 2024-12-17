@@ -9,95 +9,14 @@
       "value": "https://inferno.healthit.gov/reference-server/r4"
     },
     {
-      "name": "standalone_client_id",
-      "type": "text",
-      "value": "SAMPLE_PUBLIC_CLIENT_ID"
+      "name": "standalone_smart_auth_info",
+      "type": "auth_info",
+      "value": "{\"auth_type\":\"public\",\"use_discovery\":\"true\",\"requested_scopes\":\"launch/patient openid fhirUser offline_access patient/*.read\",\"client_id\":\"SAMPLE_PUBLIC_CLIENT_ID\",\"pkce_support\":\"disabled\",\"auth_request_method\":\"GET\"}"
     },
     {
-      "name": "standalone_requested_scopes",
-      "type": "text",
-      "value": "launch/patient openid fhirUser offline_access patient/*.read"
-    },
-    {
-      "name": "use_pkce",
-      "type": "radio",
-      "title": "Proof Key for Code Exchange (PKCE)",
-      "options": {
-        "list_options": [
-          {
-            "label": "Enabled",
-            "value": "true"
-          },
-          {
-            "label": "Disabled",
-            "value": "false"
-          }
-        ]
-      },
-      "value": "false"
-    },
-    {
-      "name": "pkce_code_challenge_method",
-      "type": "radio",
-      "optional": true,
-      "title": "PKCE Code Challenge Method",
-      "options": {
-        "list_options": [
-          {
-            "label": "S256",
-            "value": "S256"
-          },
-          {
-            "label": "plain",
-            "value": "plain"
-          }
-        ]
-      },
-      "value": "S256"
-    },
-    {
-      "name": "client_auth_type",
-      "value": "public",
-      "_title": "Client Authentication Method",
-      "_type": "radio",
-      "_options": {
-        "list_options": [
-          {
-            "label": "Public",
-            "value": "public"
-          },
-          {
-            "label": "Confidential Symmetric",
-            "value": "confidential_symmetric"
-          },
-          {
-            "label": "Confidential Asymmetric",
-            "value": "confidential_asymmetric"
-          }
-        ]
-      }
-    },
-    {
-      "name": "standalone_client_secret",
-      "type": "text",
-      "optional": true,
-      "value": null
-    },
-    {
-      "name": "ehr_client_id",
-      "type": "text",
-      "value": "SAMPLE_PUBLIC_CLIENT_ID"
-    },
-    {
-      "name": "ehr_requested_scopes",
-      "type": "text",
-      "value": "launch openid fhirUser offline_access user/*.read"
-    },
-    {
-      "name": "ehr_client_secret",
-      "type": "text",
-      "optional": true,
-      "value": null
+      "name": "ehr_smart_auth_info",
+      "type": "auth_info",
+      "value": "{\"auth_type\":\"public\",\"use_discovery\":\"true\",\"requested_scopes\":\"launch openid fhirUser offline_access user/*.read\",\"client_id\":\"SAMPLE_PUBLIC_CLIENT_ID\",\"pkce_support\":\"disabled\",\"auth_request_method\":\"GET\"}"
     }
   ]
 }

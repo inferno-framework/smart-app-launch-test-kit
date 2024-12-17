@@ -52,8 +52,7 @@ module SMARTAppLaunch
     end
 
     def signing_key
-      private_key
-      if @private_key.nil?
+      if private_key.nil?
         raise Inferno::Exceptions::AssertionException,
               "No signing key found for inputs: encryption method = '#{client_auth_encryption_method}' and kid = '#{kid}'"
       end

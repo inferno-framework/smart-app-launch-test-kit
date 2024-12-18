@@ -24,7 +24,6 @@ module SMARTAppLaunch
             components: [
               {
                 name: :auth_type,
-                type: 'select',
                 default: 'backend_services',
                 locked: 'true'
               }

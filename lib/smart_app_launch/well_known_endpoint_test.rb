@@ -20,7 +20,6 @@ module SMARTAppLaunch
             components: [
               {
                 name: :auth_type,
-                type: 'select',
                 default: 'public',
                 options: {
                   list_options: [

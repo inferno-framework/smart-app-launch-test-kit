@@ -66,7 +66,7 @@ module SMARTAppLaunch
       body are returned in the response.
       )
 
-      input :standalone_smart_auth_info, type: :auth_info, options: { mode: 'auth' }
+      input :standalone_smart_auth_info, type: :auth_info, options: { mode: 'access' }
 
       output :active_token_introspection_response_body
 

@@ -16,7 +16,7 @@ module SMARTAppLaunch
       - `sub` must be a non-blank string not exceeding 255 characters in length
     )
 
-    REQUIRED_CLAIMS = %w[iss sub aud exp iat].freeze
+    REQUIRED_CLAIMS = ['iss', 'sub', 'aud', 'exp', 'iat'].freeze
 
     def required_claims
       REQUIRED_CLAIMS.dup

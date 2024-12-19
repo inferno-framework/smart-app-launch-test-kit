@@ -1,3 +1,3 @@
 module SMARTAppLaunch
-  VERSION = '0.4.6'.freeze
+  VERSION = '0.5.0.dev'.freeze
 end

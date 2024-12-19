@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     smart_app_launch_test_kit (0.5.0.dev)
-      inferno_core (>= 0.5.3)
+      inferno_core (>= 0.5.4)
       json-jwt (~> 1.15.3)
       jwt (~> 2.6)
       tls_test_kit (~> 0.2.0)
@@ -138,7 +138,7 @@ GEM
     httpclient (2.8.3)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
-    inferno_core (0.5.3)
+    inferno_core (0.5.4)
       activesupport (~> 6.1.7.5)
       base62-rb (= 0.3.1)
       blueprinter (= 0.25.2)

@@ -15,9 +15,11 @@ RSpec.describe SMARTAppLaunch::TokenRefreshGroup do
   let(:token_url) { "#{url}/token" }
   let(:inputs) do
     {
-      smart_token_url: token_url,
-      refresh_token: 'REFRESH_TOKEN',
-      client_id: 'CLIENT_ID',
+      smart_auth_info: Inferno::DSL::AuthInfo.new(
+        client_id: 'CLIENT_ID',
+        refresh_token: 'REFRESH_TOKEN',
+        token_url:
+      ),
       received_scopes: 'launch/patient patient/*.*'
     }
   end

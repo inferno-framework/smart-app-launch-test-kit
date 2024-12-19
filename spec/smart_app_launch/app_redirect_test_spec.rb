@@ -13,11 +13,13 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
   let(:url) { 'http://example.com/fhir' }
   let(:inputs) do
     {
-      client_id: 'CLIENT_ID',
-      requested_scopes: 'REQUESTED_SCOPES',
       url: url,
-      smart_authorization_url: 'http://example.com/auth',
-      use_pkce: 'false'
+      smart_auth_info: Inferno::DSL::AuthInfo.new(
+        client_id: 'CLIENT_ID',
+        requested_scopes: 'REQUESTED_SCOPES',
+        pkce_support: 'disabled',
+        auth_url: 'http://example.com/auth'
+      )
     }
   end
 
@@ -61,7 +63,7 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
   end
 
   it 'fails if the authorization url is invalid' do
-    inputs[:smart_authorization_url] = 'xyz'
+    inputs[:smart_auth_info].auth_url = 'xyz'
     result = run(test, inputs)
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/is not a valid URI/)
@@ -90,9 +92,10 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
 
   context 'when PKCE is enabled' do
     let(:pkce_inputs) do
-      pkce_inputs = inputs.merge(pkce_code_challenge_method: 'S256')
-      pkce_inputs[:use_pkce] = true
-      pkce_inputs
+      smart_auth_info = inputs[:smart_auth_info]
+      smart_auth_info.pkce_support = 'enabled'
+      smart_auth_info.pkce_code_challenge_method = 'S256'
+      inputs
     end
 
     it 'adds code_challenge and code_challenge method to the authorization url' do
@@ -103,7 +106,8 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
     end
 
     it 'sends the verifier as the challenge when challenge method is plain' do
-      result = run(test, pkce_inputs.merge(pkce_code_challenge_method: 'plain'))
+      pkce_inputs[:smart_auth_info].pkce_code_challenge_method = 'plain'
+      result = run(test, pkce_inputs)
 
       expect(result.result).to eq('wait')
       # We generate a uuid for the verifier, so check that the challenge is a uuid
@@ -133,7 +137,7 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
         subject.authorization_url_builder(base_url, new_params)
       end
 
-      it { expect(result).to eq "https://example.com?one=1&two=2" }
+      it { expect(result).to eq 'https://example.com?one=1&two=2' }
     end
 
     context 'when there are existing URL parameters' do
@@ -142,7 +146,7 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
         subject.authorization_url_builder(base_url, new_params)
       end
 
-      it { expect(result).to eq "https://example.com?keep=me&one=1&two=2" }
+      it { expect(result).to eq 'https://example.com?keep=me&one=1&two=2' }
     end
 
     context 'when a URL parameter value is nil' do
@@ -152,7 +156,7 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
       end
 
       # an empty query parameter is not disallowed by RFC3986, although weird
-      it { expect(result).to eq "https://example.com?one=1&empty" }
+      it { expect(result).to eq 'https://example.com?one=1&empty' }
     end
   end
 end

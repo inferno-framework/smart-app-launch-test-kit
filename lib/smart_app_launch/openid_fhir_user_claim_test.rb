@@ -9,14 +9,13 @@ module SMARTAppLaunch
     )
 
     input :id_token_payload_json, :url
-    input :smart_credentials, type: :auth_info, options: { mode: 'access' }
     input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
 
     output :id_token_fhir_user
 
     fhir_client do
       url :url
-      auth_info :smart_credentials
+      auth_info :smart_auth_info
     end
 
     run do

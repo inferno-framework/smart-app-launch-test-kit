@@ -16,11 +16,11 @@ module SMARTAppLaunch
     optional
 
     input :url, :id_token_fhir_user
-    input :smart_credentials, type: :auth_info
+    input :smart_auth_info, type: :auth_info
 
     fhir_client do
       url :url
-      auth_info :smart_credentials
+      auth_info :smart_auth_info
       headers 'Origin' => Inferno::Application['inferno_host']
     end
 

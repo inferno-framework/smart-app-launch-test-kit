@@ -38,7 +38,14 @@ module SMARTAppLaunch
       inputs: {
         smart_auth_info: {
           name: :standalone_smart_auth_info,
-          default: { requested_scopes: 'launch/patient openid fhirUser offline_access patient/*.read' }.to_json
+          options: {
+            components: [
+              {
+                name: :requested_scopes,
+                default: 'launch/patient openid fhirUser offline_access patient/*.read'
+              }
+            ]
+          }
         },
         url: {
           title: 'Standalone FHIR Endpoint',

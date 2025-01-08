@@ -251,7 +251,7 @@ module SMARTAppLaunch
                   {
                     name: :auth_type,
                     default: 'backend_services',
-                    locked: 'true'
+                    locked: true
                   },
                   {
                     name: :pkce_support,

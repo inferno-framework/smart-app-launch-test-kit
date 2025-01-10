@@ -32,15 +32,6 @@ module SMARTAppLaunch
       * [SMART EHR Launch Sequence](http://hl7.org/fhir/smart-app-launch/STU2.2/app-launch.html#launch-app-ehr-launch)
     )
 
-    config(
-      inputs: {
-        smart_auth_info: {
-          name: :ehr_smart_auth_info,
-          default: { requested_scopes: 'launch openid fhirUser offline_access user/*.rs' }.to_json
-        }
-      }
-    )
-
     test from: :smart_token_exchange_stu2_2
 
     token_exchange_index = children.find_index { |child| child.id.to_s.end_with? 'smart_token_exchange' }

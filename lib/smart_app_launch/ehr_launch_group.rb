@@ -42,7 +42,23 @@ module SMARTAppLaunch
       inputs: {
         smart_auth_info: {
           name: :ehr_smart_auth_info,
-          default: { requested_scopes: 'launch openid fhirUser offline_access user/*.read' }.to_json
+          options: {
+            components: [
+              {
+                name: :auth_type,
+                options: {
+                  list_options: [
+                    { label: 'Public', value: 'public' },
+                    { label: 'Confidential Symmetric', value: 'symmetric' }
+                  ]
+                }
+              },
+              {
+                name: :requested_scopes,
+                default: 'launch openid fhirUser offline_access user/*.read'
+              }
+            ]
+          }
         },
         url: {
           title: 'EHR Launch FHIR Endpoint',

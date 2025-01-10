@@ -7,29 +7,17 @@ RSpec.describe SMARTAppLaunch::OpenIDFHIRUserClaimTest do
   let(:url) { 'http://example.com/fhir' }
   let(:scopes) { 'fhirUser' }
   let(:client_id) { 'CLIENT_ID' }
-  let(:smart_credentials) do
-    {
-      access_token: 'ACCESS_TOKEN',
-      refresh_token: 'REFRESH_TOKEN',
-      expires_in: 3600,
-      client_id: client_id,
-      issue_time: Time.now.iso8601,
-      token_url: 'http://example.com/token'
-    }.to_json
-  end
   let(:payload) do
     {
       fhirUser: "#{url}/Patient/123"
     }
   end
+  let(:smart_auth_info) { Inferno::DSL::AuthInfo.new(requested_scopes: scopes) }
   let(:inputs) do
     {
       id_token_payload_json: payload.to_json,
       url: url,
-      smart_credentials: smart_credentials,
-      smart_auth_info: Inferno::DSL::AuthInfo.new(
-        requested_scopes: scopes
-      )
+      smart_auth_info:
     }
   end
 
@@ -48,7 +36,7 @@ RSpec.describe SMARTAppLaunch::OpenIDFHIRUserClaimTest do
   end
 
   it 'skips if no token payload is available' do
-    result = run(test, id_token_payload_json: nil, url: url, smart_credentials: smart_credentials)
+    result = run(test, id_token_payload_json: nil, url: url, smart_auth_info:)
 
     expect(result.result).to eq('skip')
     expect(result.result_message).to match(/Input 'id_token_payload_json' is nil/)

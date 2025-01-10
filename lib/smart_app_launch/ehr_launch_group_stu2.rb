@@ -35,7 +35,25 @@ module SMARTAppLaunch
       inputs: {
         smart_auth_info: {
           name: :ehr_smart_auth_info,
-          default: { requested_scopes: 'launch openid fhirUser offline_access user/*.rs' }.to_json
+          options: {
+            components: [
+              {
+                name: :requested_scopes,
+                default: 'launch openid fhirUser offline_access patient/*.rs'
+              },
+              {
+                name: :pkce_support,
+                default: 'enabled',
+                locked: true
+              },
+              {
+                name: :pkce_code_challenge_method,
+                default: 'S256',
+                locked: true
+              },
+              Inferno::DSL::AuthInfo.default_auth_type_component
+            ]
+          }
         }
       }
     )

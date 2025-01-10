@@ -244,36 +244,6 @@ module SMARTAppLaunch
       run_as_group
 
       group from: :smart_discovery_stu2 do
-        input :smart_auth_info,
-              type: :auth_info,
-              options: {
-                mode: 'auth',
-                components: [
-                  {
-                    name: :auth_type,
-                    default: 'backend_services',
-                    locked: true
-                  },
-                  {
-                    name: :pkce_support,
-                    default: 'enabled',
-                    locked: true
-                  },
-                  {
-                    name: :pkce_code_challenge_method,
-                    default: 'S256',
-                    locked: true
-                  },
-                  {
-                    name: :requested_scopes,
-                    default: 'system/*.read'
-                  },
-                  {
-                    name: :use_discovery,
-                    locked: true
-                  }
-                ]
-              }
         config(
           inputs: {
             smart_auth_info: { name: :backend_services_smart_auth_info }
@@ -283,6 +253,7 @@ module SMARTAppLaunch
           }
         )
       end
+
       group from: :backend_services_authorization,
             config: {
               inputs: {

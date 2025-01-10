@@ -22,6 +22,10 @@ module SMARTAppLaunch
                 name: :auth_type,
                 default: 'backend_services',
                 locked: 'true'
+              },
+              {
+                name: :use_discovery,
+                locked: true
               }
             ]
           }

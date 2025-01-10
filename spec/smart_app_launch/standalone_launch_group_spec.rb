@@ -123,8 +123,14 @@ RSpec.describe SMARTAppLaunch::StandaloneLaunchGroup do
     components = options[:components]
 
     components.each do |component|
+      next if component[:name] == :use_discovery
+
       expect(component[:locked]).to be_falsy
     end
+
+    use_discovery_component = components.find { |component| component[:name] == :use_discovery }
+
+    expect(use_discovery_component[:locked]).to be(true)
 
     requested_scopes_component = components.find { |component| component[:name] == :requested_scopes }
 

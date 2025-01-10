@@ -56,6 +56,10 @@ module SMARTAppLaunch
               {
                 name: :requested_scopes,
                 default: 'launch openid fhirUser offline_access user/*.read'
+              },
+              {
+                name: :use_discovery,
+                locked: true
               }
             ]
           }

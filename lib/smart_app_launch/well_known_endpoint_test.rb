@@ -14,50 +14,7 @@ module SMARTAppLaunch
           title: 'FHIR Endpoint',
           description: 'URL of the FHIR endpoint used by SMART applications'
     input :smart_auth_info,
-          type: :auth_info,
-          options: {
-            mode: 'auth',
-            components: [
-              {
-                name: :auth_type,
-                default: 'public',
-                options: {
-                  list_options: [
-                    {
-                      label: 'Public',
-                      value: 'public'
-                    },
-                    {
-                      label: 'Confidential Symmetric',
-                      value: 'symmetric'
-                    },
-                    {
-                      label: 'Confidential Asymmetric',
-                      value: 'asymmetric'
-                    }
-                  ]
-                }
-              },
-              {
-                name: :pkce_support,
-                default: 'enabled',
-                locked: true
-              },
-              {
-                name: :pkce_code_challenge_method,
-                default: 'S256',
-                locked: true
-              },
-              {
-                name: :requested_scopes,
-                type: 'textarea'
-              },
-              {
-                name: :use_discovery,
-                locked: true
-              }
-            ]
-          }
+          type: :auth_info
 
     output :well_known_configuration,
            :well_known_authorization_url,

@@ -7,8 +7,9 @@ RSpec.describe SMARTAppLaunch::CORSOpenIDFHIRUserClaimTest do
   let(:test_session) { repo_create(:test_session, test_suite_id: 'smart_stu2_2') }
 
   let(:client_id) { 'CLIENT_ID' }
-  let(:smart_credentials) do
+  let(:smart_auth_info) do
     {
+      auth_type: 'public',
       access_token: 'ACCESS_TOKEN',
       refresh_token: 'REFRESH_TOKEN',
       expires_in: 3600,
@@ -49,7 +50,7 @@ RSpec.describe SMARTAppLaunch::CORSOpenIDFHIRUserClaimTest do
     result = run(
       test,
       url:,
-      smart_credentials:,
+      smart_auth_info:,
       id_token_fhir_user:
     )
 
@@ -65,7 +66,7 @@ RSpec.describe SMARTAppLaunch::CORSOpenIDFHIRUserClaimTest do
     result = run(
       test,
       url:,
-      smart_credentials:,
+      smart_auth_info:,
       id_token_fhir_user:
     )
 
@@ -82,7 +83,7 @@ RSpec.describe SMARTAppLaunch::CORSOpenIDFHIRUserClaimTest do
     result = run(
       test,
       url:,
-      smart_credentials:,
+      smart_auth_info:,
       id_token_fhir_user:
     )
 
@@ -99,7 +100,7 @@ RSpec.describe SMARTAppLaunch::CORSOpenIDFHIRUserClaimTest do
     result = run(
       test,
       url:,
-      smart_credentials:,
+      smart_auth_info:,
       id_token_fhir_user:
     )
 
@@ -117,7 +118,7 @@ RSpec.describe SMARTAppLaunch::CORSOpenIDFHIRUserClaimTest do
     result = run(
       test,
       url:,
-      smart_credentials:,
+      smart_auth_info:,
       id_token_fhir_user:
     )
 

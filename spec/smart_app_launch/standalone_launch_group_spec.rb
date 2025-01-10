@@ -110,4 +110,31 @@ RSpec.describe SMARTAppLaunch::StandaloneLaunchGroup do
       expect(requests_repo.find_named_request(test_session.id, name)).to be_present
     end
   end
+
+  it 'has a properly configured auth input' do
+    auth_input = described_class.available_inputs[:standalone_smart_auth_info]
+
+    expect(auth_input).to be_present
+
+    options = auth_input.options
+
+    expect(options[:mode]).to eq('auth')
+
+    components = options[:components]
+
+    components.each do |component|
+      expect(component[:locked]).to be_falsy
+    end
+
+    requested_scopes_component = components.find { |component| component[:name] == :requested_scopes }
+
+    expect(requested_scopes_component[:default]).to eq('launch/patient openid fhirUser offline_access patient/*.read')
+
+    auth_type_component = components.find { |component| component[:name] == :auth_type }
+
+    list_options = auth_type_component.dig(:options, :list_options)
+    expected_list_options = [{ label: 'Public', value: 'public' }, { label: 'Confidential Symmetric', value: 'symmetric' }]
+
+    expect(list_options).to match_array(expected_list_options)
+  end
 end

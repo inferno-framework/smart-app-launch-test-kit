@@ -1,0 +1,31 @@
+namespace :requirements do
+  desc 'Generate requirements coverage CSV'
+  task :generate_coverage do
+    require 'inferno'
+    Inferno::Application.start(:suites)
+
+    require_relative 'lib/inferno_requirements_tools/tasks/requirements_coverage'
+    InfernoRequirementsTools::Tasks::RequirementsCoverage.new.run
+  end
+
+  desc 'Check if requirements coverage CSV is up-to-date'
+  task :check_coverage do
+    require 'inferno'
+    Inferno::Application.start(:suites)
+
+    require_relative 'lib/inferno_requirements_tools/tasks/requirements_coverage'
+    InfernoRequirementsTools::Tasks::RequirementsCoverage.new.run_check
+  end
+
+  desc 'Collect requirements and planned not tested requirements into CSVs'
+  task :collect, [:requirements_dir, :test_kit_dir] => [] do |_t, args|
+    require_relative 'lib/inferno_requirements_tools/tasks/collect_requirements'
+    InfernoRequirementsTools::Tasks::CollectRequirements.run(args.requirements_dir, args.test_kit_dir)
+  end
+
+  desc 'Check if requirements and planned not tested CSVs are up-to-date'
+  task :check_collection, [:requirements_dir, :test_kit_dir] => [] do |_t, args|
+    require_relative 'lib/inferno_requirements_tools/tasks/collect_requirements'
+    InfernoRequirementsTools::Tasks::CollectRequirements.check(args.requirements_dir, args.test_kit_dir)
+  end
+end

@@ -12,6 +12,10 @@ module SMARTAppLaunch
 
       The format of the optional `fhirContext` field is validated if present.
     )
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@73',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@74',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@75'
+    
     id :smart_token_response_body_stu2_2
 
     input :requested_scopes

@@ -1,0 +1,11 @@
+test_kit_id: bulk-data-test-kit
+
+suites:
+  - id: smart_app_launch_test_kit
+    class_name: SMARTAppLaunch::SMARTSTU22Suite
+    suite_actor: Client
+
+requirement_sets:
+  - id: hl7.fhir.uv.smart-app-launch_2.2.0
+    actor_map:
+      - { spec: Server, test_kit: client }

@@ -67,6 +67,7 @@ module SMARTAppLaunch
         FHIR authorization server’s token endpoint. All exchanges described herein between the client and the 
         FHIR server SHALL be secured using TLS V1.2 or a more recent version of TLS."
       DESCRIPTION
+      verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@318'
       id :smart_backend_services_token_tls_version
 
       config(

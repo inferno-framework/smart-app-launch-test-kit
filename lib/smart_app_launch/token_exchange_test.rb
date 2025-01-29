@@ -27,7 +27,7 @@ module SMARTAppLaunch
     end
 
     def add_credentials_to_request(oauth2_params, oauth2_headers)
-      if smart_auth_info.client_secret.present?
+      if smart_auth_info.symmetric_auth?
         client_credentials = "#{smart_auth_info.client_id}:#{smart_auth_info.client_secret}"
         oauth2_headers['Authorization'] = "Basic #{Base64.strict_encode64(client_credentials)}"
       else
@@ -47,7 +47,7 @@ module SMARTAppLaunch
 
       add_credentials_to_request(oauth2_params, oauth2_headers)
 
-      oauth2_params[:code_verifier] = pkce_code_verifier if smart_auth_info.pkce_support == 'enabled'
+      oauth2_params[:code_verifier] = pkce_code_verifier if smart_auth_info.pkce_enabled?
 
       post(smart_auth_info.token_url, body: oauth2_params, name: :token, headers: oauth2_headers)
 

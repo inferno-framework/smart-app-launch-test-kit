@@ -79,11 +79,11 @@ module SMARTAppLaunch
         oauth2_params['launch'] = launch
       end
 
-      if smart_auth_info.pkce_support == 'enabled'
+      if smart_auth_info.pkce_enabled?
         # code verifier must be between 43 and 128 characters
         code_verifier = "#{SecureRandom.uuid}-#{SecureRandom.uuid}"
         code_challenge =
-          if smart_auth_info.pkce_code_challenge_method == 'S256'
+          if smart_auth_info.s256_code_challenge_method?
             self.class.calculate_s256_challenge(code_verifier)
           else
             code_verifier

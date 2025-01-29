@@ -23,6 +23,7 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
   end
   let(:confidential_inputs) do
     public_inputs[:smart_auth_info].client_secret = 'CLIENT_SECRET'
+    public_inputs[:smart_auth_info].auth_type = 'symmetric'
     public_inputs
   end
 

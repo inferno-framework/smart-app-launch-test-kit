@@ -26,7 +26,7 @@ module SMARTAppLaunch
     end
 
     def authorization_url_builder(url, params)
-      return super if smart_auth_info.auth_request_method.casecmp? 'get'
+      return super if smart_auth_info.get_auth_request?
 
       post_params = params.merge(auth_url: url)
 

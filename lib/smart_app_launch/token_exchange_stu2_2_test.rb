@@ -11,7 +11,7 @@ module SMARTAppLaunch
         oauth2_params[:client_id] = smart_auth_info.client_id
         oauth2_headers['Origin'] = Inferno::Application['inferno_host']
       else
-        super(oauth2_params, oauth2_headers)
+        super
       end
     end
   end

@@ -31,7 +31,7 @@ module SMARTAppLaunch
           )
         )
       else
-        super(oauth2_headers, oauth2_params)
+        super
       end
     end
   end

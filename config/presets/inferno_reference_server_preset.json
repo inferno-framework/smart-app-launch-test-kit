@@ -11,12 +11,22 @@
     {
       "name": "standalone_smart_auth_info",
       "type": "auth_info",
-      "value": "{\"auth_type\":\"public\",\"use_discovery\":\"true\",\"requested_scopes\":\"launch/patient openid fhirUser offline_access patient/*.read\",\"client_id\":\"SAMPLE_PUBLIC_CLIENT_ID\",\"pkce_support\":\"disabled\",\"auth_request_method\":\"GET\"}"
+      "value": {
+        "auth_type": "public",
+        "requested_scopes": "launch/patient openid fhirUser offline_access patient/*.read",
+        "client_id": "SAMPLE_PUBLIC_CLIENT_ID",
+        "pkce_support": "disabled"
+      }
     },
     {
       "name": "ehr_smart_auth_info",
       "type": "auth_info",
-      "value": "{\"auth_type\":\"public\",\"use_discovery\":\"true\",\"requested_scopes\":\"launch openid fhirUser offline_access user/*.read\",\"client_id\":\"SAMPLE_PUBLIC_CLIENT_ID\",\"pkce_support\":\"disabled\",\"auth_request_method\":\"GET\"}"
+      "value": {
+        "auth_type": "public",
+        "requested_scopes": "launch openid fhirUser offline_access user/*.read",
+        "client_id": "SAMPLE_PUBLIC_CLIENT_ID",
+        "pkce_support": "disabled"
+      }
     }
   ]
 }

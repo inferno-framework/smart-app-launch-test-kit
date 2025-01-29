@@ -71,6 +71,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
   context 'with a confidential client' do
     it 'passes when the refresh succeeds' do
       credentials = Base64.strict_encode64("#{client_id}:#{client_secret}")
+      inputs[:smart_auth_info].auth_type = 'symmetric'
       stub_request(:post, token_url)
         .with(
           headers: {

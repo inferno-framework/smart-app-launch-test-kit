@@ -23,7 +23,7 @@ module SMARTAppLaunch
     makes_request :token_refresh
 
     def add_credentials_to_request(oauth2_headers, oauth2_params)
-      if smart_auth_info.client_secret.present?
+      if smart_auth_info.symmetric_auth?
         credentials = Base64.strict_encode64("#{smart_auth_info.client_id}:#{smart_auth_info.client_secret}")
         oauth2_headers['Authorization'] = "Basic #{credentials}"
       else

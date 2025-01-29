@@ -20,16 +20,7 @@ module SMARTAppLaunch
     input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
 
     def add_credentials_to_request(oauth2_headers, oauth2_params)
-      case smart_auth_info.auth_type
-      when 'public'
-        oauth2_params['client_id'] = smart_auth_info.client_id
-      when 'symmetric'
-        assert smart_auth_info.client_secret.present?,
-               'A client secret must be provided when using confidential symmetric client authentication.'
-
-        credentials = Base64.strict_encode64("#{smart_auth_info.client_id}:#{smart_auth_info.client_secret}")
-        oauth2_headers['Authorization'] = "Basic #{credentials}"
-      when 'asymmetric'
+      if smart_auth_info.asymmetric_auth?
         oauth2_params.merge!(
           client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
           client_assertion: ClientAssertionBuilder.build(
@@ -39,6 +30,8 @@ module SMARTAppLaunch
             client_auth_encryption_method: smart_auth_info.encryption_algorithm
           )
         )
+      else
+        super(oauth2_headers, oauth2_params)
       end
     end
   end

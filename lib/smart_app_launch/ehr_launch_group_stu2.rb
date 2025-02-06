@@ -51,7 +51,7 @@ module SMARTAppLaunch
                 default: 'S256',
                 locked: true
               },
-              Inferno::DSL::AuthInfo.default_auth_type_component,
+              Inferno::DSL::AuthInfo.default_auth_type_component_without_backend_services,
               {
                 name: :use_discovery,
                 locked: true

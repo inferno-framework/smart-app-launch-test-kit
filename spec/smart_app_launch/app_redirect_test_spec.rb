@@ -9,7 +9,7 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:requests_repo) { Inferno::Repositories::Requests.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
+  let(:suite_id) { 'smart'}
   let(:url) { 'http://example.com/fhir' }
   let(:inputs) do
     {

@@ -7,7 +7,7 @@ RSpec.describe SMARTAppLaunch::LaunchReceivedTest do
 
   let(:test) { Inferno::Repositories::Tests.new.find('smart_launch_received') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
+  let(:suite_id) { 'smart'}
   let(:url) { 'http://example.com/fhir' }
 
   def run(runnable, inputs = {})

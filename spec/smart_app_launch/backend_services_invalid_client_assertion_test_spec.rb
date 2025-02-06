@@ -5,7 +5,7 @@ RSpec.describe SMARTAppLaunch::BackendServicesInvalidClientAssertionTest do
 
   let(:test) { Inferno::Repositories::Tests.new.find('smart_backend_services_invalid_client_assertion') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart_stu2') }
+  let(:suite_id) { 'smart_stu2'}
   let(:smart_token_url) { 'http://example.com/fhir/token' }
   let(:client_auth_encryption_method) { 'ES384' }
   let(:backend_services_requested_scope) { 'system/Patient.read' }
@@ -17,7 +17,7 @@ RSpec.describe SMARTAppLaunch::BackendServicesInvalidClientAssertionTest do
   let(:body) { request_builder.authorization_request_query_values }
   let(:input) do
     {
-      smart_token_url:, 
+      smart_token_url:,
       client_auth_encryption_method:,
       backend_services_requested_scope:,
       backend_services_client_id:

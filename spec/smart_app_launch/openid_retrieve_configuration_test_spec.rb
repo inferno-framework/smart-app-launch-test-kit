@@ -8,7 +8,7 @@ RSpec.describe SMARTAppLaunch::OpenIDRetrieveConfigurationTest do
   let(:test) { Inferno::Repositories::Tests.new.find('smart_openid_retrieve_configuration') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:requests_repo) { Inferno::Repositories::Requests.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
+  let(:suite_id) { 'smart'}
   let(:url) { 'http://example.com/fhir' }
   let(:client_id) { 'CLIENT_ID' }
   let(:payload) do

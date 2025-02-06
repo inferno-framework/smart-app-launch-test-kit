@@ -5,7 +5,7 @@ RSpec.describe "Well-Known Tests" do
   let(:test_v1) { Inferno::Repositories::Tests.new.find('well_known_capabilities_stu1') }
   let(:test_v2) { Inferno::Repositories::Tests.new.find('well_known_capabilities_stu2') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
+  let(:suite_id) { 'smart'}
   let(:well_known_config) do
     {
       'authorization_endpoint' => 'https://example.com/fhir/auth/authorize',

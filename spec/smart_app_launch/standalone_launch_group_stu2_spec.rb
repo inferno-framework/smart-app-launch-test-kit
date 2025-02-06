@@ -32,7 +32,7 @@ RSpec.describe SMARTAppLaunch::StandaloneLaunchGroupSTU2 do
 
     auth_type_component = components.find { |component| component[:name] == :auth_type }
 
-    expected_list_options = Inferno::DSL::AuthInfo.default_auth_type_component[:options][:list_options]
+    expected_list_options = Inferno::DSL::AuthInfo.default_auth_type_component_without_backend_services[:options][:list_options]
     list_options = auth_type_component.dig(:options, :list_options)
 
     expect(list_options).to match_array(expected_list_options)

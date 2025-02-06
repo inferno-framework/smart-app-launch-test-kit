@@ -5,7 +5,6 @@ module SMARTAppLaunch
     id 'smart_access_brands'
     title 'SMART User-access Brands and Endpoints STU2.2'
     short_title 'SMART User-access Brands'
-    version VERSION
 
     description <<~DESCRIPTION
       The SMART User-access Brands Test Suite verifies that Brand Bundle Publishers publish valid User-access
@@ -33,6 +32,10 @@ module SMARTAppLaunch
       User Access Brand Bundle served at a public endpoint, testers can validate by providing the User Access Brand
       Bundle as an input and leaving the User Access Brand Publication URL input blank.
     INSTRUCTIONS
+
+    source_code_url('https://github.com/inferno-framework/smart-app-launch-test-kit')
+    download_url('https://github.com/inferno-framework/smart-app-launch-test-kit/releases')
+    report_issue_url('https://github.com/inferno-framework/smart-app-launch-test-kit/issues')
 
     VALIDATION_MESSAGE_FILTERS = [
       /\A\S+: \S+: URL value '.*' does not resolve/,

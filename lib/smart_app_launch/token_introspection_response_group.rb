@@ -162,8 +162,7 @@ module SMARTAppLaunch
             unless fhirUser_id_claim.nil?
               assert !fhirUser_intr_claim.nil?,
                      'Introspection response SHOULD include claim for fhirUser because ID token present in access token response'
-            end
-            unless fhirUser_id_claim.nil?
+
               assert fhirUser_intr_claim.eql?(fhirUser_id_claim),
                      'Introspection response claim for fhirUser SHOULD match value in ID token'
             end

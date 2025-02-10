@@ -1,5 +1,8 @@
+# 0.5.0
+* FI-3648: Add Spec for Shared Tests and Implement Features for the Failing Tests by @vanessuniq in https://github.com/inferno-framework/smart-app-launch-test-kit/pull/86
+
 # 0.4.6
-* * FI-3018: Allow multi-line custom headers in token introspection request by @emichaud998 in https://github.com/inferno-framework/smart-app-launch-test-kit/pull/77
+* FI-3018: Allow multi-line custom headers in token introspection request by @emichaud998 in https://github.com/inferno-framework/smart-app-launch-test-kit/pull/77
 * FI-3257: Use Custom Authorization Header Input in Invalid Token Test by @emichaud998 in https://github.com/inferno-framework/smart-app-launch-test-kit/pull/81
 * FI-2919: SMART CORS Support Tests by @emichaud998 in https://github.com/inferno-framework/smart-app-launch-test-kit/pull/75
 

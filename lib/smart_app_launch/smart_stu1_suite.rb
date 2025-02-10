@@ -1,7 +1,6 @@
 require 'tls_test_kit'
 
 require_relative 'jwks'
-require_relative 'version'
 require_relative 'discovery_stu1_group'
 require_relative 'standalone_launch_group'
 require_relative 'ehr_launch_group'
@@ -12,7 +11,6 @@ module SMARTAppLaunch
   class SMARTSTU1Suite < Inferno::TestSuite
     id 'smart'
     title 'SMART App Launch STU1'
-    version VERSION
 
     resume_test_route :get, '/launch' do |request|
       request.query_parameters['iss']
@@ -34,15 +32,18 @@ module SMARTAppLaunch
     }
 
     description <<~DESCRIPTION
-      The SMART App Launch Test Suite verifies that systems correctly implement 
-      the [SMART App Launch IG](http://hl7.org/fhir/smart-app-launch/1.0.0/) 
-      for providing authorization and/or authentication services to client 
-      applications accessing HL7® FHIR® APIs. To get started, please first register 
+      The SMART App Launch Test Suite verifies that systems correctly implement
+      the [SMART App Launch IG](http://hl7.org/fhir/smart-app-launch/1.0.0/)
+      for providing authorization and/or authentication services to client
+      applications accessing HL7® FHIR® APIs. To get started, please first register
       the Inferno client as a SMART App with the following information:
 
       * SMART Launch URI: `#{config.options[:launch_uri]}`
       * OAuth Redirect URI: `#{config.options[:redirect_uri]}`
     DESCRIPTION
+    source_code_url('https://github.com/inferno-framework/smart-app-launch-test-kit')
+    download_url('https://github.com/inferno-framework/smart-app-launch-test-kit/releases')
+    report_issue_url('https://github.com/inferno-framework/smart-app-launch-test-kit/issues')
 
     group do
       title 'Standalone Launch'

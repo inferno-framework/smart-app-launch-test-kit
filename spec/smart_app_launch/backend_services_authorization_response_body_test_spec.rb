@@ -4,7 +4,7 @@ RSpec.describe SMARTAppLaunch::BackendServicesAuthorizationResponseBodyTest do
 
   let(:test) { Inferno::Repositories::Tests.new.find('smart_backend_services_auth_response_body') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart_stu2') }
+  let(:suite_id) { 'smart_stu2'}
 
   let(:response_body) do
     {

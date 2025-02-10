@@ -1,7 +1,6 @@
 require 'tls_test_kit'
 
 require_relative 'jwks'
-require_relative 'version'
 require_relative 'discovery_stu2_group'
 require_relative 'standalone_launch_group_stu2'
 require_relative 'ehr_launch_group_stu2'
@@ -14,7 +13,6 @@ module SMARTAppLaunch
   class SMARTSTU2Suite < Inferno::TestSuite
     id 'smart_stu2'
     title 'SMART App Launch STU2'
-    version VERSION
 
     resume_test_route :get, '/launch' do |request|
       request.query_parameters['iss']
@@ -42,10 +40,10 @@ module SMARTAppLaunch
     }
 
     description <<~DESCRIPTION
-      The SMART App Launch Test Suite verifies that systems correctly implement 
-      the [SMART App Launch IG](http://hl7.org/fhir/smart-app-launch/STU2/) 
-      for providing authorization and/or authentication services to client 
-      applications accessing HL7® FHIR® APIs. To get started, please first register 
+      The SMART App Launch Test Suite verifies that systems correctly implement
+      the [SMART App Launch IG](http://hl7.org/fhir/smart-app-launch/STU2/)
+      for providing authorization and/or authentication services to client
+      applications accessing HL7® FHIR® APIs. To get started, please first register
       the Inferno client as a SMART App with the following information:
 
       * SMART Launch URI: `#{config.options[:launch_uri]}`
@@ -59,17 +57,20 @@ module SMARTAppLaunch
 
     input_instructions %(
       When running tests at this level, the token introspection endpoint is not available as a manual input.
-      Instead, group 3 Token Introspection will assume the token introspection endpoint 
+      Instead, group 3 Token Introspection will assume the token introspection endpoint
       will be output from group 1 Standalone Launch tests, specifically the SMART On FHIR Discovery tests that query
       the .well-known/smart-configuration endpoint. However, including the token introspection
       endpoint as part of the well-known ouput is NOT required and is not formally checked in the SMART On FHIR Discovery
       tests.  RFC-7662 on Token Introspection says that "The means by which the protected resource discovers the location of the introspection
       endpoint are outside the scope of this specification" and the Token Introspection IG does not add any further
-      requirements to this.  
+      requirements to this.
 
-      If the token introspection endpoint of the system under test is NOT available at .well-known/smart-configuration, 
-      please run the test groups individually and group 3 Token Introspection will include the introspection endpoint as a manual input.  
+      If the token introspection endpoint of the system under test is NOT available at .well-known/smart-configuration,
+      please run the test groups individually and group 3 Token Introspection will include the introspection endpoint as a manual input.
     )
+    source_code_url('https://github.com/inferno-framework/smart-app-launch-test-kit')
+    download_url('https://github.com/inferno-framework/smart-app-launch-test-kit/releases')
+    report_issue_url('https://github.com/inferno-framework/smart-app-launch-test-kit/issues')
 
     group do
       title 'Standalone Launch'

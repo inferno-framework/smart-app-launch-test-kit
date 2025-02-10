@@ -1,7 +1,6 @@
 require 'tls_test_kit'
 
 require_relative 'jwks'
-require_relative 'version'
 require_relative 'discovery_stu2_2_group'
 require_relative 'standalone_launch_group_stu2_2'
 require_relative 'ehr_launch_group_stu2_2'
@@ -13,7 +12,6 @@ module SMARTAppLaunch
   class SMARTSTU22Suite < Inferno::TestSuite
     id 'smart_stu2_2'
     title 'SMART App Launch STU2.2'
-    version VERSION
 
     resume_test_route :get, '/launch' do |request|
       request.query_parameters['iss']
@@ -72,6 +70,9 @@ module SMARTAppLaunch
       If the token introspection endpoint of the system under test is NOT available at .well-known/smart-configuration,
       please run the test groups individually and group 3 Token Introspection will include the introspection endpoint as a manual input.
     )
+    source_code_url('https://github.com/inferno-framework/smart-app-launch-test-kit')
+    download_url('https://github.com/inferno-framework/smart-app-launch-test-kit/releases')
+    report_issue_url('https://github.com/inferno-framework/smart-app-launch-test-kit/issues')
 
     group do
       title 'Standalone Launch'

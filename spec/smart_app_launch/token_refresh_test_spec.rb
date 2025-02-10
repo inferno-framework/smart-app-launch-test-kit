@@ -8,7 +8,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
   let(:test) { Inferno::Repositories::Tests.new.find('smart_token_refresh') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:requests_repo) { Inferno::Repositories::Requests.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
+  let(:suite_id) { 'smart'}
   let(:token_url) { 'http://example.com/fhir/token' }
   let(:refresh_token) { 'REFRESH_TOKEN' }
   let(:client_id) { 'CLIENT_ID' }

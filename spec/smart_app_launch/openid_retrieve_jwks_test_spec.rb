@@ -8,7 +8,7 @@ RSpec.describe SMARTAppLaunch::OpenIDRetrieveJWKSTest do
   let(:test) { Inferno::Repositories::Tests.new.find('smart_openid_retrieve_jwks') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:requests_repo) { Inferno::Repositories::Requests.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
+  let(:suite_id) { 'smart'}
   let(:url) { 'http://example.com/fhir' }
   let(:key_pair) { OpenSSL::PKey::RSA.new(2048) }
   let(:jwk) { JWT::JWK.new(key_pair) }

@@ -15,7 +15,7 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTest do
     }
   end
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
+  let(:suite_id) { 'smart'}
 
   def run(runnable, inputs = {})
     test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)

@@ -3,7 +3,7 @@ require_relative '../../lib/smart_app_launch/openid_token_header_test'
 RSpec.describe SMARTAppLaunch::OpenIDTokenHeaderTest do
   let(:test) { Inferno::Repositories::Tests.new.find('smart_openid_token_header') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
+  let(:suite_id) { 'smart'}
   let(:url) { 'http://example.com/fhir' }
   let(:client_id) { 'CLIENT_ID' }
   let(:payload) do

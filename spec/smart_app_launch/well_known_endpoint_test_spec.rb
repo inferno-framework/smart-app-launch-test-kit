@@ -4,7 +4,7 @@ RSpec.describe SMARTAppLaunch::WellKnownEndpointTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('well_known_endpoint') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
+  let(:suite_id) { 'smart'}
   let(:url) { 'http://example.com/fhir' }
   let(:well_known_url) { 'http://example.com/fhir/.well-known/smart-configuration' }
   let(:well_known_config) do
@@ -104,7 +104,7 @@ RSpec.describe SMARTAppLaunch::WellKnownEndpointTest do
       .with( headers: { 'Accept' => 'application/json' })
       .to_return(status: 200, body: well_known_config.to_json, headers: { 'Content-Type' => 'application/json' })
     result = run(runnable, url: url)
-    
+
     expect(result.result).to eq('pass')
   end
 

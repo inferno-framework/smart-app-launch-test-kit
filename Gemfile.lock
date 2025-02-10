@@ -5,7 +5,7 @@ PATH
       inferno_core (>= 0.6.2)
       json-jwt (~> 1.15.3)
       jwt (~> 2.6)
-      tls_test_kit (~> 0.2.0)
+      tls_test_kit (~> 0.3.0)
 
 GEM
   remote: https://rubygems.org/
@@ -272,8 +272,8 @@ GEM
     strings-ansi (0.2.0)
     thor (1.2.2)
     tilt (2.6.0)
-    tls_test_kit (0.2.2)
-      inferno_core (>= 0.4.2)
+    tls_test_kit (0.3.0)
+      inferno_core (>= 0.6.2)
     tty-color (0.6.0)
     tty-markdown (0.7.2)
       kramdown (>= 1.16.2, < 3.0)

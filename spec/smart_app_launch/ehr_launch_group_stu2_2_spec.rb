@@ -1,9 +1,7 @@
 require_relative '../../lib/smart_app_launch/ehr_launch_group_stu2_2'
-require_relative '../request_helper'
 
-RSpec.describe SMARTAppLaunch::EHRLaunchGroupSTU22 do
-  include Rack::Test::Methods
-  include RequestHelpers
+RSpec.describe SMARTAppLaunch::EHRLaunchGroupSTU22, :request do
+  let(:suite_id) { 'smart' }
 
   it 'has a properly configured auth input' do
     auth_input = described_class.available_inputs[:ehr_smart_auth_info]

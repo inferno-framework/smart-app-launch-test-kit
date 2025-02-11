@@ -1,23 +1,15 @@
 require_relative '../../lib/smart_app_launch/standalone_launch_group'
-require_relative '../request_helper'
 
-RSpec.describe SMARTAppLaunch::StandaloneLaunchGroup do
-  include Rack::Test::Methods
-  include RequestHelpers
-
-  let(:suite) { Inferno::Repositories::TestSuites.new.find('smart') }
+RSpec.describe SMARTAppLaunch::StandaloneLaunchGroup, :request do
+  let(:suite_id) { 'smart' }
   let(:group) { Inferno::Repositories::TestGroups.new.find('smart_standalone_launch') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:requests_repo) { Inferno::Repositories::Requests.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
   let(:url) { 'http://example.com/fhir' }
   let(:token_url) { "#{url}/token" }
   let(:inputs) do
     {
       url: url,
-      smart_authorization_url: "#{url}/auth",
-      smart_token_url: token_url,
       smart_auth_info: Inferno::DSL::AuthInfo.new(
         auth_type: 'public',
         client_id: 'CLIENT_ID',
@@ -46,22 +38,6 @@ RSpec.describe SMARTAppLaunch::StandaloneLaunchGroup do
       'Cache-Control' => 'no-store',
       'Pragma' => 'no-cache'
     }
-  end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      type = runnable.config.input_type(name).presence || 'text'
-      type = 'text' if type == 'radio'
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name: runnable.config.input_name(name).presence || name,
-        value: value,
-        type: type
-      )
-    end
-    Inferno::TestRunner.new(test_session: test_session, test_run: test_run).run(runnable)
   end
 
   it 'persists requests and outputs' do

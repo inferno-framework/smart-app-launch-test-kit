@@ -2,7 +2,6 @@ require_relative '../../lib/smart_app_launch/openid_fhir_user_claim_test'
 
 RSpec.describe SMARTAppLaunch::OpenIDFHIRUserClaimTest do
   let(:test) { Inferno::Repositories::Tests.new.find('smart_openid_fhir_user_claim') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:suite_id) { 'smart'}
   let(:url) { 'http://example.com/fhir' }
   let(:scopes) { 'fhirUser' }
@@ -19,20 +18,6 @@ RSpec.describe SMARTAppLaunch::OpenIDFHIRUserClaimTest do
       url: url,
       smart_auth_info:
     }
-  end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name: name,
-        value: value,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session: test_session, test_run: test_run).run(runnable)
   end
 
   it 'skips if no token payload is available' do

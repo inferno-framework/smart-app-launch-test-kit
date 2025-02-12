@@ -1,12 +1,7 @@
 require_relative '../../lib/smart_app_launch/token_exchange_stu2_test'
-require_relative '../request_helper'
 
-RSpec.describe SMARTAppLaunch::TokenExchangeSTU2Test do
-  include Rack::Test::Methods
-  include RequestHelpers
-
+RSpec.describe SMARTAppLaunch::TokenExchangeSTU2Test, :request do
   let(:test) { Inferno::Repositories::Tests.new.find('smart_token_exchange_stu2') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:suite_id) { 'smart'}
   let(:url) { 'http://example.com/fhir' }
   let(:token_url) { 'http://example.com/token' }
@@ -22,22 +17,6 @@ RSpec.describe SMARTAppLaunch::TokenExchangeSTU2Test do
         token_url:
       )
     }
-  end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      type = runnable.config.input_type(name)
-      type = 'text' if type == 'radio'
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name: name,
-        value: value,
-        type: type.presence
-      )
-    end
-    Inferno::TestRunner.new(test_session: test_session, test_run: test_run).run(runnable)
   end
 
   def create_redirect_request(url)

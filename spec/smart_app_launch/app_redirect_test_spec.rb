@@ -1,12 +1,7 @@
 require_relative '../../lib/smart_app_launch/app_redirect_test'
-require_relative '../request_helper'
 
-RSpec.describe SMARTAppLaunch::AppRedirectTest do
-  include Rack::Test::Methods
-  include RequestHelpers
-
+RSpec.describe SMARTAppLaunch::AppRedirectTest, :request do
   let(:test) { Inferno::Repositories::Tests.new.find('smart_app_redirect') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:requests_repo) { Inferno::Repositories::Requests.new }
   let(:suite_id) { 'smart'}
@@ -21,22 +16,6 @@ RSpec.describe SMARTAppLaunch::AppRedirectTest do
         auth_url: 'http://example.com/auth'
       )
     }
-  end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      type = runnable.config.input_type(name)
-      type = 'text' if type == 'radio'
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name: name,
-        value: value,
-        type: type
-      )
-    end
-    Inferno::TestRunner.new(test_session: test_session, test_run: test_run).run(runnable)
   end
 
   it 'waits and then passes when it receives a request with the correct state' do

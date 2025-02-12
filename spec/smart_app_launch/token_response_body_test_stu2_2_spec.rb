@@ -1,10 +1,6 @@
 require_relative '../../lib/smart_app_launch/token_exchange_test'
-require_relative '../request_helper'
 
-RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
-  include Rack::Test::Methods
-  include RequestHelpers
-
+RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22, :request do
   let(:test) { Inferno::Repositories::Tests.new.find('smart_token_response_body_stu2_2') }
   let(:valid_body) do
     {
@@ -14,24 +10,9 @@ RSpec.describe SMARTAppLaunch::TokenResponseBodyTestSTU22 do
       scope: 'patient/*.*'
     }
   end
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:suite_id) { 'smart_stu2_2'}
   let(:runnable_inputs) do
     { smart_auth_info: Inferno::DSL::AuthInfo.new(requested_scopes: 'patient/*.*') }
-  end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name:,
-        value:,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
   end
 
   def create_token_request(body: nil, status: 200, headers: nil)

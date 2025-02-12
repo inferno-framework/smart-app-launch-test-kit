@@ -1,12 +1,7 @@
 require_relative '../../lib/smart_app_launch/token_refresh_test'
-require_relative '../request_helper'
 
-RSpec.describe SMARTAppLaunch::TokenRefreshTest do
-  include Rack::Test::Methods
-  include RequestHelpers
-
+RSpec.describe SMARTAppLaunch::TokenRefreshTest, :request do
   let(:test) { Inferno::Repositories::Tests.new.find('smart_token_refresh') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:requests_repo) { Inferno::Repositories::Requests.new }
   let(:suite_id) { 'smart'}
   let(:token_url) { 'http://example.com/fhir/token' }
@@ -28,20 +23,6 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
       received_scopes:,
       smart_auth_info: Inferno::DSL::AuthInfo.new(client_id:, token_url:, refresh_token:)
     }
-  end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name:,
-        value:,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
   end
 
   it 'skips if no refresh_token is available' do

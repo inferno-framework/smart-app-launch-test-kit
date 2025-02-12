@@ -1,12 +1,7 @@
 require_relative '../../lib/smart_app_launch/cors_token_exchange_test'
-require_relative '../request_helper'
 
-RSpec.describe SMARTAppLaunch::CORSTokenExchangeTest do
-  include Rack::Test::Methods
-  include RequestHelpers
-
+RSpec.describe SMARTAppLaunch::CORSTokenExchangeTest, :request do
   let(:test) { Inferno::Repositories::Tests.new.find('smart_cors_token_exchange') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:suite_id) { 'smart'}
 
   let(:valid_body) do
@@ -20,22 +15,6 @@ RSpec.describe SMARTAppLaunch::CORSTokenExchangeTest do
 
   let(:inputs) do
     { smart_auth_info: Inferno::DSL::AuthInfo.new(auth_type: 'public') }
-  end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      type = runnable.config.input_type(name)
-      type = 'text' if type == 'radio'
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name:,
-        value:,
-        type: type.presence
-      )
-    end
-    Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
   end
 
   def cors_header_origin(value)

@@ -3,7 +3,6 @@ require_relative '../../lib/smart_app_launch/openid_connect_group'
 RSpec.describe SMARTAppLaunch::OpenIDConnectGroup do
   let(:group) { Inferno::Repositories::TestGroups.new.find('smart_openid_connect') }
   let(:results_repo) { Inferno::Repositories::Results.new }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:suite_id) { 'smart'}
   let(:url) { 'http://example.com/fhir' }
   let(:client_id) { 'CLIENT_ID' }
@@ -21,16 +20,6 @@ RSpec.describe SMARTAppLaunch::OpenIDConnectGroup do
   let(:key_pair) { OpenSSL::PKey::RSA.new(2048) }
   let(:jwk) { JWT::JWK.new(key_pair) }
   let(:id_token) { JWT.encode(payload, key_pair, 'RS256', kid: jwk.kid) }
-  let(:smart_credentials) do
-    {
-      access_token: 'ACCESS_TOKEN',
-      refresh_token: 'REFRESH_TOKEN',
-      expires_in: 3600,
-      client_id: client_id,
-      issue_time: Time.now.iso8601,
-      token_url: 'http://example.com/token'
-    }.to_json
-  end
   let(:config) do
     {
       registration_endpoint: 'https://www.example.com/register',
@@ -47,20 +36,6 @@ RSpec.describe SMARTAppLaunch::OpenIDConnectGroup do
       issuer: url,
       subject_types_supported: 'public'
     }
-  end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name: name,
-        value: value,
-        type: runnable.config.input_type(name).presence || 'text'
-      )
-    end
-    Inferno::TestRunner.new(test_session: test_session, test_run: test_run).run(runnable)
   end
 
   it 'passes' do
@@ -83,7 +58,6 @@ RSpec.describe SMARTAppLaunch::OpenIDConnectGroup do
     inputs = {
       id_token: id_token,
       url: url,
-      smart_credentials: smart_credentials,
       smart_auth_info: Inferno::DSL::AuthInfo.new(
         client_id:,
         requested_scopes: 'openid fhirUser'

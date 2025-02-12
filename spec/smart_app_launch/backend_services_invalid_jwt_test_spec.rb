@@ -3,7 +3,6 @@ require_relative '../../lib/smart_app_launch/backend_services_authorization_requ
 
 RSpec.describe SMARTAppLaunch::BackendServicesInvalidJWTTest do
   let(:test) { Inferno::Repositories::Tests.new.find('smart_backend_services_invalid_jwt') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:suite_id) { 'smart_stu2'}
   let(:smart_token_url) { 'http://example.com/fhir/token' }
   let(:client_auth_encryption_method) { 'ES384' }
@@ -36,20 +35,6 @@ RSpec.describe SMARTAppLaunch::BackendServicesInvalidJWTTest do
       jti:,
       kid:
     }
-  end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name: name,
-        value: value,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
   end
 
   it 'fails when token endpoint allows invalid JWT token' do

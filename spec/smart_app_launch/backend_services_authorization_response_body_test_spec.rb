@@ -1,9 +1,7 @@
 require_relative '../../lib/smart_app_launch/backend_services_authorization_response_body_test'
 
 RSpec.describe SMARTAppLaunch::BackendServicesAuthorizationResponseBodyTest do
-
   let(:test) { Inferno::Repositories::Tests.new.find('smart_backend_services_auth_response_body') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:suite_id) { 'smart_stu2'}
 
   let(:response_body) do
@@ -13,20 +11,6 @@ RSpec.describe SMARTAppLaunch::BackendServicesAuthorizationResponseBodyTest do
       'expires_in' => 'a_couple_minutes',
       'scope' => 'system'
     }
-  end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name: name,
-        value: value,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
   end
 
   it 'skips when no authentication response received' do

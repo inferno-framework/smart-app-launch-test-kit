@@ -14,6 +14,7 @@ module SMARTAppLaunch
     id :backend_services_authorization
 
     input :smart_auth_info,
+          title: 'Backend Services Credentials',
           type: :auth_info,
           options: {
             mode: 'auth',

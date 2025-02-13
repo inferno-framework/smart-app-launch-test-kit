@@ -42,6 +42,7 @@ module SMARTAppLaunch
       inputs: {
         smart_auth_info: {
           name: :ehr_smart_auth_info,
+          title: 'EHR Launch Credentials',
           options: {
             components: [
               {

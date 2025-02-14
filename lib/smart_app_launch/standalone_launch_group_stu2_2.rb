@@ -30,22 +30,6 @@ module SMARTAppLaunch
       * [Standalone Launch Sequence](http://hl7.org/fhir/smart-app-launch/STU2.2/app-launch.html#launch-app-standalone-launch)
     )
 
-    config(
-      inputs: {
-        use_pkce: {
-          default: 'true',
-          locked: true
-        },
-        pkce_code_challenge_method: {
-          default: 'S256',
-          locked: true
-        },
-        requested_scopes: {
-          default: 'launch/patient openid fhirUser offline_access patient/*.rs'
-        }
-      }
-    )
-
     test from: :smart_token_exchange_stu2_2
 
     token_exchange_index = children.find_index { |child| child.id.to_s.end_with? 'token_exchange' }

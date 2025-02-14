@@ -1,12 +1,7 @@
 require_relative '../../lib/smart_app_launch/token_refresh_test'
-require_relative '../request_helper'
 
-RSpec.describe SMARTAppLaunch::TokenRefreshTest do
-  include Rack::Test::Methods
-  include RequestHelpers
-
+RSpec.describe SMARTAppLaunch::TokenRefreshTest, :request do
   let(:test) { Inferno::Repositories::Tests.new.find('smart_token_refresh') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:requests_repo) { Inferno::Repositories::Requests.new }
   let(:suite_id) { 'smart'}
   let(:token_url) { 'http://example.com/fhir/token' }
@@ -23,23 +18,16 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
       refresh_token: 'REFRESH_TOKEN2'
     }
   end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name:,
-        value:,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
+  let(:inputs) do
+    {
+      received_scopes:,
+      smart_auth_info: Inferno::DSL::AuthInfo.new(client_id:, token_url:, refresh_token:)
+    }
   end
 
   it 'skips if no refresh_token is available' do
-    result = run(test, refresh_token: nil)
+    inputs[:smart_auth_info].refresh_token = nil
+    result = run(test, inputs)
 
     expect(result.result).to eq('skip')
   end
@@ -55,13 +43,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
           body: valid_response.to_json
         )
 
-      result = run(
-        test,
-        smart_token_url: token_url,
-        refresh_token:,
-        client_id:,
-        received_scopes:
-      )
+      result = run(test, inputs)
 
       expect(result.result).to eq('pass')
     end
@@ -70,6 +52,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
   context 'with a confidential client' do
     it 'passes when the refresh succeeds' do
       credentials = Base64.strict_encode64("#{client_id}:#{client_secret}")
+      inputs[:smart_auth_info].auth_type = 'symmetric'
       stub_request(:post, token_url)
         .with(
           headers: {
@@ -84,14 +67,8 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
           body: valid_response.to_json
         )
 
-      result = run(
-        test,
-        smart_token_url: token_url,
-        refresh_token:,
-        client_id:,
-        client_secret:,
-        received_scopes:
-      )
+      inputs[:smart_auth_info].client_secret = client_secret
+      result = run(test, inputs)
 
       expect(result.result).to eq('pass')
     end
@@ -107,13 +84,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
         body: valid_response.to_json
       )
 
-    result = run(
-      test,
-      smart_token_url: token_url,
-      refresh_token:,
-      client_id:,
-      received_scopes:
-    )
+    result = run(test, inputs)
 
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/202/)
@@ -129,13 +100,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
         body: '[['
       )
 
-    result = run(
-      test,
-      smart_token_url: token_url,
-      refresh_token:,
-      client_id:,
-      received_scopes:
-    )
+    result = run(test, inputs)
 
     expect(result.result).to eq('fail')
     expect(result.result_message).to match(/Invalid JSON/)
@@ -151,13 +116,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
         body: valid_response.to_json
       )
 
-    result = run(
-      test,
-      smart_token_url: token_url,
-      refresh_token:,
-      client_id:,
-      received_scopes:
-    )
+    result = run(test, inputs)
 
     expect(result.result).to eq('pass')
 
@@ -176,13 +135,7 @@ RSpec.describe SMARTAppLaunch::TokenRefreshTest do
           body: valid_response.except(:refresh_token).to_json
         )
 
-      result = run(
-        test,
-        smart_token_url: token_url,
-        refresh_token:,
-        client_id:,
-        received_scopes:
-      )
+      result = run(test, inputs)
 
       expect(result.result).to eq('pass')
 

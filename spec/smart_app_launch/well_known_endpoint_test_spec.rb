@@ -2,7 +2,6 @@ require_relative '../../lib/smart_app_launch/well_known_endpoint_test'
 
 RSpec.describe SMARTAppLaunch::WellKnownEndpointTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('well_known_endpoint') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:suite_id) { 'smart'}
   let(:url) { 'http://example.com/fhir' }
@@ -47,20 +46,6 @@ RSpec.describe SMARTAppLaunch::WellKnownEndpointTest do
       'grant_types_supported' => ['authorization_code'],
       'code_challenge_methods_supported' => ['S256']
     }
-  end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name: name,
-        value: value,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session: test_session, test_run: test_run).run(runnable)
   end
 
   it 'passes when a valid well-known configuration is received' do

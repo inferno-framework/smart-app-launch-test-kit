@@ -15,25 +15,10 @@ module SMARTAppLaunch
       Request](http://hl7.org/fhir/smart-app-launch/STU2/app-launch.html#request-4)
     )
 
-    input :authorization_method,
-          title: 'Authorization Request Method',
-          type: 'radio',
-          default: 'get',
-          options: {
-            list_options: [
-              {
-                label: 'GET',
-                value: 'get'
-              },
-              {
-                label: 'POST',
-                value: 'post'
-              }
-            ]
-          }
+    input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
 
     def authorization_url_builder(url, params)
-      return super if authorization_method == 'get'
+      return super if smart_auth_info.get_auth_request?
 
       post_params = params.merge(auth_url: url)
 

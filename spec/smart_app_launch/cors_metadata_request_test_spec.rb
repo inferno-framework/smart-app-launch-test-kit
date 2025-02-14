@@ -1,10 +1,8 @@
 require_relative '../../lib/smart_app_launch/cors_metadata_request_test'
 
 RSpec.describe SMARTAppLaunch::CORSMetadataRequest do
-  let(:suite) { Inferno::Repositories::TestSuites.new.find('smart_stu2_2') }
+  let(:suite_id) { 'smart_stu2_2' }
   let(:test) { Inferno::Repositories::Tests.new.find('smart_cors_metadata_request') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart_stu2_2') }
   let(:url) { 'http://example.com/fhir' }
 
   let(:minimal_capabilities) do
@@ -16,20 +14,6 @@ RSpec.describe SMARTAppLaunch::CORSMetadataRequest do
         }
       ]
     )
-  end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name:,
-        value:,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
   end
 
   def cors_header(value)

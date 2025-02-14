@@ -4,7 +4,6 @@ require_relative '../../lib/smart_app_launch/well_known_capabilities_stu2_test'
 RSpec.describe "Well-Known Tests" do
   let(:test_v1) { Inferno::Repositories::Tests.new.find('well_known_capabilities_stu1') }
   let(:test_v2) { Inferno::Repositories::Tests.new.find('well_known_capabilities_stu2') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:suite_id) { 'smart'}
   let(:well_known_config) do
     {
@@ -25,20 +24,6 @@ RSpec.describe "Well-Known Tests" do
       'grant_types_supported' => ['authorization_code'],
       'code_challenge_methods_supported' => ['S256']
     }
-  end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name: name,
-        value: value,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session: test_session, test_run: test_run).run(runnable)
   end
 
   shared_examples 'well-known tests' do |required_fields|

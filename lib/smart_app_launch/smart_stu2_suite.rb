@@ -50,7 +50,7 @@ module SMARTAppLaunch
       * OAuth Redirect URI: `#{config.options[:redirect_uri]}`
 
       If using asymmetric client authentication, register Inferno with the
-      following JWK Set URL:
+      following JWK Set URL or provide a custom JWK Set:
 
       * `#{Inferno::Application[:base_url]}/custom/smart_stu2/.well-known/jwks.json`
     DESCRIPTION
@@ -83,7 +83,7 @@ module SMARTAppLaunch
         * OAuth Redirect URI: `#{config.options[:redirect_uri]}`
 
         If using asymmetric client authentication, register Inferno with the
-        following JWK Set URL:
+        following JWK Set URL or provide a custom JWK Set:
 
         * `#{Inferno::Application[:base_url]}/custom/smart_stu2/.well-known/jwks.json`
       INSTRUCTIONS
@@ -162,7 +162,7 @@ module SMARTAppLaunch
         * OAuth Redirect URI: `#{config.options[:redirect_uri]}`
 
         If using asymmetric client authentication, register Inferno with the
-        following JWK Set URL:
+        following JWK Set URL or provide a custom JWK Set:
 
         * `#{Inferno::Application[:base_url]}/custom/smart_stu2/.well-known/jwks.json`
       INSTRUCTIONS
@@ -236,7 +236,7 @@ module SMARTAppLaunch
 
       input_instructions <<~INSTRUCTIONS
         Please register the Inferno client with the authorization services with the
-        following JWK Set URL:
+        following JWK Set URL or provide a custom JWK Set:
 
         * `#{Inferno::Application[:base_url]}/custom/smart_stu2/.well-known/jwks.json`
       INSTRUCTIONS

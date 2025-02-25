@@ -17,7 +17,8 @@ module SMARTAppLaunch
                 :iss,
                 :jti,
                 :sub,
-                :kid
+                :kid,
+                :custom_jwks
 
     def initialize(
       client_auth_encryption_method:,
@@ -26,7 +27,8 @@ module SMARTAppLaunch
       aud:,
       exp: 5.minutes.from_now.to_i,
       jti: SecureRandom.hex(32),
-      kid: nil
+      kid: nil,
+      custom_jwks: nil
     )
       @client_auth_encryption_method = client_auth_encryption_method
       @iss = iss
@@ -38,13 +40,24 @@ module SMARTAppLaunch
       @exp = exp
       @jti = jti
       @kid = kid.presence
+      @custom_jwks = custom_jwks
+    end
+
+    def jwks
+      @jwks ||=
+        if custom_jwks.present?
+          JWT::JWK::Set.new(JSON.parse(custom_jwks))
+        else
+          JWKS.jwks
+        end
     end
 
     def private_key
-      @private_key ||= JWKS.jwks
-                           .select { |key| key[:key_ops]&.include?('sign') }
-                           .select { |key| key[:alg] == client_auth_encryption_method }
-                           .find { |key| !kid || key[:kid] == kid }
+      @private_key ||=
+        jwks
+          .select { |key| key[:key_ops]&.include?('sign') }
+          .select { |key| key[:alg] == client_auth_encryption_method }
+          .find { |key| !kid || key[:kid] == kid }
     end
 
     def jwt_payload

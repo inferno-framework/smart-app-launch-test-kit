@@ -32,7 +32,8 @@ module SMARTAppLaunch
         iss: smart_auth_info.client_id,
         sub: smart_auth_info.client_id,
         aud: smart_auth_info.token_url,
-        kid: smart_auth_info.kid
+        kid: smart_auth_info.kid,
+        custom_jwks: smart_auth_info.jwks
       )
 
       authentication_response = post(smart_auth_info.token_url, **post_request_content)

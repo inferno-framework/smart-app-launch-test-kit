@@ -38,7 +38,8 @@ module SMARTAppLaunch
         sub: smart_auth_info.client_id,
         aud: smart_auth_info.token_url,
         client_assertion_type: 'not_an_assertion_type',
-        kid: smart_auth_info.kid
+        kid: smart_auth_info.kid,
+        custom_jwks: smart_auth_info.jwks
       )
 
       post(smart_auth_info.token_url, **post_request_content)

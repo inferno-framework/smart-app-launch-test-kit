@@ -58,6 +58,11 @@ module SMARTAppLaunch
               {
                 name: :use_discovery,
                 locked: true
+              },
+              {
+                name: :auth_request_method,
+                default: 'GET',
+                locked: true
               }
             ]
           }

@@ -101,7 +101,7 @@ RSpec.describe SMARTAppLaunch::EHRLaunchGroup, :request do
     components = options[:components]
 
     components.each do |component|
-      next if component[:name] == :use_discovery
+      next if [:use_discovery, :auth_request_method].include? component[:name]
 
       expect(component[:locked]).to be_falsy
     end
@@ -120,5 +120,9 @@ RSpec.describe SMARTAppLaunch::EHRLaunchGroup, :request do
     expected_list_options = [{ label: 'Public', value: 'public' }, { label: 'Confidential Symmetric', value: 'symmetric' }]
 
     expect(list_options).to match_array(expected_list_options)
+
+    auth_method_component = components.find { |component| component[:name] == :auth_request_method }
+    expect(auth_method_component[:default]).to eq('GET')
+    expect(auth_method_component[:locked]).to be(true)
   end
 end

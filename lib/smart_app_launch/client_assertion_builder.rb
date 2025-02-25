@@ -17,7 +17,8 @@ module SMARTAppLaunch
                 :iss,
                 :jti,
                 :sub,
-                :kid
+                :kid,
+                :custom_jwks
 
     def initialize(
       client_auth_encryption_method:,
@@ -26,7 +27,8 @@ module SMARTAppLaunch
       aud:,
       exp: 5.minutes.from_now.to_i,
       jti: SecureRandom.hex(32),
-      kid: nil
+      kid: nil,
+      custom_jwks: nil
     )
       @client_auth_encryption_method = client_auth_encryption_method
       @iss = iss
@@ -37,14 +39,25 @@ module SMARTAppLaunch
       @client_assertion_type = client_assertion_type
       @exp = exp
       @jti = jti
-      @kid = kid
+      @kid = kid.presence
+      @custom_jwks = custom_jwks
+    end
+
+    def jwks
+      @jwks ||=
+        if custom_jwks.present?
+          JWT::JWK::Set.new(JSON.parse(custom_jwks))
+        else
+          JWKS.jwks
+        end
     end
 
     def private_key
-      @private_key ||= JWKS.jwks
-        .select { |key| key[:key_ops]&.include?('sign') }
-        .select { |key| key[:alg] == client_auth_encryption_method }
-        .find { |key| !kid || key[:kid] == kid }
+      @private_key ||=
+        jwks
+          .select { |key| key[:key_ops]&.include?('sign') }
+          .select { |key| key[:alg] == client_auth_encryption_method }
+          .find { |key| !kid || key[:kid] == kid }
     end
 
     def jwt_payload
@@ -52,11 +65,12 @@ module SMARTAppLaunch
     end
 
     def signing_key
-      private_key()
-      if @private_key.nil?
-        raise Inferno::Exceptions::AssertionException, "No signing key found for inputs: encryption method = '#{client_auth_encryption_method}' and kid = '#{kid}'"
+      if private_key.nil?
+        raise Inferno::Exceptions::AssertionException,
+              "No signing key found for inputs: encryption method = '#{client_auth_encryption_method}' and kid = '#{kid}'"
       end
-      return @private_key.signing_key
+
+      @private_key.signing_key
     end
 
     def key_id
@@ -65,7 +79,8 @@ module SMARTAppLaunch
 
     def client_assertion
       @client_assertion ||=
-        JWT.encode jwt_payload, signing_key, client_auth_encryption_method, { alg: client_auth_encryption_method, kid: key_id, typ: 'JWT' }
+        JWT.encode jwt_payload, signing_key, client_auth_encryption_method,
+                   { alg: client_auth_encryption_method, kid: key_id, typ: 'JWT' }
     end
   end
 end

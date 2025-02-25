@@ -40,8 +40,12 @@ module SMARTAppLaunch
       * [OpenID Connect Core](https://openid.net/specs/openid-connect-core-1_0.html)
     )
 
-    test from: :well_known_endpoint,
-         id: 'Test01'
+    test from: :well_known_endpoint do
+      id 'Test01'
+      input :smart_auth_info,
+            type: :auth_info
+    end
+
     test from: :well_known_capabilities_stu1,
          id: 'Test02'
 

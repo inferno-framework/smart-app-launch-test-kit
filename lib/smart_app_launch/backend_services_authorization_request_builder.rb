@@ -7,8 +7,18 @@ module SMARTAppLaunch
       new(...).authorization_request
     end
 
-    attr_reader :encryption_method, :scope, :iss, :sub, :aud, :content_type, :grant_type, :client_assertion_type, :exp,
-                :jti, :kid
+    attr_reader :encryption_method,
+                :scope,
+                :iss,
+                :sub,
+                :aud,
+                :content_type,
+                :grant_type,
+                :client_assertion_type,
+                :exp,
+                :jti,
+                :kid,
+                :custom_jwks
 
     def initialize(
       encryption_method:,
@@ -21,7 +31,8 @@ module SMARTAppLaunch
       client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
       exp: 5.minutes.from_now,
       jti: SecureRandom.hex(32),
-      kid: nil
+      kid: nil,
+      custom_jwks: nil
     )
       @encryption_method = encryption_method
       @scope = scope
@@ -34,6 +45,7 @@ module SMARTAppLaunch
       @exp = exp
       @jti = jti
       @kid = kid
+      @custom_jwks = custom_jwks
     end
 
     def authorization_request_headers
@@ -54,13 +66,14 @@ module SMARTAppLaunch
 
     def client_assertion
       @client_assertion ||= ClientAssertionBuilder.build(
-          client_auth_encryption_method: encryption_method, 
-          iss: iss,
-          sub: sub,
-          aud: aud,
+          client_auth_encryption_method: encryption_method,
+          iss:,
+          sub:,
+          aud:,
           exp: exp.to_i,
-          jti: jti,
-          kid: kid
+          jti:,
+          kid:,
+          custom_jwks:
           )
     end
 

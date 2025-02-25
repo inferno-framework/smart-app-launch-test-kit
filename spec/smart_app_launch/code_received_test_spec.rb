@@ -1,28 +1,8 @@
 require_relative '../../lib/smart_app_launch/code_received_test'
-require_relative '../request_helper'
 
-RSpec.describe SMARTAppLaunch::CodeReceivedTest do
-  include Rack::Test::Methods
-  include RequestHelpers
-
+RSpec.describe SMARTAppLaunch::CodeReceivedTest, :request do
   let(:test) { Inferno::Repositories::Tests.new.find('smart_code_received') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:suite_id) { 'smart'}
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name: name,
-        value: value,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session: test_session, test_run: test_run).run(runnable)
-  end
 
   def create_redirect_request(url)
     repo_create(

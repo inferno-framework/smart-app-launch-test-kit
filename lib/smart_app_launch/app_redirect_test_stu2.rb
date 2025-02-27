@@ -32,12 +32,20 @@ module SMARTAppLaunch
             ]
           }
 
+    def default_post_authorization_uri
+      "#{Inferno::Application['base_url']}/custom/smart_stu2/post_auth"
+    end
+
+    def post_authorization_uri
+      config.options[:post_authorization_uri].presence || default_post_authorization_uri
+    end
+
     def authorization_url_builder(url, params)
       return super if authorization_method == 'get'
 
       post_params = params.merge(auth_url: url)
 
-      post_url = URI(config.options[:post_authorization_uri])
+      post_url = URI(post_authorization_uri)
       post_url.query = URI.encode_www_form(post_params)
       post_url.to_s
     end

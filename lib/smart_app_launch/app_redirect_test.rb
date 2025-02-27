@@ -47,7 +47,13 @@ module SMARTAppLaunch
     output :state, :pkce_code_challenge, :pkce_code_verifier
     receives_request :redirect
 
-    config options: { redirect_uri: "#{Inferno::Application['base_url']}/custom/smart/redirect" }
+    def default_redirect_uri
+      "#{Inferno::Application['base_url']}/custom/smart/redirect"
+    end
+
+    def redirect_uri
+      config.options[:redirect_uri].presence || default_redirect_uri
+    end
 
     def self.calculate_s256_challenge(verifier)
       Base64.urlsafe_encode64(Digest::SHA256.digest(verifier), padding: false)
@@ -68,7 +74,7 @@ module SMARTAppLaunch
         [Follow this link to authorize with the SMART server](#{auth_url}).
 
         Tests will resume once Inferno receives a request at
-        `#{config.options[:redirect_uri]}` with a state of `#{state}`.
+        `#{redirect_uri}` with a state of `#{state}`.
       )
     end
 
@@ -94,7 +100,7 @@ module SMARTAppLaunch
       oauth2_params = {
         'response_type' => 'code',
         'client_id' => client_id,
-        'redirect_uri' => config.options[:redirect_uri],
+        'redirect_uri' => redirect_uri,
         'scope' => requested_scopes,
         'state' => state,
         'aud' => aud

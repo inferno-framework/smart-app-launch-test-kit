@@ -36,7 +36,13 @@ module SMARTAppLaunch
     uses_request :redirect
     makes_request :token
 
-    config options: { redirect_uri: "#{Inferno::Application['base_url']}/custom/smart/redirect" }
+    def default_redirect_uri
+      "#{Inferno::Application['base_url']}/custom/smart/redirect"
+    end
+
+    def redirect_uri
+      config.options[:redirect_uri].presence || default_redirect_uri
+    end
 
     def add_credentials_to_request(oauth2_params, oauth2_headers)
       if client_secret.present?
@@ -52,7 +58,7 @@ module SMARTAppLaunch
 
       oauth2_params = {
         code:,
-        redirect_uri: config.options[:redirect_uri],
+        redirect_uri:,
         grant_type: 'authorization_code'
       }
       oauth2_headers = { 'Content-Type' => 'application/x-www-form-urlencoded' }

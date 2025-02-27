@@ -10,7 +10,13 @@ module SMARTAppLaunch
     input :url
     receives_request :launch
 
-    config options: { launch_uri: "#{Inferno::Application['base_url']}/custom/smart/launch" }
+    def default_launch_uri
+      "#{Inferno::Application['base_url']}/custom/smart/launch"
+    end
+
+    def launch_uri
+      config.options[:launch_uri].presence || default_launch_uri
+    end
 
     def wait_message
       return instance_exec(&config.options[:launch_message_proc]) if config.options[:launch_message_proc].present?
@@ -21,7 +27,7 @@ module SMARTAppLaunch
         Waiting for Inferno to be launched from the EHR.
 
         Tests will resume once Inferno receives a launch request at
-        `#{config.options[:launch_uri]}` with an `iss` of `#{url}`.
+        `#{launch_uri}` with an `iss` of `#{url}`.
       )
     end
 

@@ -10,6 +10,7 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
   let(:suite_id) { 'smart'}
   let(:url) { 'http://example.com/fhir' }
   let(:token_url) { 'http://example.com/token' }
+  let(:redirect_uri) { "#{Inferno::Application['base_url']}/custom/smart/redirect" }
   let(:public_inputs) do
     {
       code: 'CODE',
@@ -81,7 +82,7 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
               grant_type: 'authorization_code',
               code: 'CODE',
               client_id: 'CLIENT_ID',
-              redirect_uri: described_class.config.options[:redirect_uri]
+              redirect_uri:
             }
         )
         .to_return(status: 200, body: {}.to_json)
@@ -101,7 +102,7 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
             grant_type: 'authorization_code',
             code: 'CODE',
             client_id: 'CLIENT_ID',
-            redirect_uri: described_class.config.options[:redirect_uri]
+            redirect_uri:
           }
       )
       .to_return(status: 201)
@@ -132,7 +133,7 @@ RSpec.describe SMARTAppLaunch::TokenExchangeTest do
                 grant_type: 'authorization_code',
                 code: 'CODE',
                 client_id: 'CLIENT_ID',
-                redirect_uri: described_class.config.options[:redirect_uri],
+                redirect_uri:,
                 code_verifier: 'CODE_VERIFIER'
               }
           )

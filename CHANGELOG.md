@@ -1,3 +1,6 @@
+# 0.5.1
+* FI-3788: Add default redirect/launch/post auth uris by @Jammjammjamm in https://github.com/inferno-framework/smart-app-launch-test-kit/pull/89
+
 # 0.5.0
 * FI-3648: Add Spec for Shared Tests and Implement Features for the Failing Tests by @vanessuniq in https://github.com/inferno-framework/smart-app-launch-test-kit/pull/86
 

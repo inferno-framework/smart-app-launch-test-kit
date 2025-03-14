@@ -1,10 +1,8 @@
 require_relative '../../lib/smart_app_launch/cors_well_known_endpoint_test'
 
 RSpec.describe SMARTAppLaunch::CORSWellKnownEndpointTest do
-  let(:suite) { Inferno::Repositories::TestSuites.new.find('smart_stu2_2') }
+  let(:suite_id) { 'smart_stu2_2' }
   let(:test) { Inferno::Repositories::Tests.new.find('smart_cors_well_known_endpoint') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart_stu2_2') }
   let(:url) { 'http://example.com/fhir' }
   let(:well_known_url) { 'http://example.com/fhir/.well-known/smart-configuration' }
   let(:well_known_config) do
@@ -26,20 +24,6 @@ RSpec.describe SMARTAppLaunch::CORSWellKnownEndpointTest do
       'grant_types_supported' => ['authorization_code'],
       'code_challenge_methods_supported' => ['S256']
     }
-  end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name:,
-        value:,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
   end
 
   def cors_header(value)

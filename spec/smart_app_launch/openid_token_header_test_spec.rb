@@ -2,7 +2,6 @@ require_relative '../../lib/smart_app_launch/openid_token_header_test'
 
 RSpec.describe SMARTAppLaunch::OpenIDTokenHeaderTest do
   let(:test) { Inferno::Repositories::Tests.new.find('smart_openid_token_header') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:suite_id) { 'smart'}
   let(:url) { 'http://example.com/fhir' }
   let(:client_id) { 'CLIENT_ID' }
@@ -22,20 +21,6 @@ RSpec.describe SMARTAppLaunch::OpenIDTokenHeaderTest do
   let(:rsa_keys) { [jwk.export] }
   let(:id_token) { JWT.encode(payload, key_pair, 'RS256', kid: jwk.kid) }
   let(:header) { JWT.decode(id_token, nil, false)[1] }
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name: name,
-        value: value,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session: test_session, test_run: test_run).run(runnable)
-  end
 
   it 'skips if no id token header is available' do
     result = run(test, id_token_header_json: nil)

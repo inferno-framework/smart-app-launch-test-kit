@@ -49,7 +49,7 @@ module SMARTAppLaunch
       * OAuth Redirect URI: `#{config.options[:redirect_uri]}`
 
       If using asymmetric client authentication, register Inferno with the
-      following JWK Set URL:
+      following JWK Set URL or provide a custom JWK Set:
 
       * `#{Inferno::Application[:base_url]}/custom/smart_stu2_2/.well-known/jwks.json`
 
@@ -85,23 +85,29 @@ module SMARTAppLaunch
         * OAuth Redirect URI: `#{config.options[:redirect_uri]}`
 
         If using asymmetric client authentication, register Inferno with the
-        following JWK Set URL:
+        following JWK Set URL or provide a custom JWK Set:
 
         * `#{Inferno::Application[:base_url]}/custom/smart_stu2_2/.well-known/jwks.json`
       INSTRUCTIONS
 
       run_as_group
 
-      group from: :smart_discovery_stu2_2
+      group from: :smart_discovery_stu2_2,
+            config: {
+              inputs: {
+                smart_auth_info: { name: :standalone_smart_auth_info }
+              },
+              outputs: {
+                smart_auth_info: { name: :standalone_smart_auth_info }
+              }
+            }
       group from: :smart_standalone_launch_stu2_2
 
       group from: :smart_openid_connect_stu2_2,
             config: {
               inputs: {
                 id_token: { name: :standalone_id_token },
-                client_id: { name: :standalone_client_id },
-                requested_scopes: { name: :standalone_requested_scopes },
-                access_token: { name: :standalone_access_token },
+                smart_auth_info: { name: :standalone_smart_auth_info },
                 smart_credentials: { name: :standalone_smart_credentials }
               }
             }
@@ -111,9 +117,7 @@ module SMARTAppLaunch
             title: 'SMART Token Refresh Without Scopes',
             config: {
               inputs: {
-                refresh_token: { name: :standalone_refresh_token },
-                client_id: { name: :standalone_client_id },
-                client_secret: { name: :standalone_client_secret },
+                smart_auth_info: { name: :standalone_smart_auth_info },
                 received_scopes: { name: :standalone_received_scopes }
               },
               outputs: {
@@ -122,7 +126,8 @@ module SMARTAppLaunch
                 access_token: { name: :standalone_access_token },
                 token_retrieval_time: { name: :standalone_token_retrieval_time },
                 expires_in: { name: :standalone_expires_in },
-                smart_credentials: { name: :standalone_smart_credentials }
+                smart_credentials: { name: :standalone_smart_credentials },
+                smart_auth_info: { name: :standalone_smart_auth_info }
               }
             }
 
@@ -132,9 +137,7 @@ module SMARTAppLaunch
             config: {
               options: { include_scopes: true },
               inputs: {
-                refresh_token: { name: :standalone_refresh_token },
-                client_id: { name: :standalone_client_id },
-                client_secret: { name: :standalone_client_secret },
+                smart_auth_info: { name: :standalone_smart_auth_info },
                 received_scopes: { name: :standalone_received_scopes }
               },
               outputs: {
@@ -143,7 +146,8 @@ module SMARTAppLaunch
                 access_token: { name: :standalone_access_token },
                 token_retrieval_time: { name: :standalone_token_retrieval_time },
                 expires_in: { name: :standalone_expires_in },
-                smart_credentials: { name: :standalone_smart_credentials }
+                smart_credentials: { name: :standalone_smart_credentials },
+                smart_auth_info: { name: :standalone_smart_auth_info }
               }
             }
     end
@@ -160,14 +164,22 @@ module SMARTAppLaunch
         * OAuth Redirect URI: `#{config.options[:redirect_uri]}`
 
         If using asymmetric client authentication, register Inferno with the
-        following JWK Set URL:
+        following JWK Set URL or provide a custom JWK Set:
 
         * `#{Inferno::Application[:base_url]}/custom/smart_stu2_2/.well-known/jwks.json`
       INSTRUCTIONS
 
       run_as_group
 
-      group from: :smart_discovery_stu2_2
+      group from: :smart_discovery_stu2_2,
+            config: {
+              inputs: {
+                smart_auth_info: { name: :ehr_smart_auth_info }
+              },
+              outputs: {
+                smart_auth_info: { name: :ehr_smart_auth_info }
+              }
+            }
 
       group from: :smart_ehr_launch_stu2_2
 
@@ -175,9 +187,7 @@ module SMARTAppLaunch
             config: {
               inputs: {
                 id_token: { name: :ehr_id_token },
-                client_id: { name: :ehr_client_id },
-                requested_scopes: { name: :ehr_requested_scopes },
-                access_token: { name: :ehr_access_token },
+                smart_auth_info: { name: :ehr_smart_auth_info },
                 smart_credentials: { name: :ehr_smart_credentials }
               }
             }
@@ -187,9 +197,7 @@ module SMARTAppLaunch
             title: 'SMART Token Refresh Without Scopes',
             config: {
               inputs: {
-                refresh_token: { name: :ehr_refresh_token },
-                client_id: { name: :ehr_client_id },
-                client_secret: { name: :ehr_client_secret },
+                smart_auth_info: { name: :ehr_smart_auth_info },
                 received_scopes: { name: :ehr_received_scopes }
               },
               outputs: {
@@ -198,7 +206,8 @@ module SMARTAppLaunch
                 access_token: { name: :ehr_access_token },
                 token_retrieval_time: { name: :ehr_token_retrieval_time },
                 expires_in: { name: :ehr_expires_in },
-                smart_credentials: { name: :ehr_smart_credentials }
+                smart_credentials: { name: :ehr_smart_credentials },
+                smart_auth_info: { name: :ehr_smart_auth_info }
               }
             }
 
@@ -208,9 +217,7 @@ module SMARTAppLaunch
             config: {
               options: { include_scopes: true },
               inputs: {
-                refresh_token: { name: :ehr_refresh_token },
-                client_id: { name: :ehr_client_id },
-                client_secret: { name: :ehr_client_secret },
+                smart_auth_info: { name: :ehr_smart_auth_info },
                 received_scopes: { name: :ehr_received_scopes }
               },
               outputs: {
@@ -219,7 +226,8 @@ module SMARTAppLaunch
                 access_token: { name: :ehr_access_token },
                 token_retrieval_time: { name: :ehr_token_retrieval_time },
                 expires_in: { name: :ehr_expires_in },
-                smart_credentials: { name: :ehr_smart_credentials }
+                smart_credentials: { name: :ehr_smart_credentials },
+                smart_auth_info: { name: :ehr_smart_auth_info }
               }
             }
     end
@@ -230,15 +238,33 @@ module SMARTAppLaunch
 
       input_instructions <<~INSTRUCTIONS
         Please register the Inferno client with the authorization services with the
-        following JWK Set URL:
+        following JWK Set URL or provide a custom JWK Set:
 
         * `#{Inferno::Application[:base_url]}/custom/smart_stu2_2/.well-known/jwks.json`
       INSTRUCTIONS
 
       run_as_group
 
-      group from: :smart_discovery_stu2_2
-      group from: :backend_services_authorization
+      group from: :smart_discovery_stu2_2 do
+        config(
+          inputs: {
+            smart_auth_info: { name: :backend_services_smart_auth_info }
+          },
+          outputs: {
+            smart_auth_info: { name: :backend_services_smart_auth_info }
+          }
+        )
+      end
+
+      group from: :backend_services_authorization,
+            config: {
+              inputs: {
+                smart_auth_info: { name: :backend_services_smart_auth_info }
+              },
+              outputs: {
+                smart_auth_info: { name: :backend_services_smart_auth_info }
+              }
+            }
     end
 
     group from: :smart_token_introspection_stu2_2

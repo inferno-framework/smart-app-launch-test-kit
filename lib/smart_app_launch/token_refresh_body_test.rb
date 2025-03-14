@@ -15,7 +15,8 @@ module SMARTAppLaunch
       Scopes returned must be a strict subset of the scopes granted in the original launch.
     )
     input :received_scopes
-    output :refresh_token, :access_token, :token_retrieval_time, :expires_in, :received_scopes
+    input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
+    output :refresh_token, :access_token, :token_retrieval_time, :expires_in, :received_scopes, :smart_auth_info
     uses_request :token_refresh
 
     run do
@@ -25,15 +26,21 @@ module SMARTAppLaunch
 
       body = JSON.parse(response[:body])
       output refresh_token: body['refresh_token'] if body.key? 'refresh_token'
+      smart_auth_info.refresh_token = refresh_token if refresh_token.present?
 
       required_fields = ['access_token', 'token_type', 'expires_in', 'scope']
       validate_required_fields_present(body, required_fields)
 
       old_received_scopes = received_scopes
+      smart_auth_info.issue_time = Time.now
       output access_token: body['access_token'],
-             token_retrieval_time: Time.now.iso8601,
+             token_retrieval_time: smart_auth_info.issue_time.iso8601,
              expires_in: body['expires_in'],
              received_scopes: body['scope']
+
+      smart_auth_info.access_token = access_token
+      smart_auth_info.expires_in = expires_in
+      output smart_auth_info: smart_auth_info
 
       validate_token_field_types(body)
       validate_token_type(body)

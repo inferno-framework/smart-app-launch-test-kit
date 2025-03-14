@@ -1,31 +1,12 @@
 require_relative '../../lib/smart_app_launch/openid_retrieve_jwks_test'
-require_relative '../request_helper'
 
-RSpec.describe SMARTAppLaunch::OpenIDRetrieveJWKSTest do
-  include Rack::Test::Methods
-  include RequestHelpers
-
+RSpec.describe SMARTAppLaunch::OpenIDRetrieveJWKSTest, :request do
   let(:test) { Inferno::Repositories::Tests.new.find('smart_openid_retrieve_jwks') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:requests_repo) { Inferno::Repositories::Requests.new }
   let(:suite_id) { 'smart'}
   let(:url) { 'http://example.com/fhir' }
   let(:key_pair) { OpenSSL::PKey::RSA.new(2048) }
   let(:jwk) { JWT::JWK.new(key_pair) }
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name: name,
-        value: value,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session: test_session, test_run: test_run).run(runnable)
-  end
 
   it 'skips if no jwks uri is available' do
     result = run(test, openid_jwks_uri: nil)

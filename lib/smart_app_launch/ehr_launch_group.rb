@@ -40,23 +40,35 @@ module SMARTAppLaunch
 
     config(
       inputs: {
-        client_id: {
-          name: :ehr_client_id,
-          title: 'EHR Launch Client ID',
-          description: 'Client ID provided during registration of Inferno as an EHR launch application'
-        },
-        client_secret: {
-          name: :ehr_client_secret,
-          title: 'EHR Launch Client Secret',
-          description: 'Client Secret provided during registration of Inferno as an EHR launch application. ' \
-                       'Only for clients using confidential symmetric authentication.'
-        },
-        requested_scopes: {
-          name: :ehr_requested_scopes,
-          title: 'EHR Launch Scope',
-          description: 'OAuth 2.0 scope provided by system to enable all required functionality',
-          type: 'textarea',
-          default: 'launch openid fhirUser offline_access user/*.read'
+        smart_auth_info: {
+          name: :ehr_smart_auth_info,
+          title: 'EHR Launch Credentials',
+          options: {
+            components: [
+              {
+                name: :auth_type,
+                options: {
+                  list_options: [
+                    { label: 'Public', value: 'public' },
+                    { label: 'Confidential Symmetric', value: 'symmetric' }
+                  ]
+                }
+              },
+              {
+                name: :requested_scopes,
+                default: 'launch openid fhirUser offline_access user/*.read'
+              },
+              {
+                name: :use_discovery,
+                locked: true
+              },
+              {
+                name: :auth_request_method,
+                default: 'GET',
+                locked: true
+              }
+            ]
+          }
         },
         url: {
           title: 'EHR Launch FHIR Endpoint',
@@ -88,7 +100,8 @@ module SMARTAppLaunch
         encounter_id: { name: :ehr_encounter_id },
         received_scopes: { name: :ehr_received_scopes },
         intent: { name: :ehr_intent },
-        smart_credentials: { name: :ehr_smart_credentials }
+        smart_credentials: { name: :ehr_smart_credentials },
+        smart_auth_info: { name: :ehr_smart_auth_info }
       },
       requests: {
         launch: { name: :ehr_launch },
@@ -99,7 +112,7 @@ module SMARTAppLaunch
 
     test from: :smart_app_launch
     test from: :smart_launch_received
-    test from: :tls_version_test,
+    test from: :smart_tls,
          id: :ehr_auth_tls,
          title: 'OAuth 2.0 authorize endpoint secured by transport layer security',
          description: %(
@@ -108,14 +121,16 @@ module SMARTAppLaunch
            servers, over TLS-secured channels.
          ),
          config: {
-           inputs: { url: { name: :smart_authorization_url } },
-           options: {  minimum_allowed_version: OpenSSL::SSL::TLS1_2_VERSION }
+           options: {
+             minimum_allowed_version: OpenSSL::SSL::TLS1_2_VERSION,
+             smart_endpoint_key: :auth_url
+           }
          }
     test from: :smart_app_redirect do
       input :launch
     end
     test from: :smart_code_received
-    test from: :tls_version_test,
+    test from: :smart_tls,
          id: :ehr_token_tls,
          title: 'OAuth 2.0 token endpoint secured by transport layer security',
          description: %(
@@ -124,8 +139,10 @@ module SMARTAppLaunch
            servers, over TLS-secured channels.
          ),
          config: {
-           inputs: { url: { name: :smart_token_url } },
-           options: {  minimum_allowed_version: OpenSSL::SSL::TLS1_2_VERSION }
+           options: {
+             minimum_allowed_version: OpenSSL::SSL::TLS1_2_VERSION,
+             smart_endpoint_key: :token_url
+           }
          }
     test from: :smart_token_exchange
     test from: :smart_token_response_body

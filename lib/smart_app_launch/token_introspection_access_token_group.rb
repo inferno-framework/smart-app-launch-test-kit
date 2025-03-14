@@ -15,12 +15,20 @@ module SMARTAppLaunch
       These tests are currently designed such that the token introspection URL must be present in the SMART well-known endpoint.
 
     )
-    
+
     input_instructions %(
       Register Inferno as a Standalone SMART App and provide the registration details below.
     )
-    
-    group from: :smart_discovery_stu2
+
+    group from: :smart_discovery_stu2,
+          config: {
+            inputs: {
+              smart_auth_info: { name: :standalone_smart_auth_info }
+            },
+            outputs: {
+              smart_auth_info: { name: :standalone_smart_auth_info }
+            }
+          }
     group from: :smart_standalone_launch_stu2
   end
 end

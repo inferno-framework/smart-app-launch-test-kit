@@ -31,16 +31,32 @@ module SMARTAppLaunch
 
     config(
       inputs: {
-        use_pkce: {
-          default: 'true',
-          locked: true
-        },
-        pkce_code_challenge_method: {
-          default: 'S256',
-          locked: true
-        },
-        requested_scopes: {
-          default: 'launch/patient openid fhirUser offline_access patient/*.rs'
+        smart_auth_info: {
+          name: :standalone_smart_auth_info,
+          title: 'Standalone Launch Credentials',
+          options: {
+            components: [
+              {
+                name: :requested_scopes,
+                default: 'launch/patient openid fhirUser offline_access patient/*.rs'
+              },
+              {
+                name: :pkce_support,
+                default: 'enabled',
+                locked: true
+              },
+              {
+                name: :pkce_code_challenge_method,
+                default: 'S256',
+                locked: true
+              },
+              Inferno::DSL::AuthInfo.default_auth_type_component_without_backend_services,
+              {
+                name: :use_discovery,
+                locked: true
+              }
+            ]
+          }
         }
       }
     )

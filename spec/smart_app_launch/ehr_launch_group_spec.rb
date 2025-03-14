@@ -1,27 +1,23 @@
 require_relative '../../lib/smart_app_launch/ehr_launch_group'
-require_relative '../request_helper'
 
-RSpec.describe SMARTAppLaunch::EHRLaunchGroup do
-  include Rack::Test::Methods
-  include RequestHelpers
-
-  let(:suite) { Inferno::Repositories::TestSuites.new.find('smart') }
+RSpec.describe SMARTAppLaunch::EHRLaunchGroup, :request do
+  let(:suite_id) { 'smart' }
   let(:group) { Inferno::Repositories::TestGroups.new.find('smart_ehr_launch') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:requests_repo) { Inferno::Repositories::Requests.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'smart') }
   let(:url) { 'http://example.com/fhir' }
   let(:token_url) { "#{url}/token" }
   let(:inputs) do
     {
       url: url,
-      smart_authorization_url: "#{url}/auth",
-      smart_token_url: token_url,
-      client_id: 'CLIENT_ID',
-      requested_scopes: 'launch/patient patient/*.*',
-      client_auth_type: 'public',
-      use_pkce: 'false'
+      smart_auth_info: Inferno::DSL::AuthInfo.new(
+        auth_type: 'public',
+        client_id: 'CLIENT_ID',
+        requested_scopes: 'launch/patient patient/*.*',
+        pkce_support: 'disabled',
+        auth_url: "#{url}/auth",
+        token_url:
+      )
     }
   end
   let(:token_response) do
@@ -42,22 +38,6 @@ RSpec.describe SMARTAppLaunch::EHRLaunchGroup do
       'Cache-Control' => 'no-store',
       'Pragma' => 'no-cache'
     }
-  end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      type = runnable.config.input_type(name).presence || 'text'
-      type = 'text' if type == 'radio'
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name: runnable.config.input_name(name).presence || name,
-        value: value,
-        type: type
-      )
-    end
-    Inferno::TestRunner.new(test_session: test_session, test_run: test_run).run(runnable)
   end
 
   it 'persists requests and outputs' do
@@ -94,7 +74,7 @@ RSpec.describe SMARTAppLaunch::EHRLaunchGroup do
       ehr_received_scopes: token_response[:scope],
       ehr_intent: token_response[:intent]
     }
-    other_outputs = [:ehr_code, :ehr_state, :ehr_token_retrieval_time]
+    other_outputs = %i[ehr_code ehr_state ehr_token_retrieval_time]
 
     expected_outputs.each do |name, value|
       expect(session_data_repo.load(test_session_id: test_session.id, name: name)).to eq(value.to_s)
@@ -104,8 +84,45 @@ RSpec.describe SMARTAppLaunch::EHRLaunchGroup do
       expect(session_data_repo.load(test_session_id: test_session.id, name: name)).to be_present
     end
 
-    [:ehr_launch, :ehr_redirect, :ehr_token].each do |name|
+    %i[ehr_launch ehr_redirect ehr_token].each do |name|
       expect(requests_repo.find_named_request(test_session.id, name)).to be_present
     end
+  end
+
+  it 'has a properly configured auth input' do
+    auth_input = described_class.available_inputs[:ehr_smart_auth_info]
+
+    expect(auth_input).to be_present
+
+    options = auth_input.options
+
+    expect(options[:mode]).to eq('auth')
+
+    components = options[:components]
+
+    components.each do |component|
+      next if [:use_discovery, :auth_request_method].include? component[:name]
+
+      expect(component[:locked]).to be_falsy
+    end
+
+    use_discovery_component = components.find { |component| component[:name] == :use_discovery }
+
+    expect(use_discovery_component[:locked]).to be(true)
+
+    requested_scopes_component = components.find { |component| component[:name] == :requested_scopes }
+
+    expect(requested_scopes_component[:default]).to eq('launch openid fhirUser offline_access user/*.read')
+
+    auth_type_component = components.find { |component| component[:name] == :auth_type }
+
+    list_options = auth_type_component.dig(:options, :list_options)
+    expected_list_options = [{ label: 'Public', value: 'public' }, { label: 'Confidential Symmetric', value: 'symmetric' }]
+
+    expect(list_options).to match_array(expected_list_options)
+
+    auth_method_component = components.find { |component| component[:name] == :auth_request_method }
+    expect(auth_method_component[:default]).to eq('GET')
+    expect(auth_method_component[:locked]).to be(true)
   end
 end

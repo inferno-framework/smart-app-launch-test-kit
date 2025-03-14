@@ -15,10 +15,10 @@ module SMARTAppLaunch
 
     uses_request :cors_token_request
 
-    input :client_auth_type
+    input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
 
     run do
-      omit_if client_auth_type != 'public', %(
+      omit_if smart_auth_info.auth_type != 'public', %(
         Client type is not public, Cross-Origin Resource Sharing (CORS) is not required to be supported for
         non-public client types
       )

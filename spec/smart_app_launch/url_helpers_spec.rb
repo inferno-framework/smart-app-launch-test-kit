@@ -1,7 +1,6 @@
 require_relative '../../lib/smart_app_launch/url_helpers'
-require_relative '../request_helper'
 
-RSpec.describe SMARTAppLaunch::URLHelpers do
+RSpec.describe SMARTAppLaunch::URLHelpers, :request do
   # See: https://datatracker.ietf.org/doc/html/rfc1808#section-4
   # See: https://datatracker.ietf.org/doc/html/rfc3986#section-5.4.1
   let(:klass) { Class.new { extend SMARTAppLaunch::URLHelpers } }

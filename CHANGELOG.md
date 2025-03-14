@@ -1,13 +1,28 @@
+# 0.6.0
+* **Breaking Change**: FI 3093: Transition to use auth info by @vanessuniq in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/84 As a
+  result of this change, any test kits which rely on the SMART App Launch Test
+  Kit will need to be updated to use AuthInfo rather than OAuthCredentials
+  inputs.
+
 # 0.5.1
-* FI-3788: Add default redirect/launch/post auth uris by @Jammjammjamm in https://github.com/inferno-framework/smart-app-launch-test-kit/pull/89
+* FI-3788: Add default redirect/launch/post auth uris by @Jammjammjamm in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/89
 
 # 0.5.0
-* FI-3648: Add Spec for Shared Tests and Implement Features for the Failing Tests by @vanessuniq in https://github.com/inferno-framework/smart-app-launch-test-kit/pull/86
+* FI-3648: Add Spec for Shared Tests and Implement Features for the Failing
+  Tests by @vanessuniq in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/86
 
 # 0.4.6
-* FI-3018: Allow multi-line custom headers in token introspection request by @emichaud998 in https://github.com/inferno-framework/smart-app-launch-test-kit/pull/77
-* FI-3257: Use Custom Authorization Header Input in Invalid Token Test by @emichaud998 in https://github.com/inferno-framework/smart-app-launch-test-kit/pull/81
-* FI-2919: SMART CORS Support Tests by @emichaud998 in https://github.com/inferno-framework/smart-app-launch-test-kit/pull/75
+* FI-3018: Allow multi-line custom headers in token introspection request by
+  @emichaud998 in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/77
+* FI-3257: Use Custom Authorization Header Input in Invalid Token Test by
+  @emichaud998 in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/81
+* FI-2919: SMART CORS Support Tests by @emichaud998 in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/75
 
 # 0.4.5
 * FI-3247: Add note that CORS is not yet tested by @Jammjammjamm in

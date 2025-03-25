@@ -53,7 +53,7 @@ module SMARTAppLaunch
         introspection response and should match the claim in the ID token
       )
 
-      input :standalone_smart_auth_info, type: :auth_info, options: { mode: 'auth' }
+      input :standalone_smart_auth_info, type: :auth_info, options: { mode: 'access' }
 
       input :standalone_received_scopes,
             title: 'Expected Introspection Response Value: scope',

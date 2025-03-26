@@ -193,6 +193,46 @@
         ],
         "address" : "http://example.com/api/FHIR/R4/2"
       }
+    },
+    {
+      "fullUrl" : "https://ehr.example.com/Organization/ehchospital",
+      "resource" : {
+        "resourceType" : "Organization",
+        "id" : "ehchospital",
+        "extension" : [{
+          "extension" : [{
+            "url" : "brandLogo",
+            "valueUrl" : "data:image/svg+xml;base64,PHN2ZyB0aXRsZT0iU3Rld2FydCBNZW1vcmlhbCBIb3Nw...+IDwvc3ZnPgo="
+          }],
+          "url" : "http://hl7.org/fhir/StructureDefinition/organization-brand"
+        }],
+        "identifier" : [{
+          "system" : "urn:ietf:rfc:3986",
+          "value" : "https://ehchospital.example.org"
+        }],
+        "active" : true,
+        "type" : [{
+          "coding" : [{
+            "system" : "http://terminology.hl7.org/CodeSystem/organization-type",
+            "code" : "prov",
+            "display" : "Healthcare Provider"
+          }]
+        }],
+        "name" : "ExampleHealth Community Hospital",
+        "alias" : ["GoodHealth Madison"],
+        "telecom" : [{
+          "system" : "url",
+          "value" : "https://www.ehchospital.example.com"
+        }],
+        "address" : [{
+          "city" : "Lake City",
+          "state" : "IA",
+          "country" : "US"
+        }],
+        "partOf" : {
+          "reference" : "Organization/examplehospital"
+        }
+      }
     }
   ]
 }

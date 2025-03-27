@@ -23,7 +23,7 @@ module SMARTAppLaunch
             ]
           }
 
-    output :authentication_response
+    output :authentication_response, :smart_auth_info
 
     run do
       post_request_content = BackendServicesAuthorizationRequestBuilder.build(
@@ -42,7 +42,8 @@ module SMARTAppLaunch
 
       smart_auth_info.issue_time = Time.now
 
-      output authentication_response: authentication_response.response_body
+      output authentication_response: authentication_response.response_body,
+             smart_auth_info: smart_auth_info
     end
   end
 end

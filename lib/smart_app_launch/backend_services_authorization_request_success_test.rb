@@ -40,6 +40,8 @@ module SMARTAppLaunch
 
       assert_response_status([200, 201])
 
+      smart_auth_info.issue_time = Time.now
+
       output authentication_response: authentication_response.response_body
     end
   end

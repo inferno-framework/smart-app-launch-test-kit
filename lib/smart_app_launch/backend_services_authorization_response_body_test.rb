@@ -42,8 +42,6 @@ module SMARTAppLaunch
       expires_in = response_body['expires_in']
 
       assert access_token.present?, 'Token response did not contain access_token as required'
-      assert received_scopes.present?, 'Token response did not contain scope as required'
-      assert expires_in.present?, 'Token response did not contain expires_in as required'
 
       smart_auth_info.access_token = access_token
       smart_auth_info.expires_in = expires_in

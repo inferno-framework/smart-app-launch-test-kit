@@ -31,7 +31,7 @@ module SMARTAppLaunch
             ]
           }
 
-    output :bearer_token
+    output :bearer_token, :received_scopes
 
     test from: :smart_tls,
          id: :smart_backend_services_token_tls_version,

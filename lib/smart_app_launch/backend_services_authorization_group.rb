@@ -31,8 +31,6 @@ module SMARTAppLaunch
             ]
           }
 
-    output :bearer_token
-
     test from: :smart_tls,
          id: :smart_backend_services_token_tls_version,
          title: 'Authorization service token endpoint secured by transport layer security',

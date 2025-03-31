@@ -260,7 +260,8 @@ module SMARTAppLaunch
                 smart_auth_info: { name: :backend_services_smart_auth_info }
               },
               outputs: {
-                smart_auth_info: { name: :backend_services_smart_auth_info }
+                smart_auth_info: { name: :backend_services_smart_auth_info },
+                received_scopes: { name: :backend_services_received_scopes }
               }
             }
     end

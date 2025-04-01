@@ -64,12 +64,12 @@ module SMARTAppLaunch
       section](https://github.com/inferno-framework/smart-app-launch-test-kit/issues)
       of the repository.
     DESCRIPTION
-    suite_ids [:smart, :smart_stu2, :smart_stu2_2, :smart_access_brands]
+    suite_ids [:smart, :smart_stu2, :smart_stu2_2, :smart_access_brands, :smart_client_stu2_2]
     tags ['SMART App Launch', 'Endpoint Publication']
     last_updated LAST_UPDATED
     version VERSION
     maturity 'Medium'
-    authors ['Stephen MacVicar']
+    authors ['Stephen MacVicar', 'Karl Naden']
     repo 'https://github.com/inferno-framework/smart-app-launch-test-kit'
   end
 end

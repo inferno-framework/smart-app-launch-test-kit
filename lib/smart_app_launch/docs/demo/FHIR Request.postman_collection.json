@@ -1,0 +1,81 @@
+{
+	"info": {
+		"_postman_id": "22f52416-c6ae-4ffc-a388-54616465d149",
+		"name": "FHIR Request",
+		"description": "Make a simple FHIR request with a specific bearer token. Useful for security client tests like SMART and UDAP.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32597978"
+	},
+	"item": [
+		{
+			"name": "Patient Read",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/custom/{{target_suite}}/fhir/Patient/example",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"custom",
+						"{{target_suite}}",
+						"fhir",
+						"Patient",
+						"example"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://inferno.healthit.gov/suites",
+			"type": "string"
+		},
+		{
+			"key": "target_suite",
+			"value": "smart_client_stu2_2",
+			"type": "string"
+		},
+		{
+			"key": "bearer_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

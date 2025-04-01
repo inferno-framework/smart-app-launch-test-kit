@@ -1,0 +1,31 @@
+{
+  "title": "Demo: Run Against the SMART Server Suite",
+  "id": "smart_run_client_against_server_v2_2",
+  "test_suite_id": "smart_client_stu2_2",
+  "inputs": [
+    {
+      "name": "smart_jwk_set",
+      "description": "The SMART client's JSON Web Key Set. May be provided as either a publicly accessible url containing the JWKS, or the raw JWKS.",
+      "optional": true,
+      "title": "SMART JSON Web Key Set (JWKS)",
+      "type": "textarea",
+      "value": "http://localhost:4567/custom/smart_stu2_2/.well-known/jwks.json"
+    },
+    {
+      "name": "client_id",
+      "description": "If a particular client id is desired, put it here. Otherwise a default of the Inferno session id will be used.",
+      "optional": true,
+      "title": "Client Id",
+      "type": "text",
+      "value": "smart_client_test_demo"
+    },
+    {
+      "name": "echoed_fhir_response",
+      "description": "JSON representation of a FHIR resource for Inferno to echo when a request is made to the simulated FHIR server. The provided content will be echoed back exactly and no check will be made that it is appropriate for the request made. If nothing is provided, an OperationOutcome will be returned.",
+      "optional": true,
+      "title": "FHIR Response to Echo",
+      "type": "textarea",
+      "value": "{\n  \"resourceType\": \"Patient\",\n  \"id\": \"example\",\n  \"name\": [\n    {\n      \"family\": \"Chalmers\",\n      \"given\": [\n        \"Peter\",\n        \"James\"\n      ]\n    }\n  ],\n  \"gender\": \"male\",\n  \"birthDate\": \"1974-12-25\",\n  \"address\": [\n    {\n      \"line\": [\n        \"534 Erewhon St\"\n      ],\n      \"city\": \"Ann Arbor\",\n      \"state\": \"MI\",\n      \"postalCode\": \"48108\"\n    }\n  ]\n}"
+    }
+  ]
+}

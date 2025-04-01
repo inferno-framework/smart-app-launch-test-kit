@@ -14,8 +14,8 @@ the [Backend Services](https://hl7.org/fhir/smart-app-launch/STU2.2/backend-serv
 flow.
 
 These tests are a **DRAFT** intended to allow implementers to perform
-preliminary checks of their systems against Subscriptions capabilities backported
-from FHIR R5 to R4 and [provide feedback](https://github.com/inferno-framework/smart-app-launch-test-kit/issues)
+preliminary checks of their systems against SMART requirements and 
+[provide feedback](https://github.com/inferno-framework/smart-app-launch-test-kit/issues)
 on the tests. Future versions of these tests may verify other
 requirements and may change the test verification logic.
 

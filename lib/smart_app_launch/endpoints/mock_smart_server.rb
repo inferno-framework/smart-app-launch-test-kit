@@ -27,6 +27,42 @@ module SMARTAppLaunch
       [200, { 'Content-Type' => 'application/json', 'Access-Control-Allow-Origin' => '*' }, [response_body]]
     end
 
+    def make_smart_token_response(request, response, result)
+      assertion = request.params[:client_assertion]
+      client_id = client_id_from_client_assertion(assertion)
+
+      key_set_input = JSON.parse(result.input_json)&.find do |input|
+        input['name'] == 'smart_jwk_set'
+      end&.dig('value')
+      signature_error = smart_assertion_signature_verification(assertion, key_set_input)
+
+      if signature_error.present?
+        update_response_for_invalid_assertion(response, signature_error)
+        return
+      end
+
+      exp_min = 60
+      response_body = {
+        access_token: client_id_to_token(client_id, exp_min),
+        token_type: 'Bearer',
+        expires_in: 60 * exp_min,
+        scope: request.params[:scope]
+      }
+
+      response.body = response_body.to_json
+      response.headers['Cache-Control'] = 'no-store'
+      response.headers['Pragma'] = 'no-cache'
+      response.headers['Access-Control-Allow-Origin'] = '*'
+      response.content_type = 'application/json'
+      response.status = 200
+    end
+
+    def client_id_from_client_assertion(client_assertion_jwt)
+      return unless client_assertion_jwt.present?
+
+      jwt_claims(client_assertion_jwt)&.dig('iss')
+    end
+
     def env_base_url(env, endpoint_path)
       protocol = env['rack.url_scheme']
       host = env['HTTP_HOST']

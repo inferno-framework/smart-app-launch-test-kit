@@ -8,7 +8,7 @@ module SMARTAppLaunch
   module MockSMARTServer
     class TokenEndpoint < Inferno::DSL::SuiteEndpoint
       def test_run_identifier
-        client_id_from_client_assertion(request.params[:client_assertion])
+        MockSMARTServer.client_id_from_client_assertion(request.params[:client_assertion])
       end
 
       def make_response

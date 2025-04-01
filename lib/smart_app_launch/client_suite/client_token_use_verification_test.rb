@@ -17,11 +17,19 @@ module SMARTAppLaunch
           optional: true,
           locked: true
 
+    def access_request_tags
+      return config.options[:access_request_tags] if config.options[:access_request_tags].present?
+
+      [ACCESS_TAG]
+    end
+
     run do
       omit_if smart_jwk_set.blank?, 'SMART Authentication not demonstrated as a part of this test session.'
 
       token_requests = load_tagged_requests(TOKEN_TAG, SMART_TAG)
-      access_requests = load_tagged_requests(ACCESS_TAG).reject { |access| access.status == 401 }
+      access_requests = access_request_tags.map do |access_request_tag|
+        load_tagged_requests(access_request_tag).reject { |access| access.status == 401 }
+      end.flatten
 
       skip_if token_requests.blank?, 'No token requests made.'
       skip_if access_requests.blank?, 'No successful access requests made.'

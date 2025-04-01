@@ -46,8 +46,8 @@ any tests in this suite:
    key(s) that Inferno will use to verify the signature on incoming token requests. May
    be provided as either a publicly accessible url containing the JWKS, or the raw JWKS.
 
-Additional inputs described in the *Additional Inputs* section below can enable
-verification of additional content types and some Subscription creation error scenarios.
+The *Additional Inputs* section below describes options available to customize
+the behavior of Inferno's server simulation.
 
 ### Demonstration
 

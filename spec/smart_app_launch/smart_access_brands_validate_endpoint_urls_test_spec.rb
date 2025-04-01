@@ -6,9 +6,9 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
   let(:result) { repo_create(:result, test_session_id: test_session.id) }
 
   let(:smart_access_brands_bundle) do
-    JSON.parse(File.read(File.join(
-                           __dir__, '..', 'fixtures', 'smart_access_brands_example.json'
-                         )))
+    FHIR.from_contents(File.read(File.join(
+                                   __dir__, '..', 'fixtures', 'smart_access_brands_example.json'
+                                 )))
   end
 
   let(:capability_statement) do
@@ -19,20 +19,6 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
 
   let(:user_access_brands_publication_url) { 'http://fhirserver.org/smart_access_brands_example.json' }
   let(:base_url) { 'http://example.com/api/FHIR/R4' }
-
-  def create_user_access_brands_request(url: user_access_brands_publication_url, body: nil, status: 200)
-    repo_create(
-      :request,
-      name: 'retrieve_smart_access_brands_bundle',
-      direction: 'outgoing',
-      url:,
-      result:,
-      test_session_id: test_session.id,
-      response_body: body.is_a?(Hash) ? body.to_json : body,
-      status:,
-      tags: ['smart_access_brands_bundle']
-    )
-  end
 
   def entity_result_message(runnable)
     results_repo.current_results_for_test_session_and_runnables(test_session.id, [runnable])
@@ -67,7 +53,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
       capability_statement_request = stub_request(:get, uri_template)
         .to_return(status: 200, body: capability_statement.to_json, headers: {})
 
-      create_user_access_brands_request(body: smart_access_brands_bundle)
+      allow_any_instance_of(test).to receive(:scratch_bundle_resource).and_return(smart_access_brands_bundle)
 
       result = run(test, user_access_brands_publication_url:, endpoint_availability_success_rate: 'all')
 
@@ -76,9 +62,9 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
     end
 
     it 'fails if Endpoint in Bundle contains an invalid URLs' do
-      smart_access_brands_bundle['entry'][1]['resource']['address'] = 'invalid_url'
+      smart_access_brands_bundle.entry[1].resource.address = 'invalid_url'
 
-      create_user_access_brands_request(body: smart_access_brands_bundle)
+      allow_any_instance_of(test).to receive(:scratch_bundle_resource).and_return(smart_access_brands_bundle)
 
       result = run(test, user_access_brands_publication_url:, endpoint_availability_success_rate: 'all')
 
@@ -91,7 +77,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
       capability_statement_request = stub_request(:get, uri_template)
         .to_return(status: 404, body: capability_statement.to_json, headers: {})
 
-      create_user_access_brands_request(body: smart_access_brands_bundle)
+      allow_any_instance_of(test).to receive(:scratch_bundle_resource).and_return(smart_access_brands_bundle)
 
       result = run(test, user_access_brands_publication_url:, endpoint_availability_success_rate: 'all')
 
@@ -105,7 +91,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
       capability_statement_request = stub_request(:get, uri_template)
         .to_return(status: 200, body: { 'example' => 'example' }.to_json, headers: {})
 
-      create_user_access_brands_request(body: smart_access_brands_bundle)
+      allow_any_instance_of(test).to receive(:scratch_bundle_resource).and_return(smart_access_brands_bundle)
 
       result = run(test, user_access_brands_publication_url:, endpoint_availability_success_rate: 'all')
 
@@ -120,7 +106,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
       capability_statement_request = stub_request(:get, uri_template)
         .to_return(status: 200, body: capability_statement.to_json, headers: {})
 
-      create_user_access_brands_request(body: smart_access_brands_bundle)
+      allow_any_instance_of(test).to receive(:scratch_bundle_resource).and_return(smart_access_brands_bundle)
 
       result = run(test, user_access_brands_publication_url:, endpoint_availability_success_rate: 'all')
 
@@ -136,7 +122,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
       capability_statement_request = stub_request(:get, uri_template)
         .to_return(status: 200, body: capability_statement.to_json, headers: {})
 
-      create_user_access_brands_request(body: smart_access_brands_bundle)
+      allow_any_instance_of(test).to receive(:scratch_bundle_resource).and_return(smart_access_brands_bundle)
 
       result = run(test, user_access_brands_publication_url:, endpoint_availability_success_rate: 'all',
                          endpoint_availability_limit: 1)
@@ -146,7 +132,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
     end
 
     it 'passes if at least 1 endpoint is available when success rate input is set to at least 1' do
-      smart_access_brands_bundle['entry'][1]['resource']['address'] = "#{base_url}/fake/address/1"
+      smart_access_brands_bundle.entry[1].resource.address = "#{base_url}/fake/address/1"
 
       uri_template = Addressable::Template.new "#{base_url}/{id}/metadata"
       capability_statement_request_success = stub_request(:get, uri_template)
@@ -156,7 +142,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
       capability_statement_request_fail = stub_request(:get, fake_uri_template)
         .to_return(status: 404, body: '', headers: {})
 
-      create_user_access_brands_request(body: smart_access_brands_bundle)
+      allow_any_instance_of(test).to receive(:scratch_bundle_resource).and_return(smart_access_brands_bundle)
 
       result = run(test, user_access_brands_publication_url:, endpoint_availability_success_rate: 'at_least_1')
 
@@ -172,7 +158,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateEndpointURLs do
       capability_statement_request = stub_request(:get, uri_template)
         .to_return(status: 200, body: capability_statement.to_json, headers: {})
 
-      create_user_access_brands_request(body: smart_access_brands_bundle)
+      allow_any_instance_of(test).to receive(:scratch_bundle_resource).and_return(smart_access_brands_bundle)
 
       result = run(test, user_access_brands_publication_url:, endpoint_availability_success_rate: 'none')
 

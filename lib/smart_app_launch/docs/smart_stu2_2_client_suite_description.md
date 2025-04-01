@@ -77,11 +77,11 @@ The client tests should pass with the exception of test **1.2.02** Verify SMART 
 expected as the Server tests make several intentionally invalid token requests. Inferno's simulated SMART
 server responds successfully to those requests when the client id can be identified, but flags them as
 not conformant causing these expected failures. Because responding with an access token to non-conformant
-token requests is itself not conformant, there are corresponding failures on the server test in tests **3.2.02**,
+token requests is itself not conformant there are corresponding failures on the server test in tests **3.2.02**,
 **3.2.04**, and **3.2.04**. There may be other SMART server test failures due to an assumption that
 servers support the app launch capabilities in addition to backend services.
 
-### Additional Input Details
+### Additional Inputs
 
 Two additional inputs are available to support testers 
 - **Client Id**: Testers may specify a client id for Inferno to use for the test session if they

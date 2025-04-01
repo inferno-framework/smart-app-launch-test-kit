@@ -61,7 +61,7 @@ steps.
 2. From the drop down in the upper left, select preset "Demo: Run Against the SMART Server Suite".
 3. Click the "RUN ALL TESTS" button in the upper right and click "SUBMIT"
 4. In a new tab, start an instance of the SMART App Launch STU2.2 Test Suite
-5. From the drop down in the upper left, select preset "Demo: Run Against the SMART Server Suite"
+5. From the drop down in the upper left, select preset "Demo: Run Against the SMART Client Suite"
 6. Select test group **3** Backend Services from the left panel, click the "RUN TESTS" button
    in the upper right, and click "SUBMIT"
 7. Find the access token to use for the data access request by opening test **3.2.05** Authorization

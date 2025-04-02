@@ -10,8 +10,8 @@ module SMARTAppLaunch
 
     module_function
 
-    def smart_server_metadata(env)
-      base_url = env_base_url(env, SMART_DISCOVERY_PATH)
+    def smart_server_metadata(suite_id)
+      base_url = "#{Inferno::Application['base_url']}/custom/#{suite_id}"
       response_body = {
         token_endpoint_auth_signing_alg_values_supported: ['RS384', 'ES384'],
         capabilities: ['client-confidential-asymmetric'],
@@ -60,14 +60,6 @@ module SMARTAppLaunch
       return unless client_assertion_jwt.present?
 
       jwt_claims(client_assertion_jwt)&.dig('iss')
-    end
-
-    def env_base_url(env, endpoint_path)
-      protocol = env['rack.url_scheme']
-      host = env['HTTP_HOST']
-      path = env['REQUEST_PATH'] || env['PATH_INFO']
-      path.gsub!(%r{#{endpoint_path}(/)?}, '')
-      "#{protocol}://#{host + path}"
     end
 
     def parsed_request_body(request)

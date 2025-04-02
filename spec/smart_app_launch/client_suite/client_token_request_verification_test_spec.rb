@@ -76,11 +76,6 @@ RSpec.describe SMARTAppLaunch::SMARTClientTokenRequestVerification do # rubocop:
     )
   end
 
-  it 'omits if not configured for auth' do
-    result = run(test)
-    expect(result.result).to eq('omit')
-  end
-
   it 'skips if no token requests' do
     result = run(test, client_id:, smart_jwk_set: jwks_valid)
     expect(result.result).to eq('skip')

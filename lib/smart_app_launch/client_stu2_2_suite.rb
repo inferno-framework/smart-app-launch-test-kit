@@ -33,7 +33,7 @@ module SMARTAppLaunch
       }
     ]
 
-    route(:get, SMART_DISCOVERY_PATH, ->(env) {MockSMARTServer.smart_server_metadata(id) }) 
+    route(:get, SMART_DISCOVERY_PATH, ->(_env) {MockSMARTServer.smart_server_metadata(id) }) 
     suite_endpoint :post, TOKEN_PATH, MockSMARTServer::TokenEndpoint
     suite_endpoint :get, FHIR_PATH, EchoingFHIRResponderEndpoint
     suite_endpoint :post, FHIR_PATH, EchoingFHIRResponderEndpoint

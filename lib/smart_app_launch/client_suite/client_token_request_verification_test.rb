@@ -15,7 +15,7 @@ module SMARTAppLaunch
     input :client_id,
           title: 'Client Id',
           type: 'text',
-          optional: true,
+          optional: false,
           locked: true,
           description: %(
             The registered Client Id for use in obtaining access tokens.
@@ -24,7 +24,7 @@ module SMARTAppLaunch
     input :smart_jwk_set,
           title: 'JSON Web Key Set (JWKS)',
           type: 'textarea',
-          optional: true,
+          optional: false,
           locked: true,
           description: %(
             The SMART client's JSON Web Key Set in the form of either a publicly accessible url
@@ -34,7 +34,7 @@ module SMARTAppLaunch
           )
 
     run do
-      omit_if smart_jwk_set.blank?,
+      omit_if smart_jwk_set.blank?, # for re-use: mark the smart_jwk_set input as optional when importing to enable
               'SMART Backend Services authentication not demonstrated as a part of this test session.'
 
       load_tagged_requests(TOKEN_TAG, SMART_TAG)

@@ -14,7 +14,7 @@ module SMARTAppLaunch
       )
 
     input :smart_jwk_set,
-          optional: true,
+          optional: false,
           locked: true
 
     def access_request_tags
@@ -24,7 +24,8 @@ module SMARTAppLaunch
     end
 
     run do
-      omit_if smart_jwk_set.blank?, 'SMART Authentication not demonstrated as a part of this test session.'
+      omit_if smart_jwk_set.blank?, # for re-use: mark the smart_jwk_set input as optional when importing to enable
+        'SMART Authentication not demonstrated as a part of this test session.'
 
       token_requests = load_tagged_requests(TOKEN_TAG, SMART_TAG)
       access_requests = access_request_tags.map do |access_request_tag|

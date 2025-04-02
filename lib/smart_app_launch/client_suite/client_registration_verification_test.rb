@@ -32,7 +32,8 @@ module SMARTAppLaunch
     output :client_id
 
     run do
-      omit_if smart_jwk_set.blank?, 'Not configured for SMART authentication.'
+      omit_if smart_jwk_set.blank?, # for re-use: mark the smart_jwk_set input as optional when importing to enable
+        'Not configured for SMART authentication.'
 
       if client_id.blank?
         client_id = test_session_id

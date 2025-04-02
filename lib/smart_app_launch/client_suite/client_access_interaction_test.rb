@@ -9,7 +9,7 @@ module SMARTAppLaunch
     title 'Perform SMART-secured Access'
     description %(
       During this test, Inferno will wait for the client to access data
-      using a SMART token obtained
+      using a SMART token obtained during earlier tests.
     )
     input :client_id,
           title: 'Client Id',
@@ -17,7 +17,7 @@ module SMARTAppLaunch
           locked: true,
           description: %(
             The registered Client Id for use in obtaining access tokens.
-            Run the **1.1** Client Registration group populate or update this input.
+            Run the **1.1** Client Registration group to populate or update this input.
           )
     input :smart_jwk_set,
           title: 'JSON Web Key Set (JWKS)',
@@ -51,11 +51,11 @@ module SMARTAppLaunch
             token using SMART Backend Services
             and use that token to access a FHIR endpoint under the simulated server's base URL
 
-            `#{fhir_base_url}`
+            `#{client_fhir_base_url}`
 
             Inferno will echo the response provided in the **FHIR Response to Echo** input.
 
-            [Click here](#{resume_pass_url}?token=#{client_id}) once you performed
+            [Click here](#{client_resume_pass_url}?token=#{client_id}) once you performed
             the access.
           )
       )

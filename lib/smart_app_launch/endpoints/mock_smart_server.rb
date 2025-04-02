@@ -6,7 +6,6 @@ require_relative '../tags'
 
 module SMARTAppLaunch
   module MockSMARTServer
-    include Inferno::DSL::HTTPClient
     SUPPORTED_SCOPES = ['openid', 'system/*.read', 'user/*.read', 'patient/*.read'].freeze
 
     module_function

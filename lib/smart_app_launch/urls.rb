@@ -9,32 +9,32 @@ module SMARTAppLaunch
   TOKEN_PATH = "#{AUTH_SERVER_PATH}/token".freeze
 
   module URLs
-    def base_url
-      @base_url ||= "#{Inferno::Application['base_url']}/custom/#{suite_id}"
+    def client_base_url
+      @base_url ||= "#{Inferno::Application['base_url']}/custom/#{client_suite_id}"
     end
 
-    def fhir_base_url
-      @fhir_base_url ||= base_url + FHIR_PATH
+    def client_fhir_base_url
+      @fhir_base_url ||= client_base_url + FHIR_PATH
     end
 
-    def resume_pass_url
-      @resume_pass_url ||= base_url + RESUME_PASS_PATH
+    def client_resume_pass_url
+      @resume_pass_url ||= client_base_url + RESUME_PASS_PATH
     end
 
-    def resume_fail_url
-      @resume_fail_url ||= base_url + RESUME_FAIL_PATH
+    def client_resume_fail_url
+      @resume_fail_url ||= client_base_url + RESUME_FAIL_PATH
     end
 
-    def smart_discovery_url
-      @smart_discovery_url ||= base_url + SMART_DISCOVERY_PATH
+    def client_smart_discovery_url
+      @smart_discovery_url ||= client_base_url + SMART_DISCOVERY_PATH
     end
 
-    def token_url
-      @token_url ||= base_url + TOKEN_PATH
+    def client_token_url
+      @token_url ||= client_base_url + TOKEN_PATH
     end
 
-    def suite_id
-      self.class.suite.id
+    def client_suite_id
+      SMARTAppLaunch::SMARTClientSTU22Suite.id
     end
   end
 end

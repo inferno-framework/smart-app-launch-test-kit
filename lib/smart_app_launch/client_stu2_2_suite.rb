@@ -5,7 +5,7 @@ require_relative 'client_suite/client_registration_group'
 require_relative 'client_suite/client_access_group'
 
 module SMARTAppLaunch
-  class SMARTClientTestSuite < Inferno::TestSuite
+  class SMARTClientSTU22Suite < Inferno::TestSuite
     id :smart_client_stu2_2 # rubocop:disable Naming/VariableNumber
     title 'SMART App Launch STU2.2 Client'
     description File.read(File.join(__dir__, 'docs', 'smart_stu2_2_client_suite_description.md'))

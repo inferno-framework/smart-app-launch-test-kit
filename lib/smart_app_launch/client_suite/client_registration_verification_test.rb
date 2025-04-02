@@ -1,10 +1,8 @@
 require_relative '../tags'
-require_relative '../urls'
 require_relative '../endpoints/mock_smart_server'
 
 module SMARTAppLaunch
   class SMARTClientRegistrationVerification < Inferno::Test
-    include URLs
 
     id :smart_client_registration_verification
     title 'Verify SMART Registration'

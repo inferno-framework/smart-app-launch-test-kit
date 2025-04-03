@@ -11,7 +11,8 @@ module SMARTAppLaunch
         authentication.
       )
 
-    input :smart_tokens
+    input :smart_tokens,
+          optional: true # verified in the test to return a more specific error message
     input :smart_jwk_set,
           optional: false,
           locked: true
@@ -29,8 +30,7 @@ module SMARTAppLaunch
       access_requests = access_request_tags.map do |access_request_tag|
         load_tagged_requests(access_request_tag).reject { |access| access.status == 401 }
       end.flatten
-
-      obtained_tokens = smart_tokens.split("\n")
+      obtained_tokens = smart_tokens&.split("\n")
 
       skip_if obtained_tokens.blank?, 'No token requests made.'
       skip_if access_requests.blank?, 'No successful access requests made.'

@@ -90,7 +90,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientTokenRequestVerification do # rubocop:
   it 'includes the response token as output' do
     create_token_request(token_request_body_valid)
     result = run(test, client_id:, smart_jwk_set: jwks_valid)
-    output_tokens = JSON.parse(result.output_json).find { |output| output['name'] == 'smart_tokens'}&.dig('value')
+    output_tokens = JSON.parse(result.output_json).find { |output| output['name'] == 'smart_tokens' }&.dig('value')
     expect(output_tokens).to eq(access_token)
   end
 

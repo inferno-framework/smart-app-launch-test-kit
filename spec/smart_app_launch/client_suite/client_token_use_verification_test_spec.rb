@@ -3,7 +3,6 @@ RSpec.describe SMARTAppLaunch::SMARTClientTokenUseVerification do # rubocop:disa
   let(:test) { described_class }
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:dummy_result) { repo_create(:result, test_session_id: test_session.id) }
-  let(:token_endpoint) { 'https://inferno.healthit.gov/suites/custom/smart_client_stu2_2/auth/token' }
   let(:access_endpoint) { 'https://inferno.healthit.gov/suites/custom/smart_client_stu2_2/fhir/Patient/999' }
   let(:jwks_valid) do
     File.read(File.join(__dir__, '..', '..', '..', 'lib', 'smart_app_launch', 'smart_jwks.json'))
@@ -32,12 +31,14 @@ RSpec.describe SMARTAppLaunch::SMARTClientTokenUseVerification do # rubocop:disa
   it 'skips if no input tokens' do
     result = run(test, smart_jwk_set: jwks_valid)
     expect(result.result).to eq('skip')
+    expect(result.result_message).to match(/No token requests made./)
   end
 
   it 'skips if no access requests' do
     smart_tokens = "abc\n123"
     result = run(test, smart_jwk_set: jwks_valid, smart_tokens:)
     expect(result.result).to eq('skip')
+    expect(result.result_message).to match(/No successful access requests made./)
   end
 
   it 'passes an input access token is used in an access request' do
@@ -52,6 +53,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientTokenUseVerification do # rubocop:disa
     create_access_request('xyz')
     result = run(test, smart_jwk_set: jwks_valid, smart_tokens:)
     expect(result.result).to eq('fail')
+    expect(result.result_message).to match(/Returned tokens never used in any requests./)
   end
 
 end

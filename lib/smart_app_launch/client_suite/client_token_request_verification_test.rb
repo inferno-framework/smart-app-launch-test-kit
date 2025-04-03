@@ -32,6 +32,7 @@ module SMARTAppLaunch
             verify signatures on token requests made by the client.
             Run the **1.1** Client Registration group to populate or update this input.
           )
+    output :smart_tokens
 
     run do
       omit_if smart_jwk_set.blank?, # for re-use: mark the smart_jwk_set input as optional when importing to enable
@@ -41,11 +42,15 @@ module SMARTAppLaunch
       skip_if requests.blank?, 'No SMART token requests made.'
 
       jti_list = []
+      token_list = []
       requests.each_with_index do |token_request, index|
         request_params = URI.decode_www_form(token_request.request_body).to_h
         check_request_params(request_params, index + 1)
         check_client_assertion(request_params['client_assertion'], index + 1, jti_list, token_request.url)
+        token_list << extract_token_from_response(token_request)
       end
+
+      output smart_tokens: token_list.compact.join("\n")
 
       assert messages.none? { |msg|
         msg[:type] == 'error'
@@ -128,6 +133,14 @@ module SMARTAppLaunch
       return unless error.present?
 
       add_message('error', "Signature validation failed on token request #{request_num}: #{error}")
+    end
+
+    def extract_token_from_response(request)
+      return unless request.status == 200
+
+      JSON.parse(request.response_body)&.dig('access_token')
+    rescue
+      nil
     end
   end
 end

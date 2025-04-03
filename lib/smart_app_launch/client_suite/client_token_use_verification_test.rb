@@ -11,6 +11,7 @@ module SMARTAppLaunch
         authentication.
       )
 
+    input :smart_tokens
     input :smart_jwk_set,
           optional: false,
           locked: true
@@ -25,12 +26,13 @@ module SMARTAppLaunch
       omit_if smart_jwk_set.blank?, # for re-use: mark the smart_jwk_set input as optional when importing to enable
         'SMART Authentication not demonstrated as a part of this test session.'
 
-      token_requests = load_tagged_requests(TOKEN_TAG, SMART_TAG)
       access_requests = access_request_tags.map do |access_request_tag|
         load_tagged_requests(access_request_tag).reject { |access| access.status == 401 }
       end.flatten
 
-      skip_if token_requests.blank?, 'No token requests made.'
+      obtained_tokens = smart_tokens.split("\n")
+
+      skip_if obtained_tokens.blank?, 'No token requests made.'
       skip_if access_requests.blank?, 'No successful access requests made.'
 
       used_tokens = access_requests.map do |access_request|
@@ -39,11 +41,7 @@ module SMARTAppLaunch
         end&.value&.delete_prefix('Bearer ')
       end.compact
 
-      request_with_used_token = token_requests.find do |token_request|
-        used_tokens.include?(JSON.parse(token_request.response_body)&.dig('access_token'))
-      end
-
-      assert request_with_used_token.present?, 'Returned tokens never used in any requests.'
+      assert (used_tokens & obtained_tokens).present?, 'Returned tokens never used in any requests.'
     end
   end
 end

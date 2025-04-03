@@ -1,11 +1,10 @@
-require_relative '../../../lib/smart_app_launch/tags'
-
 RSpec.describe SMARTAppLaunch::SMARTClientTokenRequestVerification do # rubocop:disable RSpec/SpecFilePathFormat
   let(:suite_id) { 'smart_client_stu2_2' }
   let(:test) { described_class }
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:dummy_result) { repo_create(:result, test_session_id: test_session.id) }
   let(:client_id) { 'cid' }
+  let(:access_token) { 'xyz' }
   let(:jwks_valid) do
     File.read(File.join(__dir__, '..', '..', '..', 'lib', 'smart_app_launch', 'smart_jwks.json'))
   end
@@ -71,6 +70,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientTokenRequestVerification do # rubocop:
       result: dummy_result,
       test_session_id: test_session.id,
       request_body: URI.encode_www_form(body),
+      response_body: { access_token: }.to_json,
       status: 200,
       tags: [SMARTAppLaunch::TOKEN_TAG, SMARTAppLaunch::SMART_TAG]
     )
@@ -85,6 +85,13 @@ RSpec.describe SMARTAppLaunch::SMARTClientTokenRequestVerification do # rubocop:
     create_token_request(token_request_body_valid)
     result = run(test, client_id:, smart_jwk_set: jwks_valid)
     expect(result.result).to eq('pass')
+  end
+
+  it 'includes the response token as output' do
+    create_token_request(token_request_body_valid)
+    result = run(test, client_id:, smart_jwk_set: jwks_valid)
+    output_tokens = JSON.parse(result.output_json).find { |output| output['name'] == 'smart_tokens'}&.dig('value')
+    expect(output_tokens).to eq(access_token)
   end
 
   it 'passes for a valid request (jwks as url)' do

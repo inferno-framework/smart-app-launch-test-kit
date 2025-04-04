@@ -69,7 +69,9 @@ steps.
    button, and expanding the "Response Body". Copy the "access_token" value, which will be a ~100 character
    string of letters and numbers (e.g., eyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc0MzUxNDk4Mywibm9uY2UiOiJlZDI5MWIwNmZhMTE4OTc4In0)
 8. Open Postman and open the "FHIR Request" Collection. Click the "Variables" tab and add the copied access token
-   as the current value of the "bearer_token" variable. Save the collection.
+   as the current value of the `bearer_token` variable. Also update the
+   `base_url` value for where the test is running (see details on the "Overview" tab).
+   Save the collection.
 9. Select the "Patient Read" request and click "Send". A FHIR Patient resource should be returned.
 10. Return to the client tests and click the link to continue and complete the tests.
 

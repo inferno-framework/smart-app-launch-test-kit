@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "22f52416-c6ae-4ffc-a388-54616465d149",
 		"name": "FHIR Request",
-		"description": "Make a simple FHIR request with a specific bearer token. Useful for security client tests like SMART and UDAP.",
+		"description": "Make a simple FHIR request with a specific bearer token. Useful for security client tests like SMART and UDAP.\n\n- base_url: points to a running instance of inferno. Typical values will be\n    \n    - Inferno production: [https://inferno.healthit.gov/suites](https://inferno.healthit.gov/suites)\n        \n    - Inferno QA: [https://inferno-qa.healthit.gov/suites](https://inferno-qa.healthit.gov/suites)\n        \n    - Local docker: [http://localhost](http://localhost)\n        \n    - Local development: [http://localhost:4567](http://localhost:4567)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "32597978"
 	},

@@ -19,7 +19,7 @@ module SMARTAppLaunch
           locked: true,
           description: %(
             The registered Client Id for use in obtaining access tokens.
-            Run the **1.1** Client Registration group to populate or update this input.
+            Create a new session if you need to change this value.
           )
     input :smart_jwk_set,
           title: 'JSON Web Key Set (JWKS)',
@@ -30,7 +30,7 @@ module SMARTAppLaunch
             The SMART client's JSON Web Key Set in the form of either a publicly accessible url
             containing the JWKS, or the raw JWKS JSON. Must include the key(s) Inferno will need to
             verify signatures on token requests made by the client.
-            Run the **1.1** Client Registration group to populate or update this input.
+            Create a new session if you need to change this value.
           )
     output :smart_tokens
 

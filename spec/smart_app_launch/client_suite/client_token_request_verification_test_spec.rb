@@ -10,7 +10,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientTokenRequestVerification do # rubocop:
   end
   let(:parsed_jwks) { JWT::JWK::Set.new(JSON.parse(jwks_valid)) }
   let(:jwks_url_valid) { 'https://inferno.healthit.gov/suites/custom/smart_stu2/.well-known/jwks.json' }
-  let(:token_endpoint) { 'https://inferno.healthit.gov/suites/custom/smart_client_stu2_2/auth/token' }
+  let(:token_endpoint) { "#{Inferno::Application['base_url']}/custom/smart_client_stu2_2/auth/token" }
   let(:header_valid) do
     {
       typ: 'JWT',

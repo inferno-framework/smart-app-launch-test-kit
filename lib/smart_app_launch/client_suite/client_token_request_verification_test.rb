@@ -46,7 +46,7 @@ module SMARTAppLaunch
       requests.each_with_index do |token_request, index|
         request_params = URI.decode_www_form(token_request.request_body).to_h
         check_request_params(request_params, index + 1)
-        check_client_assertion(request_params['client_assertion'], index + 1, jti_list, token_request.url)
+        check_client_assertion(request_params['client_assertion'], index + 1, jti_list)
         token_list << extract_token_from_response(token_request)
       end
 
@@ -74,7 +74,7 @@ module SMARTAppLaunch
       add_message('error', "Token request #{request_num} did not include the requested `scope`")
     end
 
-    def check_client_assertion(assertion, request_num, jti_list, endpoint_aud)
+    def check_client_assertion(assertion, request_num, jti_list)
       decoded_token =
         begin
           JWT::EncodedToken.new(assertion)
@@ -86,7 +86,7 @@ module SMARTAppLaunch
       return unless decoded_token.present?
 
       check_jwt_header(decoded_token.header, request_num)
-      check_jwt_payload(decoded_token.payload, request_num, jti_list, endpoint_aud)
+      check_jwt_payload(decoded_token.payload, request_num, jti_list)
       check_jwt_signature(decoded_token, request_num)
     end
 
@@ -97,7 +97,7 @@ module SMARTAppLaunch
                            "expected 'JWT', got '#{header['typ']}'")
     end
 
-    def check_jwt_payload(claims, request_num, jti_list, endpoint_aud)
+    def check_jwt_payload(claims, request_num, jti_list)
       if claims['iss'] != client_id
         add_message('error', "client assertion jwt on token request #{request_num} has an incorrect `iss` claim: " \
                              "expected '#{client_id}', got '#{claims['iss']}'")
@@ -108,9 +108,9 @@ module SMARTAppLaunch
                              "expected '#{client_id}', got '#{claims['sub']}'")
       end
 
-      if claims['aud'] != endpoint_aud
+      if claims['aud'] != client_token_url
         add_message('error', "client assertion jwt on token request #{request_num} has an incorrect `aud` claim: " \
-                             "expected '#{endpoint_aud}', got '#{claims['aud']}'")
+                             "expected '#{client_token_url}', got '#{claims['aud']}'")
       end
 
       if claims['exp'].blank?

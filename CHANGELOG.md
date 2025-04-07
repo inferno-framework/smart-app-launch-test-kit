@@ -1,3 +1,11 @@
+# 0.6.1
+* Fix SMART Auth Input for Token Introspection Response Group by @emichaud998 in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/92
+* FI-3905: Backend Services Token Introspection Support by @emichaud998 in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/93
+* FI-3825 - client suite for backend services by @karlnaden in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/94
+
 # 0.6.0
 * **Breaking Change**: FI 3093: Transition to use auth info by @vanessuniq in
   https://github.com/inferno-framework/smart-app-launch-test-kit/pull/84 As a

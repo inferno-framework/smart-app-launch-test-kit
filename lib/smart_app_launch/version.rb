@@ -1,4 +1,4 @@
 module SMARTAppLaunch
-  VERSION = '0.6.0'.freeze
-  LAST_UPDATED = '2025-03-14'.freeze
+  VERSION = '0.6.1'.freeze
+  LAST_UPDATED = '2025-04-07'.freeze
 end

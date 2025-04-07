@@ -1,0 +1,42 @@
+{
+  "title": "Demo: Run Against the SMART Client Suite",
+  "id": "smart_run_server_against_client_v2_2",
+  "test_suite_id": "smart_stu2_2",
+  "inputs": [
+    {
+      "name": "url",
+      "description": "URL of the FHIR endpoint used by SMART applications",
+      "title": "FHIR Endpoint",
+      "type": "text",
+      "value": "<%= Inferno::Application['base_url'] %>/custom/smart_client_stu2_2/fhir"
+    },
+    {
+      "name": "backend_services_smart_auth_info",
+      "options": {
+        "mode": "auth",
+        "components": [
+          {
+            "name": "auth_type",
+            "default": "backend_services",
+            "locked": "true"
+          },
+          {
+            "name": "use_discovery",
+            "locked": true
+          }
+        ]
+      },
+      "title": "Backend Services Credentials",
+      "type": "auth_info",
+      "value": {
+        "encryption_algorithm": "ES384",
+        "auth_type": "backend_services",
+        "use_discovery": "true",
+        "token_url": "<%= Inferno::Application['base_url'] %>/custom/smart_client_stu2_2/auth/token",
+        "requested_scopes": "system/*.rs",
+        "client_id": "smart_client_test_demo"
+      },
+      "default": {}
+    }
+  ]
+}

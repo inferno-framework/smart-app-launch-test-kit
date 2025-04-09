@@ -33,7 +33,17 @@ module SMARTAppLaunch
       end
 
       def tags
-        [TOKEN_TAG, SMART_TAG]
+        tags = [TOKEN_TAG, SMART_TAG]
+        workflow_tag = 
+          case request.params[:grant_type]
+          when 'client_credentials'
+            CLIENT_CREDENTIAL_TAG
+          when 'authorization_code'
+            AUTHORIZATION_CODE_TAG
+          end  
+       tags << workflow_tag unless workflow_tag.blank?
+
+       tags
       end
   
       def make_smart_authorization_code_token_response
@@ -54,7 +64,7 @@ module SMARTAppLaunch
           )
           return
         end
-        auth_code_request_inputs = authorization_code_request_details(authorization_request)
+        auth_code_request_inputs = MockSMARTServer.authorization_code_request_details(authorization_request)
         if auth_code_request_inputs.blank?
           MockSMARTServer.update_response_for_invalid_assertion(
             response, 
@@ -124,20 +134,6 @@ module SMARTAppLaunch
             false
           end
         end
-      end
-
-      def authorization_code_request_details(inferno_request)
-        details_hash = 
-          if inferno_request.verb.downcase == 'get'
-            CGI.parse(inferno_request.url.split('?')[1])
-          elsif inferno_request.verb.downcase == 'post'
-            CGI.parse(inferno_request.request_body)
-          else
-            nil
-          end
-        
-        details_hash&.keys&.each { |key| details_hash[key] = details_hash[key].first }
-        details_hash
       end
 
       def requests_repo

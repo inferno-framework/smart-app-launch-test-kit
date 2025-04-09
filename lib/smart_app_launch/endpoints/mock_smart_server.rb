@@ -319,5 +319,19 @@ module SMARTAppLaunch
       
       true
     end
+
+    def authorization_code_request_details(inferno_request)
+      details_hash = 
+        if inferno_request.verb.downcase == 'get'
+          CGI.parse(inferno_request.url.split('?')[1])
+        elsif inferno_request.verb.downcase == 'post'
+          CGI.parse(inferno_request.request_body)
+        else
+          nil
+        end
+      
+      details_hash&.keys&.each { |key| details_hash[key] = details_hash[key].first }
+      details_hash
+    end
   end
 end

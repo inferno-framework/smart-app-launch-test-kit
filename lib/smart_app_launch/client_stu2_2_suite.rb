@@ -4,6 +4,8 @@ require_relative 'endpoints/echoing_fhir_responder'
 require_relative 'urls'
 require_relative 'client_suite/client_registration_group'
 require_relative 'client_suite/client_access_group'
+require_relative 'client_suite/app_launch/app_launch_registration_group'
+require_relative 'client_suite/app_launch/app_launch_access_group'
 
 module SMARTAppLaunch
   class SMARTClientSTU22Suite < Inferno::TestSuite
@@ -64,6 +66,19 @@ module SMARTAppLaunch
     end
 
     group do
+      title 'SMART App Launch'
+      description %(
+        During these tests, the client will use SMART App Launch
+        to access a FHIR API. Clients will provide registeration details,
+        obtain an authorization code, trade it for an access token, and
+        use the access token when making a request to a FHIR API.
+      )
+
+      group from: :smart_client_app_launch_registration
+      group from: :smart_client_app_launch_access
+    end
+
+    group do
       title 'SMART Backend Services'
       description %(
         During these tests, the client will use SMART Backend Services
@@ -78,5 +93,7 @@ module SMARTAppLaunch
       group from: :smart_client_registration
       group from: :smart_client_access
     end
+
+
   end
 end

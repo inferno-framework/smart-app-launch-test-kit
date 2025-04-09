@@ -1,6 +1,6 @@
 RSpec.describe SMARTAppLaunch::MockSMARTServer, :request, :runnable do
   let(:suite_id) { 'smart_client_stu2_2' }
-  let(:backend_services_access_test) { suite.children[0].children[1].children[0] } # backend services data acccess test
+  let(:backend_services_access_test) { suite.children[1].children[1].children[0] } # backend services data acccess test
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:dummy_result) { repo_create(:result, test_session_id: test_session.id) }
   let(:client_id) { 'cid' }

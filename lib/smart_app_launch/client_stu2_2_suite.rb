@@ -1,4 +1,5 @@
 require_relative 'endpoints/mock_smart_server/token'
+require_relative 'endpoints/mock_smart_server/authorization'
 require_relative 'endpoints/echoing_fhir_responder'
 require_relative 'urls'
 require_relative 'client_suite/client_registration_group'
@@ -34,6 +35,8 @@ module SMARTAppLaunch
     ]
 
     route(:get, SMART_DISCOVERY_PATH, ->(_env) {MockSMARTServer.smart_server_metadata(id) }) 
+    suite_endpoint :get, AUTHORIZATION_PATH, MockSMARTServer::AuthorizationEndpoint
+    suite_endpoint :post, AUTHORIZATION_PATH, MockSMARTServer::AuthorizationEndpoint
     suite_endpoint :post, TOKEN_PATH, MockSMARTServer::TokenEndpoint
     suite_endpoint :get, FHIR_PATH, EchoingFHIRResponderEndpoint
     suite_endpoint :post, FHIR_PATH, EchoingFHIRResponderEndpoint

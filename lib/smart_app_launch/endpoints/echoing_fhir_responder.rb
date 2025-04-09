@@ -38,7 +38,7 @@ module SMARTAppLaunch
 
     def update_result
       if MockSMARTServer.request_has_expired_token?(request)
-        MockSMARTServer.update_response_for_expired_token(response)
+        MockSMARTServer.update_response_for_expired_token(response, 'Bearer token')
         return
       end
 

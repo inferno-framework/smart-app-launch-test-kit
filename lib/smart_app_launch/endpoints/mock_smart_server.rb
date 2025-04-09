@@ -1,6 +1,7 @@
 require 'jwt'
 require 'faraday'
 require 'time'
+require 'base64'
 require_relative '../urls'
 require_relative '../tags'
 
@@ -18,48 +19,23 @@ module SMARTAppLaunch
         code_challenge_methods_supported: ['S256'],
         token_endpoint_auth_methods_supported: ['private_key_jwt'],
         issuer: base_url + FHIR_PATH,
-        grant_types_supported: ['client_credentials'],
+        grant_types_supported: ['client_credentials', 'authorization_code'],
         scopes_supported: SUPPORTED_SCOPES,
+        authorization_endpoint: base_url + AUTHORIZATION_PATH,
         token_endpoint: base_url + TOKEN_PATH
       }.to_json
 
       [200, { 'Content-Type' => 'application/json', 'Access-Control-Allow-Origin' => '*' }, [response_body]]
     end
 
-    def make_smart_token_response(request, response, result)
-      assertion = request.params[:client_assertion]
-      client_id = client_id_from_client_assertion(assertion)
-
-      key_set_input = JSON.parse(result.input_json)&.find do |input|
-        input['name'] == 'smart_jwk_set'
-      end&.dig('value')
-      signature_error = smart_assertion_signature_verification(assertion, key_set_input)
-
-      if signature_error.present?
-        update_response_for_invalid_assertion(response, signature_error)
-        return
-      end
-
-      exp_min = 60
-      response_body = {
-        access_token: client_id_to_token(client_id, exp_min),
-        token_type: 'Bearer',
-        expires_in: 60 * exp_min,
-        scope: request.params[:scope]
-      }
-
-      response.body = response_body.to_json
-      response.headers['Cache-Control'] = 'no-store'
-      response.headers['Pragma'] = 'no-cache'
-      response.headers['Access-Control-Allow-Origin'] = '*'
-      response.content_type = 'application/json'
-      response.status = 200
-    end
-
     def client_id_from_client_assertion(client_assertion_jwt)
       return unless client_assertion_jwt.present?
 
       jwt_claims(client_assertion_jwt)&.dig('iss')
+    end
+
+    def client_id_from_authorization_code(authorization_code)
+      token_to_client_id(authorization_code)
     end
 
     def parsed_request_body(request)
@@ -111,6 +87,16 @@ module SMARTAppLaunch
       decode_token(token)&.dig('client_id')
     end
 
+    def registered_client_type(jwks, client_secret)
+      if jwks.present?
+        :confidential_asymmetric
+      elsif client_secret.present?
+        :confidential_symmetric
+      else
+        :public
+      end
+    end
+
     def jwk_set(jku, warning_messages = []) # rubocop:disable Metrics/CyclomaticComplexity
       jwk_set = JWT::JWK::Set.new
 
@@ -160,18 +146,23 @@ module SMARTAppLaunch
       return false if request.params[:session_path].present?
 
       token = request.headers['authorization']&.delete_prefix('Bearer ')
-      decoded_token = decode_token(token)
-      return false unless decoded_token&.dig('expiration').present?
-
-      decoded_token['expiration'] < Time.now.to_i
+      token_expired?(token)
     end
 
-    def update_response_for_expired_token(response)
+    def token_expired?(token, check_time = nil)
+      decoded_token = decode_token(token)
+      return false unless decoded_token&.dig('expiration').present?
+      check_time = Time.now.to_i unless check_time.present?
+
+      decoded_token['expiration'] < check_time
+    end
+
+    def update_response_for_expired_token(response, type)
       response.status = 401
       response.format = :json
       response.body = FHIR::OperationOutcome.new(
         issue: FHIR::OperationOutcome::Issue.new(severity: 'fatal', code: 'expired',
-                                                 details: FHIR::CodeableConcept.new(text: 'Bearer token has expired'))
+                                                 details: FHIR::CodeableConcept.new(text: "#{type}has expired"))
       ).to_json
     end
 
@@ -212,6 +203,121 @@ module SMARTAppLaunch
       response.status = 401
       response.format = :json
       response.body = { error: 'invalid_client', error_description: error_message }.to_json
+    end
+
+    def authenticated?(request, response, result, client_id)
+      
+      # configuration inputs
+      key_set_input = JSON.parse(result.input_json)&.find do |input|
+        input['name'] == 'smart_jwk_set'
+      end&.dig('value')
+      client_secret_input = JSON.parse(result.input_json)&.find do |input|
+        input['name'] == 'client_secret'
+      end&.dig('value')
+
+      case registered_client_type(key_set_input, client_secret_input)
+      when :confidential_asymmetric
+        return confidential_asymmetric_authenticated?(request, response, key_set_input)
+      when :confidential_symmetric
+        return confidential_symmetric_authenticated?(request, response, client_id, client_secret_input)
+      when :public
+        return true
+      end
+    end
+
+    def confidential_asymmetric_authenticated?(request, response, jwks)
+      assertion = request.params[:client_assertion]
+      if assertion.blank?
+        update_response_for_invalid_assertion(
+          response, 
+          'client_assertion missing from confidential asymmetric client request'
+        )
+        return false
+      end
+
+      signature_error = smart_assertion_signature_verification(assertion, jwks)
+
+      if signature_error.present?
+        update_response_for_invalid_assertion(response, signature_error)
+        return  false
+      end
+      
+      true
+    end
+
+    def confidential_symmetric_authenticated?(request, response, client_id, client_secret)
+      auth_header_value = request.request_headers.find { |header| header.name.downcase == 'authorization' }&.value
+      if auth_header_value.blank?
+        update_response_for_invalid_assertion(
+          response, 
+          'authorization header missing from confidential symmetric client request'
+        )
+        return false
+      end
+      unless auth_header_value.start_with?('Basic ')
+        update_response_for_invalid_assertion(
+          response, 
+          'authorization header for confidential symmetric client request does not use Basic auth'
+        )
+        return false
+      end
+      auth_client, auth_secret = Base64.decode64(auth_header_value.delete_prefix('Basic ')).split(':')
+      unless auth_client == client_id
+        update_response_for_invalid_assertion(
+          response, 
+          "authorization header has the wrong client: expected '#{client_id}', got '#{auth_client}'"
+        )
+        return false
+      end
+      unless auth_secret == client_secret
+        update_response_for_invalid_assertion(
+          response, 
+          "authorization header has the wrong secret: expected '#{client_secret}', got '#{auth_secret}'"
+        )
+        return false
+      end
+    
+      true
+    end
+
+    def pkce_valid?(verifier, challenge, method, response)
+      if verifier.blank?
+        update_response_for_invalid_assertion(
+          response, 
+          'pkce check failed: no verifier provided'
+        )
+        return false
+      elsif challenge.blank?
+        update_response_for_invalid_assertion(
+          response, 
+          'pkce check failed: no challenge code provided'
+        )
+        return false
+      elsif method == 'plain'
+        return true unless challenge != verifier
+
+        update_response_for_invalid_assertion(
+          response, 
+          "invalid plain pkce verifier: got '#{verifier}' expected '#{challenge}'"
+        )
+        return false
+      elsif method == 'S256'
+        return true unless challenge != AppRedirectTest.calculate_s256_challenge(verifier)
+        update_response_for_invalid_assertion(
+          response, 
+          "invalid S256 pkce verifier: got '#{AppRedirectTest.calculate_s256_challenge(verifier)}' " \
+          "expected '#{challenge}'"
+        )
+        return false
+      else
+        update_response_for_invalid_assertion(
+          response, 
+          "invalid pkce challenge method '#{method}'"
+        )
+        return false
+      end
+      
+      true
     end
   end
 end

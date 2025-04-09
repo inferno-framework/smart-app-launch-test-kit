@@ -7,6 +7,7 @@ module SMARTAppLaunch
   AUTH_SERVER_PATH = '/auth'
   SMART_DISCOVERY_PATH = "#{FHIR_PATH}/.well-known/smart-configuration".freeze
   TOKEN_PATH = "#{AUTH_SERVER_PATH}/token".freeze
+  AUTHORIZATION_PATH = "#{AUTH_SERVER_PATH}/authorization".freeze
 
   module URLs
     def client_base_url
@@ -31,6 +32,10 @@ module SMARTAppLaunch
 
     def client_token_url
       @client_token_url ||= client_base_url + TOKEN_PATH
+    end
+
+    def client_authorization_url
+      @client_token_url ||= client_base_url + AUTHORIZATION_PATH
     end
 
     def client_suite_id

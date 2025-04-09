@@ -60,21 +60,51 @@ module SMARTAppLaunch
           ),
           locked: true,
           optional: true
-    input :echoed_fhir_response,
-          title: 'FHIR Response to Echo',
+    input :launch_context,
+          title: 'Launch Context',
           type: 'textarea',
           description: %(
-            JSON representation of a FHIR resource for Inferno to echo when a request
-            is made to the simulated FHIR server. The provided content will be echoed
-            back exactly and no check will be made that it is appropriate for the request
-            made. If nothing is provided, an OperationOutcome will be returned.
+            Launch context details to be included in access token responses,
+            specified as a JSON array. These contents will be merged into
+            Inferno's token responses.
+          ),
+          optional: true
+    input :fhir_read_resources_bundle,
+          optional: true,
+          title: 'Available Resources',
+          type: 'textarea',
+          description: %(
+            Resources to make available in Inferno's simulated FHIR server provided as a
+            FHIR bundle. Each entry must contain a resource with the id element populated. Each
+            instance present will be available for retrieval from Inferno at the endpoint:
+            <fhir-base>/<resource type>/<instance id>. These are only available through
+            the read interaction.
+          )
+    input :echoed_fhir_response,
+          title: 'Default FHIR Response',
+          type: 'textarea',
+          description: %(
+            JSON representation of a default FHIR resource for Inferno to echo when a request
+            is made to the simulated FHIR server. Reads targetting resources in the 
+            **Available Resources** input will return that resource instead of this.
+            Otherwise, the content here will be echoed back exactly and no check will
+            be made that it is appropriate for the request made. If nothing is provided,
+            an OperationOutcome will be returned.
           ),
           optional: true
 
     output :launch_key
 
     run do
-      
+      begin
+        JSON.parse(launch_context)
+      rescue JSON::ParserError
+        add_message(
+          'warning', 
+          'Input **Launch Context** is not valid JSON and will be disregarded when responding to token requests'
+        )
+      end
+
       message = 
         if smart_launch_urls.present?
           launch_key = SecureRandom.hex(32)

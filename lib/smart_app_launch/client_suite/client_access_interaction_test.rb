@@ -30,14 +30,27 @@ module SMARTAppLaunch
             verify signatures on token requests made by the client.
             Create a new session if you need to change this value.
           )
+    input :fhir_read_resources_bundle,
+          optional: true,
+          title: 'Available Resources',
+          type: 'textarea',
+          description: %(
+            Resources to make available in Inferno's simulated FHIR server provided as a
+            FHIR bundle. Each entry must contain a resource with the id element populated. Each
+            instance present will be available for retrieval from Inferno at the endpoint:
+            <fhir-base>/<resource type>/<instance id>. These are only available through
+            the read interaction.
+          )
     input :echoed_fhir_response,
           title: 'FHIR Response to Echo',
           type: 'textarea',
           description: %(
-            JSON representation of a FHIR resource for Inferno to echo when a request
-            is made to the simulated FHIR server. The provided content will be echoed
-            back exactly and no check will be made that it is appropriate for the request
-            made. If nothing is provided, an OperationOutcome will be returned.
+            JSON representation of a default FHIR resource for Inferno to echo when a request
+            is made to the simulated FHIR server. Reads targetting resources in the 
+            **Available Resources** input will return that resource instead of this.
+            Otherwise, the content here will be echoed back exactly and no check will
+            be made that it is appropriate for the request made. If nothing is provided,
+            an OperationOutcome will be returned.
           ),
           optional: true
 

@@ -94,9 +94,18 @@ module SMARTAppLaunch
           scope: auth_code_request_inputs['scope']
         }
 
-        additional_context = requested_scope_context(auth_code_request_inputs['scope'], code)
+        launch_context = 
+          begin
+            input_string = JSON.parse(result.input_json)&.find do |input|
+              input['name'] == 'launch_context'
+            end&.dig('value')
+            JSON.parse(input_string) if input_string.present?
+          rescue JSON::ParserError
+            nil
+          end
+        additional_context = requested_scope_context(auth_code_request_inputs['scope'], code, launch_context)
   
-        response.body = response_body.merge(additional_context).to_json
+        response.body = additional_context.merge(response_body).to_json # response body values take priority
         response.headers['Cache-Control'] = 'no-store'
         response.headers['Pragma'] = 'no-cache'
         response.headers['Access-Control-Allow-Origin'] = '*'
@@ -137,9 +146,19 @@ module SMARTAppLaunch
           scope: request.params[:scope].present? ? request.params[:scope] : auth_code_request_inputs['scope']
         }
         
-        additional_context = requested_scope_context(auth_code_request_inputs['scope'], authorization_code)
+        launch_context = 
+          begin
+            input_string = JSON.parse(result.input_json)&.find do |input|
+              input['name'] == 'launch_context'
+            end&.dig('value')
+            JSON.parse(input_string)
+          rescue JSON::ParserError
+            nil
+          end
+        additional_context = requested_scope_context(auth_code_request_inputs['scope'], authorization_code,
+                                                     launch_context)
   
-        response.body = response_body.merge(additional_context).to_json
+        response.body = additional_context.merge(response_body).to_json # response body values take priority
         response.headers['Cache-Control'] = 'no-store'
         response.headers['Pragma'] = 'no-cache'
         response.headers['Access-Control-Allow-Origin'] = '*'
@@ -193,11 +212,15 @@ module SMARTAppLaunch
         @requests_repo ||= Inferno::Repositories::Requests.new
       end
 
-      def requested_scope_context(requested_scopes, authorization_code)
+      def requested_scope_context(requested_scopes, authorization_code, launch_context)
         context = {}
         scopes_list = requested_scopes.split(' ')
         if scopes_list.include?('offline_access') || scopes_list.include?('online_access')
           context[:refresh_token] = MockSMARTServer.authorization_code_to_refresh_token(authorization_code)
+        end
+
+        if launch_context.present?
+          context = context.merge(launch_context)
         end
 
         context

@@ -6,8 +6,12 @@ RSpec.describe SMARTAppLaunch::SMARTClientAccessInteraction, :request do # ruboc
     let(:test) { described_class }
     let(:results_repo) { Inferno::Repositories::Results.new }
     let(:requests_repo) { Inferno::Repositories::Requests.new }
-    let(:patient_read_url) { "/custom/#{suite_id}/fhir/Patient/999" }
-    let(:patient_read_response) { '{ "resourceType": "Patient" }' }
+    let(:patient_id) { '999' }
+    let(:patient_read_url) { "/custom/#{suite_id}/fhir/Patient/#{patient_id}" }
+    let(:patient_read_response) { %({ "resourceType": "Patient", "id": "#{patient_id}" }) }
+    let(:fhir_read_resources_bundle) do
+      %({ "resourceType": "Bundle", "entry": [ { "resource": #{patient_read_response} } ] })
+    end
     let(:token_url) { "/custom/#{suite_id}#{SMARTAppLaunch::TOKEN_PATH}" }
     let(:jwks_valid) do
       File.read(File.join(__dir__, '..', '..', '..', 'lib', 'smart_app_launch', 'smart_jwks.json'))
@@ -84,6 +88,18 @@ RSpec.describe SMARTAppLaunch::SMARTClientAccessInteraction, :request do # ruboc
 
         expect(last_response.status).to be(200)
         expect(last_response.body).to eq(patient_read_response)
+      end
+
+      it 'returns a resource from the tester-provided Bundle on a read' do
+        inputs = { client_id:, smart_jwk_set: jwks_valid, fhir_read_resources_bundle:}
+        result = run(test, inputs)
+        expect(result.result).to eq('wait')
+
+        header('Authorization', "Bearer #{Base64.urlsafe_encode64({ client_id: client_id }.to_json, padding: false)}")
+        get(patient_read_url)
+
+        expect(last_response.status).to be(200)
+        expect(last_response.body).to match(/999/)
       end
 
       it 'returns an operaion outcome when no tester-provided response' do

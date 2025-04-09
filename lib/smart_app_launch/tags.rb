@@ -7,4 +7,5 @@ module SMARTAppLaunch
   ACCESS_TAG = 'access'
   CLIENT_CREDENTIAL_TAG = 'client_credentials'
   AUTHORIZATION_CODE_TAG = 'authorization_code'
+  REFRESH_TOKEN_TAG = 'refresh_token'
 end

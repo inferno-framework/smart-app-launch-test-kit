@@ -1,18 +1,18 @@
-require_relative '../tags'
-require_relative '../urls'
-require_relative '../endpoints/mock_smart_server'
-require_relative 'authentication_verification'
+require_relative '../../tags'
+require_relative '../../urls'
+require_relative '../../endpoints/mock_smart_server'
+require_relative '../authentication_verification'
 
 module SMARTAppLaunch
-  class SMARTClientTokenRequestVerification < Inferno::Test
+  class SMARTClientAppLaunchRefreshRequestVerification < Inferno::Test
     include URLs
     include AuthenticationVerification
 
-    id :smart_client_token_request_verification
-    title 'Verify SMART Token Requests'
+    id :smart_client_app_launch_refresh_request_verification
+    title 'Verify SMART Token Refresh Requests'
     description %(
-        Check that SMART token requests are conformant.
-      )
+      Check that SMART token refresh requests are conformant.
+    )
 
     input :client_id,
           title: 'Client Id',
@@ -34,21 +34,30 @@ module SMARTAppLaunch
             verify signatures on token requests made by the client.
             Create a new session if you need to change this value.
           )
+    input :client_type,
+          title: 'Client Authentication Type',
+          type: 'text',
+          description: %(
+            Authentication approach chosen during client registration.
+            Create a new session if you need to change this value.
+          ),
+          locked: true
+    input :smart_tokens,
+          optional: true
     output :smart_tokens
 
     run do
-      omit_if smart_jwk_set.blank?, # for re-use: mark the smart_jwk_set input as optional when importing to enable
-              'SMART Backend Services authentication not demonstrated as a part of this test session.'
-
-      load_tagged_requests(TOKEN_TAG, SMART_TAG)
-      skip_if requests.blank?, 'No SMART token requests made.'
+      load_tagged_requests(TOKEN_TAG, SMART_TAG, REFRESH_TOKEN_TAG)
+      skip_if requests.blank?, 'No SMART token refresh requests made.'
 
       jti_list = []
-      token_list = []
+      token_list = smart_tokens.present? ? smart_tokens.split("\n") : []
       requests.each_with_index do |token_request, index|
         request_params = URI.decode_www_form(token_request.request_body).to_h
         check_request_params(request_params, index + 1)
-        check_client_assertion(request_params['client_assertion'], index + 1, jti_list)
+        check_authentication(request, request_params, index + 1, jti_list)
+        #TODO: check refresh token
+        # check scopes is a subset of auth request
         token_list << MockSMARTServer.extract_token_from_response(token_request)
       end
 
@@ -60,20 +69,19 @@ module SMARTAppLaunch
     end
 
     def check_request_params(params, request_num)
-      if params['grant_type'] != 'client_credentials'
+      if params['grant_type'] != 'refresh_token'
         add_message('error',
-                    "Token request #{request_num} had an incorrect `grant_type`: expected 'client_credentials', " \
+                    "Token request #{request_num} had an incorrect `grant_type`: expected 'refresh_token', " \
                     "but got '#{params['grant_type']}'")
-      end
-      if params['client_assertion_type'] != 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
+      end 
+      if client_type == 'confidential_asymmetric' && 
+         params['client_assertion_type'] != 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
+        
         add_message('error',
-                    "Token request #{request_num} had an incorrect `client_assertion_type`: " \
+                    "Confidential Asymmetric token request #{request_num} had an incorrect `client_assertion_type`: " \
                     "expected 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer', " \
                     "but got '#{params['client_assertion_type']}'")
       end
-      return unless params['scope'].blank?
-
-      add_message('error', "Token request #{request_num} did not include the requested `scope`")
     end
   end
 end

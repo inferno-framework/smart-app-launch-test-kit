@@ -9,8 +9,8 @@ module SMARTAppLaunch
     id :smart_client_app_launch_authorization_request_verification
     title 'Verify SMART Authorization Requests'
     description %(
-        Check that SMART authorization requests are conformant.
-      )
+      Check that SMART authorization requests are conformant.
+    )
 
     input :client_id,
           title: 'Client Id',

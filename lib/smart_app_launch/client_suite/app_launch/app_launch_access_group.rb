@@ -1,6 +1,7 @@
 require_relative 'app_launch_access_interaction_test'
-require_relative 'app_launch_token_request_verification_test'
 require_relative 'app_launch_authorization_request_verification_test'
+require_relative 'app_launch_token_request_verification_test'
+require_relative 'app_launch_refresh_request_verification_test'
 require_relative '../client_token_use_verification_test'
 
 module SMARTAppLaunch
@@ -19,6 +20,7 @@ module SMARTAppLaunch
     test from: :smart_client_app_launch_access_interaction
     test from: :smart_client_app_launch_authorization_request_verification
     test from: :smart_client_app_launch_token_request_verification
+    test from: :smart_client_app_launch_refresh_request_verification
     test from: :smart_client_token_use_verification
   end
 end

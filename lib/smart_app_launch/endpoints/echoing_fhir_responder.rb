@@ -7,7 +7,7 @@ require_relative 'mock_smart_server'
 module SMARTAppLaunch
   class EchoingFHIRResponderEndpoint < Inferno::DSL::SuiteEndpoint
     def test_run_identifier
-      MockSMARTServer.token_to_client_id(request.headers['authorization']&.delete_prefix('Bearer '))
+      MockSMARTServer.issued_token_to_client_id(request.headers['authorization']&.delete_prefix('Bearer '))
     end
 
     def make_response

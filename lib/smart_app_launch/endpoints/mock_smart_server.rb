@@ -34,10 +34,6 @@ module SMARTAppLaunch
       jwt_claims(client_assertion_jwt)&.dig('iss')
     end
 
-    def client_id_from_authorization_code(authorization_code)
-      token_to_client_id(authorization_code)
-    end
-
     def parsed_request_body(request)
       JSON.parse(request.request_body)
     rescue JSON::ParserError
@@ -83,8 +79,16 @@ module SMARTAppLaunch
       nil
     end
 
-    def token_to_client_id(token)
+    def issued_token_to_client_id(token)
       decode_token(token)&.dig('client_id')
+    end
+
+    def authorization_code_to_refresh_token(code)
+      "#{code}rt"
+    end
+
+    def refresh_token_to_authorization_code(refresh_token)
+      refresh_token[..-3]
     end
 
     def registered_client_type(jwks, client_secret)
@@ -332,6 +336,14 @@ module SMARTAppLaunch
       
       details_hash&.keys&.each { |key| details_hash[key] = details_hash[key].first }
       details_hash
+    end
+
+    def extract_token_from_response(request)
+      return unless request.status == 200
+
+      JSON.parse(request.response_body)&.dig('access_token')
+    rescue
+      nil
     end
   end
 end

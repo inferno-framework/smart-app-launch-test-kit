@@ -40,7 +40,7 @@ module SMARTAppLaunch
       omit_if smart_jwk_set.blank?, # for re-use: mark the smart_jwk_set input as optional when importing to enable
               'SMART Backend Services authentication not demonstrated as a part of this test session.'
 
-      load_tagged_requests(TOKEN_TAG, SMART_TAG)
+      load_tagged_requests(TOKEN_TAG, SMART_TAG, CLIENT_CREDENTIAL_TAG)
       skip_if requests.blank?, 'No SMART token requests made.'
 
       jti_list = []

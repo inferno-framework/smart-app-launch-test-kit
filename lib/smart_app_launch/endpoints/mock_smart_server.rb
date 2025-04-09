@@ -7,7 +7,7 @@ require_relative '../tags'
 
 module SMARTAppLaunch
   module MockSMARTServer
-    SUPPORTED_SCOPES = ['openid', 'system/*.read', 'user/*.read', 'patient/*.read'].freeze
+    SUPPORTED_SCOPES = ['system/*.read', 'user/*.read', 'patient/*.read'].freeze
 
     module_function
 
@@ -15,9 +15,14 @@ module SMARTAppLaunch
       base_url = "#{Inferno::Application['base_url']}/custom/#{suite_id}"
       response_body = {
         token_endpoint_auth_signing_alg_values_supported: ['RS384', 'ES384'],
-        capabilities: ['client-confidential-asymmetric'],
+        capabilities: ['client-confidential-asymmetric', 'launch-ehr' ,'launch-standalone', 'authorize-post',
+                       'client-public', 'client-confidential-symmetric', 'permission-offline', 'permission-online',
+                       'permission-patient', 'permission-user', 'permission-v1', 'permission-v2',
+                       'context-ehr-patient', 'context-ehr-encounter', 
+                       'context-standalone-patient', 'context-standalone-encounter',
+                       'context-banner', 'context-style'],
         code_challenge_methods_supported: ['S256'],
-        token_endpoint_auth_methods_supported: ['private_key_jwt'],
+        token_endpoint_auth_methods_supported: ['private_key_jwt', 'client_secret_basic'],
         issuer: base_url + FHIR_PATH,
         grant_types_supported: ['client_credentials', 'authorization_code'],
         scopes_supported: SUPPORTED_SCOPES,

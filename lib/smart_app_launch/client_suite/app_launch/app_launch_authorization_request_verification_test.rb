@@ -74,18 +74,14 @@ module SMARTAppLaunch
                       "got #{params['redirect_uri']}, but expected one of '#{smart_redirect_uris}'")
         end
       end
-      if launch_key.present?
-        if params['launch'] != launch_key
-          add_message('error',
-                      "Authorization request #{request_num} had an incorrect `launch`: expected #{launch_key}, " \
-                      "but got '#{params['launch']}'")
-        end
-      else
-        if params['launch'].present?
-          add_message('error',
-                      "Authorization request #{request_num} for a standalone launch included `launch` but should not.")
-        end
+      # for ehr launch, `launch` value must be the one Inferno generated
+      # but can't know if this was intended to be ehr or standalone if `launch` isn't there
+      if launch_key.present? && params['launch'].present? && params['launch'] != launch_key
+        add_message('error',
+                    "Authorization request #{request_num} had an incorrect `launch`: expected #{launch_key}, " \
+                    "but got '#{params['launch']}'")
       end
+     
       if params['state'].blank?
         add_message('error',
                     "Authorization request #{request_num} is missing the `state` element")

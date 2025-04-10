@@ -6,6 +6,8 @@ module SMARTAppLaunch
   RESUME_FAIL_PATH = '/resume_fail'
   AUTH_SERVER_PATH = '/auth'
   SMART_DISCOVERY_PATH = "#{FHIR_PATH}/.well-known/smart-configuration".freeze
+  OIDC_DISCOVERY_PATH = "#{FHIR_PATH}/.well-known/openid-configuration".freeze
+  OIDC_JWKS_PATH = "#{FHIR_PATH}/.well-known/jwks.json".freeze
   TOKEN_PATH = "#{AUTH_SERVER_PATH}/token".freeze
   AUTHORIZATION_PATH = "#{AUTH_SERVER_PATH}/authorization".freeze
 

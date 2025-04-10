@@ -3,10 +3,13 @@
 require_relative '../../urls'
 require_relative '../../tags'
 require_relative '../mock_smart_server'
+require_relative '../../client_suite/oidc_jwks'
 
 module SMARTAppLaunch
   module MockSMARTServer
     class TokenEndpoint < Inferno::DSL::SuiteEndpoint
+      include URLs
+
       def test_run_identifier
         if request.params[:grant_type] == 'client_credentials'
           MockSMARTServer.client_id_from_client_assertion(request.params[:client_assertion])
@@ -213,17 +216,49 @@ module SMARTAppLaunch
       end
 
       def requested_scope_context(requested_scopes, authorization_code, launch_context)
-        context = {}
+        context = launch_context.present? ? launch_context : {}
         scopes_list = requested_scopes.split(' ')
+        
         if scopes_list.include?('offline_access') || scopes_list.include?('online_access')
           context[:refresh_token] = MockSMARTServer.authorization_code_to_refresh_token(authorization_code)
         end
 
-        if launch_context.present?
-          context = context.merge(launch_context)
+        if scopes_list.include?('openid')
+          context[:id_token] = construct_id_token(scopes_list.include?('fhirUser'))
         end
 
         context
+      end
+
+      def construct_id_token(include_fhir_user)
+        client_id = JSON.parse(result.input_json)&.find do |input|
+          input['name'] == 'client_id'
+        end&.dig('value')
+        fhir_user_relative_reference = JSON.parse(result.input_json)&.find do |input|
+          input['name'] == 'fhir_user_relative_reference'
+        end&.dig('value')
+        # TODO: how to generate the id - is this ok?
+        subject_id = fhir_user_relative_reference.present? ? 
+                     fhir_user_relative_reference.downcase.gsub('/','-') : SecureRandom.uuid
+        
+        claims = {
+          iss: client_fhir_base_url,
+          sub: subject_id,
+          aud: client_id,
+          exp: 1.year.from_now.to_i,
+          iat: Time.now.to_i
+        }
+        if include_fhir_user && fhir_user_relative_reference.present?
+          claims[:fhirUser] = "#{fhir_user_relative_reference}/#{fhir_user_relative_reference}"
+        end
+
+        algorithm = 'RS256'
+        private_key = OIDCJWKS.jwks
+          .select { |key| key[:key_ops]&.include?('sign') }
+          .select { |key| key[:alg] == algorithm }
+          .first
+
+        JWT.encode claims, private_key.signing_key, algorithm, { alg: algorithm, kid: private_key.kid, typ: 'JWT' }
       end
     end
   end

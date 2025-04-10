@@ -69,6 +69,15 @@ module SMARTAppLaunch
             Inferno's token responses.
           ),
           optional: true
+    input :fhir_user_relative_reference,
+          optional: true,
+          title: 'FHIR User Relative Reference',
+          type: 'text',
+          description: %(
+            A FHIR relative reference (<resource type>/<id>) for the FHIR user record
+            to return when the openid and fhirUser scopes are requested. Include this
+            resource in the **Available Resources** input so that it can be accessed.
+          )
     input :fhir_read_resources_bundle,
           optional: true,
           title: 'Available Resources',

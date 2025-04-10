@@ -33,6 +33,21 @@ module SMARTAppLaunch
       [200, { 'Content-Type' => 'application/json', 'Access-Control-Allow-Origin' => '*' }, [response_body]]
     end
 
+    def openid_connect_metadata(suite_id)
+      base_url = "#{Inferno::Application['base_url']}/custom/#{suite_id}"
+      response_body = {
+        issuer: base_url + FHIR_PATH,  
+        authorization_endpoint: base_url + AUTHORIZATION_PATH,
+        token_endpoint: base_url + TOKEN_PATH,
+        jwks_uri: base_url + OIDC_JWKS_PATH,
+        response_types_supported: [ 'code', 'id_token', 'token id_token'],
+        subject_types_supported: [ 'pairwise', 'public' ],
+        id_token_signing_alg_values_supported: ['RS256']
+      }.to_json
+
+      [200, { 'Content-Type' => 'application/json', 'Access-Control-Allow-Origin' => '*' }, [response_body]]
+    end
+
     def client_id_from_client_assertion(client_assertion_jwt)
       return unless client_assertion_jwt.present?
 

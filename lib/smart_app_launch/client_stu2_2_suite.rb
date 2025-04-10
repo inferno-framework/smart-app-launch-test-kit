@@ -6,6 +6,7 @@ require_relative 'client_suite/client_registration_group'
 require_relative 'client_suite/client_access_group'
 require_relative 'client_suite/app_launch/app_launch_registration_group'
 require_relative 'client_suite/app_launch/app_launch_access_group'
+require_relative 'client_suite/oidc_jwks'
 
 module SMARTAppLaunch
   class SMARTClientSTU22Suite < Inferno::TestSuite
@@ -36,7 +37,14 @@ module SMARTAppLaunch
       }
     ]
 
+    route(
+      :get,
+      OIDC_JWKS_PATH,
+      ->(_env) { [200, { 'Content-Type' => 'application/json' }, [OIDCJWKS.jwks_json]] }
+    )
+
     route(:get, SMART_DISCOVERY_PATH, ->(_env) {MockSMARTServer.smart_server_metadata(id) }) 
+    route(:get, OIDC_DISCOVERY_PATH, ->(_env) {MockSMARTServer.openid_connect_metadata(id) }) 
     suite_endpoint :get, AUTHORIZATION_PATH, MockSMARTServer::AuthorizationEndpoint
     suite_endpoint :post, AUTHORIZATION_PATH, MockSMARTServer::AuthorizationEndpoint
     suite_endpoint :post, TOKEN_PATH, MockSMARTServer::TokenEndpoint

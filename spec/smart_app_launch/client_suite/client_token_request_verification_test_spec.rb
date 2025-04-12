@@ -72,7 +72,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientTokenRequestVerification do # rubocop:
       request_body: URI.encode_www_form(body),
       response_body: { access_token: }.to_json,
       status: 200,
-      tags: [SMARTAppLaunch::TOKEN_TAG, SMARTAppLaunch::SMART_TAG, SMARTAppLaunch::CLIENT_CREDENTIAL_TAG]
+      tags: [SMARTAppLaunch::TOKEN_TAG, SMARTAppLaunch::SMART_TAG, SMARTAppLaunch::CLIENT_CREDENTIALS_TAG]
     )
   end
 

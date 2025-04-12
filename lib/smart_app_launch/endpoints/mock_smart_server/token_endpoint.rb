@@ -46,7 +46,7 @@ module SMARTAppLaunch
         workflow_tag = 
           case request.params[:grant_type]
           when 'client_credentials'
-            CLIENT_CREDENTIAL_TAG
+            CLIENT_CREDENTIALS_TAG
           when 'authorization_code'
             AUTHORIZATION_CODE_TAG
           when 'refresh_token'
@@ -67,7 +67,7 @@ module SMARTAppLaunch
           return
         end
   
-        authorization_request = authorization_request_for_code(code)
+        authorization_request = MockSMARTServer.authorization_request_for_code(code, test_run.test_session_id)
         if authorization_request.blank?
           MockSMARTServer.update_response_for_invalid_assertion(
             response, 
@@ -124,7 +124,8 @@ module SMARTAppLaunch
         
         # no expiration checks for refresh tokens
   
-        authorization_request = authorization_request_for_code(authorization_code)
+        authorization_request = MockSMARTServer.authorization_request_for_code(authorization_code, 
+                                                                               test_run.test_session_id)
         if authorization_request.blank?
           MockSMARTServer.update_response_for_invalid_assertion(
             response, 
@@ -197,22 +198,6 @@ module SMARTAppLaunch
         response.headers['Access-Control-Allow-Origin'] = '*'
         response.content_type = 'application/json'
         response.status = 200
-      end
-
-      def authorization_request_for_code(code)
-        authorization_requests = requests_repo.tagged_requests(test_run.test_session_id, [SMART_TAG, AUTHORIZATION_TAG])
-        authorization_requests.find do |request|
-          location_header = request.response_headers.find { |header| header.name.downcase == 'location' }
-          if location_header.present? && location_header.value.present?
-            CGI.parse(URI(location_header.value)&.query)&.dig('code')&.first == code
-          else
-            false
-          end
-        end
-      end
-
-      def requests_repo
-        @requests_repo ||= Inferno::Repositories::Requests.new
       end
 
       def requested_scope_context(requested_scopes, authorization_code, launch_context)

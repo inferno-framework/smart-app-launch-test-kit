@@ -10,6 +10,7 @@ module SMARTAppLaunch
   OIDC_JWKS_PATH = "#{FHIR_PATH}/.well-known/jwks.json".freeze
   TOKEN_PATH = "#{AUTH_SERVER_PATH}/token".freeze
   AUTHORIZATION_PATH = "#{AUTH_SERVER_PATH}/authorization".freeze
+  INTROSPECTION_PATH = "#{AUTH_SERVER_PATH}/introspect".freeze
 
   module URLs
     def client_base_url
@@ -37,7 +38,11 @@ module SMARTAppLaunch
     end
 
     def client_authorization_url
-      @client_token_url ||= client_base_url + AUTHORIZATION_PATH
+      @client_authorization_url ||= client_base_url + AUTHORIZATION_PATH
+    end
+
+    def client_introspection_url
+      @client_introspection_url ||= client_base_url + INTROSPECTION_PATH
     end
 
     def client_suite_id

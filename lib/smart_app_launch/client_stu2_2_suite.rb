@@ -2,12 +2,12 @@ require_relative 'endpoints/mock_smart_server/token_endpoint'
 require_relative 'endpoints/mock_smart_server/authorization_endpoint'
 require_relative 'endpoints/mock_smart_server/introspection_endpoint'
 require_relative 'endpoints/echoing_fhir_responder_endpoint'
+require_relative 'tags'
 require_relative 'urls'
-require_relative 'client_suite/client_registration_group'
-require_relative 'client_suite/client_access_group'
-require_relative 'client_suite/app_launch/app_launch_registration_group'
-require_relative 'client_suite/app_launch/app_launch_access_group'
+require_relative 'client_suite/registration_group'
+require_relative 'client_suite/access_group'
 require_relative 'client_suite/oidc_jwks'
+require_relative 'client_suite/client_options'
 
 module SMARTAppLaunch
   class SMARTClientSTU22Suite < Inferno::TestSuite
@@ -38,14 +38,35 @@ module SMARTAppLaunch
       }
     ]
 
+    suite_option :client_type,
+                 title: 'SMART Client Type',
+                 list_options: [
+                   {
+                     label: 'SMART App Launch Public Client',
+                     value: SMARTClientOptions::SMART_APP_LAUNCH_PUBLIC
+                   },
+                   {
+                     label: 'SMART App Launch Confidential Symmetric Client',
+                     value: SMARTClientOptions::SMART_APP_LAUNCH_CONFIDENTIAL_SYMMETRIC
+                   },
+                   {
+                     label: 'SMART App Launch Confidential Asymmetric Client',
+                     value: SMARTClientOptions::SMART_APP_LAUNCH_CONFIDENTIAL_ASYMMETRIC
+                   },
+                   {
+                     label: 'SMART Backend Services Confidential Asymmetric Client',
+                     value: SMARTClientOptions::SMART_BACKEND_SERVICES_CONFIDENTIAL_ASYMMETRIC
+                   }
+                 ]
+
+    route(:get, SMART_DISCOVERY_PATH, ->(_env) {MockSMARTServer.smart_server_metadata(id) }) 
+    route(:get, OIDC_DISCOVERY_PATH, ->(_env) {MockSMARTServer.openid_connect_metadata(id) }) 
     route(
       :get,
       OIDC_JWKS_PATH,
       ->(_env) { [200, { 'Content-Type' => 'application/json' }, [OIDCJWKS.jwks_json]] }
     )
 
-    route(:get, SMART_DISCOVERY_PATH, ->(_env) {MockSMARTServer.smart_server_metadata(id) }) 
-    route(:get, OIDC_DISCOVERY_PATH, ->(_env) {MockSMARTServer.openid_connect_metadata(id) }) 
     suite_endpoint :get, AUTHORIZATION_PATH, MockSMARTServer::AuthorizationEndpoint
     suite_endpoint :post, AUTHORIZATION_PATH, MockSMARTServer::AuthorizationEndpoint
     suite_endpoint :post, INTROSPECTION_PATH, MockSMARTServer::IntrospectionEndpoint
@@ -75,35 +96,7 @@ module SMARTAppLaunch
       request.query_parameters['token']
     end
 
-    group do
-      title 'SMART App Launch'
-      description %(
-        During these tests, the client will use SMART App Launch
-        to access a FHIR API. Clients will provide registeration details,
-        obtain an authorization code, trade it for an access token, and
-        use the access token when making a request to a FHIR API.
-      )
-
-      group from: :smart_client_app_launch_registration
-      group from: :smart_client_app_launch_access
-    end
-
-    group do
-      title 'SMART Backend Services'
-      description %(
-        During these tests, the client will use SMART Backend Services
-        to access a FHIR API. Clients will provide registeration details,
-        obtain an access token, and use the access token when making a
-        request to a FHIR API.
-      )
-
-      input :smart_jwk_set,
-            optional: false
-
-      group from: :smart_client_registration
-      group from: :smart_client_access
-    end
-
-
+    group from: :smart_client_registration
+    group from: :smart_client_access
   end
 end

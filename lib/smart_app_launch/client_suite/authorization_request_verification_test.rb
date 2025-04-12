@@ -1,38 +1,30 @@
-require_relative '../../tags'
-require_relative '../../urls'
-require_relative '../../endpoints/mock_smart_server'
+require_relative '../tags'
+require_relative '../urls'
+require_relative '../endpoints/mock_smart_server'
+require_relative 'client_descriptions'
 
 module SMARTAppLaunch
   class SMARTClientAppLaunchAuthorizationRequestVerification < Inferno::Test
     include URLs
 
-    id :smart_client_app_launch_authorization_request_verification
-    title 'Verify SMART Authorization Requests'
+    id :smart_client_authorization_request_verification
+    title 'Verify SMART App Launch Authorization Requests'
     description %(
-      Check that SMART authorization requests are conformant.
+      Check that SMART authorization requests made are conformant.
     )
 
     input :client_id,
           title: 'Client Id',
           type: 'text',
-          optional: false,
           locked: true,
-          description: %(
-            The registered Client Id for use in obtaining access tokens.
-            Create a new session if you need to change this value.
-          )
+          description: INPUT_CLIENT_ID_DESCRIPTION_LOCKED
     input :smart_redirect_uris,
           title: 'SMART App Launch Redirect URI(s)',
           type: 'textarea',
-          description: %(
-            Registered Redirect URIs in the form of a comma-separated list of one or more URIs.
-            Redirect URIs specified in authorization requests must come from this list.
-            Create a new session if you need to change this value.
-          ),
           locked: true,
-          optional: true
-    input :launch_key,
-          optional: true
+          description: INPUT_SMART_REDIRECT_URIS_DESCRIPTION_LOCKED
+    input :launch_key,      # from app launch access interaction test, 
+          optional: true    # present if client registered for ehr launch but won't know if did ehr or standalone
 
     run do
       load_tagged_requests(AUTHORIZATION_TAG, SMART_TAG)
@@ -43,7 +35,6 @@ module SMARTAppLaunch
         check_request_params(auth_code_request_params, index + 1)
       end
 
-      
       assert messages.none? { |msg|
         msg[:type] == 'error'
       }, 'Invalid authorization requests detected. See messages for details.'
@@ -76,6 +67,7 @@ module SMARTAppLaunch
       end
       # for ehr launch, `launch` value must be the one Inferno generated
       # but can't know if this was intended to be ehr or standalone if `launch` isn't there
+      # and currently the tests allow either standalone or ehr launch
       if launch_key.present? && params['launch'].present? && params['launch'] != launch_key
         add_message('error',
                     "Authorization request #{request_num} had an incorrect `launch`: expected #{launch_key}, " \
@@ -100,12 +92,11 @@ module SMARTAppLaunch
                     "Authorization request #{request_num} had an incorrect `aud`: " \
                     "expected 'S256', but got '#{params['code_challenge_method']}'")
       end
+      if params['scope'].blank?
+        add_message('error', "Token request #{request_num} did not include the requested `scope`")
+      end
 
-      return unless params['scope'].blank?
-
-      add_message('error', "Token request #{request_num} did not include the requested `scope`")
+      nil
     end
-
-    
   end
 end

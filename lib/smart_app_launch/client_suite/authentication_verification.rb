@@ -1,10 +1,10 @@
 module SMARTAppLaunch
   module AuthenticationVerification
     def check_authentication(request, request_params, request_num, jti_list)
-      case client_type
-      when 'confidential_asymmetric'
+      case SMARTClientOptions.smart_authentication_approach(suite_options)
+      when CONFIDENTIAL_ASYMMETRIC_TAG
         check_client_assertion(request_params['client_assertion'], request_num, jti_list)
-      when 'confidential_symmetric'
+      when CONFIDENTIAL_SYMMETRIC_TAG
         check_authorization_header(request, request_num)
       end
     end

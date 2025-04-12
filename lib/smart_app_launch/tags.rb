@@ -3,9 +3,13 @@
 module SMARTAppLaunch
   TOKEN_TAG = 'token'
   AUTHORIZATION_TAG = 'authorization'
-  SMART_TAG = 'smart'
+  INTROSPECTION_TAG = 'introspection'
+  SMART_TAG = 'SMART'
   ACCESS_TAG = 'access'
-  CLIENT_CREDENTIAL_TAG = 'client_credentials'
+  CLIENT_CREDENTIALS_TAG = 'client_credentials'
   AUTHORIZATION_CODE_TAG = 'authorization_code'
   REFRESH_TOKEN_TAG = 'refresh_token'
+  PUBLIC_TAG = 'public'
+  CONFIDENTIAL_SYMMETRIC_TAG = 'confidential_symmetric'
+  CONFIDENTIAL_ASYMMETRIC_TAG = 'confidential_asymmetric'
 end

@@ -52,6 +52,14 @@
       "value": "{ \"patient\": \"example\" }"
     },
     {
+      "name": "fhir_user_relative_reference",
+      "description": "A FHIR relative reference (<resource type>/<id>) for the FHIR user record to return when the openid and fhirUser scopes are requested. Include this resource in the **Available Resources** input so that it can be accessed.",
+      "optional": true,
+      "title": "FHIR User Relative Reference",
+      "type": "text",
+      "value": "Patient/example"
+    },
+    {
       "name": "fhir_read_resources_bundle",
       "description": "Resources to make available in Inferno's simulated FHIR server provided as a FHIR bundle. Each entry must contain a resource with the id element populated. Each instance present will be available for retrieval from Inferno at the endpoint: <fhir-base>/<resource type>/<instance id>. These are only available through the read interaction.",
       "optional": true,

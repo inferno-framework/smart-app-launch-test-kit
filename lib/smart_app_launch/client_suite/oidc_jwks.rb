@@ -11,7 +11,7 @@ module SMARTAppLaunch
       end
 
       def default_jwks_path
-        @default_jwks_path ||= File.join(__dir__, 'client_oidc_jwks.json')
+        @default_jwks_path ||= File.join(__dir__, 'oidc_jwks.json')
       end
 
       def jwks_path

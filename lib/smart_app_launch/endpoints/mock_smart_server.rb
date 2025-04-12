@@ -4,6 +4,7 @@ require 'time'
 require 'base64'
 require_relative '../urls'
 require_relative '../tags'
+require_relative '../client_suite/client_options'
 
 module SMARTAppLaunch
   module MockSMARTServer
@@ -27,7 +28,8 @@ module SMARTAppLaunch
         grant_types_supported: ['client_credentials', 'authorization_code'],
         scopes_supported: SUPPORTED_SCOPES,
         authorization_endpoint: base_url + AUTHORIZATION_PATH,
-        token_endpoint: base_url + TOKEN_PATH
+        token_endpoint: base_url + TOKEN_PATH,
+        introspection_endpoint: base_url + INTROSPECTION_PATH
       }.to_json
 
       [200, { 'Content-Type' => 'application/json', 'Access-Control-Allow-Origin' => '*' }, [response_body]]
@@ -94,7 +96,13 @@ module SMARTAppLaunch
     end
 
     def decode_token(token)
-      JSON.parse(Base64.urlsafe_decode64(token))
+      token_to_decode = 
+        if issued_token_is_refresh_token(token)
+          refresh_token_to_authorization_code(token)
+        else
+          token
+        end
+      JSON.parse(Base64.urlsafe_decode64(token_to_decode))
     rescue JSON::ParserError
       nil
     end
@@ -103,22 +111,16 @@ module SMARTAppLaunch
       decode_token(token)&.dig('client_id')
     end
 
+    def issued_token_is_refresh_token(token)
+      token.end_with?('_rt')
+    end
+
     def authorization_code_to_refresh_token(code)
-      "#{code}rt"
+      "#{code}_rt"
     end
 
     def refresh_token_to_authorization_code(refresh_token)
-      refresh_token[..-3]
-    end
-
-    def registered_client_type(jwks, client_secret)
-      if jwks.present?
-        :confidential_asymmetric
-      elsif client_secret.present?
-        :confidential_symmetric
-      else
-        :public
-      end
+      refresh_token[..-4]
     end
 
     def jwk_set(jku, warning_messages = []) # rubocop:disable Metrics/CyclomaticComplexity
@@ -230,23 +232,40 @@ module SMARTAppLaunch
     end
 
     def authenticated?(request, response, result, client_id)
-      
-      # configuration inputs
       key_set_input = JSON.parse(result.input_json)&.find do |input|
         input['name'] == 'smart_jwk_set'
       end&.dig('value')
+      if key_set_input.present?
+        return confidential_asymmetric_authenticated?(request, response, key_set_input)
+      end
+      
       client_secret_input = JSON.parse(result.input_json)&.find do |input|
         input['name'] == 'client_secret'
       end&.dig('value')
-
-      case registered_client_type(key_set_input, client_secret_input)
-      when :confidential_asymmetric
-        return confidential_asymmetric_authenticated?(request, response, key_set_input)
-      when :confidential_symmetric
+      if client_secret_input.present?
         return confidential_symmetric_authenticated?(request, response, client_id, client_secret_input)
-      when :public
-        return true
       end
+
+      true
+      
+      #suite_options = Inferno::Repositories::TestSessions.new.find(result.test_session_id)&.suite_options
+      
+      #case SMARTClientOptions.smart_authentication_approach(suite_options)
+      
+      #case authentication_approach
+      #when CONFIDENTIAL_ASYMMETRIC_TAG
+      #  key_set_input = JSON.parse(result.input_json)&.find do |input|
+      #    input['name'] == 'smart_jwk_set'
+      #  end&.dig('value')
+      #  return confidential_asymmetric_authenticated?(request, response, key_set_input)
+      #when CONFIDENTIAL_SYMMETRIC_TAG
+      #  client_secret_input = JSON.parse(result.input_json)&.find do |input|
+      #    input['name'] == 'client_secret'
+      #  end&.dig('value')
+      #  return confidential_symmetric_authenticated?(request, response, client_id, client_secret_input)
+      #when PUBLIC_TAG
+      #  return true
+      #end
     end
 
     def confidential_asymmetric_authenticated?(request, response, jwks)
@@ -304,44 +323,47 @@ module SMARTAppLaunch
       true
     end
 
-    def pkce_valid?(verifier, challenge, method, response)
+    def pkce_error(verifier, challenge, method)
       if verifier.blank?
-        update_response_for_invalid_assertion(
-          response, 
-          'pkce check failed: no verifier provided'
-        )
-        return false
-      elsif challenge.blank?
-        update_response_for_invalid_assertion(
-          response, 
-          'pkce check failed: no challenge code provided'
-        )
-        return false
+        'pkce check failed: no verifier provided'
+      elsif challenge.blank?       
+        'pkce check failed: no challenge code provided'
       elsif method == 'plain'
-        return true unless challenge != verifier
+        return nil unless challenge != verifier
 
-        update_response_for_invalid_assertion(
-          response, 
-          "invalid plain pkce verifier: got '#{verifier}' expected '#{challenge}'"
-        )
-        return false
+        "invalid plain pkce verifier: got '#{verifier}' expected '#{challenge}'"
       elsif method == 'S256'
-        return true unless challenge != AppRedirectTest.calculate_s256_challenge(verifier)
-        update_response_for_invalid_assertion(
-          response, 
-          "invalid S256 pkce verifier: got '#{AppRedirectTest.calculate_s256_challenge(verifier)}' " \
-          "expected '#{challenge}'"
-        )
-        return false
+        return nil unless challenge != AppRedirectTest.calculate_s256_challenge(verifier)
+       
+        "invalid S256 pkce verifier: got '#{AppRedirectTest.calculate_s256_challenge(verifier)}' " \
+        "expected '#{challenge}'"
       else
-        update_response_for_invalid_assertion(
-          response, 
-          "invalid pkce challenge method '#{method}'"
-        )
-        return false
+        "invalid pkce challenge method '#{method}'"
       end
-      
-      true
+    end
+
+    def pkce_valid?(verifier, challenge, method, response)
+      pkce_error = pkce_error(verifier, challenge, method)
+
+      if pkce_error.present?
+        update_response_for_invalid_assertion(response, pkce_error)
+        false
+      else
+        true
+      end
+    end
+
+    def authorization_request_for_code(code, test_session_id)
+      authorization_requests = Inferno::Repositories::Requests.new.tagged_requests(test_session_id, 
+                                                                                   [SMART_TAG, AUTHORIZATION_TAG])
+      authorization_requests.find do |request|
+        location_header = request.response_headers.find { |header| header.name.downcase == 'location' }
+        if location_header.present? && location_header.value.present?
+          CGI.parse(URI(location_header.value)&.query)&.dig('code')&.first == code
+        else
+          false
+        end
+      end
     end
 
     def authorization_code_request_details(inferno_request)

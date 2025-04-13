@@ -232,40 +232,23 @@ module SMARTAppLaunch
     end
 
     def authenticated?(request, response, result, client_id)
-      key_set_input = JSON.parse(result.input_json)&.find do |input|
-        input['name'] == 'smart_jwk_set'
-      end&.dig('value')
-      if key_set_input.present?
+      suite_options_list = Inferno::Repositories::TestSessions.new.find(result.test_session_id)&.suite_options
+      suite_options_hash = suite_options_list.map { |so| [so.id, so.value] }.to_h
+      
+      case SMARTClientOptions.smart_authentication_approach(suite_options_hash)
+      when CONFIDENTIAL_ASYMMETRIC_TAG
+        key_set_input = JSON.parse(result.input_json)&.find do |input|
+          input['name'] == 'smart_jwk_set'
+        end&.dig('value')
         return confidential_asymmetric_authenticated?(request, response, key_set_input)
-      end
-      
-      client_secret_input = JSON.parse(result.input_json)&.find do |input|
-        input['name'] == 'client_secret'
-      end&.dig('value')
-      if client_secret_input.present?
+      when CONFIDENTIAL_SYMMETRIC_TAG
+        client_secret_input = JSON.parse(result.input_json)&.find do |input|
+          input['name'] == 'client_secret'
+        end&.dig('value')
         return confidential_symmetric_authenticated?(request, response, client_id, client_secret_input)
+      when PUBLIC_TAG
+        return true
       end
-
-      true
-      
-      #suite_options = Inferno::Repositories::TestSessions.new.find(result.test_session_id)&.suite_options
-      
-      #case SMARTClientOptions.smart_authentication_approach(suite_options)
-      
-      #case authentication_approach
-      #when CONFIDENTIAL_ASYMMETRIC_TAG
-      #  key_set_input = JSON.parse(result.input_json)&.find do |input|
-      #    input['name'] == 'smart_jwk_set'
-      #  end&.dig('value')
-      #  return confidential_asymmetric_authenticated?(request, response, key_set_input)
-      #when CONFIDENTIAL_SYMMETRIC_TAG
-      #  client_secret_input = JSON.parse(result.input_json)&.find do |input|
-      #    input['name'] == 'client_secret'
-      #  end&.dig('value')
-      #  return confidential_symmetric_authenticated?(request, response, client_id, client_secret_input)
-      #when PUBLIC_TAG
-      #  return true
-      #end
     end
 
     def confidential_asymmetric_authenticated?(request, response, jwks)

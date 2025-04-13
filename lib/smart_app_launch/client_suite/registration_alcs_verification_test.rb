@@ -33,7 +33,7 @@ module SMARTAppLaunch
           description: INPUT_SMART_REDIRECT_URIS_DESCRIPTION
     input :smart_client_secret,
           title: 'SMART Confidential Symmetric Client Secret',
-          type: 'textarea',
+          type: 'text',
           description: INPUT_CLIENT_SECRET_DESCRIPTION
     
     output :client_id

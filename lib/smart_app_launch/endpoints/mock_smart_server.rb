@@ -234,7 +234,7 @@ module SMARTAppLaunch
     def authenticated?(request, response, result, client_id)
       suite_options_list = Inferno::Repositories::TestSessions.new.find(result.test_session_id)&.suite_options
       suite_options_hash = suite_options_list.map { |so| [so.id, so.value] }.to_h
-      
+
       case SMARTClientOptions.smart_authentication_approach(suite_options_hash)
       when CONFIDENTIAL_ASYMMETRIC_TAG
         key_set_input = JSON.parse(result.input_json)&.find do |input|
@@ -243,7 +243,7 @@ module SMARTAppLaunch
         return confidential_asymmetric_authenticated?(request, response, key_set_input)
       when CONFIDENTIAL_SYMMETRIC_TAG
         client_secret_input = JSON.parse(result.input_json)&.find do |input|
-          input['name'] == 'client_secret'
+          input['name'] == 'smart_client_secret'
         end&.dig('value')
         return confidential_symmetric_authenticated?(request, response, client_id, client_secret_input)
       when PUBLIC_TAG
@@ -272,38 +272,32 @@ module SMARTAppLaunch
     end
 
     def confidential_symmetric_authenticated?(request, response, client_id, client_secret)
-      auth_header_value = request.request_headers.find { |header| header.name.downcase == 'authorization' }&.value
-      if auth_header_value.blank?
-        update_response_for_invalid_assertion(
-          response, 
-          'authorization header missing from confidential symmetric client request'
-        )
+      auth_header_value = request.headers['authorization']
+      error = confidential_symmetric_header_value_error(auth_header_value, client_id, client_secret)
+      if error.present?
+        update_response_for_invalid_assertion(response, error)
         return false
       end
-      unless auth_header_value.start_with?('Basic ')
-        update_response_for_invalid_assertion(
-          response, 
-          'authorization header for confidential symmetric client request does not use Basic auth'
-        )
-        return false
-      end
-      auth_client, auth_secret = Base64.decode64(auth_header_value.delete_prefix('Basic ')).split(':')
-      unless auth_client == client_id
-        update_response_for_invalid_assertion(
-          response, 
-          "authorization header has the wrong client: expected '#{client_id}', got '#{auth_client}'"
-        )
-        return false
-      end
-      unless auth_secret == client_secret
-        update_response_for_invalid_assertion(
-          response, 
-          "authorization header has the wrong secret: expected '#{client_secret}', got '#{auth_secret}'"
-        )
-        return false
-      end
-    
+      
       true
+    end
+
+    def confidential_symmetric_header_value_error(authorization_header_value, client_id, client_secret)
+      unless authorization_header_value.present?
+        return 'authorization header missing from confidential symmetric client request'
+      end
+      unless authorization_header_value.start_with?('Basic ')
+        return 'authorization header for confidential symmetric client request does not use Basic auth'
+      end
+      
+      client_and_secret = Base64.decode64(authorization_header_value.delete_prefix('Basic '))
+      expected_client_and_secret = "#{client_id}:#{client_secret}"
+      unless client_and_secret == expected_client_and_secret
+        return 'basic authorization header has the wrong decoded value - ' \
+               "expected '#{client_and_secret}', got '#{expected_client_and_secret}'"
+      end
+
+      nil
     end
 
     def pkce_error(verifier, challenge, method)

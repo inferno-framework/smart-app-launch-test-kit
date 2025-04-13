@@ -23,7 +23,7 @@ module SMARTAppLaunch
 
       if params['grant_type'] != oauth_flow
         add_message('error',
-                    "Token request #{request_num} had an incorrect `grant_type`: expected #{flow}, " \
+                    "Token request #{request_num} had an incorrect `grant_type`: expected #{oauth_flow}, " \
                     "but got '#{params['grant_type']}'")
       end
       if authentication_approach == CONFIDENTIAL_ASYMMETRIC_TAG && 

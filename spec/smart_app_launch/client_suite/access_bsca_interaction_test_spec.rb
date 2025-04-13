@@ -1,4 +1,4 @@
-RSpec.describe SMARTAppLaunch::SMARTClientAccessInteraction, :request do # rubocop:disable RSpec/SpecFilePathFormat
+RSpec.describe SMARTAppLaunch::SMARTClientAccessBackendServicesConfidentialAsymmetricInteraction, :request do # rubocop:disable RSpec/SpecFilePathFormat
   let(:suite_id) { 'smart_client_stu2_2' }
 
   describe 'during the acess wait test' do

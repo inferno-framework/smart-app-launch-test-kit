@@ -1,4 +1,4 @@
-RSpec.describe SMARTAppLaunch::SMARTClientTokenRequestVerification do # rubocop:disable RSpec/SpecFilePathFormat
+RSpec.describe SMARTAppLaunch::SMARTClientTokenRequestBackendServicesConfidentialAsymmetricVerification do # rubocop:disable RSpec/SpecFilePathFormat
   let(:suite_id) { 'smart_client_stu2_2' }
   let(:test) { described_class }
   let(:results_repo) { Inferno::Repositories::Results.new }
@@ -74,6 +74,13 @@ RSpec.describe SMARTAppLaunch::SMARTClientTokenRequestVerification do # rubocop:
       status: 200,
       tags: [SMARTAppLaunch::TOKEN_TAG, SMARTAppLaunch::SMART_TAG, SMARTAppLaunch::CLIENT_CREDENTIALS_TAG]
     )
+  end
+
+  before do
+    allow(SMARTAppLaunch::SMARTClientOptions).to receive(:smart_authentication_approach)
+      .and_return(SMARTAppLaunch::CONFIDENTIAL_ASYMMETRIC_TAG)
+    allow(SMARTAppLaunch::SMARTClientOptions).to receive(:oauth_flow)
+      .and_return(SMARTAppLaunch::CLIENT_CREDENTIALS_TAG)
   end
 
   it 'skips if no token requests' do

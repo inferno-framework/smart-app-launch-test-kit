@@ -66,8 +66,8 @@ module SMARTAppLaunch
       wait(
         identifier: client_id,
         message: wait_dialog_app_launch_access_prefix(client_id, 'confidential asymmetric', client_fhir_base_url) +
-                wait_dialog_ehr_launch_instructions(smart_launch_urls, client_fhir_base_url) +
-                 wait_dialog_access_response_and_continue_suffix(client_resume_pass_url, client_id)
+                 wait_dialog_ehr_launch_instructions(smart_launch_urls, client_fhir_base_url) +
+                 wait_dialog_access_response_and_continue_suffix(client_id, client_resume_pass_url)
       )
     end
   end

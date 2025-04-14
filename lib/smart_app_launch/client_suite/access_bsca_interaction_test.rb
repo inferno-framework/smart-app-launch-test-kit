@@ -32,13 +32,13 @@ module SMARTAppLaunch
           title: 'Default FHIR Response',
           type: 'textarea',
           optional: true,
-          description:INPUT_ECHOED_FHIR_RESPONSE_DESCRIPTION
+          description: INPUT_ECHOED_FHIR_RESPONSE_DESCRIPTION
 
     run do
       wait(
         identifier: client_id,
-        message: wait_dialog_backend_services_access_prefix(client_id) + 
-                 wait_dialog_access_response_and_continue_suffix(client_resume_pass_url, client_id)
+        message: wait_dialog_backend_services_access_prefix(client_id, client_fhir_base_url) + 
+                 wait_dialog_access_response_and_continue_suffix(client_id, client_resume_pass_url)
       )
     end
   end

@@ -3,7 +3,6 @@ require_relative '../endpoints/mock_smart_server'
 
 module SMARTAppLaunch
   class SMARTClientTokenUseVerification < Inferno::Test
-
     id :smart_client_token_use_verification
     title 'Verify SMART Token Use'
     description %(

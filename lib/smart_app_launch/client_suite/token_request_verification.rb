@@ -41,15 +41,22 @@ module SMARTAppLaunch
                              "expected '#{client_id}' but got '#{params['client_id']}'")
       end
 
-      if oauth_flow == AUTHORIZATION_CODE_TAG
+      check_authorization_code_request_params(params, request_num) if oauth_flow == AUTHORIZATION_CODE_TAG
+
+      nil
+    end
+
+    def check_authorization_code_request_params(params, request_num)
+      if params['code'].present?
+
         authorization_request = MockSMARTServer.authorization_request_for_code(params['code'], test_session_id)
 
         if authorization_request.present?
           authorization_body = MockSMARTServer.authorization_code_request_details(authorization_request)
-          
+
           if params['redirect_uri'] != authorization_body['redirect_uri']
-            add_message('error', "Authorization code token request #{request_num} included an incorrect `redirect_uri` " \
-                                 "value: expected '#{authorization_body['redirect_uri']} " \
+            add_message('error', "Authorization code token request #{request_num} included an incorrect " \
+                                 "`redirect_uri` value: expected '#{authorization_body['redirect_uri']} " \
                                  "but got '#{params['redirect_uri']}'")
           end
 
@@ -64,9 +71,9 @@ module SMARTAppLaunch
           add_message('error', "Authorization code token request #{request_num} included a code not " \
                                "issued during this test session: '#{params['code']}'")
         end
+      else
+        add_message('error', "Authorization code token request #{request_num} missing a `code`")
       end
-
-      nil
     end
 
     def check_refresh_request_params(params, request_num)

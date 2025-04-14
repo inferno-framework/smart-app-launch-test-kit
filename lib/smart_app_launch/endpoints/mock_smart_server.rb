@@ -38,12 +38,12 @@ module SMARTAppLaunch
     def openid_connect_metadata(suite_id)
       base_url = "#{Inferno::Application['base_url']}/custom/#{suite_id}"
       response_body = {
-        issuer: base_url + FHIR_PATH,  
+        issuer: base_url + FHIR_PATH,
         authorization_endpoint: base_url + AUTHORIZATION_PATH,
         token_endpoint: base_url + TOKEN_PATH,
         jwks_uri: base_url + OIDC_JWKS_PATH,
-        response_types_supported: [ 'code', 'id_token', 'token id_token'],
-        subject_types_supported: [ 'pairwise', 'public' ],
+        response_types_supported: ['code', 'id_token', 'token id_token'],
+        subject_types_supported: ['pairwise', 'public'],
         id_token_signing_alg_values_supported: ['RS256']
       }.to_json
 
@@ -75,14 +75,6 @@ module SMARTAppLaunch
 
     def jwt_claims(encoded_jwt)
       JWT.decode(encoded_jwt, nil, false)[0]
-    end
-
-    def client_uri_to_client_id(client_uri)
-      Base64.urlsafe_encode64(client_uri, padding: false)
-    end
-
-    def client_id_to_client_uri(client_id)
-      Base64.urlsafe_decode64(client_id)
     end
 
     def client_id_to_token(client_id, exp_min)
@@ -178,8 +170,8 @@ module SMARTAppLaunch
     def token_expired?(token, check_time = nil)
       decoded_token = decode_token(token)
       return false unless decoded_token&.dig('expiration').present?
-      check_time = Time.now.to_i unless check_time.present?
 
+      check_time = Time.now.to_i unless check_time.present?
       decoded_token['expiration'] < check_time
     end
 
@@ -303,7 +295,7 @@ module SMARTAppLaunch
     def pkce_error(verifier, challenge, method)
       if verifier.blank?
         'pkce check failed: no verifier provided'
-      elsif challenge.blank?       
+      elsif challenge.blank?
         'pkce check failed: no challenge code provided'
       elsif method == 'plain'
         return nil unless challenge != verifier
@@ -311,9 +303,9 @@ module SMARTAppLaunch
         "invalid plain pkce verifier: got '#{verifier}' expected '#{challenge}'"
       elsif method == 'S256'
         return nil unless challenge != AppRedirectTest.calculate_s256_challenge(verifier)
-       
+
         "invalid S256 pkce verifier: got '#{AppRedirectTest.calculate_s256_challenge(verifier)}' " \
-        "expected '#{challenge}'"
+          "expected '#{challenge}'"
       else
         "invalid pkce challenge method '#{method}'"
       end
@@ -331,7 +323,7 @@ module SMARTAppLaunch
     end
 
     def authorization_request_for_code(code, test_session_id)
-      authorization_requests = Inferno::Repositories::Requests.new.tagged_requests(test_session_id, 
+      authorization_requests = Inferno::Repositories::Requests.new.tagged_requests(test_session_id,
                                                                                    [SMART_TAG, AUTHORIZATION_TAG])
       authorization_requests.find do |request|
         location_header = request.response_headers.find { |header| header.name.downcase == 'location' }
@@ -344,15 +336,13 @@ module SMARTAppLaunch
     end
 
     def authorization_code_request_details(inferno_request)
-      details_hash = 
+      details_hash =
         if inferno_request.verb.downcase == 'get'
           CGI.parse(inferno_request.url.split('?')[1])
         elsif inferno_request.verb.downcase == 'post'
           CGI.parse(inferno_request.request_body)
-        else
-          nil
         end
-      
+
       details_hash&.keys&.each { |key| details_hash[key] = details_hash[key].first }
       details_hash
     end

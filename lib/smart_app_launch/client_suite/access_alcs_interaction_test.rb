@@ -25,11 +25,6 @@ module SMARTAppLaunch
           locked: true,
           optional: true,
           description: INPUT_SMART_LAUNCH_URLS_DESCRIPTION_LOCKED
-    input :smart_client_secret,
-          title: 'SMART Confidential Symmetric Client Secret',
-          type: 'text',
-          locked: true,
-          description: INPUT_CLIENT_SECRET_DESCRIPTION_LOCKED
     input :launch_context,
           title: 'Launch Context',
           type: 'textarea',

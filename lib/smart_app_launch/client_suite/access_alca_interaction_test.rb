@@ -25,11 +25,6 @@ module SMARTAppLaunch
           locked: true,
           optional: true,
           description: INPUT_SMART_LAUNCH_URLS_DESCRIPTION_LOCKED
-    input :smart_jwk_set,
-          title: 'JSON Web Key Set (JWKS)',
-          type: 'textarea',
-          locked: true,
-          description: INPUT_CLIENT_JWKS_DESCRIPTION_LOCKED
     input :launch_context,
           title: 'Launch Context',
           type: 'textarea',

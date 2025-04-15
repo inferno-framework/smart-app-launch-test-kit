@@ -229,14 +229,14 @@ module SMARTAppLaunch
 
       case SMARTClientOptions.smart_authentication_approach(suite_options_hash)
       when CONFIDENTIAL_ASYMMETRIC_TAG
-        key_set_input = JSON.parse(result.input_json)&.find do |input|
-          input['name'] == 'smart_jwk_set'
-        end&.dig('value')
+        key_set_input = Inferno::Repositories::SessionData.new.load( 
+          test_session_id: result.test_session_id, name: 'smart_jwk_set'
+        )
         return confidential_asymmetric_authenticated?(request, response, key_set_input)
       when CONFIDENTIAL_SYMMETRIC_TAG
-        client_secret_input = JSON.parse(result.input_json)&.find do |input|
-          input['name'] == 'smart_client_secret'
-        end&.dig('value')
+        client_secret_input = Inferno::Repositories::SessionData.new.load( 
+          test_session_id: result.test_session_id, name: 'smart_client_secret'
+        )
         return confidential_symmetric_authenticated?(request, response, client_id, client_secret_input)
       when PUBLIC_TAG
         return true

@@ -142,9 +142,11 @@ module SMARTAppLaunch
         assertion = request.params[:client_assertion]
         client_id = MockSMARTServer.client_id_from_client_assertion(assertion)
 
-        key_set_input = JSON.parse(result.input_json)&.find do |input|
-          input['name'] == 'smart_jwk_set'
-        end&.dig('value')
+        # by loading from DB rather than result inputs don't have to be associated with specific tests
+        # e.g., key set input present on registration and auth checks, not during wait tests
+        key_set_input = Inferno::Repositories::SessionData.new.load( 
+          test_session_id: result.test_session_id, name: 'smart_jwk_set'
+        )
         signature_error = MockSMARTServer.smart_assertion_signature_verification(assertion, key_set_input)
 
         if signature_error.present?

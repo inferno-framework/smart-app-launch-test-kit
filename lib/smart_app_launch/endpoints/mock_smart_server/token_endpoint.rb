@@ -1,24 +1,21 @@
 # frozen_string_literal: true
-
-require_relative '../../urls'
 require_relative '../../tags'
 require_relative '../mock_smart_server'
-require_relative '../../client_suite/oidc_jwks'
-require_relative 'smart_token_response_creation'
+require_relative 'smart_response_creation'
 
 module SMARTAppLaunch
   module MockSMARTServer
     class TokenEndpoint < Inferno::DSL::SuiteEndpoint
       include URLs
-      include SMARTTokenResponseCreation
+      include SMARTResponseCreation
 
       def test_run_identifier
         case request.params[:grant_type]
-        when 'client_credentials'
+        when CLIENT_CREDENTIALS_TAG
           MockSMARTServer.client_id_from_client_assertion(request.params[:client_assertion])
-        when 'authorization_code'
+        when AUTHORIZATION_CODE_TAG
           MockSMARTServer.issued_token_to_client_id(request.params[:code])
-        when 'refresh_token'
+        when REFRESH_TOKEN_TAG
           MockSMARTServer.issued_token_to_client_id(
             MockSMARTServer.refresh_token_to_authorization_code(request.params[:refresh_token])
           )
@@ -27,11 +24,11 @@ module SMARTAppLaunch
 
       def make_response
         case request.params[:grant_type]
-        when 'client_credentials'
+        when CLIENT_CREDENTIALS_TAG
           make_smart_client_credential_token_response
-        when 'authorization_code'
+        when AUTHORIZATION_CODE_TAG
           make_smart_authorization_code_token_response
-        when 'refresh_token'
+        when REFRESH_TOKEN_TAG
           make_smart_refresh_token_response
         else
           MockSMARTServer.update_response_for_invalid_assertion(
@@ -47,21 +44,11 @@ module SMARTAppLaunch
 
       def tags
         tags = [TOKEN_TAG, SMART_TAG]
-        workflow_tag = 
-          case request.params[:grant_type]
-          when 'client_credentials'
-            CLIENT_CREDENTIALS_TAG
-          when 'authorization_code'
-            AUTHORIZATION_CODE_TAG
-          when 'refresh_token'
-            REFRESH_TOKEN_TAG
-          end  
-       tags << workflow_tag unless workflow_tag.blank?
-
-       tags
-      end
-  
-      
+        if [CLIENT_CREDENTIALS_TAG, AUTHORIZATION_CODE_TAG, REFRESH_TOKEN_TAG].include?(request.params[:grant_type])
+          tags << request.params[:grant_type]
+        end
+        tags
+      end    
     end
   end
 end

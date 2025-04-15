@@ -4,7 +4,28 @@ require_relative '../../client_suite/oidc_jwks'
 
 module SMARTAppLaunch
   module MockSMARTServer
-    module SMARTTokenResponseCreation
+    module SMARTResponseCreation
+      def make_smart_authorization_response
+        redirect_uri = request.params[:redirect_uri]
+        if redirect_uri.blank?
+          response.status = 400
+          response.body = { 
+            error: 'Bad request',
+            message: 'Missing required redirect_uri parameter.'}.to_json
+          response.content_type = 'application/json'
+          return
+        end
+  
+        client_id = request.params[:client_id]
+        state = request.params[:state]
+  
+        exp_min = 10
+        token = MockSMARTServer.client_id_to_token(client_id, exp_min)
+        query_string = "code=#{ERB::Util.url_encode(token)}&state=#{ERB::Util.url_encode(state)}"
+        response.headers['Location'] = "#{redirect_uri}?#{query_string}"
+        response.status = 302
+      end
+      
       def make_smart_authorization_code_token_response
         authorization_code = request.params[:code]
         client_id = MockSMARTServer.issued_token_to_client_id(authorization_code)
@@ -199,6 +220,44 @@ module SMARTAppLaunch
         challenge = auth_code_request_inputs&.dig('code_challenge')
         method = auth_code_request_inputs&.dig('code_challenge_method')
         MockSMARTServer.pkce_valid?(verifier, challenge, method, response)
+      end
+
+      def make_smart_introspection_response
+        target_token = request.params[:token]
+        introspection_inactive_response_body = { active: false }
+
+        return introspection_inactive_response_body if MockSMARTServer.token_expired?(target_token)
+        
+        token_requests = Inferno::Repositories::Requests.new.tagged_requests(test_run.test_session_id, [TOKEN_TAG])
+        original_response_body = nil
+        original_token_request = token_requests.find do |request|
+          next unless request.status == 200
+
+          original_response_body = JSON.parse(request.response_body)
+          [original_response_body['access_token'], original_response_body['refresh_token']].include?(target_token)
+        end
+        return introspection_inactive_response_body unless original_token_request.present?
+
+        decoded_token = MockSMARTServer.decode_token(target_token)
+        introspection_active_response_body = {
+          active: true,
+          client_id: decoded_token['client_id'],
+          exp: decoded_token['expiration']
+        }
+        original_response_body.each do |element, value|
+          next if ['access_token', 'refresh_token', 'token_type', 'expires_in'].include?(element)
+          next if introspection_active_response_body.key?(element)
+
+          introspection_active_response_body[element] = value
+        end
+        if original_response_body.key?('id_token')
+          user_claims, _header = JWT.decode(original_response_body['id_token'], nil, false)
+          introspection_active_response_body['iss'] = user_claims['iss']
+          introspection_active_response_body['sub'] = user_claims['sub']
+          introspection_active_response_body['fhirUser'] = user_claims['fhirUser'] if user_claims['fhirUser'].present?
+        end
+        
+        introspection_active_response_body
       end
     end 
   end

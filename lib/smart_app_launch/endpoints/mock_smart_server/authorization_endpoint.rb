@@ -20,7 +20,7 @@ module SMARTAppLaunch
       end
 
       def tags
-        [AUTHORIZATION_TAG, SMART_TAG]
+        [AUTHORIZATION_TAG, AUTHORIZATION_CODE_TAG, SMART_TAG]
       end
     end
   end

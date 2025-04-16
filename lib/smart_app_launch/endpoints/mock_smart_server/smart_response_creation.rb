@@ -35,26 +35,8 @@ module SMARTAppLaunch
           MockSMARTServer.update_response_for_expired_token(response, 'Authorization code')
           return
         end
-        
-        authorization_request = MockSMARTServer.authorization_request_for_code(authorization_code,
-                                                                               test_run.test_session_id)
-        if authorization_request.blank?
-          MockSMARTServer.update_response_for_invalid_assertion(
-            response,
-            "no authorization request found for code #{authorization_code}"
-          )
-          return
-        end
-        auth_code_request_inputs = MockSMARTServer.authorization_code_request_details(authorization_request)
-        if auth_code_request_inputs.blank?
-          MockSMARTServer.update_response_for_invalid_assertion(
-            response,
-            'invalid authorization request details'
-          )
-          return
-        end
 
-        return if request.params[:code_verifier].present? && !pkce_valid?(auth_code_request_inputs)
+        return if request.params[:code_verifier].present? && !pkce_valid?(authorization_code)
 
         exp_min = 60
         response_body = {
@@ -217,7 +199,25 @@ module SMARTAppLaunch
         JWT.encode claims, private_key.signing_key, algorithm, { alg: algorithm, kid: private_key.kid, typ: 'JWT' }
       end
 
-      def pkce_valid?(auth_code_request_inputs)
+      def pkce_valid?(authorization_code)
+        authorization_request = MockSMARTServer.authorization_request_for_code(authorization_code,
+                                                                              test_run.test_session_id)
+        if authorization_request.blank?
+          MockSMARTServer.update_response_for_invalid_assertion(
+            response,
+            "Could not check code_verifier: no authorization request found that returned code #{authorization_code}"
+          )
+          return false
+        end
+        auth_code_request_inputs = MockSMARTServer.authorization_code_request_details(authorization_request)
+        if auth_code_request_inputs.blank?
+          MockSMARTServer.update_response_for_invalid_assertion(
+            response,
+            "Could not check code_verifier: invalid authorization request details for code #{authorization_code}"
+          )
+          return false
+        end
+
         verifier = request.params[:code_verifier]
         challenge = auth_code_request_inputs&.dig('code_challenge')
         method = auth_code_request_inputs&.dig('code_challenge_method')

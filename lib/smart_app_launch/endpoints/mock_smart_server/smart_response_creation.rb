@@ -36,7 +36,7 @@ module SMARTAppLaunch
           return
         end
 
-        return if request.params[:code_verifier].present? && !pkce_valid?(authorization_code)
+        return if request.params[:code_verifier].present? && !smart_pkce_valid?(authorization_code)
 
         exp_min = 60
         response_body = {
@@ -55,7 +55,7 @@ module SMARTAppLaunch
           rescue JSON::ParserError
             nil
           end
-        additional_context = requested_scope_context(auth_code_request_inputs['scope'], authorization_code, 
+        additional_context = smart_requested_scope_context(auth_code_request_inputs['scope'], authorization_code, 
                                                      launch_context)
 
         response.body = additional_context.merge(response_body).to_json # response body values take priority
@@ -109,7 +109,7 @@ module SMARTAppLaunch
           rescue JSON::ParserError
             nil
           end
-        additional_context = requested_scope_context(auth_code_request_inputs['scope'], authorization_code,
+        additional_context = smart_requested_scope_context(auth_code_request_inputs['scope'], authorization_code,
                                                     launch_context)
 
         response.body = additional_context.merge(response_body).to_json # response body values take priority
@@ -152,7 +152,7 @@ module SMARTAppLaunch
         response.status = 200
       end
 
-      def requested_scope_context(requested_scopes, authorization_code, launch_context)
+      def smart_requested_scope_context(requested_scopes, authorization_code, launch_context)
         context = launch_context.present? ? launch_context : {}
         scopes_list = requested_scopes.split
 
@@ -160,12 +160,12 @@ module SMARTAppLaunch
           context[:refresh_token] = MockSMARTServer.authorization_code_to_refresh_token(authorization_code)
         end
 
-        context[:id_token] = construct_id_token(scopes_list.include?('fhirUser')) if scopes_list.include?('openid')
+        context[:id_token] = smart_construct_id_token(scopes_list.include?('fhirUser')) if scopes_list.include?('openid')
 
         context
       end
 
-      def construct_id_token(include_fhir_user)
+      def smart_construct_id_token(include_fhir_user)
         client_id = JSON.parse(result.input_json)&.find do |input|
           input['name'] == 'client_id'
         end&.dig('value')
@@ -199,7 +199,7 @@ module SMARTAppLaunch
         JWT.encode claims, private_key.signing_key, algorithm, { alg: algorithm, kid: private_key.kid, typ: 'JWT' }
       end
 
-      def pkce_valid?(authorization_code)
+      def smart_pkce_valid?(authorization_code)
         authorization_request = MockSMARTServer.authorization_request_for_code(authorization_code,
                                                                               test_run.test_session_id)
         if authorization_request.blank?

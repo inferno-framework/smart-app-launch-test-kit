@@ -1,9 +1,13 @@
+require 'jwt'
+require_relative 'client_options'
+require_relative '../endpoints/mock_smart_server'
+
 module SMARTAppLaunch
   module AuthenticationVerification
-    def check_authentication(request, request_params, request_num, jti_list)
-      case SMARTClientOptions.smart_authentication_approach(suite_options)
+    def check_authentication(authentication_apporach, request, request_params, jti_list, request_num)
+      case authentication_apporach
       when CONFIDENTIAL_ASYMMETRIC_TAG
-        check_client_assertion(request_params['client_assertion'], request_num, jti_list)
+        check_client_assertion(request_params['client_assertion'], jti_list, request_num)
       when CONFIDENTIAL_SYMMETRIC_TAG
         check_authorization_header(request, request_num)
       end
@@ -20,7 +24,7 @@ module SMARTAppLaunch
       end
     end
 
-    def check_client_assertion(assertion, request_num, jti_list)
+    def check_client_assertion(assertion, jti_list, request_num)
       decoded_token =
         begin
           JWT::EncodedToken.new(assertion)
@@ -32,7 +36,7 @@ module SMARTAppLaunch
       return unless decoded_token.present?
 
       check_jwt_header(decoded_token.header, request_num)
-      check_jwt_payload(decoded_token.payload, request_num, jti_list)
+      check_jwt_payload(decoded_token.payload, jti_list, request_num)
       check_jwt_signature(decoded_token, request_num)
     end
 
@@ -43,7 +47,7 @@ module SMARTAppLaunch
                            "expected 'JWT', got '#{header['typ']}'")
     end
 
-    def check_jwt_payload(claims, request_num, jti_list)
+    def check_jwt_payload(claims, jti_list, request_num)
       if claims['iss'] != client_id
         add_message('error', "client assertion jwt on token request #{request_num} has an incorrect `iss` claim: " \
                              "expected '#{client_id}', got '#{claims['iss']}'")

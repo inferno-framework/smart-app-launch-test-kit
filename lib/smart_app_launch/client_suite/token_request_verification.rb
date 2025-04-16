@@ -1,15 +1,15 @@
 module SMARTAppLaunch
   module TokenRequestVerification
     
-    def verify_token_requests
+    def verify_token_requests(oauth_flow, authentication_approach)
       jti_list = []
       token_list = []
       requests.each_with_index do |token_request, index|
         request_params = URI.decode_www_form(token_request.request_body).to_h
         request_params['grant_type'] != 'refresh_token' ?
-          check_request_params(request_params, index + 1) :
-          check_refresh_request_params(request_params, index + 1)
-        check_authentication(token_request, request_params, index + 1, jti_list)
+          check_request_params(request_params, oauth_flow, authentication_approach, index + 1) :
+          check_refresh_request_params(request_params, oauth_flow, authentication_approach, index + 1)
+        check_authentication(authentication_approach, token_request, request_params, jti_list, index + 1)
         
         token_list << MockSMARTServer.extract_token_from_response(token_request)
       end
@@ -17,10 +17,7 @@ module SMARTAppLaunch
       output smart_tokens: token_list.compact.join("\n")
     end
     
-    def check_request_params(params, request_num)
-      oauth_flow = SMARTClientOptions.oauth_flow(suite_options)
-      authentication_approach = SMARTClientOptions.smart_authentication_approach(suite_options)
-
+    def check_request_params(params, oauth_flow, authentication_approach, request_num)
       if params['grant_type'] != oauth_flow
         add_message('error',
                     "Token request #{request_num} had an incorrect `grant_type`: expected #{oauth_flow}, " \
@@ -76,8 +73,8 @@ module SMARTAppLaunch
       end
     end
 
-    def check_refresh_request_params(params, request_num)
-      if SMARTClientOptions.oauth_flow(suite_options) == CLIENT_CREDENTIALS_TAG
+    def check_refresh_request_params(params, oauth_flow, authentication_approach, request_num)
+      if oauth_flow == CLIENT_CREDENTIALS_TAG
         add_message('error',
                     "Invalid refresh request #{request_num} found during client_credentials flow.")
         return
@@ -88,7 +85,7 @@ module SMARTAppLaunch
                     "Refresh request #{request_num} had an incorrect `grant_type`: expected 'refresh_token', " \
                     "but got '#{params['grant_type']}'")
       end
-      if SMARTClientOptions.smart_authentication_approach(suite_options) == CONFIDENTIAL_ASYMMETRIC_TAG && 
+      if authentication_approach == CONFIDENTIAL_ASYMMETRIC_TAG && 
           params['client_assertion_type'] != 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
         add_message('error',
                     "Confidential asymmetric refresh request #{request_num} had an incorrect `client_assertion_type`: " \

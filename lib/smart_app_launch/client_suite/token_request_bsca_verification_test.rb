@@ -36,7 +36,7 @@ module SMARTAppLaunch
       load_tagged_requests(TOKEN_TAG, SMART_TAG, CLIENT_CREDENTIALS_TAG)
       skip_if requests.blank?, 'No SMART token requests made.'
 
-      verify_token_requests
+      verify_token_requests(CLIENT_CREDENTIALS_TAG, CONFIDENTIAL_ASYMMETRIC_TAG)
 
       assert messages.none? { |msg|
         msg[:type] == 'error'

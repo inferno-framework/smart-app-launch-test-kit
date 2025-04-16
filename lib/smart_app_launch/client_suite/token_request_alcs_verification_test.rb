@@ -37,7 +37,7 @@ module SMARTAppLaunch
       skip_if requests.blank?, 'No SMART authorization code token requests made.'
       load_tagged_requests(TOKEN_TAG, SMART_TAG, REFRESH_TOKEN_TAG) # verify refresh_requests as well
 
-      verify_token_requests
+      verify_token_requests(AUTHORIZATION_CODE_TAG, CONFIDENTIAL_SYMMETRIC_TAG)
 
       assert messages.none? { |msg|
         msg[:type] == 'error'

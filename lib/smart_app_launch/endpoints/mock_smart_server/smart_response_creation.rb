@@ -36,7 +36,25 @@ module SMARTAppLaunch
           return
         end
 
-        return if request.params[:code_verifier].present? && !smart_pkce_valid?(authorization_code)
+        authorization_request = MockSMARTServer.authorization_request_for_code(authorization_code,
+                                                                               test_run.test_session_id)
+        if authorization_request.blank?
+          MockSMARTServer.update_response_for_invalid_assertion(
+            response,
+            "no authorization request found for code #{authorization_code}"
+          )
+          return
+        end
+        auth_code_request_inputs = MockSMARTServer.authorization_code_request_details(authorization_request)
+        if auth_code_request_inputs.blank?
+          MockSMARTServer.update_response_for_invalid_assertion(
+            response,
+            'invalid authorization request details'
+          )
+          return
+        end
+ 
+        return if request.params[:code_verifier].present? && !smart_pkce_valid?(auth_code_request_inputs)
 
         exp_min = 60
         response_body = {
@@ -56,7 +74,7 @@ module SMARTAppLaunch
             nil
           end
         additional_context = smart_requested_scope_context(auth_code_request_inputs['scope'], authorization_code, 
-                                                     launch_context)
+                                                           launch_context)
 
         response.body = additional_context.merge(response_body).to_json # response body values take priority
         response.headers['Cache-Control'] = 'no-store'
@@ -75,7 +93,7 @@ module SMARTAppLaunch
         # no expiration checks for refresh tokens
 
         authorization_request = MockSMARTServer.authorization_request_for_code(authorization_code,
-                                                                              test_run.test_session_id)
+                                                                               test_run.test_session_id)
         if authorization_request.blank?
           MockSMARTServer.update_response_for_invalid_assertion(
             response,
@@ -110,7 +128,7 @@ module SMARTAppLaunch
             nil
           end
         additional_context = smart_requested_scope_context(auth_code_request_inputs['scope'], authorization_code,
-                                                    launch_context)
+                                                           launch_context)
 
         response.body = additional_context.merge(response_body).to_json # response body values take priority
         response.headers['Cache-Control'] = 'no-store'
@@ -199,25 +217,7 @@ module SMARTAppLaunch
         JWT.encode claims, private_key.signing_key, algorithm, { alg: algorithm, kid: private_key.kid, typ: 'JWT' }
       end
 
-      def smart_pkce_valid?(authorization_code)
-        authorization_request = MockSMARTServer.authorization_request_for_code(authorization_code,
-                                                                              test_run.test_session_id)
-        if authorization_request.blank?
-          MockSMARTServer.update_response_for_invalid_assertion(
-            response,
-            "Could not check code_verifier: no authorization request found that returned code #{authorization_code}"
-          )
-          return false
-        end
-        auth_code_request_inputs = MockSMARTServer.authorization_code_request_details(authorization_request)
-        if auth_code_request_inputs.blank?
-          MockSMARTServer.update_response_for_invalid_assertion(
-            response,
-            "Could not check code_verifier: invalid authorization request details for code #{authorization_code}"
-          )
-          return false
-        end
-
+      def smart_pkce_valid?(auth_code_request_inputs)
         verifier = request.params[:code_verifier]
         challenge = auth_code_request_inputs&.dig('code_challenge')
         method = auth_code_request_inputs&.dig('code_challenge_method')

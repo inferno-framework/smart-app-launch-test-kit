@@ -123,7 +123,7 @@ module SMARTAppLaunch
             input_string = JSON.parse(result.input_json)&.find do |input|
               input['name'] == 'launch_context'
             end&.dig('value')
-            JSON.parse(input_string)
+            JSON.parse(input_string) if input_string.present?
           rescue JSON::ParserError
             nil
           end

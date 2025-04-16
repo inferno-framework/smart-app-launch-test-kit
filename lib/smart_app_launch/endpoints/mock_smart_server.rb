@@ -225,7 +225,7 @@ module SMARTAppLaunch
 
     def authenticated?(request, response, result, client_id)
       suite_options_list = Inferno::Repositories::TestSessions.new.find(result.test_session_id)&.suite_options
-      suite_options_hash = suite_options_list.map { |so| [so.id, so.value] }.to_h
+      suite_options_hash = suite_options_list&.map { |so| [so.id, so.value] }&.to_h
 
       case SMARTClientOptions.smart_authentication_approach(suite_options_hash)
       when CONFIDENTIAL_ASYMMETRIC_TAG

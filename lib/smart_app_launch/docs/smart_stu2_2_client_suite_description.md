@@ -178,7 +178,15 @@ The two inputs that control these response include:
 This test kit is still in draft form and does not test all of the requirements and features
 described in the SMART App Launch IG for clients.
 
-The following sections list other known gaps and limitations.
+The following sections list known gaps and limitations.
+
+### SMART Scope Checking and Fulfilment
+
+These tests do not verify any details about scopes, including that the
+- Requested scopes are conformant, such as that they have a valid format and are consistent
+  between authorization and refresh token requests.
+- Provided **Launch Context** input fullfils the requested data context scopes.
+- Access performed is allowed by the requested scope.
 
 ### SMART Server Simulation Limitations
 

@@ -1,6 +1,15 @@
 RSpec.describe SMARTAppLaunch::SMARTClientTokenRequestBackendServicesConfidentialAsymmetricVerification do # rubocop:disable RSpec/SpecFilePathFormat
   let(:suite_id) { 'smart_client_stu2_2' }
   let(:test) { described_class }
+  let(:test_session) do # override to add suite options
+    repo_create(
+      :test_session,
+      suite: suite_id,
+      suite_options: [Inferno::DSL::SuiteOption.new(
+        id: :client_type, 
+        value: SMARTAppLaunch::SMARTClientOptions::SMART_BACKEND_SERVICES_CONFIDENTIAL_ASYMMETRIC)]
+    )
+  end
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:dummy_result) { repo_create(:result, test_session_id: test_session.id) }
   let(:client_id) { 'cid' }
@@ -74,13 +83,6 @@ RSpec.describe SMARTAppLaunch::SMARTClientTokenRequestBackendServicesConfidentia
       status: 200,
       tags: [SMARTAppLaunch::TOKEN_TAG, SMARTAppLaunch::SMART_TAG, SMARTAppLaunch::CLIENT_CREDENTIALS_TAG]
     )
-  end
-
-  before do
-    allow(SMARTAppLaunch::SMARTClientOptions).to receive(:smart_authentication_approach)
-      .and_return(SMARTAppLaunch::CONFIDENTIAL_ASYMMETRIC_TAG)
-    allow(SMARTAppLaunch::SMARTClientOptions).to receive(:oauth_flow)
-      .and_return(SMARTAppLaunch::CLIENT_CREDENTIALS_TAG)
   end
 
   it 'skips if no token requests' do

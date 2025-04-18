@@ -57,7 +57,7 @@ module SMARTAppLaunch
     'indicating nothing to echo will be returned.'
 
   module ClientWaitDialogDescriptions
-    def wait_dialog_backend_services_access_prefix(client_id, fhir_base_url)
+    def access_wait_dialog_backend_services_access_prefix(client_id, fhir_base_url)
       <<~PREFIX
         **Access**
 
@@ -70,7 +70,7 @@ module SMARTAppLaunch
       PREFIX
     end
 
-    def wait_dialog_app_launch_access_prefix(client_id, authentication_approach, fhir_base_url)
+    def access_wait_dialog_app_launch_access_prefix(client_id, authentication_approach, fhir_base_url)
       <<~PREFIX
         **Launch and Access**
 
@@ -84,7 +84,7 @@ module SMARTAppLaunch
       PREFIX
     end
 
-    def wait_dialog_ehr_launch_instructions(smart_launch_urls, fhir_base_url)
+    def access_wait_dialog_ehr_launch_instructions(smart_launch_urls, fhir_base_url)
       if smart_launch_urls.present?
         launch_key = SecureRandom.hex(32)
         output(launch_key:)
@@ -99,7 +99,7 @@ module SMARTAppLaunch
       end
     end
 
-    def wait_dialog_access_response_and_continue_suffix(client_id, resume_pass_url)
+    def access_wait_dialog_access_response_and_continue_suffix(client_id, resume_pass_url)
       <<~SUFFIX
         Inferno will respond to requests with either:
         - A resource from the Bundle in the **Available Resources** input if the request is a read matching
@@ -107,7 +107,7 @@ module SMARTAppLaunch
         - Otherwise, the contents of the **Default FHIR Response** if provided.
         - Otherwise, an OperationOutcome indicating nothing to echo.
 
-        [Click here](#{resume_pass_url}?token=#{client_id}) once you performed the data access.
+        [Click here](#{resume_pass_url}?token=#{client_id}) once the client has made a data access request.
       SUFFIX
     end
   end

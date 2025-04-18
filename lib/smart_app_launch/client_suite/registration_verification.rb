@@ -6,6 +6,8 @@ module SMARTAppLaunch
       parsed_smart_jwk_set = MockSMARTServer.jwk_set(smart_jwk_set, jwks_warnings)
       jwks_warnings.each { |warning| add_message('warning', warning) }
 
+      # TODO: add key-specific verification per end of https://build.fhir.org/ig/HL7/smart-app-launch/client-confidential-asymmetric.html#registering-a-client-communicating-public-keys
+
       unless parsed_smart_jwk_set.length.positive?
         add_message(
           'error',

@@ -37,8 +37,8 @@ module SMARTAppLaunch
     run do
       wait(
         identifier: client_id,
-        message: wait_dialog_backend_services_access_prefix(client_id, client_fhir_base_url) + 
-                 wait_dialog_access_response_and_continue_suffix(client_id, client_resume_pass_url)
+        message: access_wait_dialog_backend_services_access_prefix(client_id, client_fhir_base_url) + 
+                 access_wait_dialog_access_response_and_continue_suffix(client_id, client_resume_pass_url)
       )
     end
   end

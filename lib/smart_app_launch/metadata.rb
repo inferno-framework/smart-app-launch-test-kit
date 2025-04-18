@@ -5,9 +5,9 @@ module SMARTAppLaunch
     id :smart_app_launch_test_kit
     title 'SMART App Launch Test Kit'
     description <<~DESCRIPTION
-      The SMART App Launch Test Kit primarily validates the conformance of an
-      authorization server implementation to a specified version of the [SMART
-      Application Launch Framework Implementation
+      The SMART App Launch Test Kit validates the conformance of authorization server
+      implementations and clients that interact with them to a specified version of the
+      [SMART Application Launch Framework Implementation
       Guide](http://hl7.org/fhir/smart-app-launch/index.html).  This Test Kit also
       provides Brand Bundle Publisher testing for the User-access Brands and Endpoints
       specification.  This Test Kit supports following versions of the SMART App
@@ -30,16 +30,19 @@ module SMARTAppLaunch
 
       ## Status
 
-      The SMART App Launch Test Kit primarily verifies that systems correctly
-      implement the SMART App Launch IG for providing authorization and/or
-      authentication services to client applications accessing HL7 FHIR APIs.
-
-      The test kit currently tests the following requirements:
-      - Standalone Launch
-      - EHR Launch
-
-      It also tests the ability of a Brand Bundle Publisher to publish a valid brand
-      bundle as described in the User-access Brands and Endpoints specification.
+      The SMART App Launch Test Kit provides five suites that verify that systems
+      correctly implement different aspects and versions of the SMART App Launch IG.
+      - Three server suites (SMART App Launch STU{1, 2, 2.2}) verifying that SMART server implementations
+        can provide authorization and/or authentication services to
+        client applications accessing HL7 FHIR APIs. Thes
+        - Standalone Launch
+        - EHR Launch
+        - Backend Services (STU 2 and 2.2 only)
+        - Token Introspection (STU 2 and 2.2 only)
+      - A client suite (SMART App Launch STU2.2 Client) verifying that a SMART STU2.2
+        client can obtain and use an access token using the SMART flows.
+      - A suite verifying a server's compliance with the User-access Brands and Endpoints
+        specification.
 
       See the test descriptions within the test kit for detail on the specific
       validations performed as part of testing these requirements.

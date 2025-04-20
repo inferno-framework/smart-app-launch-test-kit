@@ -50,7 +50,7 @@ module SMARTAppLaunch
 
     run do
       begin
-        JSON.parse(launch_context)
+        JSON.parse(launch_context) if launch_context.present?
       rescue JSON::ParserError
         add_message(
           'warning', 

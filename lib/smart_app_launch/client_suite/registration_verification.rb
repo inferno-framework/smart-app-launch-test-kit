@@ -19,51 +19,43 @@ module SMARTAppLaunch
     def verify_registered_launch_urls(launch_urls)
       return unless launch_urls.present?
 
-      normalized_launch_urls = []
-      launch_urls.split(',').map { |url| url.strip }.each do |launch_url|
-        next if launch_url.blank?
-
-        parsed_url =
-          begin
-            URI.parse(launch_url)
-          rescue URI::InvalidURIError
-            add_message('error', "Registered launch URL '#{launch_url}' is not a valid URI.")
-            nil
-          end
-        next unless parsed_url.present?
-
-        normalized_launch_urls << launch_url
-        unless parsed_url.scheme == 'https'
-          add_message('error', "Registered launch URL '#{launch_url}' is not a valid https URL.")
-        end
-      end
-
+      normalized_launch_urls = normalize_urls(launch_urls, 'launch URL')
       output smart_launch_urls: normalized_launch_urls.join(',').strip
     end
 
     def verify_registered_redirect_uris(redirect_uris)
       return unless redirect_uris.present?
 
-      normalized_redirect_uris = []
-      redirect_uris.split(',').map { |url| url.strip }.each do |redirect_uri|
-        next if redirect_uri.blank?
+      normalized_redirect_uris = normalize_urls(redirect_uris, 'redirect URI')
+
+      output smart_redirect_uris: normalized_redirect_uris.join(',').strip
+    end
+
+    def normalize_urls(url_list, type_for_error)
+      normalized_urls = []
+      url_list.split(',').map { |one_url| one_url.strip }.each do |url|
+        next if url.blank?
 
         parsed_uri =
           begin
-            URI.parse(redirect_uri)
+            URI.parse(url)
           rescue URI::InvalidURIError
-            add_message('error', "Registered redirect URI '#{redirect_uri}' is not a valid URI.")
+            add_message('error', "Registered #{type_for_error} '#{url}' is not a valid URI.")
             nil
           end
         next unless parsed_uri.present?
+        unless parsed_uri.scheme == 'https' || parsed_uri.scheme == 'http'
+          add_message('error', "Registered #{type_for_error} '#{url}' is not a valid http address.")
+          next
+        end
 
-        normalized_redirect_uris << redirect_uri
+        normalized_urls << url
         unless parsed_uri.scheme == 'https'
-          add_message('error', "Registered redirect URI '#{redirect_uri}' is not a valid https URI.")
+          add_message('error', "Registered #{type_for_error} '#{url}' is not a valid https URI.")
         end
       end
 
-      output smart_redirect_uris: normalized_redirect_uris.join(',').strip
+      normalized_urls
     end
   end
 end

@@ -2,6 +2,7 @@ require 'jwt'
 require 'faraday'
 require 'time'
 require 'base64'
+require 'rack/utils'
 require_relative '../urls'
 require_relative '../tags'
 require_relative '../client_suite/client_options'
@@ -282,11 +283,16 @@ module SMARTAppLaunch
         return 'authorization header for confidential symmetric client request does not use Basic auth'
       end
       
-      client_and_secret = Base64.decode64(authorization_header_value.delete_prefix('Basic '))
+      client_and_secret = 
+        begin
+          Base64.strict_decode64(authorization_header_value.delete_prefix('Basic '))
+        rescue
+          return 'Basic authorization header could not be decoded'
+        end
       expected_client_and_secret = "#{client_id}:#{client_secret}"
       unless client_and_secret == expected_client_and_secret
         return 'basic authorization header has the wrong decoded value - ' \
-               "expected '#{client_and_secret}', got '#{expected_client_and_secret}'"
+               "expected '#{expected_client_and_secret}', got '#{client_and_secret}'"
       end
 
       nil
@@ -327,7 +333,7 @@ module SMARTAppLaunch
       authorization_requests.find do |request|
         location_header = request.response_headers.find { |header| header.name.downcase == 'location' }
         if location_header.present? && location_header.value.present?
-          CGI.parse(URI(location_header.value)&.query)&.dig('code')&.first == code
+          Rack::Utils.parse_query(URI(location_header.value)&.query)&.dig('code') == code
         else
           false
         end
@@ -335,15 +341,11 @@ module SMARTAppLaunch
     end
 
     def authorization_code_request_details(inferno_request)
-      details_hash =
-        if inferno_request.verb.downcase == 'get'
-          CGI.parse(inferno_request.url.split('?')[1])
-        elsif inferno_request.verb.downcase == 'post'
-          CGI.parse(inferno_request.request_body)
-        end
-
-      details_hash&.keys&.each { |key| details_hash[key] = details_hash[key].first }
-      details_hash
+      if inferno_request.verb.downcase == 'get'
+        Rack::Utils.parse_query(URI(inferno_request.url)&.query)
+      elsif inferno_request.verb.downcase == 'post'
+        Rack::Utils.parse_query(inferno_request.request_body)
+      end
     end
 
     def extract_token_from_response(request)

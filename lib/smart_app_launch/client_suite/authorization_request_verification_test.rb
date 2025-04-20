@@ -89,7 +89,7 @@ module SMARTAppLaunch
       end
       if params['code_challenge_method'] != 'S256'
         add_message('error',
-                    "Authorization request #{request_num} had an incorrect `aud`: " \
+                    "Authorization request #{request_num} had an incorrect `code_challenge_method`: " \
                     "expected 'S256', but got '#{params['code_challenge_method']}'")
       end
       if params['scope'].blank?

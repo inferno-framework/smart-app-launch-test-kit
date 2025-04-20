@@ -16,7 +16,7 @@ module SMARTAppLaunch
 
       def jwks_path
         @jwks_path ||=
-          ENV.fetch('CLIENT_OIDC_JWKS_PATH', default_jwks_path)
+          ENV.fetch('SIMULATED_OIDC_JWKS_PATH', default_jwks_path)
       end
 
       def jwks

@@ -9,12 +9,12 @@ client systems to the STU 2.2.0 version of the HL7® FHIR®
 The SMART App Launch Client Test Suite verifies that systems correctly implement
 the aproach specified in the [SMART App Launch IG](http://hl7.org/fhir/smart-app-launch/STU2.2/)
 for authorizing and potentially authenticating with a server in order to gain 
-access to HL7® FHIR® APIs. The suite contains options for test clints following
-- the [App Launch flow](https://hl7.org/fhir/smart-app-launch/STU2.2/app-launch.html), for
+access to HL7® FHIR® APIs. The suite contains options for testing clients that follow the
+- [App Launch flow](https://hl7.org/fhir/smart-app-launch/STU2.2/app-launch.html), for
   - Public clients not authenticating with the server.
   - Confidential clients using [symmetric authentication](https://hl7.org/fhir/smart-app-launch/STU2.2/client-confidential-symmetric.html).
   - Confidential clients using [asymmetric authentication](https://hl7.org/fhir/smart-app-launch/STU2.2/client-confidential-asymmetric.html).
-- the [Backend Services flow](https://hl7.org/fhir/smart-app-launch/STU2.2/backend-services.html),
+- [Backend Services flow](https://hl7.org/fhir/smart-app-launch/STU2.2/backend-services.html),
   which requires clients to use [asymmetric authentication](https://hl7.org/fhir/smart-app-launch/STU2.2/client-confidential-asymmetric.html).
 
 These tests are a **DRAFT** intended to allow implementers to perform
@@ -140,10 +140,11 @@ Testers have the option to provide two additional SMART registration details:
 
 #### Inputs Controlling Token Responses
 
-Inferno's SMART simulation is shallow and does not include the details needed to populate
+Inferno's SMART simulation does not include the details needed to populate
 the token response [context data](https://hl7.org/fhir/smart-app-launch/STU2.2/scopes-and-launch-context.html)
 when requested by apps using scopes during the *SMART App Launch* flow. If the tested app
-needs and will request these details, the tester must provide them using the following inputs:
+needs and will request these details, the tester must provide them for Inferno
+to respond with using the following inputs:
 - **Launch Context** (available for all *SMART App Launch* clients): Testers can provide a JSON
   array for Inferno to use as the base for building a token response on. This can include
   keys like `"patient"` when the `launch/patient` scope will be requested. Note that when keys that Inferno
@@ -157,7 +158,7 @@ needs and will request these details, the tester must provide them using the fol
 #### Inputs Controlling FHIR Responses
 The focus of this test kit is on the auth protocol, so the simulated FHIR server implemented
 in this test suite is very simple. It will respond to any FHIR request with either:
-  - A resource from a tester-provided Bundle in the **Available Resources* input
+  - A resource from a tester-provided Bundle in the **Available Resources** input
     if the request is a read matching a resource type and id found in the Bundle.
   - Otherwise, the contents of the **Default FHIR Response** input, if provided.
   - Otherwise, an OperationOutcome indicating no response was available.

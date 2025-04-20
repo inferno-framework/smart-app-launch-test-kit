@@ -35,6 +35,7 @@ module SMARTAppLaunch
     run do
       load_tagged_requests(TOKEN_TAG, SMART_TAG, CLIENT_CREDENTIALS_TAG)
       skip_if requests.blank?, 'No SMART token requests made.'
+      load_tagged_requests(TOKEN_TAG, SMART_TAG, REFRESH_TOKEN_TAG) # verify refresh_requests as well (shouldn't be any)
 
       verify_token_requests(CLIENT_CREDENTIALS_TAG, CONFIDENTIAL_ASYMMETRIC_TAG)
 

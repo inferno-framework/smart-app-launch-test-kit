@@ -18,11 +18,6 @@ module SMARTAppLaunch
           type: 'text',
           locked: true,
           description: INPUT_CLIENT_ID_DESCRIPTION_LOCKED
-    input :smart_jwk_set,
-          title: 'JSON Web Key Set (JWKS)',
-          type: 'textarea',
-          locked: true,
-          description: INPUT_CLIENT_JWKS_DESCRIPTION_LOCKED
     input :fhir_read_resources_bundle,
           title: 'Available Resources',
           type: 'textarea',

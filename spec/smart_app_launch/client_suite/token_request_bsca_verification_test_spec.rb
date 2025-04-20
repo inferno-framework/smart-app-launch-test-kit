@@ -1,7 +1,7 @@
 RSpec.describe SMARTAppLaunch::SMARTClientTokenRequestBackendServicesConfidentialAsymmetricVerification do # rubocop:disable RSpec/SpecFilePathFormat
   let(:suite_id) { 'smart_client_stu2_2' }
   let(:test) { described_class }
-  let(:test_session) do # override to add suite options
+  let(:test_session) do # overriden to add suite options
     repo_create(
       :test_session,
       suite: suite_id,

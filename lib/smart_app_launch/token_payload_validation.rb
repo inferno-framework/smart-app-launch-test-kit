@@ -78,8 +78,8 @@ module SMARTAppLaunch
     end
 
     def check_for_missing_scopes(requested_scopes, body)
-      expected_scopes = requested_scopes.split
-      new_scopes = body['scope'].split
+      expected_scopes = requested_scopes&.split || []
+      new_scopes = body['scope']&.split || []
       missing_scopes = expected_scopes - new_scopes
 
       warning do

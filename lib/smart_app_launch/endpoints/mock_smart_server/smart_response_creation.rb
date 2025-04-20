@@ -172,7 +172,7 @@ module SMARTAppLaunch
 
       def smart_requested_scope_context(requested_scopes, authorization_code, launch_context)
         context = launch_context.present? ? launch_context : {}
-        scopes_list = requested_scopes.split
+        scopes_list = requested_scopes&.split || []
 
         if scopes_list.include?('offline_access') || scopes_list.include?('online_access')
           context[:refresh_token] = MockSMARTServer.authorization_code_to_refresh_token(authorization_code)
@@ -205,7 +205,7 @@ module SMARTAppLaunch
           iat: Time.now.to_i
         }
         if include_fhir_user && fhir_user_relative_reference.present?
-          claims[:fhirUser] = "#{fhir_user_relative_reference}/#{fhir_user_relative_reference}"
+          claims[:fhirUser] = "#{client_fhir_base_url}/#{fhir_user_relative_reference}"
         end
 
         algorithm = 'RS256'

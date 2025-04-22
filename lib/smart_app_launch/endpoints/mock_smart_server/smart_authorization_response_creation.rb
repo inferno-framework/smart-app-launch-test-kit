@@ -22,7 +22,7 @@ module SMARTAppLaunch
         exp_min = 10
         token = MockSMARTServer.client_id_to_token(client_id, exp_min)
         query_string = "code=#{ERB::Util.url_encode(token)}&state=#{ERB::Util.url_encode(state)}"
-        response.headers['Location'] = "#{redirect_uri}?#{query_string}"
+        response.headers['Location'] =  "#{redirect_uri}#{redirect_uri.include?('?') ? '&' : '?'}#{query_string}"
         response.status = 302
       end
     end 

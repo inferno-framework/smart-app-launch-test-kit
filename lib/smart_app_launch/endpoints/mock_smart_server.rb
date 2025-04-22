@@ -24,7 +24,7 @@ module SMARTAppLaunch
                        'context-standalone-patient', 'context-standalone-encounter',
                        'context-banner', 'context-style'],
         code_challenge_methods_supported: ['S256'],
-        token_endpoint_auth_methods_supported: ['private_key_jwt', 'client_secret_basic'],
+        token_endpoint_auth_methods_supported: ['private_key_jwt', 'client_secret_basic', 'client_secret_post'],
         issuer: base_url + FHIR_PATH,
         grant_types_supported: ['client_credentials', 'authorization_code'],
         scopes_supported: SUPPORTED_SCOPES,
@@ -54,28 +54,8 @@ module SMARTAppLaunch
     def client_id_from_client_assertion(client_assertion_jwt)
       return unless client_assertion_jwt.present?
 
-      jwt_claims(client_assertion_jwt)&.dig('iss')
-    end
-
-    def parsed_request_body(request)
-      JSON.parse(request.request_body)
-    rescue JSON::ParserError
-      nil
-    end
-
-    def parsed_io_body(request)
-      parsed_body = begin
-        JSON.parse(request.body.read)
-      rescue JSON::ParserError
-        nil
-      end
-      request.body.rewind
-
-      parsed_body
-    end
-
-    def jwt_claims(encoded_jwt)
-      JWT.decode(encoded_jwt, nil, false)[0]
+      claims, _header = JWT.decode(client_assertion_jwt, nil, false)[0]
+      claims&.dig('iss')
     end
 
     def client_id_to_token(client_id, exp_min)
@@ -218,61 +198,10 @@ module SMARTAppLaunch
       parsed_key_set&.find { |key| key.kid == kid }
     end
 
-    def update_response_for_invalid_assertion(response, error_message)
+    def update_response_for_error(response, error_message)
       response.status = 401
       response.format = :json
       response.body = { error: 'invalid_client', error_description: error_message }.to_json
-    end
-
-    def authenticated?(request, response, result, client_id)
-      suite_options_list = Inferno::Repositories::TestSessions.new.find(result.test_session_id)&.suite_options
-      suite_options_hash = suite_options_list&.map { |so| [so.id, so.value] }&.to_h
-
-      case SMARTClientOptions.smart_authentication_approach(suite_options_hash)
-      when CONFIDENTIAL_ASYMMETRIC_TAG
-        key_set_input = Inferno::Repositories::SessionData.new.load( 
-          test_session_id: result.test_session_id, name: 'smart_jwk_set'
-        )
-        return confidential_asymmetric_authenticated?(request, response, key_set_input)
-      when CONFIDENTIAL_SYMMETRIC_TAG
-        client_secret_input = Inferno::Repositories::SessionData.new.load( 
-          test_session_id: result.test_session_id, name: 'smart_client_secret'
-        )
-        return confidential_symmetric_authenticated?(request, response, client_id, client_secret_input)
-      when PUBLIC_TAG
-        return true
-      end
-    end
-
-    def confidential_asymmetric_authenticated?(request, response, jwks)
-      assertion = request.params[:client_assertion]
-      if assertion.blank?
-        update_response_for_invalid_assertion(
-          response, 
-          'client_assertion missing from confidential asymmetric client request'
-        )
-        return false
-      end
-
-      signature_error = smart_assertion_signature_verification(assertion, jwks)
-
-      if signature_error.present?
-        update_response_for_invalid_assertion(response, signature_error)
-        return  false
-      end
-      
-      true
-    end
-
-    def confidential_symmetric_authenticated?(request, response, client_id, client_secret)
-      auth_header_value = request.headers['authorization']
-      error = confidential_symmetric_header_value_error(auth_header_value, client_id, client_secret)
-      if error.present?
-        update_response_for_invalid_assertion(response, error)
-        return false
-      end
-      
-      true
     end
 
     def confidential_symmetric_header_value_error(authorization_header_value, client_id, client_secret)
@@ -303,10 +232,6 @@ module SMARTAppLaunch
         'pkce check failed: no verifier provided'
       elsif challenge.blank?
         'pkce check failed: no challenge code provided'
-      elsif method == 'plain'
-        return nil unless challenge != verifier
-
-        "invalid plain pkce verifier: got '#{verifier}' expected '#{challenge}'"
       elsif method == 'S256'
         return nil unless challenge != AppRedirectTest.calculate_s256_challenge(verifier)
 
@@ -321,7 +246,7 @@ module SMARTAppLaunch
       pkce_error = pkce_error(verifier, challenge, method)
 
       if pkce_error.present?
-        update_response_for_invalid_assertion(response, pkce_error)
+        update_response_for_error(response, pkce_error)
         false
       else
         true
@@ -346,14 +271,6 @@ module SMARTAppLaunch
       elsif inferno_request.verb.downcase == 'post'
         Rack::Utils.parse_query(inferno_request.request_body)
       end
-    end
-
-    def extract_token_from_response(request)
-      return unless request.status == 200
-
-      JSON.parse(request.response_body)&.dig('access_token')
-    rescue
-      nil
     end
   end
 end

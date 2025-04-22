@@ -4,7 +4,10 @@ require_relative 'endpoints/mock_smart_server/introspection_endpoint'
 require_relative 'endpoints/echoing_fhir_responder_endpoint'
 require_relative 'tags'
 require_relative 'urls'
-require_relative 'client_suite/registration_group'
+require_relative 'client_suite/registration_alca_group'
+require_relative 'client_suite/registration_alcs_group'
+require_relative 'client_suite/registration_alp_group'
+require_relative 'client_suite/registration_bsca_group'
 require_relative 'client_suite/access_group'
 require_relative 'client_suite/oidc_jwks'
 require_relative 'client_suite/client_options'
@@ -96,7 +99,22 @@ module SMARTAppLaunch
       request.query_parameters['token']
     end
 
-    group from: :smart_client_registration
+    group from: :smart_client_registration_alca,
+         required_suite_options: {
+           client_type: SMARTClientOptions::SMART_APP_LAUNCH_CONFIDENTIAL_ASYMMETRIC
+         }
+    group from: :smart_client_registration_alcs,
+         required_suite_options: {
+           client_type: SMARTClientOptions::SMART_APP_LAUNCH_CONFIDENTIAL_SYMMETRIC
+         }
+    group from: :smart_client_registration_alp,
+         required_suite_options: {
+           client_type: SMARTClientOptions::SMART_APP_LAUNCH_PUBLIC
+         }
+    group from: :smart_client_registration_bsca,
+         required_suite_options: {
+           client_type: SMARTClientOptions::SMART_BACKEND_SERVICES_CONFIDENTIAL_ASYMMETRIC
+         }
     group from: :smart_client_access
   end
 end

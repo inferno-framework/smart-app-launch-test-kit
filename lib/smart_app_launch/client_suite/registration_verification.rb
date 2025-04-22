@@ -32,8 +32,7 @@ module SMARTAppLaunch
     end
 
     def normalize_urls(url_list, type_for_error)
-      normalized_urls = []
-      url_list.split(',').map { |one_url| one_url.strip }.each do |url|
+      url_list.split(',').map(&:strip).each_with_object([]) do |url, normalized_urls|
         next if url.blank?
 
         parsed_uri =
@@ -54,8 +53,6 @@ module SMARTAppLaunch
           add_message('error', "Registered #{type_for_error} '#{url}' is not a valid https URI.")
         end
       end
-
-      normalized_urls
     end
   end
 end

@@ -11,7 +11,7 @@ module SMARTAppLaunch
           check_refresh_request_params(request_params, oauth_flow, authentication_approach, index + 1)
         check_authentication(authentication_approach, token_request, request_params, jti_list, index + 1)
         
-        token_list << MockSMARTServer.extract_token_from_response(token_request)
+        token_list << extract_token_from_response(token_request)
       end
 
       output smart_tokens: token_list.compact.join("\n")
@@ -102,6 +102,14 @@ module SMARTAppLaunch
                              "issued during this test session: '#{params['refresh_token']}'")
       end
 
+      nil
+    end
+
+    def extract_token_from_response(request)
+      return unless request.status == 200
+
+      JSON.parse(request.response_body)&.dig('access_token')
+    rescue
       nil
     end
   end

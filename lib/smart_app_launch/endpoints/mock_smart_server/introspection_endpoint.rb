@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 require_relative '../../tags'
 require_relative '../mock_smart_server'
-require_relative 'smart_response_creation'
+require_relative 'smart_token_response_creation'
 
 module SMARTAppLaunch
   module MockSMARTServer
     class IntrospectionEndpoint < Inferno::DSL::SuiteEndpoint
-      include SMARTResponseCreation
+      include SMARTTokenResponseCreation
 
       def test_run_identifier
         MockSMARTServer.issued_token_to_client_id(request.params[:token])

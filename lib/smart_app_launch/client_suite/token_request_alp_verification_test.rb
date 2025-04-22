@@ -36,7 +36,7 @@ module SMARTAppLaunch
 
       assert messages.none? { |msg|
         msg[:type] == 'error'
-      }, 'Invalid token requests detected. See messages for details.'
+      }, 'Invalid token requests received. See messages for details.'
     end
   end
 end

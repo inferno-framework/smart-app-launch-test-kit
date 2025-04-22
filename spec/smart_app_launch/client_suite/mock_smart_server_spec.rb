@@ -1,9 +1,9 @@
 RSpec.describe SMARTAppLaunch::MockSMARTServer, :request, :runnable do
   include SMARTAppLaunch::URLs
   let(:suite_id) { 'smart_client_stu2_2' }
-  let(:backend_services_access_test) { suite.children[1].children[3] } # backend services data acccess test
-  let(:backend_services_reg_test) { suite.children[0].children[3] } # backend services reg test
-  let(:app_launch_ca_access_test) { suite.children[1].children[0] } # app launch confidential asymmetric data acccess
+  let(:backend_services_access_test) { suite.children[4].children[3] } # backend services data acccess test
+  let(:backend_services_reg_test) { suite.children[3].children[0] } # backend services reg test
+  let(:app_launch_ca_access_test) { suite.children[4].children[0] } # app launch confidential asymmetric data acccess
   let(:app_launch_ca_reg_test) { suite.children[0].children[0]} # app launch confidential asymmetric reg test
   let(:test_session) do # overriden to add suite options
     repo_create(
@@ -114,7 +114,7 @@ RSpec.describe SMARTAppLaunch::MockSMARTServer, :request, :runnable do
 
   describe 'when generating authorization responses for SMART' do
     it 'can return success with get' do
-      # run reg test to save smaart_jwk_set input
+      # run reg test to save smart_jwk_set input
       inputs = { client_id:, smart_jwk_set: jwks_valid}
       result = run(backend_services_reg_test, inputs)
       expect(result.result).to eq('pass')
@@ -129,7 +129,7 @@ RSpec.describe SMARTAppLaunch::MockSMARTServer, :request, :runnable do
     end
 
     it 'can return success with post' do
-      # run reg test to save smaart_jwk_set input
+      # run reg test to save smart_jwk_set input
       inputs = { client_id:, smart_jwk_set: jwks_valid}
       result = run(backend_services_reg_test, inputs)
       expect(result.result).to eq('pass')
@@ -144,7 +144,7 @@ RSpec.describe SMARTAppLaunch::MockSMARTServer, :request, :runnable do
     end
 
     it 'returns 400 when no redirect url' do
-      # run reg test to save smaart_jwk_set input
+      # run reg test to save smart_jwk_set input
       inputs = { client_id:, smart_jwk_set: jwks_valid}
       result = run(backend_services_reg_test, inputs)
       expect(result.result).to eq('pass')
@@ -162,7 +162,7 @@ RSpec.describe SMARTAppLaunch::MockSMARTServer, :request, :runnable do
 
   describe 'when generating authorization_code token responses for SMART' do
     it 'returns 200 for a valid request' do
-      # run reg test to save smaart_jwk_set input
+      # run reg test to save smart_jwk_set input
       inputs = { client_id:, smart_jwk_set: jwks_valid}
       result = run(backend_services_reg_test, inputs)
       expect(result.result).to eq('pass')
@@ -195,7 +195,7 @@ RSpec.describe SMARTAppLaunch::MockSMARTServer, :request, :runnable do
     end
 
     it 'returns 401 when no authorization request' do
-      # run reg test to save smaart_jwk_set input
+      # run reg test to save smart_jwk_set input
       inputs = { client_id:, smart_jwk_set: jwks_valid}
       result = run(backend_services_reg_test, inputs)
       expect(result.result).to eq('pass')
@@ -215,7 +215,7 @@ RSpec.describe SMARTAppLaunch::MockSMARTServer, :request, :runnable do
     end
 
     it 'returns 401 when no authorization request with the provided code' do
-      # run reg test to save smaart_jwk_set input
+      # run reg test to save smart_jwk_set input
       inputs = { client_id:, smart_jwk_set: jwks_valid}
       result = run(backend_services_reg_test, inputs)
       expect(result.result).to eq('pass')
@@ -315,7 +315,7 @@ RSpec.describe SMARTAppLaunch::MockSMARTServer, :request, :runnable do
     end
 
     it 'provides a id_token when requested through scopes' do
-      # run reg test to save smaart_jwk_set input
+      # run reg test to save smart_jwk_set input
       inputs = { client_id:, smart_jwk_set: jwks_valid, smart_redirect_uris: redirect_uri}
       result = run(app_launch_ca_reg_test, inputs)
       expect(result.result).to eq('pass')
@@ -354,7 +354,7 @@ RSpec.describe SMARTAppLaunch::MockSMARTServer, :request, :runnable do
 
   describe 'when generating client_credential token responses for SMART' do
     it 'returns 401 when the signature is bad or cannot be verified' do
-      # run reg test to save smaart_jwk_set input
+      # run reg test to save smart_jwk_set input
       inputs = { client_id:, smart_jwk_set: jwks_valid}
       result = run(backend_services_reg_test, inputs)
       expect(result.result).to eq('pass')
@@ -374,7 +374,7 @@ RSpec.describe SMARTAppLaunch::MockSMARTServer, :request, :runnable do
     end
 
     it 'returns 200 when the signature is correct even if header is bad' do
-      # run reg test to save smaart_jwk_set input
+      # run reg test to save smart_jwk_set input
       inputs = { client_id:, smart_jwk_set: jwks_valid}
       result = run(backend_services_reg_test, inputs)
       expect(result.result).to eq('pass')
@@ -393,7 +393,7 @@ RSpec.describe SMARTAppLaunch::MockSMARTServer, :request, :runnable do
 
   describe 'when generating refresh token responses for SMART' do
     it 'succeeds when request is valid' do
-      # run reg test to save smaart_jwk_set input
+      # run reg test to save smart_jwk_set input
       inputs = { client_id:, smart_jwk_set: jwks_valid}
       result = run(backend_services_reg_test, inputs)
       expect(result.result).to eq('pass')
@@ -423,7 +423,7 @@ RSpec.describe SMARTAppLaunch::MockSMARTServer, :request, :runnable do
     end
 
     it 'returns 401 when no corresponding authorization request' do
-      # run reg test to save smaart_jwk_set input
+      # run reg test to save smart_jwk_set input
       inputs = { client_id:, smart_jwk_set: jwks_valid}
       result = run(backend_services_reg_test, inputs)
       expect(result.result).to eq('pass')
@@ -437,7 +437,7 @@ RSpec.describe SMARTAppLaunch::MockSMARTServer, :request, :runnable do
     end
 
     it 'returns 401 when the client assertion is invalid' do
-      # run reg test to save smaart_jwk_set input
+      # run reg test to save smart_jwk_set input
       inputs = { client_id:, smart_jwk_set: jwks_valid}
       result = run(backend_services_reg_test, inputs)
       expect(result.result).to eq('pass')
@@ -453,7 +453,7 @@ RSpec.describe SMARTAppLaunch::MockSMARTServer, :request, :runnable do
 
   describe 'when responding to access requests' do
     it 'returns 401 when the access token has expired' do
-      # run reg test to save smaart_jwk_set input
+      # run reg test to save smart_jwk_set input
       inputs = { client_id:, smart_jwk_set: jwks_valid}
       result = run(backend_services_reg_test, inputs)
       expect(result.result).to eq('pass')
@@ -476,7 +476,7 @@ RSpec.describe SMARTAppLaunch::MockSMARTServer, :request, :runnable do
     end
 
     it 'returns 200 when the access token has not expired' do
-      # run reg test to save smaart_jwk_set input
+      # run reg test to save smart_jwk_set input
       inputs = { client_id:, smart_jwk_set: jwks_valid}
       result = run(backend_services_reg_test, inputs)
       expect(result.result).to eq('pass')

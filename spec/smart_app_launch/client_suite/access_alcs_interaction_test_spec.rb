@@ -4,7 +4,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientAccessAppLaunchConfidentialSymmetricIn
   describe 'during the acess wait test' do
     let(:static_uuid) { 'f015a331-3a86-4566-b72f-b5b85902cdca' }
     let(:test) { described_class }
-    let(:alcs_reg_test) { suite.children[0].children[1] } # app launch confidential symmetric reg test
+    let(:alcs_reg_test) { suite.children[1].children[0] } # app launch confidential symmetric reg test
     let(:test_session) do # overriden to add suite options
       repo_create(
         :test_session,
@@ -37,10 +37,9 @@ RSpec.describe SMARTAppLaunch::SMARTClientAccessAppLaunchConfidentialSymmetricIn
     end
 
     describe 'it responds to token requests' do
-
       it 'it succeeds when providing the client secret' do
         
-        # run reg test to save smaart_jwk_set input
+        # run reg test to save smart_jwk_set input
         inputs = { client_id:, smart_client_secret:, smart_redirect_uris: redirect_uri}
         result = run(alcs_reg_test, inputs)
         expect(result.result).to eq('pass')
@@ -62,7 +61,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientAccessAppLaunchConfidentialSymmetricIn
 
       it 'it fails when the basic header is bad' do
         
-        # run reg test to save smaart_jwk_set input
+        # run reg test to save smart_jwk_set input
         inputs = { client_id:, smart_client_secret:, smart_redirect_uris: redirect_uri}
         result = run(alcs_reg_test, inputs)
         expect(result.result).to eq('pass')
@@ -84,7 +83,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientAccessAppLaunchConfidentialSymmetricIn
 
       it 'it fails when no basic auth header' do
         
-        # run reg test to save smaart_jwk_set input
+        # run reg test to save smart_jwk_set input
         inputs = { client_id:, smart_client_secret:, smart_redirect_uris: redirect_uri}
         result = run(alcs_reg_test, inputs)
         expect(result.result).to eq('pass')
@@ -107,7 +106,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientAccessAppLaunchConfidentialSymmetricIn
 
     describe 'it responds to access requests' do
       it 'returns the tester-provided response' do
-        # run reg test to save smaart_jwk_set input
+        # run reg test to save smart_jwk_set input
         inputs = { client_id:, smart_client_secret:, smart_redirect_uris: redirect_uri}
         result = run(alcs_reg_test, inputs)
         expect(result.result).to eq('pass')
@@ -124,7 +123,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientAccessAppLaunchConfidentialSymmetricIn
       end
 
       it 'returns a resource from the tester-provided Bundle on a read' do
-        # run reg test to save smaart_jwk_set input
+        # run reg test to save smart_jwk_set input
         inputs = { client_id:, smart_client_secret:, smart_redirect_uris: redirect_uri}
         result = run(alcs_reg_test, inputs)
         expect(result.result).to eq('pass')
@@ -141,7 +140,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientAccessAppLaunchConfidentialSymmetricIn
       end
 
       it 'returns an operaion outcome when no tester-provided response' do
-        # run reg test to save smaart_jwk_set input
+        # run reg test to save smart_jwk_set input
         inputs = { client_id:, smart_client_secret:, smart_redirect_uris: redirect_uri}
         result = run(alcs_reg_test, inputs)
         expect(result.result).to eq('pass')

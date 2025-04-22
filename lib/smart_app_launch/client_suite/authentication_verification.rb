@@ -14,9 +14,7 @@ module SMARTAppLaunch
     end
 
     def check_authorization_header(request, request_num)
-      authorization_header_value = request.request_headers.find do |header|
-        header.name.downcase == 'authorization'
-      end&.value
+      authorization_header_value = request.request_header('authorization')&.value
       error = MockSMARTServer.confidential_symmetric_header_value_error(authorization_header_value, client_id,
                                                                         smart_client_secret)
       if error.present?

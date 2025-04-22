@@ -4,7 +4,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientAccessBackendServicesConfidentialAsymm
   describe 'during the acess wait test' do
     let(:static_uuid) { 'f015a331-3a86-4566-b72f-b5b85902cdca' }
     let(:test) { described_class }
-    let(:backend_services_reg_test) { suite.children[0].children[3] } # backend services reg test
+    let(:backend_services_reg_test) { suite.children[3].children[0] } # backend services reg test
     let(:test_session) do # overriden to add suite options
       repo_create(
         :test_session,
@@ -74,7 +74,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientAccessBackendServicesConfidentialAsymm
           stub_request(:get, jwks_url_valid)
             .to_return(status: 200, body: jwks_valid)
           
-          # run reg test to save smaart_jwk_set input
+          # run reg test to save smart_jwk_set input
           inputs = { client_id:, smart_jwk_set: jwks_url_valid}
           result = run(backend_services_reg_test, inputs)
           expect(result.result).to eq('pass')
@@ -89,7 +89,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientAccessBackendServicesConfidentialAsymm
         end
 
         it 'when using provided raw jwks json' do
-          # run reg test to save smaart_jwk_set input
+          # run reg test to save smart_jwk_set input
           inputs = { client_id:, smart_jwk_set: jwks_valid}
           result = run(backend_services_reg_test, inputs)
           expect(result.result).to eq('pass')
@@ -106,7 +106,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientAccessBackendServicesConfidentialAsymm
 
       describe 'it fails' do
         it 'with 500 when no client assertion' do
-          # run reg test to save smaart_jwk_set input
+          # run reg test to save smart_jwk_set input
           inputs = { client_id:, smart_jwk_set: jwks_valid}
           result = run(backend_services_reg_test, inputs)
           expect(result.result).to eq('pass')
@@ -122,7 +122,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientAccessBackendServicesConfidentialAsymm
         end
 
         it 'with 401 when client assertion has a bad signature' do
-          # run reg test to save smaart_jwk_set input
+          # run reg test to save smart_jwk_set input
           inputs = { client_id:, smart_jwk_set: jwks_valid}
           result = run(backend_services_reg_test, inputs)
           expect(result.result).to eq('pass')
@@ -140,7 +140,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientAccessBackendServicesConfidentialAsymm
 
     describe 'it responds to access requests' do
       it 'returns the tester-provided response' do
-        # run reg test to save smaart_jwk_set input
+        # run reg test to save smart_jwk_set input
         inputs = { client_id:, smart_jwk_set: jwks_valid}
         result = run(backend_services_reg_test, inputs)
         expect(result.result).to eq('pass')
@@ -157,7 +157,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientAccessBackendServicesConfidentialAsymm
       end
 
       it 'returns a resource from the tester-provided Bundle on a read' do
-        # run reg test to save smaart_jwk_set input
+        # run reg test to save smart_jwk_set input
         inputs = { client_id:, smart_jwk_set: jwks_valid}
         result = run(backend_services_reg_test, inputs)
         expect(result.result).to eq('pass')
@@ -174,7 +174,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientAccessBackendServicesConfidentialAsymm
       end
 
       it 'returns an operaion outcome when no tester-provided response' do
-        # run reg test to save smaart_jwk_set input
+        # run reg test to save smart_jwk_set input
         inputs = { client_id:, smart_jwk_set: jwks_valid}
         result = run(backend_services_reg_test, inputs)
         expect(result.result).to eq('pass')

@@ -32,13 +32,13 @@ module SMARTAppLaunch
 
       The SMART App Launch Test Kit provides five suites that verify that systems
       correctly implement different aspects and versions of the SMART App Launch IG.
-      - Three server suites (SMART App Launch STU{1, 2, 2.2}) verifying that SMART server implementations
+      - Three server suites (SMART App Launch STU1, STU2, and STU2.2) verifying that SMART server implementations
         can provide authorization and/or authentication services to
         client applications accessing HL7 FHIR APIs. Thes
         - Standalone Launch
         - EHR Launch
-        - Backend Services (STU 2 and 2.2 only)
-        - Token Introspection (STU 2 and 2.2 only)
+        - Backend Services (STU2 and STU2.2 only)
+        - Token Introspection (STU2 and STU2.2 only)
       - A client suite (SMART App Launch STU2.2 Client) verifying that a SMART STU2.2
         client can obtain and use an access token using the SMART flows.
       - A suite verifying a server's compliance with the User-access Brands and Endpoints

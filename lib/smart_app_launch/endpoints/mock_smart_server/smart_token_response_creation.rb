@@ -4,32 +4,11 @@ require_relative '../../client_suite/oidc_jwks'
 
 module SMARTAppLaunch
   module MockSMARTServer
-    module SMARTResponseCreation
-      def make_smart_authorization_response
-        redirect_uri = request.params[:redirect_uri]
-        if redirect_uri.blank?
-          response.status = 400
-          response.body = { 
-            error: 'Bad request',
-            message: 'Missing required redirect_uri parameter.'}.to_json
-          response.content_type = 'application/json'
-          return
-        end
-  
-        client_id = request.params[:client_id]
-        state = request.params[:state]
-  
-        exp_min = 10
-        token = MockSMARTServer.client_id_to_token(client_id, exp_min)
-        query_string = "code=#{ERB::Util.url_encode(token)}&state=#{ERB::Util.url_encode(state)}"
-        response.headers['Location'] = "#{redirect_uri}?#{query_string}"
-        response.status = 302
-      end
-      
-      def make_smart_authorization_code_token_response
+    module SMARTTokenResponseCreation 
+      def make_smart_authorization_code_token_response(smart_authentication_approach)
         authorization_code = request.params[:code]
         client_id = MockSMARTServer.issued_token_to_client_id(authorization_code)
-        return unless MockSMARTServer.authenticated?(request, response, result, client_id)
+        return unless authenticated?(client_id, smart_authentication_approach)
 
         if MockSMARTServer.token_expired?(authorization_code)
           MockSMARTServer.update_response_for_expired_token(response, 'Authorization code')
@@ -39,7 +18,7 @@ module SMARTAppLaunch
         authorization_request = MockSMARTServer.authorization_request_for_code(authorization_code,
                                                                                test_run.test_session_id)
         if authorization_request.blank?
-          MockSMARTServer.update_response_for_invalid_assertion(
+          MockSMARTServer.update_response_for_error(
             response,
             "no authorization request found for code #{authorization_code}"
           )
@@ -47,7 +26,7 @@ module SMARTAppLaunch
         end
         auth_code_request_inputs = MockSMARTServer.authorization_code_request_details(authorization_request)
         if auth_code_request_inputs.blank?
-          MockSMARTServer.update_response_for_invalid_assertion(
+          MockSMARTServer.update_response_for_error(
             response,
             'invalid authorization request details'
           )
@@ -84,18 +63,18 @@ module SMARTAppLaunch
         response.status = 200
       end
 
-      def make_smart_refresh_token_response
+      def make_smart_refresh_token_response(smart_authentication_approach)
         refresh_token = request.params[:refresh_token]
         authorization_code = MockSMARTServer.refresh_token_to_authorization_code(refresh_token)
         client_id = MockSMARTServer.issued_token_to_client_id(authorization_code)
-        return unless MockSMARTServer.authenticated?(request, response, result, client_id)
+        return unless authenticated?(client_id, smart_authentication_approach)
 
         # no expiration checks for refresh tokens
 
         authorization_request = MockSMARTServer.authorization_request_for_code(authorization_code,
                                                                                test_run.test_session_id)
         if authorization_request.blank?
-          MockSMARTServer.update_response_for_invalid_assertion(
+          MockSMARTServer.update_response_for_error(
             response,
             "no authorization request found for refresh token #{refresh_token}"
           )
@@ -103,7 +82,7 @@ module SMARTAppLaunch
         end
         auth_code_request_inputs = MockSMARTServer.authorization_code_request_details(authorization_request)
         if auth_code_request_inputs.blank?
-          MockSMARTServer.update_response_for_invalid_assertion(
+          MockSMARTServer.update_response_for_error(
             response,
             'invalid authorization request details'
           )
@@ -147,12 +126,7 @@ module SMARTAppLaunch
         key_set_input = Inferno::Repositories::SessionData.new.load( 
           test_session_id: result.test_session_id, name: 'smart_jwk_set'
         )
-        signature_error = MockSMARTServer.smart_assertion_signature_verification(assertion, key_set_input)
-
-        if signature_error.present?
-          MockSMARTServer.update_response_for_invalid_assertion(response, signature_error)
-          return
-        end
+        return unless confidential_asymmetric_authenticated?(key_set_input)
 
         exp_min = 60
         response_body = {
@@ -261,6 +235,54 @@ module SMARTAppLaunch
         
         introspection_active_response_body
       end
+
+      def authenticated?(client_id, smart_authentication_approach)
+        case smart_authentication_approach
+        when CONFIDENTIAL_ASYMMETRIC_TAG
+          key_set_input = Inferno::Repositories::SessionData.new.load( 
+            test_session_id: result.test_session_id, name: 'smart_jwk_set'
+          )
+          return confidential_asymmetric_authenticated?(key_set_input)
+        when CONFIDENTIAL_SYMMETRIC_TAG
+          client_secret_input = Inferno::Repositories::SessionData.new.load( 
+            test_session_id: result.test_session_id, name: 'smart_client_secret'
+          )
+          return confidential_symmetric_authenticated?(client_id, client_secret_input)
+        when PUBLIC_TAG
+          return true
+        end
+      end
+  
+      def confidential_asymmetric_authenticated?(jwks)
+        assertion = request.params[:client_assertion]
+        if assertion.blank?
+          MockSMARTServer.update_response_for_error(
+            response, 
+            'client_assertion missing from confidential asymmetric client request'
+          )
+          return false
+        end
+  
+        signature_error = MockSMARTServer.smart_assertion_signature_verification(assertion, jwks)
+  
+        if signature_error.present?
+          MockSMARTServer.update_response_for_error(response, signature_error)
+          return  false
+        end
+        
+        true
+      end
+  
+      def confidential_symmetric_authenticated?(client_id, client_secret)
+        auth_header_value = request.headers['authorization']
+        error = MockSMARTServer.confidential_symmetric_header_value_error(auth_header_value, client_id, client_secret)
+        if error.present?
+          MockSMARTServer.update_response_for_error(response, error)
+          return false
+        end
+        
+        true
+      end  
     end 
   end
 end

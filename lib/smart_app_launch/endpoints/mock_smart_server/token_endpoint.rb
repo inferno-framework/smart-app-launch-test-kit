@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 require_relative '../../tags'
 require_relative '../mock_smart_server'
-require_relative 'smart_response_creation'
+require_relative 'smart_token_response_creation'
 
 module SMARTAppLaunch
   module MockSMARTServer
     class TokenEndpoint < Inferno::DSL::SuiteEndpoint
       include URLs
-      include SMARTResponseCreation
+      include SMARTTokenResponseCreation
 
       def test_run_identifier
         case request.params[:grant_type]
@@ -23,15 +23,19 @@ module SMARTAppLaunch
       end
 
       def make_response
+        suite_options_list = Inferno::Repositories::TestSessions.new.find(result.test_session_id)&.suite_options
+        suite_options_hash = suite_options_list&.map { |option| [option.id, option.value] }&.to_h
+        smart_authentication_approach = SMARTClientOptions.smart_authentication_approach(suite_options_hash)
+        
         case request.params[:grant_type]
         when CLIENT_CREDENTIALS_TAG
           make_smart_client_credential_token_response
         when AUTHORIZATION_CODE_TAG
-          make_smart_authorization_code_token_response
+          make_smart_authorization_code_token_response(smart_authentication_approach)
         when REFRESH_TOKEN_TAG
-          make_smart_refresh_token_response
+          make_smart_refresh_token_response(smart_authentication_approach)
         else
-          MockSMARTServer.update_response_for_invalid_assertion(
+          MockSMARTServer.update_response_for_error(
             response,
             "unsupported grant_type: #{request.params[:grant_type]}"
           )

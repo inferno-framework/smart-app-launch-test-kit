@@ -25,7 +25,13 @@ module SMARTAppLaunch
           description: INPUT_SMART_REDIRECT_URIS_DESCRIPTION_LOCKED
     input :launch_key,      # from app launch access interaction test, 
           optional: true    # present if client registered for ehr launch but won't know if did ehr or standalone
+          
+    def client_suite_id
+      return config.options[:endpoint_suite_id] if config.options[:endpoint_suite_id].present?
 
+      SMARTAppLaunch::SMARTClientSTU22Suite.id
+    end
+    
     run do
       load_tagged_requests(AUTHORIZATION_TAG, SMART_TAG)
       skip_if requests.blank?, 'No SMART authorization requests made.'

@@ -29,6 +29,12 @@ module SMARTAppLaunch
           optional: true,
           description: INPUT_ECHOED_FHIR_RESPONSE_DESCRIPTION
 
+    def client_suite_id
+      return config.options[:endpoint_suite_id] if config.options[:endpoint_suite_id].present?
+
+      SMARTAppLaunch::SMARTClientSTU22Suite.id
+    end
+
     run do
       wait(
         identifier: client_id,

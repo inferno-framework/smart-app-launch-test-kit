@@ -27,6 +27,12 @@ module SMARTAppLaunch
     
     output :smart_tokens
 
+    def client_suite_id
+      return config.options[:endpoint_suite_id] if config.options[:endpoint_suite_id].present?
+
+      SMARTAppLaunch::SMARTClientSTU22Suite.id
+    end
+    
     run do
       load_tagged_requests(TOKEN_TAG, SMART_TAG, AUTHORIZATION_CODE_TAG)
       skip_if requests.blank?, 'No SMART authorization code token requests made.'

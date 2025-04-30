@@ -48,6 +48,12 @@ module SMARTAppLaunch
 
     output :launch_key
 
+    def client_suite_id
+      return config.options[:endpoint_suite_id] if config.options[:endpoint_suite_id].present?
+
+      SMARTAppLaunch::SMARTClientSTU22Suite.id
+    end
+
     run do
       begin
         JSON.parse(launch_context) if launch_context.present?

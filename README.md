@@ -30,39 +30,64 @@ In order for the redirect and launch urls to be determined correctly, make sure
 that the `INFERNO_HOST` environment variable is populated in `.env` with the
 scheme and host where inferno will be hosted.
 
+### AuthInfo
+
+The tests in this test kit rely heavily on the
+[`AuthInfo`](https://inferno-framework.github.io/inferno-core/docs/Inferno/DSL/AuthInfo.html)
+input type. This is a complex input type which contains the information needed to:
+- Perform a SMART App Launch workflow
+- Access resources using credentials obtained from a SMART App Launch workflow
+- Refresh credentials obtained from a SMART App Launch workflow
+
+When a FHIR Client is configured to use `AuthInfo`, it will automatically
+attempt to perform a token refresh when prior to the current access token's
+expiration.
+
 ### Example
 
 ```ruby
 require 'smart_app_launch_test_kit'
 
 class MySuite < Inferno::TestSuite
+  id :my_suite
+  title 'My Suite'
   input :url
 
   group do
     title 'Auth'
 
+    config(
+      inputs: {
+        smart_auth_info: { name: :standalone_smart_auth_info }
+      },
+      outputs: {
+        smart_auth_info: { name: :standalone_smart_auth_info }
+      }
+    )
+
     group from: :smart_discovery
     group from: :smart_standalone_launch
-    group from: :smart_openid_connect
   end
 
   group do
     title 'Make some HL7® FHIR® requests using SMART credentials'
 
-    input :smart_credentials
+    input :standalone_smart_auth_info,
+          type: :auth_info,
+          options: { mode: 'access' }
 
     fhir_client do
       url :url
-      oauth_credentials :smart_credentials # Obtained from the auth group
+      auth_info :standalone_smart_auth_info # Obtained from the auth group
     end
 
     test do
       title 'Retrieve patient from SMART launch context'
 
-      input :patient_id
+      input :standalone_patient_id
 
       run do
-        fhir_read(:patient, patient_id)
+        fhir_read(:patient, standalone_patient_id)
 
         assert_response_status(200)
         assert_resource_type(:patient)
@@ -81,7 +106,7 @@ endpoint to determine its configuration.
 
 **ids:** `smart_discovery`, `smart_discovery_stu2`
 
-**inputs:** `url`
+**inputs:** `url`, `smart_auth_info`
 
 **outputs:**
 * `well_known_configuration` - The contents of `.well-known/smart-configuration`
@@ -91,6 +116,8 @@ endpoint to determine its configuration.
 * `smart_registration_url`
 * `smart_revocation_url`
 * `smart_token_url`
+* `smart_auth_info` - The `smart_auth_info` input is updated with the
+  authorization and token urls from the discovery endpoint
 
 ### Standalone Launch Group
 
@@ -100,21 +127,21 @@ performs the entire standalone launch workflow.
 
 **ids:** `smart_standalone_launch`, `smart_standalone_launch_stu2`
 
-**inputs:** `url`, `client_id`, `client_secret`, `requested_scopes`
+**inputs:** `url`, `standalone_smart_auth_info`
 
 **outputs:**
-* `smart_credentials` - An [OAuthCredentials
-  Object](https://inferno-framework.github.io/inferno-core/docs/Inferno/DSL/OAuthCredentials.html)
-  containing the credentials obtained from the launch.
-* `token_retrieval_time`
-* `id_token`
-* `refresh_token`
-* `access_token`
-* `expires_in`
-* `patient_id`
-* `encounter_id`
-* `received_scopes`
-* `intent`
+* `standalone_smart_auth_info` - An
+  [AuthInfo](https://inferno-framework.github.io/inferno-core/docs/Inferno/DSL/AuthInfo.html)
+  object containing the credentials obtained from the launch.
+* `standalone_token_retrieval_time`
+* `standalone_id_token`
+* `standalone_refresh_token`
+* `standalone_access_token`
+* `standalone_expires_in`
+* `standalone_patient_id`
+* `standalone_encounter_id`
+* `standalone_received_scopes`
+* `standalone_intent`
 
 **options:**
 * `redirect_uri`: You should not have to manually set this if the `INFERNO_HOST`
@@ -130,21 +157,21 @@ performs the entire EHR launch workflow.
 
 **ids:** `smart_ehr_launch`, `smart_ehr_launch_stu2`
 
-**inputs:** `url`, `client_id`, `client_secret`, `requested_scopes`
+**inputs:** `url`, `ehr_smart_auth_info`
 
 **outputs:**
-* `smart_credentials` - An [OAuthCredentials
-  Object](https://inferno-framework.github.io/inferno-core/docs/Inferno/DSL/OAuthCredentials.html)
-  containing the credentials obtained from the launch.
-* `token_retrieval_time`
-* `id_token`
-* `refresh_token`
-* `access_token`
-* `expires_in`
-* `patient_id`
-* `encounter_id`
-* `received_scopes`
-* `intent`
+* `ehr_smart_auth_info` - An [AuthInfo](https://inferno-framework.github.io/inferno-core/docs/Inferno/DSL/AuthInfo.html)
+  object containing the credentials obtained from the launch.
+* `ehr_launch` - the value of the `launch` parameter
+* `ehr_token_retrieval_time`
+* `ehr_id_token`
+* `ehr_refresh_token`
+* `ehr_access_token`
+* `ehr_expires_in`
+* `ehr_patient_id`
+* `ehr_encounter_id`
+* `ehr_received_scopes`
+* `ehr_intent`
 
 **options:**
 * `launch`: a hardcoded value to use instead of the `launch` parameter received
@@ -163,8 +190,7 @@ validates an id token obtained during a SMART launch.
 
 **id:** `smart_openid_connect`
 
-**inputs:** `id_token`, `client_id`, `requested_scopes`, `access_token`,
-`smart_credentials`
+**inputs:** `url`, `id_token`, `smart_auth_info`
 
 **outputs:**
 * `id_token_payload_json`
@@ -185,13 +211,11 @@ performs a token refresh.
 
 **id:** `smart_token_refresh`
 
-**inputs:** `refresh_token`, `client_id`, `client_secret`, `received_scopes`,
-`well_known_token_url`
+**inputs:** `smart_auth_info`, `received_scopes`
 
 **outputs:**
-* `smart_credentials` - An [OAuthCredentials
-  Object](https://inferno-framework.github.io/inferno-core/docs/Inferno/DSL/OAuthCredentials.html)
-  containing the credentials obtained from the launch.
+* `smart_auth_info` - An [AuthInfo](https://inferno-framework.github.io/inferno-core/docs/Inferno/DSL/AuthInfo.html)
+  object containing the credentials obtained from the launch.
 * `token_retrieval_time`
 * `refresh_token`
 * `access_token`
@@ -213,10 +237,14 @@ for system resources.
 
 **id:** `backend_services_authorization`
 
-**inputs:** `smart_token_url`, `backend_services_client_id`,
-`backend_services_requested_scope`, `client_auth_encryption_method`, `backend_services_jwks_kid` (optional)
+**inputs:**  `url`, `smart_auth_info`
 
-**outputs:**  `bearer_token`
+**outputs:**
+* `smart_auth_info` - An
+  [AuthInfo](https://inferno-framework.github.io/inferno-core/docs/Inferno/DSL/AuthInfo.html)
+  object containing the credentials obtained from the launch.
+* `bearer_token`
+* `received_scopes`
 
 ### Token Introspection Group 
 The [Token Introspection Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/token_introspection_group.rb)
@@ -229,14 +257,13 @@ under test.
 #### Token Introspection Access Token Group
 The [Token Introspection Access Token Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/token_introspection_access_token_group.rb) 
 reuses tests from the Discovery and Standalone Launch groups to retrieve the
-token endpoint and an access token for introspection.  This group is optional.   
+token endpoint and an access token for introspection.  This group is optional.
 
 **id:** `smart_token_introspection_access_token_group`
 
-**inputs:** `url`, `client_id`, `client_secret`, `requested_scopes`, `use_pkce`,
-`pkce_code_challenge_method`, `authorization_method`, `client_auth_type`, `client_auth_encryption_method`
+**inputs:** `url`, `standalone_smart_auth_info`
 
-**outputs:** `standalone_access_token`
+**outputs:** `standalone_smart_auth_info`
 
 #### Token Introspection Request Group
 The [Token Introspection Request Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/token_introspection_request_group.rb) 
@@ -247,7 +274,7 @@ group is optional but recommended.
 **id:** `smart_token_introspection_request_group`
 
 **inputs:** `well_known_introspection_url`, `custom_authorization_header`,
-`optional_introspection_request_params`, `standalone_access_token` 
+`optional_introspection_request_params`, `standalone_smart_auth_info` 
 
 **outputs:**
 * `active_token_introspection_response_body`
@@ -260,7 +287,7 @@ server.  This group is required to demonstrate token introspection capabilities.
 
 **id:** `smart_token_introspection_response_group`
 
-**inputs:** `standalone_client_id`, `standalone_received_scopes`,
+**inputs:** `standalone_smart_auth_info`, `standalone_received_scopes`,
 `standalone_id_token`, `standalone_patient_id`, `standalone_encounter_id`,
 `active_token_introspection_response_body`,
 `invalid_token_introspection_response_body`

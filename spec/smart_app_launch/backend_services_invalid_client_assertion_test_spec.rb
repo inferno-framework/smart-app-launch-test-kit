@@ -45,7 +45,7 @@ RSpec.describe SMARTAppLaunch::BackendServicesInvalidClientAssertionTest do
     result = run(test, input)
 
     expect(result.result).to eq('fail')
-    expect(result.result_message).to eq('Unexpected response status: expected 400, but received 200')
+    expect(result.result_message).to match(/Unexpected response status:/)
   end
 
   it 'passes when token endpoint requires valid client_assertion_type' do

@@ -25,7 +25,9 @@ module SMARTAppLaunch
       kits for any FHIR-based data exchange.
 
       To run tests for a SMART App Launch authorization server, select one of the
-      "SMART App Launch" suites.  To run tests for a Brand Bundle Publisher, select
+      "SMART App Launch" suites.  To run tests for a SMART App Launch or backend
+      services client, select the "SMART App Launch STU2.2 Client" suite and choose
+      the type of client. To run tests for a Brand Bundle Publisher, select
       the "SMART User-access Brands and Endpoints" suite.
 
       ## Status
@@ -40,7 +42,7 @@ module SMARTAppLaunch
         - Backend Services (STU2 and STU2.2 only)
         - Token Introspection (STU2 and STU2.2 only)
       - A client suite (SMART App Launch STU2.2 Client) verifying that a SMART STU2.2
-        client can obtain and use an access token using the SMART flows.
+        client can obtain and use an access token using the SMART flows and authentication options.
       - A suite verifying a server's compliance with the User-access Brands and Endpoints
         specification.
 

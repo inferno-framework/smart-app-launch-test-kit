@@ -1,3 +1,11 @@
+# 0.6.2
+* FI-3981 - Client authorization code tests by @karlnaden in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/96
+* FI-3912: Update readme for AuthInfo by @Jammjammjamm in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/98
+* FI-4013: Allow 401 in invalid client responses in backend services by @Jammjammjamm in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/99
+
 # 0.6.1
 * Fix SMART Auth Input for Token Introspection Response Group by @emichaud998 in
   https://github.com/inferno-framework/smart-app-launch-test-kit/pull/92

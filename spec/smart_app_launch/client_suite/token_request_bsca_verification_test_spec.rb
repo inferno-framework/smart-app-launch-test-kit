@@ -1,6 +1,15 @@
-RSpec.describe SMARTAppLaunch::SMARTClientTokenRequestVerification do # rubocop:disable RSpec/SpecFilePathFormat
+RSpec.describe SMARTAppLaunch::SMARTClientTokenRequestBackendServicesConfidentialAsymmetricVerification do # rubocop:disable RSpec/SpecFilePathFormat
   let(:suite_id) { 'smart_client_stu2_2' }
   let(:test) { described_class }
+  let(:test_session) do # overriden to add suite options
+    repo_create(
+      :test_session,
+      suite: suite_id,
+      suite_options: [Inferno::DSL::SuiteOption.new(
+        id: :client_type, 
+        value: SMARTAppLaunch::SMARTClientOptions::SMART_BACKEND_SERVICES_CONFIDENTIAL_ASYMMETRIC)]
+    )
+  end
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:dummy_result) { repo_create(:result, test_session_id: test_session.id) }
   let(:client_id) { 'cid' }
@@ -72,7 +81,7 @@ RSpec.describe SMARTAppLaunch::SMARTClientTokenRequestVerification do # rubocop:
       request_body: URI.encode_www_form(body),
       response_body: { access_token: }.to_json,
       status: 200,
-      tags: [SMARTAppLaunch::TOKEN_TAG, SMARTAppLaunch::SMART_TAG]
+      tags: [SMARTAppLaunch::TOKEN_TAG, SMARTAppLaunch::SMART_TAG, SMARTAppLaunch::CLIENT_CREDENTIALS_TAG]
     )
   end
 

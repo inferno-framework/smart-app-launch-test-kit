@@ -3,7 +3,6 @@ require_relative '../endpoints/mock_smart_server'
 
 module SMARTAppLaunch
   class SMARTClientTokenUseVerification < Inferno::Test
-
     id :smart_client_token_use_verification
     title 'Verify SMART Token Use'
     description %(
@@ -11,11 +10,8 @@ module SMARTAppLaunch
         authentication.
       )
 
-    input :smart_tokens,
+    input :smart_tokens, # from :smart_client_token_request_verification
           optional: true # verified in the test to return a more specific error message
-    input :smart_jwk_set,
-          optional: false,
-          locked: true
 
     def access_request_tags
       return config.options[:access_request_tags] if config.options[:access_request_tags].present?
@@ -24,9 +20,6 @@ module SMARTAppLaunch
     end
 
     run do
-      omit_if smart_jwk_set.blank?, # for re-use: mark the smart_jwk_set input as optional when importing to enable
-        'SMART Authentication not demonstrated as a part of this test session.'
-
       access_requests = access_request_tags.map do |access_request_tag|
         load_tagged_requests(access_request_tag).reject { |access| access.status == 401 }
       end.flatten

@@ -1,12 +1,15 @@
 require 'jwt'
 require 'faraday'
 require 'time'
+require 'base64'
+require 'rack/utils'
 require_relative '../urls'
 require_relative '../tags'
+require_relative '../client_suite/client_options'
 
 module SMARTAppLaunch
   module MockSMARTServer
-    SUPPORTED_SCOPES = ['openid', 'system/*.read', 'user/*.read', 'patient/*.read'].freeze
+    SUPPORTED_SCOPES = ['system/*.read', 'user/*.read', 'patient/*.read'].freeze
 
     module_function
 
@@ -14,81 +17,45 @@ module SMARTAppLaunch
       base_url = "#{Inferno::Application['base_url']}/custom/#{suite_id}"
       response_body = {
         token_endpoint_auth_signing_alg_values_supported: ['RS384', 'ES384'],
-        capabilities: ['client-confidential-asymmetric'],
+        capabilities: ['client-confidential-asymmetric', 'launch-ehr' ,'launch-standalone', 'authorize-post',
+                       'client-public', 'client-confidential-symmetric', 'permission-offline', 'permission-online',
+                       'permission-patient', 'permission-user', 'permission-v1', 'permission-v2',
+                       'context-ehr-patient', 'context-ehr-encounter', 
+                       'context-standalone-patient', 'context-standalone-encounter',
+                       'context-banner', 'context-style'],
         code_challenge_methods_supported: ['S256'],
-        token_endpoint_auth_methods_supported: ['private_key_jwt'],
+        token_endpoint_auth_methods_supported: ['private_key_jwt', 'client_secret_basic', 'client_secret_post'],
         issuer: base_url + FHIR_PATH,
-        grant_types_supported: ['client_credentials'],
+        grant_types_supported: ['client_credentials', 'authorization_code'],
         scopes_supported: SUPPORTED_SCOPES,
-        token_endpoint: base_url + TOKEN_PATH
+        authorization_endpoint: base_url + AUTHORIZATION_PATH,
+        token_endpoint: base_url + TOKEN_PATH,
+        introspection_endpoint: base_url + INTROSPECTION_PATH
       }.to_json
 
       [200, { 'Content-Type' => 'application/json', 'Access-Control-Allow-Origin' => '*' }, [response_body]]
     end
 
-    def make_smart_token_response(request, response, result)
-      assertion = request.params[:client_assertion]
-      client_id = client_id_from_client_assertion(assertion)
-
-      key_set_input = JSON.parse(result.input_json)&.find do |input|
-        input['name'] == 'smart_jwk_set'
-      end&.dig('value')
-      signature_error = smart_assertion_signature_verification(assertion, key_set_input)
-
-      if signature_error.present?
-        update_response_for_invalid_assertion(response, signature_error)
-        return
-      end
-
-      exp_min = 60
+    def openid_connect_metadata(suite_id)
+      base_url = "#{Inferno::Application['base_url']}/custom/#{suite_id}"
       response_body = {
-        access_token: client_id_to_token(client_id, exp_min),
-        token_type: 'Bearer',
-        expires_in: 60 * exp_min,
-        scope: request.params[:scope]
-      }
+        issuer: base_url + FHIR_PATH,
+        authorization_endpoint: base_url + AUTHORIZATION_PATH,
+        token_endpoint: base_url + TOKEN_PATH,
+        jwks_uri: base_url + OIDC_JWKS_PATH,
+        response_types_supported: ['code', 'id_token', 'token id_token'],
+        subject_types_supported: ['pairwise', 'public'],
+        id_token_signing_alg_values_supported: ['RS256']
+      }.to_json
 
-      response.body = response_body.to_json
-      response.headers['Cache-Control'] = 'no-store'
-      response.headers['Pragma'] = 'no-cache'
-      response.headers['Access-Control-Allow-Origin'] = '*'
-      response.content_type = 'application/json'
-      response.status = 200
+      [200, { 'Content-Type' => 'application/json', 'Access-Control-Allow-Origin' => '*' }, [response_body]]
     end
 
     def client_id_from_client_assertion(client_assertion_jwt)
       return unless client_assertion_jwt.present?
 
-      jwt_claims(client_assertion_jwt)&.dig('iss')
-    end
-
-    def parsed_request_body(request)
-      JSON.parse(request.request_body)
-    rescue JSON::ParserError
-      nil
-    end
-
-    def parsed_io_body(request)
-      parsed_body = begin
-        JSON.parse(request.body.read)
-      rescue JSON::ParserError
-        nil
-      end
-      request.body.rewind
-
-      parsed_body
-    end
-
-    def jwt_claims(encoded_jwt)
-      JWT.decode(encoded_jwt, nil, false)[0]
-    end
-
-    def client_uri_to_client_id(client_uri)
-      Base64.urlsafe_encode64(client_uri, padding: false)
-    end
-
-    def client_id_to_client_uri(client_id)
-      Base64.urlsafe_decode64(client_id)
+      claims, _header = JWT.decode(client_assertion_jwt, nil, false)[0]
+      claims&.dig('iss')
     end
 
     def client_id_to_token(client_id, exp_min)
@@ -102,13 +69,33 @@ module SMARTAppLaunch
     end
 
     def decode_token(token)
-      JSON.parse(Base64.urlsafe_decode64(token))
+      token_to_decode = 
+        if issued_token_is_refresh_token(token)
+          refresh_token_to_authorization_code(token)
+        else
+          token
+        end
+      return unless token_to_decode.present?
+      
+      JSON.parse(Base64.urlsafe_decode64(token_to_decode))
     rescue JSON::ParserError
       nil
     end
 
-    def token_to_client_id(token)
+    def issued_token_to_client_id(token)
       decode_token(token)&.dig('client_id')
+    end
+
+    def issued_token_is_refresh_token(token)
+      token.end_with?('_rt')
+    end
+
+    def authorization_code_to_refresh_token(code)
+      "#{code}_rt"
+    end
+
+    def refresh_token_to_authorization_code(refresh_token)
+      refresh_token[..-4]
     end
 
     def jwk_set(jku, warning_messages = []) # rubocop:disable Metrics/CyclomaticComplexity
@@ -160,18 +147,23 @@ module SMARTAppLaunch
       return false if request.params[:session_path].present?
 
       token = request.headers['authorization']&.delete_prefix('Bearer ')
+      token_expired?(token)
+    end
+
+    def token_expired?(token, check_time = nil)
       decoded_token = decode_token(token)
       return false unless decoded_token&.dig('expiration').present?
 
-      decoded_token['expiration'] < Time.now.to_i
+      check_time = Time.now.to_i unless check_time.present?
+      decoded_token['expiration'] < check_time
     end
 
-    def update_response_for_expired_token(response)
+    def update_response_for_expired_token(response, type)
       response.status = 401
       response.format = :json
       response.body = FHIR::OperationOutcome.new(
         issue: FHIR::OperationOutcome::Issue.new(severity: 'fatal', code: 'expired',
-                                                 details: FHIR::CodeableConcept.new(text: 'Bearer token has expired'))
+                                                 details: FHIR::CodeableConcept.new(text: "#{type}has expired"))
       ).to_json
     end
 
@@ -208,10 +200,79 @@ module SMARTAppLaunch
       parsed_key_set&.find { |key| key.kid == kid }
     end
 
-    def update_response_for_invalid_assertion(response, error_message)
+    def update_response_for_error(response, error_message)
       response.status = 401
       response.format = :json
       response.body = { error: 'invalid_client', error_description: error_message }.to_json
+    end
+
+    def confidential_symmetric_header_value_error(authorization_header_value, client_id, client_secret)
+      unless authorization_header_value.present?
+        return 'authorization header missing from confidential symmetric client request'
+      end
+      unless authorization_header_value.start_with?('Basic ')
+        return 'authorization header for confidential symmetric client request does not use Basic auth'
+      end
+      
+      client_and_secret = 
+        begin
+          Base64.strict_decode64(authorization_header_value.delete_prefix('Basic '))
+        rescue
+          return 'Basic authorization header could not be decoded'
+        end
+      expected_client_and_secret = "#{client_id}:#{client_secret}"
+      unless client_and_secret == expected_client_and_secret
+        return 'basic authorization header has the wrong decoded value - ' \
+               "expected '#{expected_client_and_secret}', got '#{client_and_secret}'"
+      end
+
+      nil
+    end
+
+    def pkce_error(verifier, challenge, method)
+      if verifier.blank?
+        'pkce check failed: no verifier provided'
+      elsif challenge.blank?
+        'pkce check failed: no challenge code provided'
+      elsif method == 'S256'
+        return nil unless challenge != AppRedirectTest.calculate_s256_challenge(verifier)
+
+        "invalid S256 pkce verifier: got '#{AppRedirectTest.calculate_s256_challenge(verifier)}' " \
+          "expected '#{challenge}'"
+      else
+        "invalid pkce challenge method '#{method}'"
+      end
+    end
+
+    def pkce_valid?(verifier, challenge, method, response)
+      pkce_error = pkce_error(verifier, challenge, method)
+
+      if pkce_error.present?
+        update_response_for_error(response, pkce_error)
+        false
+      else
+        true
+      end
+    end
+
+    def authorization_request_for_code(code, test_session_id)
+      authorization_requests = Inferno::Repositories::Requests.new.tagged_requests(test_session_id, [AUTHORIZATION_TAG])
+      authorization_requests.find do |request|
+        location_header = request.response_headers.find { |header| header.name.downcase == 'location' }
+        if location_header.present? && location_header.value.present?
+          Rack::Utils.parse_query(URI(location_header.value)&.query)&.dig('code') == code
+        else
+          false
+        end
+      end
+    end
+
+    def authorization_code_request_details(inferno_request)
+      if inferno_request.verb.downcase == 'get'
+        Rack::Utils.parse_query(URI(inferno_request.url)&.query)
+      elsif inferno_request.verb.downcase == 'post'
+        Rack::Utils.parse_query(inferno_request.request_body)
+      end
     end
   end
 end

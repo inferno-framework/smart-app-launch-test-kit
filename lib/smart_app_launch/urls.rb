@@ -6,7 +6,11 @@ module SMARTAppLaunch
   RESUME_FAIL_PATH = '/resume_fail'
   AUTH_SERVER_PATH = '/auth'
   SMART_DISCOVERY_PATH = "#{FHIR_PATH}/.well-known/smart-configuration".freeze
+  OIDC_DISCOVERY_PATH = "#{FHIR_PATH}/.well-known/openid-configuration".freeze
+  OIDC_JWKS_PATH = "#{FHIR_PATH}/.well-known/jwks.json".freeze
   TOKEN_PATH = "#{AUTH_SERVER_PATH}/token".freeze
+  AUTHORIZATION_PATH = "#{AUTH_SERVER_PATH}/authorization".freeze
+  INTROSPECTION_PATH = "#{AUTH_SERVER_PATH}/introspect".freeze
 
   module URLs
     def client_base_url
@@ -31,6 +35,14 @@ module SMARTAppLaunch
 
     def client_token_url
       @client_token_url ||= client_base_url + TOKEN_PATH
+    end
+
+    def client_authorization_url
+      @client_authorization_url ||= client_base_url + AUTHORIZATION_PATH
+    end
+
+    def client_introspection_url
+      @client_introspection_url ||= client_base_url + INTROSPECTION_PATH
     end
 
     def client_suite_id

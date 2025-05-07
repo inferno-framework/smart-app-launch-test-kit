@@ -119,7 +119,7 @@ module SMARTAppLaunch
           begin
             JSON.parse(retrieved.body)
           rescue JSON::ParserError
-            warning_messages << "Failed to fetch valid json from jwks uri #{jwk_set}."
+            warning_messages << "Failed to fetch valid json from jwks uri #{jku}."
             nil
           end
       else
@@ -163,7 +163,7 @@ module SMARTAppLaunch
       response.format = :json
       response.body = FHIR::OperationOutcome.new(
         issue: FHIR::OperationOutcome::Issue.new(severity: 'fatal', code: 'expired',
-                                                 details: FHIR::CodeableConcept.new(text: "#{type}has expired"))
+                                                 details: FHIR::CodeableConcept.new(text: "#{type} has expired"))
       ).to_json
     end
 

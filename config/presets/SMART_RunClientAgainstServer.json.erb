@@ -17,7 +17,7 @@
       "optional": true,
       "title": "SMART App Launch URL(s)",
       "type": "textarea",
-      "value": "http://localhost:4567/custom/smart_stu2_2/launch"
+      "value": "<%= Inferno::Application['base_url'] %>/custom/smart_stu2_2/launch"
     },
     {
       "name": "smart_redirect_uris",
@@ -25,7 +25,7 @@
       "optional": true,
       "title": "SMART App Launch Redirect URI(s)",
       "type": "textarea",
-      "value": "http://localhost:4567/custom/smart_stu2_2/redirect"
+      "value": "<%= Inferno::Application['base_url'] %>/custom/smart_stu2_2/redirect"
     },
     {
       "name": "smart_jwk_set",
@@ -33,7 +33,7 @@
       "optional": true,
       "title": "SMART Confidential Asymmetric JSON Web Key Set (JWKS)",
       "type": "textarea",
-      "value": "http://localhost:4567/custom/smart_stu2_2/.well-known/jwks.json"
+      "value": "<%= Inferno::Application['base_url'] %>/custom/smart_stu2_2/.well-known/jwks.json"
     },
     {
       "name": "smart_client_secret",

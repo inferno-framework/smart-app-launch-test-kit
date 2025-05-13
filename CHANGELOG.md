@@ -1,3 +1,9 @@
+# 0.6.3
+* Fix typos and presets by @karlnaden in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/101
+* FI-3973: decouple client credentials tokens from suite options by @karlnaden in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/102
+
 # 0.6.2
 * FI-3981 - Client authorization code tests by @karlnaden in
   https://github.com/inferno-framework/smart-app-launch-test-kit/pull/96

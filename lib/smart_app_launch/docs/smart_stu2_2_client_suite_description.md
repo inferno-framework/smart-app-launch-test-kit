@@ -52,7 +52,7 @@ at a minimum by the tester to execute any tests in this suite:
   A comma-separated list of one or more URIs that the app will sepcify as the target
   of the redirect for Inferno to use when providing the authorization code.
 - **SMART Confidential Symmetric Client Secret** (required for the *SMART App Launch Confidential
-  Symmetric* clients only)): The client secret that the confidential symmetric client will send with
+  Symmetric* clients only): The client secret that the confidential symmetric client will send with
   token requests to authenticate the client to Inferno.
 - **SMART JSON Web Key Set (JWKS)** (required for *Confidential Asymmetric* clients): The SMART
   client's public JSON Web Key Set including key(s) that Inferno will use to verify the signature

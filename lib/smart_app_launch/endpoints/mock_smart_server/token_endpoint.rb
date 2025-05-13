@@ -23,13 +23,13 @@ module SMARTAppLaunch
       end
 
       def make_response
+        return make_smart_client_credential_token_response if request.params[:grant_type] == CLIENT_CREDENTIALS_TAG
+        
         suite_options_list = Inferno::Repositories::TestSessions.new.find(result.test_session_id)&.suite_options
         suite_options_hash = suite_options_list&.map { |option| [option.id, option.value] }&.to_h
         smart_authentication_approach = SMARTClientOptions.smart_authentication_approach(suite_options_hash)
         
         case request.params[:grant_type]
-        when CLIENT_CREDENTIALS_TAG
-          make_smart_client_credential_token_response
         when AUTHORIZATION_CODE_TAG
           make_smart_authorization_code_token_response(smart_authentication_approach)
         when REFRESH_TOKEN_TAG

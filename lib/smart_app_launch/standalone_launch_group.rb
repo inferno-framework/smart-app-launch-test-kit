@@ -63,6 +63,10 @@ module SMARTAppLaunch
                 name: :auth_request_method,
                 default: 'GET',
                 locked: true
+              },
+              {
+                name: :pkce_support,
+                default: 'disabled'
               }
             ]
           }

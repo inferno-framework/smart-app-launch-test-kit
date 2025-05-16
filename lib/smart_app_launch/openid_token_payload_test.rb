@@ -16,20 +16,26 @@ module SMARTAppLaunch
       - `sub` must be a non-blank string not exceeding 255 characters in length
     )
 
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@200',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@201',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@210'
+
     REQUIRED_CLAIMS = ['iss', 'sub', 'aud', 'exp', 'iat'].freeze
 
     def required_claims
       REQUIRED_CLAIMS.dup
     end
 
-    input :id_token, :openid_configuration_json, :id_token_jwk_json
-    input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
+    input :id_token,
+          :openid_configuration_json,
+          :id_token_jwk_json,
+          :client_id
 
     run do
       skip_if id_token.blank?, 'No ID Token'
       skip_if openid_configuration_json.blank?, 'No OpenID Configuration found'
       skip_if id_token_jwk_json.blank?, 'No ID Token jwk found'
-      skip_if smart_auth_info.client_id.blank?, 'No Client ID'
+      skip_if client_id.blank?, 'No Client ID'
 
       begin
         configuration = JSON.parse(openid_configuration_json)
@@ -42,7 +48,7 @@ module SMARTAppLaunch
             algorithms: ['RS256'],
             exp_leeway: 60,
             iss: configuration['issuer'],
-            aud: smart_auth_info.client_id,
+            aud: client_id,
             verify_not_before: false,
             verify_iat: false,
             verify_jti: false,
@@ -55,8 +61,8 @@ module SMARTAppLaunch
       end
 
       sub_value = payload['sub']
-      assert !sub_value.blank?, 'ID token `sub` claim is blank'
-      assert sub_value.length < 256, 'ID token `sub` claim exceeds 255 characters in length'
+      assert !sub_value.blank?, "ID token `sub` claim is blank"
+      assert sub_value.length < 256, "ID token `sub` claim exceeds 255 characters in length"
 
       missing_claims = required_claims - payload.keys
       missing_claims_string = missing_claims.map { |claim| "`#{claim}`" }.join(', ')

@@ -8,19 +8,22 @@ module SMARTAppLaunch
       the url for a Patient, Practitioner, RelatedPerson, or Person resource
     )
 
-    input :id_token_payload_json, :url
-    input :smart_auth_info, type: :auth_info
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@198',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@200',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@202'
 
+    input :id_token_payload_json, :requested_scopes, :url
+    input :smart_credentials, type: :oauth_credentials
     output :id_token_fhir_user
 
     fhir_client do
       url :url
-      auth_info :smart_auth_info
+      oauth_credentials :smart_credentials
     end
 
     run do
       skip_if id_token_payload_json.blank?
-      skip_if !smart_auth_info.requested_scopes&.include?('fhirUser'), '`fhirUser` scope not requested'
+      skip_if !requested_scopes&.include?('fhirUser'), '`fhirUser` scope not requested'
 
       assert_valid_json(id_token_payload_json)
       payload = JSON.parse(id_token_payload_json)

@@ -1,0 +1,16 @@
+test_kit_id: smart_app_launch
+
+suites:
+  - id: smart_app_launch_test_kit_client
+    class_name: SMARTAppLaunch::SMARTSTU22Suite
+    suite_actor: Client
+  - id: smart_app_launch_test_kit_server
+    class_name: SMARTAppLaunch::SMARTSTU22Suite
+    suite_actor: Server
+
+requirement_sets:
+  - id: hl7.fhir.uv.smart-app-launch_2.2.0
+    requirements: All
+    actor_map:
+      - { spec: Client, test_kit: Client }
+      - { spec: Server, test_kit: Server }

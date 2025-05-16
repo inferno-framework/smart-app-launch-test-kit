@@ -10,6 +10,9 @@ module SMARTAppLaunch
       by checking if it is referenced by at least 1 Organization resource.
       )
 
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@409',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@417'
+
     def find_referenced_org(bundle_resource, endpoint_id)
       bundle_resource
         .entry

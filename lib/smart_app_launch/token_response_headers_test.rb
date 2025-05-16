@@ -8,6 +8,9 @@ module SMARTAppLaunch
     )
     id :smart_token_response_headers
 
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@86',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@87'
+
     uses_request :token
 
     run do

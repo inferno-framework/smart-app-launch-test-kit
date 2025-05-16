@@ -17,22 +17,34 @@ module SMARTAppLaunch
       consistent with the requirements of the inital access token exchange.
     )
 
-    input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@86',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@87',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@109'
+
+    input :client_auth_type
+    input :client_auth_encryption_method, optional: true
+    input :client_secret, optional: true
 
     def add_credentials_to_request(oauth2_headers, oauth2_params)
-      if smart_auth_info.asymmetric_auth?
+      case client_auth_type
+      when 'public'
+        oauth2_params['client_id'] = client_id
+      when 'confidential_symmetric'
+        assert client_secret.present?,
+               "A client secret must be provided when using confidential symmetric client authentication."
+
+        credentials = Base64.strict_encode64("#{client_id}:#{client_secret}")
+        oauth2_headers['Authorization'] = "Basic #{credentials}"
+      when 'confidential_asymmetric'
         oauth2_params.merge!(
           client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
           client_assertion: ClientAssertionBuilder.build(
-            iss: smart_auth_info.client_id,
-            sub: smart_auth_info.client_id,
-            aud: smart_auth_info.token_url,
-            client_auth_encryption_method: smart_auth_info.encryption_algorithm,
-            custom_jwks: smart_auth_info.jwks
+            iss: client_id,
+            sub: client_id,
+            aud: smart_token_url,
+            client_auth_encryption_method: client_auth_encryption_method
           )
         )
-      else
-        super
       end
     end
   end

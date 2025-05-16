@@ -12,9 +12,14 @@ module SMARTAppLaunch
 
       The format of the optional `fhirContext` field is validated if present.
     )
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@73',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@74',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@75',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@172'
+    
     id :smart_token_response_body_stu2_2
 
-    input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
+    input :requested_scopes
     output :id_token,
            :refresh_token,
            :access_token,
@@ -22,8 +27,7 @@ module SMARTAppLaunch
            :patient_id,
            :encounter_id,
            :received_scopes,
-           :intent,
-           :smart_auth_info
+           :intent
     uses_request :token
 
     def validate_fhir_context(fhir_context)

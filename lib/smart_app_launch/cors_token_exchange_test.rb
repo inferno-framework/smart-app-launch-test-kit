@@ -13,12 +13,14 @@ module SMARTAppLaunch
     )
     id :smart_cors_token_exchange
 
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@17'
+
     uses_request :cors_token_request
 
-    input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
+    input :client_auth_type
 
     run do
-      omit_if smart_auth_info.auth_type != 'public', %(
+      omit_if client_auth_type != 'public', %(
         Client type is not public, Cross-Origin Resource Sharing (CORS) is not required to be supported for
         non-public client types
       )

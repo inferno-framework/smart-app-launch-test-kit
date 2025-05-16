@@ -7,6 +7,10 @@ module SMARTAppLaunch
       and available.
     )
 
+
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@396',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@417'
+
     input :user_access_brands_bundle,
           optional: true
 

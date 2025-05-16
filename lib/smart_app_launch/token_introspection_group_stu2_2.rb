@@ -39,6 +39,11 @@ module SMARTAppLaunch
 
       See the individual test groups for more details and guidance.
     )
+
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@270',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@273',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@282'
+
     group from: :smart_token_introspection_access_token_group_stu2_2
 
     access_token_group_index = children.find_index { |child| child.id.to_s.end_with? 'access_token_group' }

@@ -14,23 +14,33 @@ module SMARTAppLaunch
       [Authorization Code
       Request](http://hl7.org/fhir/smart-app-launch/STU2/app-launch.html#request-4)
     )
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@50',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@51',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@52'
 
-    input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
-
-    def default_post_authorization_uri
-      "#{Inferno::Application['base_url']}/custom/smart_stu2/post_auth"
-    end
-
-    def post_authorization_uri
-      config.options[:post_authorization_uri].presence || default_post_authorization_uri
-    end
+    input :authorization_method,
+          title: 'Authorization Request Method',
+          type: 'radio',
+          default: 'get',
+          options: {
+            list_options: [
+              {
+                label: 'GET',
+                value: 'get'
+              },
+              {
+                label: 'POST',
+                value: 'post'
+              }
+            ]
+          }
 
     def authorization_url_builder(url, params)
-      return super if smart_auth_info.get_auth_request?
+      return super if authorization_method == 'get'
 
       post_params = params.merge(auth_url: url)
 
-      post_url = URI(post_authorization_uri)
+      post_url = URI(config.options[:post_authorization_uri])
       post_url.query = URI.encode_www_form(post_params)
       post_url.to_s
     end

@@ -10,11 +10,10 @@ module SMARTAppLaunch
       The authorization endpoints accepted by a FHIR resource server can
       be exposed as a Well-Known Uniform Resource Identifier
     )
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@373'
     input :url,
           title: 'FHIR Endpoint',
           description: 'URL of the FHIR endpoint used by SMART applications'
-    input :smart_auth_info,
-          type: :auth_info
 
     output :well_known_configuration,
            :well_known_authorization_url,
@@ -22,8 +21,7 @@ module SMARTAppLaunch
            :well_known_management_url,
            :well_known_registration_url,
            :well_known_revocation_url,
-           :well_known_token_url,
-           :smart_auth_info
+           :well_known_token_url
     makes_request :smart_well_known_configuration
 
     run do
@@ -48,13 +46,6 @@ module SMARTAppLaunch
              well_known_registration_url: make_url_absolute(base_url, config['registration_endpoint']),
              well_known_revocation_url: make_url_absolute(base_url, config['revocation_endpoint']),
              well_known_token_url: make_url_absolute(base_url, config['token_endpoint'])
-
-      if smart_auth_info.use_discovery
-        smart_auth_info.auth_url = well_known_authorization_url
-        smart_auth_info.token_url = well_known_token_url
-
-        output smart_auth_info: smart_auth_info
-      end
 
       content_type = request.response_header('Content-Type')&.value
 

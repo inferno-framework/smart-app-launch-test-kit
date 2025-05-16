@@ -1,8 +1,8 @@
 require_relative 'backend_services_authorization_request_builder'
 require_relative 'backend_services_authorization_group'
 
-module SMARTAppLaunch
-  class BackendServicesAuthorizationRequestSuccessTest < Inferno::Test
+module SMARTAppLaunch 
+  class BackendServicesAuthorizationRequestSuccessTest < Inferno::Test 
     id :smart_backend_services_auth_request_success
     title 'Authorization request succeeds when supplied correct information'
     description <<~DESCRIPTION
@@ -10,40 +10,34 @@ module SMARTAppLaunch
       states "If the access token request is valid and authorized, the authorization server SHALL issue an access token in response."
     DESCRIPTION
 
-    input :smart_auth_info,
-          type: :auth_info,
-          options: {
-            mode: 'auth',
-            components: [
-              {
-                name: :auth_type,
-                default: 'backend_services',
-                locked: 'true'
-              }
-            ]
-          }
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@253'
 
-    output :authentication_response, :smart_auth_info
+    input :client_auth_encryption_method, 
+          :backend_services_requested_scope, 
+          :backend_services_client_id, 
+          :smart_token_url
+    input :backend_services_jwks_kid,
+          optional: true
+
+    output :authentication_response
+
+    http_client :token_endpoint do
+      url :smart_token_url
+    end
 
     run do
-      post_request_content = BackendServicesAuthorizationRequestBuilder.build(
-        encryption_method: smart_auth_info.encryption_algorithm,
-        scope: smart_auth_info.requested_scopes,
-        iss: smart_auth_info.client_id,
-        sub: smart_auth_info.client_id,
-        aud: smart_auth_info.token_url,
-        kid: smart_auth_info.kid,
-        custom_jwks: smart_auth_info.jwks
-      )
+      post_request_content = BackendServicesAuthorizationRequestBuilder.build(encryption_method: client_auth_encryption_method,
+                                                                scope: backend_services_requested_scope,
+                                                                iss: backend_services_client_id,
+                                                                sub: backend_services_client_id,
+                                                                aud: smart_token_url,
+                                                                kid: backend_services_jwks_kid)
 
-      authentication_response = post(smart_auth_info.token_url, **post_request_content)
+      authentication_response = post(**{ client: :token_endpoint }.merge(post_request_content))
 
       assert_response_status([200, 201])
 
-      smart_auth_info.issue_time = Time.now
-
-      output authentication_response: authentication_response.response_body,
-             smart_auth_info: smart_auth_info
+      output authentication_response: authentication_response.response_body
     end
   end
 end

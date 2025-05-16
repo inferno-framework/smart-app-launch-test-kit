@@ -19,6 +19,8 @@ module SMARTAppLaunch
     )
     optional
 
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@16'
+
     input :url
 
     fhir_client do

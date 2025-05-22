@@ -57,8 +57,8 @@ module InfernoRequirementsTools
       NOT_TESTED_FILE_NAME = "#{DASHERIZED_TEST_KIT_ID}_out_of_scope_requirements.csv".freeze
       NOT_TESTED_FILE = File.join('lib', TEST_KIT_CODE_FOLDER, 'requirements', NOT_TESTED_FILE_NAME).freeze
       OUTPUT_HEADERS = INPUT_HEADERS + TEST_SUITES.flat_map do |suite|
-                                         ["#{suite.title} #{SHORT_ID_HEADER}", "#{suite.title} #{FULL_ID_HEADER}"]
-                                       end
+        ["#{suite.title} #{SHORT_ID_HEADER}", "#{suite.title} #{FULL_ID_HEADER}"]
+      end
       OUTPUT_FILE_NAME = "#{DASHERIZED_TEST_KIT_ID}_requirements_coverage.csv".freeze
       OUTPUT_FILE_DIRECTORY = File.join('lib', TEST_KIT_CODE_FOLDER, 'requirements', 'generated')
       OUTPUT_FILE = File.join(OUTPUT_FILE_DIRECTORY, OUTPUT_FILE_NAME).freeze
@@ -259,10 +259,10 @@ module InfernoRequirementsTools
         col_widths.map { |width| width + 3 }
 
         puts [
-          headers[0].ljust(col_widths[0]),
-          headers[1].ljust(col_widths[1]),
-          headers[2].ljust(col_widths[2])
-        ].join(' | ')
+               headers[0].ljust(col_widths[0]),
+               headers[1].ljust(col_widths[1]),
+               headers[2].ljust(col_widths[2])
+             ].join(' | ')
         puts col_widths.map { |width| '-' * width }.join('-+-')
         output_requirements_map_table_contents(requirements_map, col_widths)
         puts
@@ -272,10 +272,10 @@ module InfernoRequirementsTools
         requirements_map.each do |requirement_id, runnables|
           runnables.each do |runnable|
             puts [
-              requirement_id.ljust(col_widths[0]),
-              runnable[:short_id].ljust(col_widths[1]),
-              runnable[:full_id].ljust(col_widths[2])
-            ].join(' | ')
+                   requirement_id.ljust(col_widths[0]),
+                   runnable[:short_id].ljust(col_widths[1]),
+                   runnable[:full_id].ljust(col_widths[2])
+                 ].join(' | ')
           end
         end
       end

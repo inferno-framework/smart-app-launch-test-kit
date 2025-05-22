@@ -33,6 +33,7 @@ module SMARTAppLaunch
             ]
           }
 
+
     run do
       post_request_content = BackendServicesAuthorizationRequestBuilder.build(
         encryption_method: smart_auth_info.encryption_algorithm,

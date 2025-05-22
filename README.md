@@ -230,7 +230,7 @@ performs a token refresh.
 The [Backend Services Authorization Group](https://github.com/inferno-framework/smart-app-launch-test-kit/blob/main/lib/smart_app_launch/backend_services_authorization_group.rb)
 is only part of SMART App Launch STU 2.0. It is used when autonomous or
 semi-autonomous backend services (clients) need to access resources from FHIR
-servers that have pre-authorized, defined scopes of access.  This group applies
+servers that have pre-authorized, defined scopes of access.  This group appplies
 a client credentials flow using confidential client asymmetric
 authentication and JSON Web Token (JWT) assertions to retrieve an access token
 for system resources.

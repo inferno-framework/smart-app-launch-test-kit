@@ -1,0 +1,11 @@
+test_kit_id: # the name of the gem.
+
+suites:
+  - id:  # "Id" in the metadata tab of the requirements Excel sheet
+    class_name:  # The class name of the suite.
+    suite_actor: # The actor tested by the suite. Suite requirements will have this actor in the 'actors' column of this repository's requirements csv file.
+
+requirement_sets:
+  - id: # "Id" in the metadata tab of the requirements Excel sheet
+      actor_map: # when collecting requirements from the source spreadsheets, this map will be used to translate the Actor column
+        - {spec: Provider, test_kit: Provider} # map of the actor in the source spec to the actor to use in this repository's requirements csv file. the "spec" string will be replaced by the "test_kit" string

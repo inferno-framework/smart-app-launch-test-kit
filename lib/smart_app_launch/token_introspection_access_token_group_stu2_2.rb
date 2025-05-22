@@ -23,7 +23,15 @@ module SMARTAppLaunch
       Register Inferno as a Standalone SMART App and provide the registration details below.
     )
 
-    group from: :smart_discovery_stu2_2
+    group from: :smart_discovery_stu2_2,
+          config: {
+            inputs: {
+              smart_auth_info: { name: :standalone_smart_auth_info }
+            },
+            outputs: {
+              smart_auth_info: { name: :standalone_smart_auth_info }
+            }
+          }
     group from: :smart_standalone_launch_stu2_2
   end
 end

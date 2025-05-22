@@ -7,7 +7,6 @@ module SMARTAppLaunch
         described in the OpenID Connect Discovery 1.0 documentation.
       )
 
-
     verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@205',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@207'
 

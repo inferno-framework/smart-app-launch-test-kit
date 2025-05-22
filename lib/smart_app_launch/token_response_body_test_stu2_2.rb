@@ -16,10 +16,10 @@ module SMARTAppLaunch
                           'hl7.fhir.uv.smart-app-launch_2.2.0@74',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@75',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@172'
-    
+
     id :smart_token_response_body_stu2_2
 
-    input :requested_scopes
+    input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
     output :id_token,
            :refresh_token,
            :access_token,
@@ -27,7 +27,8 @@ module SMARTAppLaunch
            :patient_id,
            :encounter_id,
            :received_scopes,
-           :intent
+           :intent,
+           :smart_auth_info
     uses_request :token
 
     def validate_fhir_context(fhir_context)

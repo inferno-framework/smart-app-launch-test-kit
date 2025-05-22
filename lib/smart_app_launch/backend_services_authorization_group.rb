@@ -12,6 +12,7 @@ module SMARTAppLaunch
     short_description 'Demonstrate SMART Backend Services Authorization'
 
     id :backend_services_authorization
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@318'
 
     input :smart_auth_info,
           title: 'Backend Services Credentials',

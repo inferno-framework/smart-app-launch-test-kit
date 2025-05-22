@@ -1,7 +1,7 @@
 require_relative 'backend_services_authorization_request_builder'
 
-module SMARTAppLaunch 
-  class BackendServicesAuthorizationResponseBodyTest < Inferno::Test 
+module SMARTAppLaunch
+  class BackendServicesAuthorizationResponseBodyTest < Inferno::Test
     id :smart_backend_services_auth_response_body
     title 'Authorization request response body contains required information encoded in JSON'
     description <<~DESCRIPTION
@@ -16,14 +16,25 @@ module SMARTAppLaunch
       | `scope` | required | Scope of access authorized. Note that this can be different from the scopes requested by the app. |
     DESCRIPTION
 
-
     verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@254',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@255',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@256',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@258'
 
     input :authentication_response
-    output :bearer_token
+    input :smart_auth_info,
+          type: :auth_info,
+          options: {
+            mode: 'auth',
+            components: [
+              {
+                name: :auth_type,
+                default: 'backend_services',
+                locked: 'true'
+              }
+            ]
+          }
+    output :bearer_token, :smart_auth_info, :received_scopes
 
     run do
       skip_if authentication_response.blank?, 'No authentication response received.'
@@ -32,9 +43,15 @@ module SMARTAppLaunch
       response_body = JSON.parse(authentication_response)
 
       access_token = response_body['access_token']
+      received_scopes = response_body['scope']
+      expires_in = response_body['expires_in']
+
       assert access_token.present?, 'Token response did not contain access_token as required'
 
-      output bearer_token: access_token
+      smart_auth_info.access_token = access_token
+      smart_auth_info.expires_in = expires_in
+
+      output bearer_token: access_token, smart_auth_info: smart_auth_info, received_scopes: received_scopes
 
       required_keys = ['token_type', 'expires_in', 'scope']
 

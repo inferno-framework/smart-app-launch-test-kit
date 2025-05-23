@@ -1,4 +1,4 @@
-test_kit_id: smart_app_launch_test_kit
+test_kit_id: smart_app_launch
 
 suites:
   - id: smart_client_stu2_2

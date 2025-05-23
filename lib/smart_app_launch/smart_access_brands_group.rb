@@ -25,13 +25,6 @@ module SMARTAppLaunch
       as being served at an stable location is considered a requirement of the spec.
     )
 
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@396',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@398',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@400',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@402',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@403',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@405'
-
     input_instructions <<~INSTRUCTIONS
       For systems that make their User Access Brand Bundle available at a public endpoint, please input
       the User Access Brand Publication URL to retrieve the Bundle from there in order to perform validation, and leave

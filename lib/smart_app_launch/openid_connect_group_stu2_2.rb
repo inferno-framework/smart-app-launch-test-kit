@@ -36,12 +36,6 @@ module SMARTAppLaunch
       * [OpenID Connect Core](https://openid.net/specs/openid-connect-core-1_0.html)
     )
 
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@17',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@196',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@200',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@205',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@207',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@210'
     test from: :smart_cors_openid_fhir_user_claim
   end
 end

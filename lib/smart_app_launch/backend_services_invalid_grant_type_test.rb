@@ -17,9 +17,6 @@ module SMARTAppLaunch
       error response as described in [Section 5.2](https://tools.ietf.org/html/rfc6749#section-5.2)."
     DESCRIPTION
 
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@236',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@340'
-
     input :smart_auth_info,
           type: :auth_info,
           options: {

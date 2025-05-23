@@ -6,9 +6,7 @@ module SMARTAppLaunch
         Verify that the ID token is a properly constructed JWT.
       )
 
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@200',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@201'
-
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@200'
     input :id_token
     output :id_token_payload_json, :id_token_header_json
 

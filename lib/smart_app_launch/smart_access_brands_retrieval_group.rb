@@ -9,9 +9,6 @@ module SMARTAppLaunch
       issues a HTTP GET request against the supplied URL and expects to receive
       the User Access Brand Bundle at this location.
     )
-
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@396',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@400'
     run_as_group
 
     http_client do

@@ -28,7 +28,7 @@ module SMARTAppLaunch
 
     test do
       title 'Token introspection response for an active token contains required fields'
-
+      verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@273'
       description %(
         This test will check whether the metadata in the token introspection response is correct for an active token and
         that the response data matches the data in the original access token and/or access token response from the

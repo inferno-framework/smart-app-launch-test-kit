@@ -7,9 +7,6 @@ module SMARTAppLaunch
     )
     id :smart_app_launch
 
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@41',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@161'
-
     input :url
     receives_request :launch
 

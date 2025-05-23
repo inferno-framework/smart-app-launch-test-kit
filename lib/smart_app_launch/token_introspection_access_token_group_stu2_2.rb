@@ -7,9 +7,6 @@ module SMARTAppLaunch
 
     id :smart_token_introspection_access_token_group_stu2_2
 
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@270',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@373'
-
     description %(
       These tests are repeated from the Standalone Launch tests in order to receive a new, active access token that
       will be provided for token introspection. This test group may be skipped if the tester can obtain an access token

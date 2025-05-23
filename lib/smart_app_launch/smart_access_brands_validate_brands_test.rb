@@ -13,10 +13,6 @@ module SMARTAppLaunch
       This test does not currently validate availability or format of Brand or Portal logos.
     )
 
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@402',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@403',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@410'
-
     input :user_access_brands_bundle,
           optional: true
 

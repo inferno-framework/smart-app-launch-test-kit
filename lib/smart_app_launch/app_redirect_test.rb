@@ -9,15 +9,6 @@ module SMARTAppLaunch
     )
     id :smart_app_redirect
 
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@32',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@33',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@34',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@37',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@39',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@41',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@44',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@45'
-
     input :url
     input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
     output :state, :pkce_code_challenge, :pkce_code_verifier

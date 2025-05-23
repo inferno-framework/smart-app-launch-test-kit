@@ -14,9 +14,6 @@ module SMARTAppLaunch
       [Authorization Code
       Request](http://hl7.org/fhir/smart-app-launch/STU2/app-launch.html#request-4)
     )
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@50',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@51',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@52'
 
     input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
 

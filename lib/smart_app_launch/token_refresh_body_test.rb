@@ -15,8 +15,7 @@ module SMARTAppLaunch
       Scopes returned must be a strict subset of the scopes granted in the original launch.
     )
 
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@108',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@110',
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@110',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@111',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@112',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@113'

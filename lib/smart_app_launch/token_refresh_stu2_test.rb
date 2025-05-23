@@ -17,9 +17,7 @@ module SMARTAppLaunch
       consistent with the requirements of the inital access token exchange.
     )
 
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@86',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@87',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@109'
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@109'
 
     input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
 

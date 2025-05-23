@@ -58,7 +58,7 @@ module SMARTAppLaunch
       uri = URI(url)
 
       # because the URL might have parameters on it
-      original_parameters = URI.decode_www_form(uri.query || '').to_h
+      original_parameters = Hash[URI.decode_www_form(uri.query || '')]
       new_params = original_parameters.merge(params)
 
       uri.query = URI.encode_www_form(new_params)

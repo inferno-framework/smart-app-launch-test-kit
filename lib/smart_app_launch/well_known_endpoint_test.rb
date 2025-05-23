@@ -6,6 +6,8 @@ module SMARTAppLaunch
 
     title 'FHIR server makes SMART configuration available from well-known endpoint'
     id :well_known_endpoint
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@373',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@374'
     description %(
       The authorization endpoints accepted by a FHIR resource server can
       be exposed as a Well-Known Uniform Resource Identifier

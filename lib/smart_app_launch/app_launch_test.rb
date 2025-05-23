@@ -6,6 +6,10 @@ module SMARTAppLaunch
       described in SMART EHR Launch Sequence.
     )
     id :smart_app_launch
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@18',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@56',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@59',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@164'
 
     input :url
     receives_request :launch

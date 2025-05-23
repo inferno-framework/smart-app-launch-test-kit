@@ -3,6 +3,7 @@ require_relative 'url_helpers'
 module SMARTAppLaunch
   class CORSMetadataRequest < Inferno::Test
     id :smart_cors_metadata_request
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@16'
 
     include URLHelpers
 
@@ -18,6 +19,8 @@ module SMARTAppLaunch
       This test verifies that the metadata request is returned with the appropriate CORS header.
     )
     optional
+
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@16'
 
     input :url
 

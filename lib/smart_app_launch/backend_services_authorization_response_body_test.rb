@@ -3,6 +3,10 @@ require_relative 'backend_services_authorization_request_builder'
 module SMARTAppLaunch
   class BackendServicesAuthorizationResponseBodyTest < Inferno::Test
     id :smart_backend_services_auth_response_body
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@254',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@255',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@256',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@258'
     title 'Authorization request response body contains required information encoded in JSON'
     description <<~DESCRIPTION
       The [SMART App Launch 2.0.0 IG specification for Backend Services](https://hl7.org/fhir/smart-app-launch/STU2/backend-services.html#issue-access-token)
@@ -15,6 +19,11 @@ module SMARTAppLaunch
       | `expires_in` | required | The lifetime in seconds of the access token. The recommended value is `300`, for a five-minute token lifetime. |
       | `scope` | required | Scope of access authorized. Note that this can be different from the scopes requested by the app. |
     DESCRIPTION
+
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@254',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@255',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@256',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@258'
 
     input :authentication_response
     input :smart_auth_info,
@@ -52,6 +61,9 @@ module SMARTAppLaunch
 
       required_keys.each do |key|
         assert response_body[key].present?, "Token response did not contain #{key} as required"
+        if key == 'token_type'
+          assert response_body[key].casecmp('bearer').zero?, '`token_type` must be `bearer`'
+        end
       end
     end
   end

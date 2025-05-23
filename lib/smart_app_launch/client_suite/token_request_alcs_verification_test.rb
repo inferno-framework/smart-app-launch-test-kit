@@ -13,6 +13,11 @@ module SMARTAppLaunch
     include TokenRequestVerification
 
     id :smart_client_token_request_alcs_verification
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@23',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@64',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@68',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@69',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@70'
     title 'Verify SMART Token Requests'
     description %(
       Check that SMART token requests are conformant.

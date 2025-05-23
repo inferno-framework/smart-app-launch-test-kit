@@ -1,6 +1,8 @@
 module SMARTAppLaunch
   class SMARTAccessBrandsValidateEndpoints < Inferno::Test
     id :smart_access_brands_valid_endpoints
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@396',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@402'
     title 'SMART Access Brands Bundle contains valid User Access Endpoints'
     description %(
       Verify that Bundle of User Access Brands and Endpoints contains Endpoints that are valid

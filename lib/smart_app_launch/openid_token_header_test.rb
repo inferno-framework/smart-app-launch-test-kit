@@ -1,6 +1,8 @@
 module SMARTAppLaunch
   class OpenIDTokenHeaderTest < Inferno::Test
     id :smart_openid_token_header
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@207',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@210'
     title 'ID token header contains required information'
     description %(
       Verify that the id token header indicates that the token is signed using
@@ -8,6 +10,9 @@ module SMARTAppLaunch
       framework](https://www.hl7.org/fhir/smart-app-launch/1.0.0/scopes-and-launch-context/index.html#scopes-for-requesting-identity-data)
       and that the key used to sign the token can be identified in the JWKS.
     )
+
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@207',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@210'
 
     input :id_token_header_json, :openid_rsa_keys_json
     output :id_token_jwk_json

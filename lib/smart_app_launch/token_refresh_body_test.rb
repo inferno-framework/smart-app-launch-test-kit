@@ -5,6 +5,10 @@ module SMARTAppLaunch
     include TokenPayloadValidation
 
     id :smart_token_refresh_body
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@110',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@111',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@112',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@113'
     title 'Token refresh response contains all required fields'
     description %(
       The EHR authorization server SHALL return a JSON structure that includes
@@ -14,6 +18,7 @@ module SMARTAppLaunch
 
       Scopes returned must be a strict subset of the scopes granted in the original launch.
     )
+
     input :received_scopes
     input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
     output :refresh_token, :access_token, :token_retrieval_time, :expires_in, :received_scopes, :smart_auth_info

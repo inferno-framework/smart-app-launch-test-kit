@@ -39,6 +39,7 @@ module SMARTAppLaunch
 
       See the individual test groups for more details and guidance.
     )
+
     group from: :smart_token_introspection_access_token_group_stu2_2
 
     access_token_group_index = children.find_index { |child| child.id.to_s.end_with? 'access_token_group' }

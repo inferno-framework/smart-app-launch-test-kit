@@ -14,6 +14,15 @@ module SMARTAppLaunch
     include TokenRequestVerification
 
     id :smart_client_token_request_bsca_verification
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@229',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@230',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@233',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@234',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@235',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@236',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@237',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@238',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@267'
     title 'Verify SMART Token Requests'
     description %(
         Check that SMART token requests are conformant.

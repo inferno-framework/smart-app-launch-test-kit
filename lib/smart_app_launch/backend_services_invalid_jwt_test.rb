@@ -3,6 +3,10 @@ require_relative 'backend_services_authorization_request_builder'
 module SMARTAppLaunch
   class BackendServicesInvalidJWTTest < Inferno::Test
     id :smart_backend_services_invalid_jwt
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@335',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@336',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@337',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@340'
     title 'Authorization request fails when client supplies invalid JWT token'
     description <<~DESCRIPTION
       The [SMART App Launch 2.0.0 IG section on Backend Services](https://hl7.org/fhir/smart-app-launch/STU2/backend-services.html#request-1)

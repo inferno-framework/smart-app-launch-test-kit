@@ -13,6 +13,8 @@ module SMARTAppLaunch
     )
     id :smart_cors_token_exchange
 
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@17'
+
     uses_request :cors_token_request
 
     input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }

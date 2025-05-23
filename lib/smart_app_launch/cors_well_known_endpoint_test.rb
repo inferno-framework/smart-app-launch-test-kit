@@ -18,6 +18,8 @@ module SMARTAppLaunch
     )
     optional
 
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@16'
+
     input :url,
           title: 'FHIR Endpoint',
           description: 'URL of the FHIR endpoint used by SMART applications'

@@ -1,6 +1,9 @@
 module SMARTAppLaunch
   class SMARTAccessBrandsValidateBundle < Inferno::Test
     id :smart_access_brands_valid_bundle
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@396',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@398',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@417'
     title 'Server returns valid Bundle resource according to the User Access Brands Bundle Profile'
     description %(
         Verify that the returned Bundle is a valid User Access Brands Bundle according to the

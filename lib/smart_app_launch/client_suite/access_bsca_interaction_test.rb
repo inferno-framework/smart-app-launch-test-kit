@@ -8,6 +8,12 @@ module SMARTAppLaunch
     include ClientWaitDialogDescriptions
 
     id :smart_client_access_bsca_interaction
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@229',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@233',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@235',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@236',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@237',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@238'
     title 'Access a secured FHIR endpoint using SMART Backend Services'
     description %(
       During this test, Inferno will wait for the client to access data

@@ -57,6 +57,9 @@ module SMARTAppLaunch
 
       required_keys.each do |key|
         assert response_body[key].present?, "Token response did not contain #{key} as required"
+        if key == 'token_type'
+          assert response_body[key].casecmp('bearer').zero?, '`token_type` must be `bearer`'
+        end
       end
     end
   end

@@ -4,6 +4,8 @@ module SMARTAppLaunch
   class OpenIDTokenPayloadTest < Inferno::Test
     include TokenPayloadValidation
     id :smart_openid_token_payload
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@200',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@210'
     title 'ID token payload has required claims and a valid signature'
     description %(
       The `iss`, `sub`, `aud`, `exp`, and `iat` claims are required.

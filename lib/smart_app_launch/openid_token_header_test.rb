@@ -1,6 +1,8 @@
 module SMARTAppLaunch
   class OpenIDTokenHeaderTest < Inferno::Test
     id :smart_openid_token_header
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@207',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@210'
     title 'ID token header contains required information'
     description %(
       Verify that the id token header indicates that the token is signed using

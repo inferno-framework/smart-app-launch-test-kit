@@ -2,6 +2,10 @@ module SMARTAppLaunch
   class WellKnownCapabilitiesSTU2Test < Inferno::Test
     title 'Well-known configuration contains required fields'
     id :well_known_capabilities_stu2
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@372',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@373',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@374',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@394'
     input :well_known_configuration
     description %(
       The JSON from .well-known/smart-configuration contains the following

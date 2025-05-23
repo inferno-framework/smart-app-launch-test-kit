@@ -1,6 +1,8 @@
 module SMARTAppLaunch
   class SMARTAccessBrandsValidateBrands < Inferno::Test
     id :smart_access_brands_valid_brands
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@396',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@402'
     title 'Service Base URL List contains valid Brand resources'
     description %(
       Verify that Bundle of User Access Brands and Endpoints contains Brands that are valid

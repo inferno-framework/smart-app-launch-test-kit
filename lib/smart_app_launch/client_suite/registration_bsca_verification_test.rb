@@ -7,6 +7,9 @@ module SMARTAppLaunch
     include RegistrationVerification
 
     id :smart_client_registration_bsca_verification
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@22',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@293',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@294'
     title 'Verify SMART Backend Services Confidential Asymmetric Client Registration'
     description %(
       During this test, Inferno will verify that the registration details

@@ -1,16 +1,14 @@
 module SMARTAppLaunch
   class OpenIDFHIRUserClaimTest < Inferno::Test
     id :smart_openid_fhir_user_claim
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@198',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@200'
     title 'FHIR resource representing the current user can be retrieved'
     description %(
       Verify that the `fhirUser` claim is present in the ID token and that the
       FHIR resource it refers to can be retrieved. The `fhirUser` claim must be
       the url for a Patient, Practitioner, RelatedPerson, or Person resource
     )
-
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@198',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@200',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@202'
 
     input :id_token_payload_json, :url
     input :smart_auth_info, type: :auth_info

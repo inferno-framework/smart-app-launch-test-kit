@@ -1,6 +1,7 @@
 module SMARTAppLaunch
   class CORSOpenIDFHIRUserClaimTest < Inferno::Test
     id :smart_cors_openid_fhir_user_claim
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@17'
     title 'SMART FHIR User REST API Endpoint Enables Cross-Origin Resource Sharing (CORS)'
     description %(
       The SMART [Considerations for Cross-Origin Resource Sharing (CORS) support](http://hl7.org/fhir/smart-app-launch/STU2.2/app-launch.html#considerations-for-cross-origin-resource-sharing-cors-support)

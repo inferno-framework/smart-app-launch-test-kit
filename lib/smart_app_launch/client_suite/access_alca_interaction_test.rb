@@ -8,6 +8,14 @@ module SMARTAppLaunch
     include ClientWaitDialogDescriptions
 
     id :smart_client_access_alca_interaction
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@11',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@22',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@64',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@65',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@229',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@233',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@235'
+
     title 'Access a secured FHIR endpoint using SMART App Launch'
     description %(
       During this test, Inferno will wait for the confidential asymmetric client to access data

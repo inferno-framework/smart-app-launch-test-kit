@@ -7,7 +7,6 @@ module SMARTAppLaunch
       response header field with a value of no-cache.
     )
     id :smart_token_response_headers
-
     verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@86',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@87'
 

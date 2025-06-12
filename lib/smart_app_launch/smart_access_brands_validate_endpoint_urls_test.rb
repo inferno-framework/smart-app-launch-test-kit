@@ -1,13 +1,12 @@
 module SMARTAppLaunch
   class SMARTAccessBrandsValidateEndpointURLs < Inferno::Test
     id :smart_access_brands_valid_endpoint_urls
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@396',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@400'
     title 'All Endpoint resource referenced URLS should be valid and available'
     description %(
       Verify that User Access Brands Bundle contains Endpoints that contain URLs that are both valid
       and available.
     )
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@400'
 
     input :user_access_brands_bundle,
           optional: true

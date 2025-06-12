@@ -8,6 +8,10 @@ module SMARTAppLaunch
     include URLs
 
     id :smart_client_authorization_request_verification
+    title 'Verify SMART App Launch Authorization Requests'
+    description %(
+      Check that SMART authorization requests made are conformant.
+    )
     verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@32',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@33',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@34',
@@ -18,11 +22,6 @@ module SMARTAppLaunch
                           'hl7.fhir.uv.smart-app-launch_2.2.0@41',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@44',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@45'
-
-    title 'Verify SMART App Launch Authorization Requests'
-    description %(
-      Check that SMART authorization requests made are conformant.
-    )
 
     input :client_id,
           title: 'Client Id',

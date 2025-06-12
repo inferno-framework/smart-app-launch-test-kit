@@ -1,14 +1,13 @@
 module SMARTAppLaunch
   class OpenIDRetrieveJWKSTest < Inferno::Test
     id :smart_openid_retrieve_jwks
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@207'
     title 'JWKS can be retrieved'
     description %(
         Verify that the JWKS can be retrieved from the `jwks_uri` from the
         OpenID Connect well-known configuration.
-      )
-
+    )
     verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@207'
+
     input :openid_jwks_uri
     output :openid_jwks_json, :openid_rsa_keys_json
     makes_request :openid_jwks

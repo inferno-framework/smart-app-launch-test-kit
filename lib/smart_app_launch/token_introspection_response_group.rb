@@ -28,7 +28,6 @@ module SMARTAppLaunch
 
     test do
       title 'Token introspection response for an active token contains required fields'
-      verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@273'
       description %(
         This test will check whether the metadata in the token introspection response is correct for an active token and
         that the response data matches the data in the original access token and/or access token response from the
@@ -52,6 +51,7 @@ module SMARTAppLaunch
         * IF identity token was included as part of access token response, `fhirUser` claim SHOULD be present in
         introspection response and should match the claim in the ID token
       )
+      verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@273'
 
       input :standalone_smart_auth_info, type: :auth_info, options: { mode: 'access' }
 

@@ -3,10 +3,6 @@ require_relative 'backend_services_authorization_request_builder'
 module SMARTAppLaunch
   class BackendServicesAuthorizationResponseBodyTest < Inferno::Test
     id :smart_backend_services_auth_response_body
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@254',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@255',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@256',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@258'
     title 'Authorization request response body contains required information encoded in JSON'
     description <<~DESCRIPTION
       The [SMART App Launch 2.0.0 IG specification for Backend Services](https://hl7.org/fhir/smart-app-launch/STU2/backend-services.html#issue-access-token)

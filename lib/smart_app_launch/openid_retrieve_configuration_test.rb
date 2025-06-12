@@ -1,12 +1,11 @@
 module SMARTAppLaunch
   class OpenIDRetrieveConfigurationTest < Inferno::Test
     id :smart_openid_retrieve_configuration
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@205'
     title 'OpenID Connect well-known configuration can be retrieved'
     description %(
         Verify that the OpenId Connect configuration can be retrieved as
         described in the OpenID Connect Discovery 1.0 documentation.
-      )
+    )
 
     input :id_token_payload_json
     output :openid_configuration_json, :openid_issuer

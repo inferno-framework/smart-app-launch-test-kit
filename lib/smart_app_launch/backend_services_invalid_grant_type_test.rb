@@ -3,7 +3,6 @@ require_relative 'backend_services_authorization_request_builder'
 module SMARTAppLaunch
   class BackendServicesInvalidGrantTypeTest < Inferno::Test
     id :smart_backend_services_invalid_grant_type
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@251'
     title 'Authorization request fails when client supplies invalid grant_type'
     description <<~DESCRIPTION
       The [SMART App Launch 2.0.0 IG section on Backend Services](https://hl7.org/fhir/smart-app-launch/STU2/backend-services.html#request-1)
@@ -17,6 +16,7 @@ module SMARTAppLaunch
       "If the request failed client authentication or is invalid, the authorization server returns an
       error response as described in [Section 5.2](https://tools.ietf.org/html/rfc6749#section-5.2)."
     DESCRIPTION
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@251'
 
     input :smart_auth_info,
           type: :auth_info,

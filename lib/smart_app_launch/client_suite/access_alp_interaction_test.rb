@@ -8,16 +8,17 @@ module SMARTAppLaunch
     include ClientWaitDialogDescriptions
 
     id :smart_client_access_alp_interaction
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@12',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@63',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@71',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@235'
     title 'Access a secured FHIR endpoint using SMART App Launch'
     description %(
       During this test, Inferno will wait for the public client to access data
       using a SMART token obtained using the SMART App Launch EHR launch
       or standalone launch flow.
     )
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@12',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@63',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@71',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@235'
+
     input :client_id,
           title: 'Client Id',
           type: 'text',

@@ -1,11 +1,10 @@
 module SMARTAppLaunch
   class OpenIDDecodeIDTokenTest < Inferno::Test
     id :smart_openid_decode_id_token
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@200'
     title 'ID token can be decoded'
     description %(
         Verify that the ID token is a properly constructed JWT.
-      )
+    )
     verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@200'
 
     input :id_token

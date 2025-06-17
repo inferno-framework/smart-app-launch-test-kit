@@ -41,6 +41,14 @@ module SMARTAppLaunch
       }
     ]
 
+    requirement_sets(
+      {
+        identifier: 'hl7.fhir.uv.smart-app-launch_2.2.0',
+        title: 'SMART App Launch',
+        actor: 'Client'
+      }
+    )
+
     suite_option :client_type,
                  title: 'SMART Client Type',
                  list_options: [

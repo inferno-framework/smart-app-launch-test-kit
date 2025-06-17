@@ -38,6 +38,14 @@ module SMARTAppLaunch
       post_authorization_uri: "#{Inferno::Application['base_url']}/custom/smart_stu2_2/post_auth"
     }
 
+    requirement_sets(
+      {
+        identifier: 'hl7.fhir.uv.smart-app-launch_2.2.0',
+        title: 'SMART App Launch',
+        actor: 'Server'
+      }
+    )
+
     description <<~DESCRIPTION
       The SMART App Launch Test Suite verifies that systems correctly implement
       the [SMART App Launch IG](http://hl7.org/fhir/smart-app-launch/STU2.2/)

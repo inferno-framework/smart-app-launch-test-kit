@@ -17,7 +17,8 @@ module SMARTAppLaunch
     verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@110',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@111',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@112',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@113'
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@113',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@114'
 
     input :received_scopes
     input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }

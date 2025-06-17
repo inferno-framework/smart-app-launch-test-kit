@@ -10,7 +10,8 @@ module SMARTAppLaunch
     )
     verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@396',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@398',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@417'
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@417',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@418'
 
     input :user_access_brands_bundle,
           optional: true

@@ -45,13 +45,19 @@ module SMARTAppLaunch
         launch context parameter(s)
           * Parameters checked for are `patient` and `encounter`
         * IF identity token was included as part of access token response, `iss` and `sub` claims are present in the
-        introspection response and match those of the orignal ID token
+        introspection response and match those of the original ID token
 
         Optional but Recommended:
         * IF identity token was included as part of access token response, `fhirUser` claim SHOULD be present in
         introspection response and should match the claim in the ID token
       )
-      verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@273'
+      verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@273',
+                            'hl7.fhir.uv.smart-app-launch_2.2.0@274',
+                            'hl7.fhir.uv.smart-app-launch_2.2.0@275',
+                            'hl7.fhir.uv.smart-app-launch_2.2.0@276',
+                            'hl7.fhir.uv.smart-app-launch_2.2.0@277',
+                            'hl7.fhir.uv.smart-app-launch_2.2.0@278',
+                            'hl7.fhir.uv.smart-app-launch_2.2.0@279'
 
       input :standalone_smart_auth_info, type: :auth_info, options: { mode: 'access' }
 

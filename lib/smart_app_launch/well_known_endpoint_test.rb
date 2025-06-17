@@ -11,7 +11,8 @@ module SMARTAppLaunch
       be exposed as a Well-Known Uniform Resource Identifier
     )
     verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@373',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@374'
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@374',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@377'
 
     input :url,
           title: 'FHIR Endpoint',

@@ -12,7 +12,8 @@ module SMARTAppLaunch
     description %(
       Check that SMART authorization requests made are conformant.
     )
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@32',
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@3',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@32',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@33',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@34',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@35',
@@ -20,6 +21,7 @@ module SMARTAppLaunch
                           'hl7.fhir.uv.smart-app-launch_2.2.0@39',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@40',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@41',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@42',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@44',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@45'
 

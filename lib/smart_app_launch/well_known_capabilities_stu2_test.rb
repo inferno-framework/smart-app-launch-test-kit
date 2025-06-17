@@ -13,6 +13,13 @@ module SMARTAppLaunch
     verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@372',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@373',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@374',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@381',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@382',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@383',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@384',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@385',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@386',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@393',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@394'
 
     def required_capabilities

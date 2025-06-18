@@ -6,7 +6,8 @@ module SMARTAppLaunch
         Verify that the JWKS can be retrieved from the `jwks_uri` from the
         OpenID Connect well-known configuration.
     )
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@207'
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@207',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@210'
 
     input :openid_jwks_uri
     output :openid_jwks_json, :openid_rsa_keys_json

@@ -39,8 +39,8 @@ module SMARTAppLaunch
         assert config[key].is_a?(type), "Well-known `#{key}` must be type: #{type.to_s.downcase}"
       end
 
-      assert config['grant_types_supported'].include?('authorization_code'),
-           'Well-known `grant_types_supported` must include `authorization_code` grant type to indicate SMART App Launch Support'
+      assert config['grant_types_supported'].include?('authorization_code') || config['grant_types_supported'].include?('client_credentials'),
+           'Well-known `grant_types_supported` must include `authorization_code` or `client_crendentials` grant type to indicate SMART App Launch Support'
       assert config['code_challenge_methods_supported'].include?('S256'),
            'Well-known `code_challenge_methods_supported` must include `S256`'
       assert config['code_challenge_methods_supported'].exclude?('plain'),

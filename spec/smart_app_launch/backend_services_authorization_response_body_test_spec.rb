@@ -8,7 +8,7 @@ RSpec.describe SMARTAppLaunch::BackendServicesAuthorizationResponseBodyTest do
     {
       'access_token' => 'this_is_the_token',
       'token_type' => 'bearer',
-      'expires_in' => 'a_couple_minutes',
+      'expires_in' => 3600,
       'scope' => 'system'
     }
   end

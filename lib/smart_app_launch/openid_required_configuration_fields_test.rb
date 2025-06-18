@@ -14,7 +14,6 @@ module SMARTAppLaunch
     )
 
     verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@205',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@207',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@210'
 
     input :openid_configuration_json

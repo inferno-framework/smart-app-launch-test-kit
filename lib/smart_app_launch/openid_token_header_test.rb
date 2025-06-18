@@ -9,8 +9,7 @@ module SMARTAppLaunch
       and that the key used to sign the token can be identified in the JWKS.
     )
 
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@207',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@210'
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@210'
 
     input :id_token_header_json, :openid_rsa_keys_json
     output :id_token_jwk_json

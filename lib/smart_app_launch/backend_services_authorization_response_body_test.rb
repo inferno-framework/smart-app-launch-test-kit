@@ -59,6 +59,9 @@ module SMARTAppLaunch
         assert response_body[key].present?, "Token response did not contain #{key} as required"
         if key == 'token_type'
           assert response_body[key].casecmp('bearer').zero?, '`token_type` must be `bearer`'
+        elsif key == 'expires_in'
+          assert response_body[key].is_a?(Numeric),
+                 "Expected expires_in to be a Numeric, but found #{response_body[key].class.name}"
         end
       end
     end

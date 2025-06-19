@@ -1,4 +1,4 @@
-﻿Req Set,ID,URL,Requirement,Conformance,Actor,Sub-Requirement(s),Conditionality,Not Tested Reason,Not Tested Details
+﻿Req Set,ID,URL,Requirement,Conformance,Actors,Sub-Requirement(s),Conditionality,Not Tested Reason,Not Tested Details
 hl7.fhir.uv.smart-app-launch_2.0.0,1,https://hl7.org/fhir/smart-app-launch/STU2/app-launch.html#app-protection,"Apps SHALL ensure that sensitive information (authentication secrets, authorization codes, tokens) is transmitted ONLY to authenticated servers, over TLS-secured channels",SHALL,Client,,,,
 hl7.fhir.uv.smart-app-launch_2.0.0,2,https://hl7.org/fhir/smart-app-launch/STU2/app-launch.html#app-protection,Apps SHALL generate an unpredictable `state` parameter for each user session,SHALL,Client,,,,
 hl7.fhir.uv.smart-app-launch_2.0.0,3,https://hl7.org/fhir/smart-app-launch/STU2/app-launch.html#app-protection,Apps SHALL... include `state` with all authorization requests,SHALL,Client,,,,

@@ -27,9 +27,6 @@ module SMARTAppLaunch
       "If the request failed client authentication or is invalid, the authorization server returns an
       error response as described in [Section 5.2](https://tools.ietf.org/html/rfc6749#section-5.2)."
     DESCRIPTION
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@335',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@336',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@337'
 
     input :smart_auth_info,
           type: :auth_info,

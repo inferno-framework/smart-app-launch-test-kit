@@ -10,7 +10,8 @@ module SMARTAppLaunch
       If the `sso-openid-connect` capability is supported, then `issuer` and `jwks_uri` must be
       present. If `sso-openid-connect` capability is not supported, then `issuer` must be omitted.
     )
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@373',
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@30',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@373',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@381',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@382',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@383',

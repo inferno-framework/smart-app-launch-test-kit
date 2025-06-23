@@ -19,7 +19,8 @@ module SMARTAppLaunch
                           'hl7.fhir.uv.smart-app-launch_2.2.0@75',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@78',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@84',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@172'
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@172',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@178'
 
     input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
     output :id_token,

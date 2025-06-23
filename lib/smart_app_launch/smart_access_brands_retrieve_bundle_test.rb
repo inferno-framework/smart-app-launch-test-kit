@@ -7,7 +7,8 @@ module SMARTAppLaunch
         accessed at the supplied URL location.
     )
     verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@396',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@400'
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@400',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@423'
 
     makes_request :bundle_request
 

@@ -51,7 +51,8 @@ module SMARTAppLaunch
         * IF identity token was included as part of access token response, `fhirUser` claim SHOULD be present in
         introspection response and should match the claim in the ID token
       )
-      verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@273',
+      verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@95',
+                            'hl7.fhir.uv.smart-app-launch_2.2.0@273',
                             'hl7.fhir.uv.smart-app-launch_2.2.0@274',
                             'hl7.fhir.uv.smart-app-launch_2.2.0@275',
                             'hl7.fhir.uv.smart-app-launch_2.2.0@276',

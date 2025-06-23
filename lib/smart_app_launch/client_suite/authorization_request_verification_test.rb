@@ -18,12 +18,11 @@ module SMARTAppLaunch
                           'hl7.fhir.uv.smart-app-launch_2.2.0@34',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@35',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@37',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@39',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@40',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@41',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@42',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@44',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@45'
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@45',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@235'
 
     input :client_id,
           title: 'Client Id',

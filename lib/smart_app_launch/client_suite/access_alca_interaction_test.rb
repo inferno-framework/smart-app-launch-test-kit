@@ -15,12 +15,9 @@ module SMARTAppLaunch
       or standalone launch flow.
     )
     verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@11',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@22',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@64',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@65',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@229',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@233',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@235'
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@233'
 
     input :client_id,
           title: 'Client Id',

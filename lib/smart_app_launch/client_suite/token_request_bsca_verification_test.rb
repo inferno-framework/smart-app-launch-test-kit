@@ -19,10 +19,7 @@ module SMARTAppLaunch
         Check that SMART token requests are conformant.
     )
     verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@229',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@230',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@233',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@234',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@235',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@236',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@237',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@238',

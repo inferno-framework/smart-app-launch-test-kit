@@ -16,8 +16,7 @@ module SMARTAppLaunch
     )
     verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@12',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@63',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@71',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@235'
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@71'
 
     input :client_id,
           title: 'Client Id',

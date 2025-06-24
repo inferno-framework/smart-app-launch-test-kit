@@ -24,8 +24,6 @@ module SMARTAppLaunch
                           'hl7.fhir.uv.smart-app-launch_2.2.0@70',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@105',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@233',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@237',
-                          'hl7.fhir.uv.smart-app-launch_2.2.0@238',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@323',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@327',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@328',

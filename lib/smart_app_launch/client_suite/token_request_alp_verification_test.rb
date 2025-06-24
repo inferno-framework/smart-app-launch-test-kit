@@ -19,6 +19,7 @@ module SMARTAppLaunch
     )
     verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@13',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@63',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@67',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@68',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@69',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@70',

@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     smart_app_launch_test_kit (0.6.3)
-      inferno_core (>= 0.6.14)
+      inferno_core (>= 0.6.15)
       json-jwt (~> 1.15.3)
       jwt (~> 2.6)
       tls_test_kit (~> 0.3.0)
@@ -141,7 +141,7 @@ GEM
       mutex_m
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
-    inferno_core (0.6.14)
+    inferno_core (0.6.15)
       activesupport (~> 6.1.7.5)
       base62-rb (= 0.3.1)
       blueprinter (= 0.25.2)
@@ -189,7 +189,7 @@ GEM
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
-    mime-types-data (3.2025.0617)
+    mime-types-data (3.2025.0624)
     mini_portile2 (2.8.9)
     minitest (5.25.5)
     multi_json (1.15.0)

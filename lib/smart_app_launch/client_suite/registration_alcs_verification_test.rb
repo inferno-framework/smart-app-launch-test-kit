@@ -16,7 +16,10 @@ module SMARTAppLaunch
       confidential client using [symmetric authentication](https://hl7.org/fhir/smart-app-launch/STU2.2/client-confidential-symmetric.html) 
       are conformant.
     )
-    
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@20',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@21',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@23'
+
     input :client_id,
           title: 'Client Id',
           type: 'text',

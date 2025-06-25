@@ -14,8 +14,9 @@ module SMARTAppLaunch
       Launch Guide, the token refresh response should include the HTTP
       Cache-Control response header field with a value of no-store, as well as
       the Pragma response header field with a value of no-cache to be
-      consistent with the requirements of the inital access token exchange.
+      consistent with the requirements of the initial access token exchange.
     )
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@109'
 
     input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
 

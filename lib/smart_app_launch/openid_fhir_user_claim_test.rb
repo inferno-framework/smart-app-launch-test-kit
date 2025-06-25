@@ -7,6 +7,7 @@ module SMARTAppLaunch
       FHIR resource it refers to can be retrieved. The `fhirUser` claim must be
       the url for a Patient, Practitioner, RelatedPerson, or Person resource
     )
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@198'
 
     input :id_token_payload_json, :url
     input :smart_auth_info, type: :auth_info

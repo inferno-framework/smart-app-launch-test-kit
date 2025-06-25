@@ -6,6 +6,7 @@ module SMARTAppLaunch
       Verify that User Access Brands Bundle contains Endpoints that contain URLs that are both valid
       and available.
     )
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@400'
 
     input :user_access_brands_bundle,
           optional: true

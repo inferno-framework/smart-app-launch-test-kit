@@ -10,6 +10,11 @@ module SMARTAppLaunch
       The authorization endpoints accepted by a FHIR resource server can
       be exposed as a Well-Known Uniform Resource Identifier
     )
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@30',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@372',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@374',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@377'
+
     input :url,
           title: 'FHIR Endpoint',
           description: 'URL of the FHIR endpoint used by SMART applications'

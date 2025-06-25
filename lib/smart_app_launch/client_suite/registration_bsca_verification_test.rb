@@ -14,6 +14,10 @@ module SMARTAppLaunch
       client using [asymmetric authentication](https://hl7.org/fhir/smart-app-launch/STU2.2/client-confidential-asymmetric.html)
       are valid.
     )
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@22',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@293',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@294'
+
     input :client_id,
           title: 'Client Id',
           type: 'text',

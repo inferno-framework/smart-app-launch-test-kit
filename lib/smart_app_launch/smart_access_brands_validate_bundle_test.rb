@@ -7,7 +7,11 @@ module SMARTAppLaunch
         [User Access Brand Bundle Profile](https://hl7.org/fhir/smart-app-launch/STU2.2/StructureDefinition-user-access-brands-bundle.html).
 
         This test also ensures the Bundle is the 'collection' type and that it is not empty.
-      )
+    )
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@396',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@398',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@417',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@418'
 
     input :user_access_brands_bundle,
           optional: true

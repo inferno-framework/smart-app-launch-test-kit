@@ -12,7 +12,15 @@ module SMARTAppLaunch
 
       The format of the optional `fhirContext` field is validated if present.
     )
+
     id :smart_token_response_body_stu2_2
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@73',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@74',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@75',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@78',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@84',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@172',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@178'
 
     input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
     output :id_token,

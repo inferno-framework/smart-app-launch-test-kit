@@ -17,6 +17,21 @@ module SMARTAppLaunch
     description %(
       Check that SMART token requests are conformant.
     )
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@13',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@64',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@68',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@69',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@70',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@105',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@233',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@323',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@327',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@328',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@329',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@330',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@332',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@333',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@334'
 
     input :client_id,
           title: 'Client Id',

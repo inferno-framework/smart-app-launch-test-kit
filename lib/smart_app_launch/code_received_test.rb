@@ -6,6 +6,10 @@ module SMARTAppLaunch
     )
     id :smart_code_received
 
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@53',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@56',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@57'
+
     output :code
     uses_request :redirect
 

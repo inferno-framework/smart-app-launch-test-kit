@@ -14,7 +14,9 @@ module SMARTAppLaunch
       provided for a [SMART App Launch](https://hl7.org/fhir/smart-app-launch/STU2.2/app-launch.html)
       public client using are conformant.
     )
-    
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@20',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@21'
+
     input :client_id,
           title: 'Client Id',
           type: 'text',

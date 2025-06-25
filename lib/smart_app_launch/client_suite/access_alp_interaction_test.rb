@@ -14,6 +14,10 @@ module SMARTAppLaunch
       using a SMART token obtained using the SMART App Launch EHR launch
       or standalone launch flow.
     )
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@12',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@63',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@71'
+
     input :client_id,
           title: 'Client Id',
           type: 'text',

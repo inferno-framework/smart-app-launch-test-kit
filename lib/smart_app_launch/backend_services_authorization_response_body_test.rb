@@ -16,6 +16,11 @@ module SMARTAppLaunch
       | `scope` | required | Scope of access authorized. Note that this can be different from the scopes requested by the app. |
     DESCRIPTION
 
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@254',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@255',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@256',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@258'
+
     input :authentication_response
     input :smart_auth_info,
           type: :auth_info,
@@ -52,6 +57,12 @@ module SMARTAppLaunch
 
       required_keys.each do |key|
         assert response_body[key].present?, "Token response did not contain #{key} as required"
+        if key == 'token_type'
+          assert response_body[key].casecmp('bearer').zero?, '`token_type` must be `bearer`'
+        elsif key == 'expires_in'
+          assert response_body[key].is_a?(Numeric),
+                 "Expected expires_in to be a Numeric, but found #{response_body[key].class.name}"
+        end
       end
     end
   end

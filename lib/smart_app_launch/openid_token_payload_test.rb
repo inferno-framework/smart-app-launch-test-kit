@@ -15,6 +15,8 @@ module SMARTAppLaunch
       - `exp` must represent a time in the future
       - `sub` must be a non-blank string not exceeding 255 characters in length
     )
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@94',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@96'
 
     REQUIRED_CLAIMS = ['iss', 'sub', 'aud', 'exp', 'iat'].freeze
 

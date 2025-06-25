@@ -35,6 +35,7 @@ module SMARTAppLaunch
       * [Apps Requesting Authorization](https://www.hl7.org/fhir/smart-app-launch/STU2.2/index.html#step-1-app-asks-for-authorization)
       * [OpenID Connect Core](https://openid.net/specs/openid-connect-core-1_0.html)
     )
+
     test from: :smart_cors_openid_fhir_user_claim
   end
 end

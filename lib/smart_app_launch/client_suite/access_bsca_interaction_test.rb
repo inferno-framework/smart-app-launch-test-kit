@@ -13,6 +13,9 @@ module SMARTAppLaunch
       During this test, Inferno will wait for the client to access data
       using a SMART token obtained using the Backend Services flow.
     )
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@229',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@233'
+
     input :client_id,
           title: 'Client Id',
           type: 'text',

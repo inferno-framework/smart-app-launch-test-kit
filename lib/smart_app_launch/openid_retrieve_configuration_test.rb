@@ -5,7 +5,7 @@ module SMARTAppLaunch
     description %(
         Verify that the OpenId Connect configuration can be retrieved as
         described in the OpenID Connect Discovery 1.0 documentation.
-      )
+    )
 
     input :id_token_payload_json
     output :openid_configuration_json, :openid_issuer

@@ -8,7 +8,8 @@ module SMARTAppLaunch
     description %(
         Check that a SMART token returned to the client was used for request
         authentication.
-      )
+    )
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@267'
 
     input :smart_tokens, # from :smart_client_token_request_verification
           optional: true # verified in the test to return a more specific error message

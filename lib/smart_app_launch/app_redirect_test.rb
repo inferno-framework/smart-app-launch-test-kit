@@ -8,6 +8,9 @@ module SMARTAppLaunch
       app as described in SMART authorization sequence.
     )
     id :smart_app_redirect
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@48',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@49',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@57'
 
     input :url
     input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }

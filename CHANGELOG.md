@@ -1,3 +1,9 @@
+# 0.6.4
+* FI-4079 Disable PKCE for SMART v1 test by default by @yunwwang in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/104
+* FI-3654: SMART: requirements mapping and analysis by @degradification and @elsaperelli in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/105
+
 # 0.6.3
 * Fix typos and presets by @karlnaden in
   https://github.com/inferno-framework/smart-app-launch-test-kit/pull/101

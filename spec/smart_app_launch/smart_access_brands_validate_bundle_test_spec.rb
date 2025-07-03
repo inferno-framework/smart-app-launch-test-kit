@@ -16,7 +16,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBundle do
       outcomes: [{
         issues: []
       }],
-      sessionId: 'b8cf5547-1dc7-4714-a797-dc2347b93fe2'
+      sessionId: test_session.id
     }
   end
 
@@ -28,11 +28,10 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBundle do
           message: 'Resource does not conform to profile'
         }]
       }],
-      sessionId: 'b8cf5547-1dc7-4714-a797-dc2347b93fe2'
+      sessionId: test_session.id
     }
   end
 
-  let(:validator_url) { ENV.fetch('FHIR_RESOURCE_VALIDATOR_URL') }
   let(:user_access_brands_publication_url) { 'http://fhirserver.org/smart_access_brands_example.json' }
 
   def create_user_access_brands_request(url: user_access_brands_publication_url, body: nil, status: 200)
@@ -67,7 +66,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBundle do
     end
 
     it 'passes if User Access Brands Bundle is valid' do
-      validation_request = stub_request(:post, "#{validator_url}/validate")
+      validation_request = stub_request(:post, validation_url)
         .to_return(status: 200, body: operation_outcome_success.to_json)
 
       create_user_access_brands_request(body: smart_access_brands_bundle)
@@ -79,7 +78,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBundle do
     end
 
     it 'passes if inputted User Access Brands Bundle is valid' do
-      validation_request = stub_request(:post, "#{validator_url}/validate")
+      validation_request = stub_request(:post, validation_url)
         .to_return(status: 200, body: operation_outcome_success.to_json)
 
       result = run(test, user_access_brands_bundle: smart_access_brands_bundle.to_json)
@@ -125,7 +124,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBundle do
     end
 
     it 'fails if the User Access Brands Bundle fails validation' do
-      validation_request = stub_request(:post, "#{validator_url}/validate")
+      validation_request = stub_request(:post, validation_url)
         .to_return(status: 200, body: operation_outcome_failure.to_json)
 
       create_user_access_brands_request(body: smart_access_brands_bundle)
@@ -140,7 +139,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBundle do
     end
 
     it 'fails if User Access Brands Bundle is not type collection' do
-      validation_request = stub_request(:post, "#{validator_url}/validate")
+      validation_request = stub_request(:post, validation_url)
         .to_return(status: 200, body: operation_outcome_success.to_json)
 
       smart_access_brands_bundle['type'] = 'history'
@@ -154,7 +153,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBundle do
     end
 
     it 'fails if User Access Brands Bundle does not have the timestamp field populated' do
-      validation_request = stub_request(:post, "#{validator_url}/validate")
+      validation_request = stub_request(:post, validation_url)
         .to_return(status: 200, body: operation_outcome_success.to_json)
 
       smart_access_brands_bundle.delete('timestamp')
@@ -170,7 +169,7 @@ RSpec.describe SMARTAppLaunch::SMARTAccessBrandsValidateBundle do
     end
 
     it 'fails if User Access Brands Bundle is empty' do
-      validation_request = stub_request(:post, "#{validator_url}/validate")
+      validation_request = stub_request(:post, validation_url)
         .to_return(status: 200, body: operation_outcome_success.to_json)
 
       smart_access_brands_bundle['entry'] = []

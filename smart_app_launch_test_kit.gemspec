@@ -4,7 +4,6 @@ Gem::Specification.new do |spec|
   spec.name          = 'smart_app_launch_test_kit'
   spec.version       = SMARTAppLaunch::VERSION
   spec.authors       = ['Stephen MacVicar']
-  spec.email         = ['inferno@groups.mitre.org']
   spec.summary       = 'Inferno Tests for the SMART Application Launch Framework Implementation Guide'
   spec.description   = 'Inferno Tests for the SMART Application Launch Framework Implementation Guide'
   spec.homepage      = 'https://github.com/inferno-framework/smart-app-launch-test-kit'

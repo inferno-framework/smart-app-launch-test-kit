@@ -1,3 +1,8 @@
+# 1.0.0
+* Update inferno_core to 1.0.2
+* FI-3815: Update Test Kit with new RSpec features by @Shaumik-Ashraf in
+  https://github.com/inferno-framework/smart-app-launch-test-kit/pull/107
+
 # 0.6.4
 * FI-4079 Disable PKCE for SMART v1 test by default by @yunwwang in
   https://github.com/inferno-framework/smart-app-launch-test-kit/pull/104

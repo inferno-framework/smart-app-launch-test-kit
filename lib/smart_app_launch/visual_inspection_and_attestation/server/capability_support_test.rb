@@ -1,8 +1,9 @@
 module SMARTAppLaunch
-  class ServerCapabilitiesAttestation < Inferno::Test
-    title ''
+  class ServerCapabilitiesAttestationTest < Inferno::Test
+    title 'Supports capabilities that are listed'
     id :server_capabilities
     description %(
+      The server supports the following capabilities when they are listed:
       - Supports SMART's EHR launch mode when listing the `launch-ehr` capability
       - Supports SMART's Standalone launch mode when listing the `launch-standalone` capability
       - Supports POST-based authorization when listing the `authorize-post` capability
@@ -56,6 +57,35 @@ module SMARTAppLaunch
                           'hl7.fhir.uv.smart-app-launch_2.2.0@369',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@370',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@371'
-                          
+
+    input :capability_support,
+          title: 'Supports capabilities that it lists',
+          description: %(
+            I attest that the server supports capabilities that it lists.
+          ),
+          type: 'radio',
+          default: 'false',
+          options: {
+            list_options: [
+              {
+                label: 'Yes',
+                value: 'true'
+              },
+              {
+                label: 'No',
+                value: 'false'
+              }
+            ]
+          }
+    input :capability_support_note,
+          title: 'Notes, if applicable:',
+          type: 'textarea',
+          optional: true
+
+    run do
+      assert capability_support == 'true',
+             'Server did not support all capabilities that it lists.'
+      pass capability_support_note if capability_support_note.present?
+    end
   end
 end

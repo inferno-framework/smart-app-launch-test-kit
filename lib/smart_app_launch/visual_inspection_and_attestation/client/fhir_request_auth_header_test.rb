@@ -6,7 +6,8 @@ module SMARTAppLaunch
       The Client application issues a request for fetching FHIR resources that includes an `Authorization` header that
       presents the `access_token` as a "Bearer" token.
     )
-    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@93'
+    verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@93',
+                          'hl7.fhir.uv.smart-app-launch_2.2.0@264'
 
     input :auth_header_access_token,
           title: 'Includes an access token as a Bearer token in the Authorization header of a FHIR request',

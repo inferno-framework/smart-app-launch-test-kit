@@ -11,6 +11,7 @@ require_relative 'client_suite/registration_bsca_group'
 require_relative 'client_suite/access_group'
 require_relative 'client_suite/oidc_jwks'
 require_relative 'client_suite/client_options'
+require_relative 'visual_inspection_and_attestation/client_attestation_group'
 
 module SMARTAppLaunch
   class SMARTClientSTU22Suite < Inferno::TestSuite
@@ -124,5 +125,6 @@ module SMARTAppLaunch
            client_type: SMARTClientOptions::SMART_BACKEND_SERVICES_CONFIDENTIAL_ASYMMETRIC
          }
     group from: :smart_client_access
+    group from: :smart_client_visual_inspection_and_attestation_stu2_2
   end
 end

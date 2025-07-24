@@ -3,11 +3,11 @@ module SMARTAppLaunch
     title 'Communicates a `client_id` to the app during registration'
     id :registration_client_id
     description %(
-      Servers confirm the app's registration parameters and communicate a `client_id` to the app.
+      The server confirms the app's registration parameters and communicates a `client_id` to the app.
     )
     verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@24'
 
-    input :client_id,
+    input :registration_client_id_correct,
           title: 'Communicates a `client_id` to the app during registration',
           description: %(
             I attest that the server confirms the app's registration parameters and communicates a `client_id` to the
@@ -27,15 +27,15 @@ module SMARTAppLaunch
               }
             ]
           }
-    input :client_id_note,
+    input :registration_client_id_note,
           title: 'Notes, if applicable:',
           type: 'textarea',
           optional: true
 
     run do
-      assert client_id == 'true',
-             'Server did not communicate a `client_id` to the app during registration.'
-      pass client_id_note if client_id_note.present?
+      assert registration_client_id_correct == 'true',
+             'Server does not communicate a `client_id` to the app during registration.'
+      pass registration_client_id_note if registration_client_id_note.present?
     end
   end
 end

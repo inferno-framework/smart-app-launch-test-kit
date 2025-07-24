@@ -1,9 +1,9 @@
 module SMARTAppLaunch
   class ContextDataRequestsAttestationTest < Inferno::Test
-    title 'Follows guidelines for requesting context data'
+    title 'Complies with requirements for requesting context data'
     id :context_data_requests
     description %(
-      Client applications adheres to the following guidelines for requesting context data:
+      The client application complying with requirements for requesting context data:
       - Asks for "launch context" scopes when requesting access to context data
       - Begins scope string with `launch` when requesting access to context data
       - Uses `launch/patient` scope for patient context at launch time
@@ -19,10 +19,10 @@ module SMARTAppLaunch
                           'hl7.fhir.uv.smart-app-launch_2.2.0@155',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@156'
 
-    input :context_data_request_guidelines,
-          title: 'Follows guidelines for requesting context data',
+    input :context_data_requests_correct,
+          title: 'Complies with requirements for requesting context data',
           description: %(
-            I attest that the client application adheres to the following guidelines for requesting context data:
+            I attest that the client application complies with requirements for requesting context data:
             - Asks for "launch context" scopes when requesting access to context data
             - Begins scope string with `launch` when requesting access to context data
             - Uses `launch/patient` scope for patient context at launch time
@@ -45,15 +45,15 @@ module SMARTAppLaunch
               }
             ]
           }
-    input :context_data_request_guidelines_note,
+    input :context_data_requests_note,
           title: 'Notes, if applicable:',
           type: 'textarea',
           optional: true
 
     run do
-      assert context_data_request_guidelines == 'true',
-             'Client application did not follow guidelines for requesting context data.'
-      pass context_data_request_guidelines_note if context_data_request_guidelines_note.present?
+      assert context_data_requests_correct == 'true',
+             'Client application does not comply with requirements for requesting context data.'
+      pass context_data_requests_note if context_data_requests_note.present?
     end
   end
 end

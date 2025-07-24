@@ -3,6 +3,8 @@ module SMARTAppLaunch
     title 'Properly supports SMART\'s `client-confidential-asymmetric` capability'
     id :client_confidential_asymmetric
     description %(
+      The client application complies with the requirements for supporting SMART's `client-confidential-asymmetric`
+      capability:
       - Registers with a FHIR server by following steps in [`client-confidential-asymmetric` authentication](https://hl7.org/fhir/smart-app-launch/STU2.2/client-confidential-asymmetric.html#registering-a-client-communicating-public-keys)
       - Uses the [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) to
         authenticate the identity of the FHIR authorization server and to establish a link for exchanges between the
@@ -26,10 +28,10 @@ module SMARTAppLaunch
                           'hl7.fhir.uv.smart-app-launch_2.2.0@331',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@345'
 
-    input :client_confidential_asymm_guidelines,
-          title: 'Follows guidelines for requesting context data',
+    input :client_confidential_asymmetric_correct,
+          title: 'Properly supports SMART\'s `client-confidential-asymmetric` capability',
           description: %(
-            I attest that the client application adheres to the following guidelines for the
+            I attest that the client application complies with the requirements for supporting SMART's
             `client-confidential-asymmetric` capability:
             - Registers with a FHIR server by following steps in [`client-confidential-asymmetric` authentication](https://hl7.org/fhir/smart-app-launch/STU2.2/client-confidential-asymmetric.html#registering-a-client-communicating-public-keys)
             - Uses the [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246)
@@ -58,15 +60,15 @@ module SMARTAppLaunch
               }
             ]
           }
-    input :client_confidential_asymm_guidelines_note,
+    input :client_confidential_asymmetric_note,
           title: 'Notes, if applicable:',
           type: 'textarea',
           optional: true
 
     run do
-      assert client_confidential_asymm_guidelines == 'true',
-             'Client application did not follow guidelines for the `client-confidential-asymmetric` capability.'
-      pass client_confidential_asymm_guidelines_note if client_confidential_asymm_guidelines_note.present?
+      assert client_confidential_asymmetric_correct == 'true',
+             'Client application does not comply with the requirements for supporting SMART\'s `client-confidential-asymmetric` capability.'
+      pass client_confidential_asymmetric_note if client_confidential_asymmetric_note.present?
     end
   end
 end

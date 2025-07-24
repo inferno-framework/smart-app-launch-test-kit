@@ -1,9 +1,9 @@
 module SMARTAppLaunch
   class IdTokenUseAttestationTest < Inferno::Test
-    title 'Uses ID tokens according to the IG'
+    title 'Complies with requirements for using ID tokens'
     id :id_token_use
     description %(
-      Client applications use ID tokens by following these steps:
+      The client application uses ID tokens by following these steps:
       1. Examine the ID token for its “issuer” property
       2. Perform a `GET {issuer}/.well-known/openid-configuration`
       3. Fetch the server’s JSON Web Key by following the “jwks_uri” property [from the retrieved
@@ -14,8 +14,8 @@ module SMARTAppLaunch
     )
     verifies_requirements 'hl7.fhir.uv.smart-app-launch_2.2.0@218'
 
-    input :id_token_steps,
-          title: 'Uses ID tokens according to the IG',
+    input :id_token_use_correct,
+          title: 'Complies with requirements for using ID tokens',
           description: %(
             I attest that the client application uses ID tokens by following these steps:
             1. Examine the ID token for its “issuer” property
@@ -40,15 +40,15 @@ module SMARTAppLaunch
               }
             ]
           }
-    input :id_token_steps_note,
+    input :id_token_use_note,
           title: 'Notes, if applicable:',
           type: 'textarea',
           optional: true
 
     run do
-      assert id_token_steps == 'true',
-             'Client application did not use ID tokens according to the IG.'
-      pass id_token_steps_note if id_token_steps_note.present?
+      assert id_token_use_correct == 'true',
+             'Client application does not comply with requirements for using ID tokens.'
+      pass id_token_use_note if id_token_use_note.present?
     end
   end
 end

@@ -7,6 +7,7 @@ require_relative 'ehr_launch_group_stu2_2'
 require_relative 'openid_connect_group_stu2_2'
 require_relative 'token_introspection_group_stu2_2'
 require_relative 'backend_services_authorization_group'
+require_relative 'visual_inspection_and_attestation/server_attestation_group'
 
 module SMARTAppLaunch
   class SMARTSTU22Suite < Inferno::TestSuite
@@ -277,5 +278,7 @@ module SMARTAppLaunch
     end
 
     group from: :smart_token_introspection_stu2_2
+
+    group from: :smart_server_visual_inspection_and_attestation_stu2_2
   end
 end

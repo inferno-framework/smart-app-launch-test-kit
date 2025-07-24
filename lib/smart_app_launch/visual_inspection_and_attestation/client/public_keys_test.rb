@@ -1,9 +1,9 @@
 module SMARTAppLaunch
   class PublicKeysAttestationTest < Inferno::Test
-    title 'Follows guidelines for public keys'
+    title 'Complies with requirements for public keys'
     id :public_keys
     description %(
-      Client applications adhere to the following guidelines for public keys:
+      The client application complies with requirements for public keys:
       - Generates or obtains an asymmetric key pair before running against a FHIR server
       - Registers its public key set with a FHIR server's authorization service
       - Protects the associated private key from unauthorized disclosure and corruption
@@ -31,10 +31,10 @@ module SMARTAppLaunch
                           'hl7.fhir.uv.smart-app-launch_2.2.0@314',
                           'hl7.fhir.uv.smart-app-launch_2.2.0@315'
 
-    input :public_key_guidelines,
-          title: 'Follows guidelines for public keys',
+    input :public_keys_correct,
+          title: 'Complies with requirements for public keys',
           description: %(
-            I attest that the client application adheres to the following guidelines for public keys:
+            I attest that the client application complies with requirements for public keys:
             - Generates or obtains an asymmetric key pair before running against a FHIR server
             - Registers its public key set with a FHIR server's authorization service
             - Protects the associated private key from unauthorized disclosure and corruption
@@ -63,15 +63,15 @@ module SMARTAppLaunch
               }
             ]
           }
-    input :public_key_guidelines_note,
+    input :public_keys_note,
           title: 'Notes, if applicable:',
           type: 'textarea',
           optional: true
 
     run do
-      assert public_key_guidelines == 'true',
-             'Client application did not follow guidelines for public keys.'
-      pass public_key_guidelines_note if public_key_guidelines_note.present?
+      assert public_keys_correct == 'true',
+             'Client application does not comply with requirements for public keys.'
+      pass public_keys_note if public_keys_note.present?
     end
   end
 end

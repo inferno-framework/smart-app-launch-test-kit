@@ -1,0 +1,478 @@
+[
+    {
+        "id": "b1e2e706-b291-4547-adf0-8b7851d42fef",
+        "created_at": "2026-04-03T12:30:57.028-04:00",
+        "inputs": [
+            {
+                "name": "url",
+                "value": "http://localhost:4567/custom/smart_client_stu2_2/fhir",
+                "type": "text"
+            },
+            {
+                "name": "backend_services_smart_auth_info",
+                "value": "{\"auth_type\":\"backend_services\",\"use_discovery\":\"true\",\"requested_scopes\":\"system/*.rs\",\"client_id\":\"smart_client_test_demo\",\"pkce_support\":\"enabled\",\"pkce_code_challenge_method\":\"S256\",\"auth_request_method\":\"GET\",\"encryption_algorithm\":\"ES384\",\"name\":\"backend_services_smart_auth_info\"}",
+                "type": "auth_info"
+            }
+        ],
+        "optional": false,
+        "outputs": [
+            {
+                "name": "well_known_introspection_url",
+                "type": "text",
+                "value": "http://localhost:4567/custom/smart_client_stu2_2/auth/introspect"
+            },
+            {
+                "name": "well_known_configuration",
+                "type": "text",
+                "value": "{\"token_endpoint_auth_signing_alg_values_supported\":[\"RS384\",\"ES384\"],\"capabilities\":[\"client-confidential-asymmetric\",\"launch-ehr\",\"launch-standalone\",\"authorize-post\",\"client-public\",\"client-confidential-symmetric\",\"permission-offline\",\"permission-online\",\"permission-patient\",\"permission-user\",\"permission-v1\",\"permission-v2\",\"context-ehr-patient\",\"context-ehr-encounter\",\"context-standalone-patient\",\"context-standalone-encounter\",\"context-banner\",\"context-style\"],\"code_challenge_methods_supported\":[\"S256\"],\"token_endpoint_auth_methods_supported\":[\"private_key_jwt\",\"client_secret_basic\",\"client_secret_post\"],\"issuer\":\"http://localhost:4567/custom/smart_client_stu2_2/fhir\",\"grant_types_supported\":[\"client_credentials\",\"authorization_code\"],\"scopes_supported\":[\"system/*.read\",\"user/*.read\",\"patient/*.read\"],\"authorization_endpoint\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/authorization\",\"token_endpoint\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/token\",\"introspection_endpoint\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/introspect\"}"
+            },
+            {
+                "name": "smart_authorization_url",
+                "type": "text",
+                "value": "http://localhost:4567/custom/smart_client_stu2_2/auth/authorization"
+            },
+            {
+                "name": "well_known_management_url",
+                "type": "text",
+                "value": ""
+            },
+            {
+                "name": "well_known_registration_url",
+                "type": "text",
+                "value": ""
+            },
+            {
+                "name": "well_known_revocation_url",
+                "type": "text",
+                "value": ""
+            },
+            {
+                "name": "smart_token_url",
+                "type": "text",
+                "value": "http://localhost:4567/custom/smart_client_stu2_2/auth/token"
+            },
+            {
+                "name": "backend_services_smart_auth_info",
+                "type": "text",
+                "value": "{\"auth_type\":\"backend_services\",\"use_discovery\":\"true\",\"token_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/token\",\"auth_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/authorization\",\"requested_scopes\":\"system/*.rs\",\"client_id\":\"smart_client_test_demo\",\"pkce_support\":\"enabled\",\"pkce_code_challenge_method\":\"S256\",\"auth_request_method\":\"GET\",\"encryption_algorithm\":\"ES384\",\"name\":\"backend_services_smart_auth_info\"}"
+            }
+        ],
+        "requests": [
+            {
+                "id": "fc08dedc-f24f-4533-93a1-9821401ebd6b",
+                "direction": "outgoing",
+                "index": 853,
+                "result_id": "b1e2e706-b291-4547-adf0-8b7851d42fef",
+                "status": 200,
+                "timestamp": "2026-04-03T12:30:57.031-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/fhir/.well-known/smart-configuration",
+                "verb": "get"
+            }
+        ],
+        "result": "pass",
+        "test_id": "smart_stu2_2-smart_backend_services-smart_discovery_stu2_2-well_known_endpoint",
+        "test_run_id": "667e7b0a-a3fc-43f6-997e-1273109c4229",
+        "test_session_id": "bqd5CYxzQ0Z",
+        "updated_at": "2026-04-03T12:30:57.028-04:00"
+    },
+    {
+        "id": "5671515b-08c0-4997-9a5a-e11fe0684b48",
+        "created_at": "2026-04-03T12:30:57.036-04:00",
+        "inputs": [
+            {
+                "name": "well_known_configuration",
+                "value": "{\"token_endpoint_auth_signing_alg_values_supported\":[\"RS384\",\"ES384\"],\"capabilities\":[\"client-confidential-asymmetric\",\"launch-ehr\",\"launch-standalone\",\"authorize-post\",\"client-public\",\"client-confidential-symmetric\",\"permission-offline\",\"permission-online\",\"permission-patient\",\"permission-user\",\"permission-v1\",\"permission-v2\",\"context-ehr-patient\",\"context-ehr-encounter\",\"context-standalone-patient\",\"context-standalone-encounter\",\"context-banner\",\"context-style\"],\"code_challenge_methods_supported\":[\"S256\"],\"token_endpoint_auth_methods_supported\":[\"private_key_jwt\",\"client_secret_basic\",\"client_secret_post\"],\"issuer\":\"http://localhost:4567/custom/smart_client_stu2_2/fhir\",\"grant_types_supported\":[\"client_credentials\",\"authorization_code\"],\"scopes_supported\":[\"system/*.read\",\"user/*.read\",\"patient/*.read\"],\"authorization_endpoint\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/authorization\",\"token_endpoint\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/token\",\"introspection_endpoint\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/introspect\"}",
+                "type": "text"
+            }
+        ],
+        "messages": [
+            {
+                "message": "Well-known `issuer` is omitted when server capabilites does not include `sso-openid-connect`",
+                "type": "warning"
+            }
+        ],
+        "optional": false,
+        "outputs": [],
+        "requests": [],
+        "result": "pass",
+        "test_id": "smart_stu2_2-smart_backend_services-smart_discovery_stu2_2-well_known_capabilities_stu2",
+        "test_run_id": "667e7b0a-a3fc-43f6-997e-1273109c4229",
+        "test_session_id": "bqd5CYxzQ0Z",
+        "updated_at": "2026-04-03T12:30:57.036-04:00"
+    },
+    {
+        "id": "23aade05-b9e5-49c7-bf4e-a8f8e415b82f",
+        "created_at": "2026-04-03T12:30:57.042-04:00",
+        "inputs": [
+            {
+                "name": "url",
+                "value": "http://localhost:4567/custom/smart_client_stu2_2/fhir",
+                "type": "text"
+            }
+        ],
+        "messages": [
+            {
+                "message": "No CORS headers required: Inferno and the target server are on the same host.",
+                "type": "info"
+            }
+        ],
+        "optional": true,
+        "outputs": [],
+        "requests": [
+            {
+                "id": "8440e3cf-bf34-4a91-82d0-500a64a6d85d",
+                "direction": "outgoing",
+                "index": 854,
+                "result_id": "23aade05-b9e5-49c7-bf4e-a8f8e415b82f",
+                "status": 200,
+                "timestamp": "2026-04-03T12:30:57.044-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/fhir/.well-known/smart-configuration",
+                "verb": "get"
+            }
+        ],
+        "result": "pass",
+        "test_id": "smart_stu2_2-smart_backend_services-smart_discovery_stu2_2-smart_cors_well_known_endpoint",
+        "test_run_id": "667e7b0a-a3fc-43f6-997e-1273109c4229",
+        "test_session_id": "bqd5CYxzQ0Z",
+        "updated_at": "2026-04-03T12:30:57.042-04:00"
+    },
+    {
+        "id": "55c879d5-cf6d-464e-af46-773f5e22ad7f",
+        "created_at": "2026-04-03T12:30:57.061-04:00",
+        "inputs": [
+            {
+                "name": "url",
+                "value": "http://localhost:4567/custom/smart_client_stu2_2/fhir",
+                "type": "text"
+            }
+        ],
+        "optional": true,
+        "outputs": [],
+        "requests": [
+            {
+                "id": "f321cdbd-67b9-4afe-8111-7bfbf83b6941",
+                "direction": "outgoing",
+                "index": 855,
+                "result_id": "55c879d5-cf6d-464e-af46-773f5e22ad7f",
+                "status": 500,
+                "timestamp": "2026-04-03T12:30:57.062-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/fhir/metadata",
+                "verb": "get"
+            }
+        ],
+        "result": "fail",
+        "result_message": "Unexpected response status: expected 200, but received 500",
+        "test_id": "smart_stu2_2-smart_backend_services-smart_discovery_stu2_2-smart_cors_metadata_request",
+        "test_run_id": "667e7b0a-a3fc-43f6-997e-1273109c4229",
+        "test_session_id": "bqd5CYxzQ0Z",
+        "updated_at": "2026-04-03T12:30:57.061-04:00"
+    },
+    {
+        "id": "623757d1-642b-41c0-94af-e37059d26ea0",
+        "created_at": "2026-04-03T12:30:57.066-04:00",
+        "inputs": [
+            {
+                "name": "url",
+                "label": "FHIR Endpoint",
+                "description": "URL of the FHIR endpoint used by SMART applications",
+                "value": "http://localhost:4567/custom/smart_client_stu2_2/fhir",
+                "type": "text"
+            },
+            {
+                "name": "backend_services_smart_auth_info",
+                "label": null,
+                "description": null,
+                "value": "{\"auth_type\":\"backend_services\",\"use_discovery\":\"true\",\"requested_scopes\":\"system/*.rs\",\"client_id\":\"smart_client_test_demo\",\"pkce_support\":\"enabled\",\"pkce_code_challenge_method\":\"S256\",\"auth_request_method\":\"GET\",\"encryption_algorithm\":\"ES384\",\"name\":\"backend_services_smart_auth_info\"}",
+                "type": "auth_info"
+            }
+        ],
+        "optional": false,
+        "outputs": [],
+        "requests": [],
+        "result": "pass",
+        "test_group_id": "smart_stu2_2-smart_backend_services-smart_discovery_stu2_2",
+        "test_run_id": "667e7b0a-a3fc-43f6-997e-1273109c4229",
+        "test_session_id": "bqd5CYxzQ0Z",
+        "updated_at": "2026-04-03T12:30:57.066-04:00"
+    },
+    {
+        "id": "c85f6156-5fc7-435b-a1e7-84192b7bca09",
+        "created_at": "2026-04-03T12:30:57.073-04:00",
+        "inputs": [
+            {
+                "name": "url",
+                "value": "http://localhost:4567/custom/smart_client_stu2_2/fhir",
+                "type": "text"
+            },
+            {
+                "name": "backend_services_smart_auth_info",
+                "value": "{\"auth_type\":\"backend_services\",\"use_discovery\":\"true\",\"token_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/token\",\"auth_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/authorization\",\"requested_scopes\":\"system/*.rs\",\"client_id\":\"smart_client_test_demo\",\"pkce_support\":\"enabled\",\"pkce_code_challenge_method\":\"S256\",\"auth_request_method\":\"GET\",\"encryption_algorithm\":\"ES384\",\"name\":\"backend_services_smart_auth_info\"}",
+                "type": "auth_info"
+            }
+        ],
+        "messages": [
+            {
+                "message": "http://localhost:4567/custom/smart_client_stu2_2/auth/token correctly denied SSL 2.0 connection as required.",
+                "type": "info"
+            },
+            {
+                "message": "http://localhost:4567/custom/smart_client_stu2_2/auth/token correctly denied SSL 3.0 connection as required.",
+                "type": "info"
+            },
+            {
+                "message": "http://localhost:4567/custom/smart_client_stu2_2/auth/token correctly denied TLS 1.0 connection as required.",
+                "type": "info"
+            },
+            {
+                "message": "http://localhost:4567/custom/smart_client_stu2_2/auth/token correctly denied TLS 1.1 connection as required.",
+                "type": "info"
+            },
+            {
+                "message": "http://localhost:4567/custom/smart_client_stu2_2/auth/token accepted TLS 1.2 connection.",
+                "type": "info"
+            },
+            {
+                "message": "http://localhost:4567/custom/smart_client_stu2_2/auth/token accepted TLS 1.3 connection.",
+                "type": "info"
+            }
+        ],
+        "optional": false,
+        "outputs": [],
+        "requests": [],
+        "result": "pass",
+        "test_id": "smart_stu2_2-smart_backend_services-backend_services_authorization-smart_backend_services_token_tls_version",
+        "test_run_id": "667e7b0a-a3fc-43f6-997e-1273109c4229",
+        "test_session_id": "bqd5CYxzQ0Z",
+        "updated_at": "2026-04-03T12:30:57.073-04:00"
+    },
+    {
+        "id": "d74c9257-3074-46fc-acf4-fd03e3f7ffdf",
+        "created_at": "2026-04-03T12:30:57.081-04:00",
+        "inputs": [
+            {
+                "name": "backend_services_smart_auth_info",
+                "value": "{\"auth_type\":\"backend_services\",\"use_discovery\":\"true\",\"token_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/token\",\"auth_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/authorization\",\"requested_scopes\":\"system/*.rs\",\"client_id\":\"smart_client_test_demo\",\"pkce_support\":\"enabled\",\"pkce_code_challenge_method\":\"S256\",\"auth_request_method\":\"GET\",\"encryption_algorithm\":\"ES384\",\"name\":\"backend_services_smart_auth_info\"}",
+                "type": "auth_info"
+            }
+        ],
+        "optional": false,
+        "outputs": [],
+        "requests": [
+            {
+                "id": "76172d46-5092-4ab0-a8f7-0e3be3ae603d",
+                "direction": "outgoing",
+                "index": 856,
+                "result_id": "d74c9257-3074-46fc-acf4-fd03e3f7ffdf",
+                "status": 500,
+                "timestamp": "2026-04-03T12:30:57.081-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/auth/token",
+                "verb": "post"
+            }
+        ],
+        "result": "fail",
+        "result_message": "Unexpected response status: expected 400, but received 500",
+        "test_id": "smart_stu2_2-smart_backend_services-backend_services_authorization-smart_backend_services_invalid_grant_type",
+        "test_run_id": "667e7b0a-a3fc-43f6-997e-1273109c4229",
+        "test_session_id": "bqd5CYxzQ0Z",
+        "updated_at": "2026-04-03T12:30:57.081-04:00"
+    },
+    {
+        "id": "ad74f654-421f-4bda-9ba2-47638b6df3d4",
+        "created_at": "2026-04-03T12:30:57.094-04:00",
+        "inputs": [
+            {
+                "name": "backend_services_smart_auth_info",
+                "value": "{\"auth_type\":\"backend_services\",\"use_discovery\":\"true\",\"token_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/token\",\"auth_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/authorization\",\"requested_scopes\":\"system/*.rs\",\"client_id\":\"smart_client_test_demo\",\"pkce_support\":\"enabled\",\"pkce_code_challenge_method\":\"S256\",\"auth_request_method\":\"GET\",\"encryption_algorithm\":\"ES384\",\"name\":\"backend_services_smart_auth_info\"}",
+                "type": "auth_info"
+            }
+        ],
+        "optional": false,
+        "outputs": [],
+        "requests": [
+            {
+                "id": "eb9a2d9c-2f9b-46e4-ad6e-e3c23bac3235",
+                "direction": "outgoing",
+                "index": 858,
+                "result_id": "ad74f654-421f-4bda-9ba2-47638b6df3d4",
+                "status": 200,
+                "timestamp": "2026-04-03T12:30:57.117-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/auth/token",
+                "verb": "post"
+            }
+        ],
+        "result": "fail",
+        "result_message": "Unexpected response status: expected 400, 401, but received 200",
+        "test_id": "smart_stu2_2-smart_backend_services-backend_services_authorization-smart_backend_services_invalid_client_assertion",
+        "test_run_id": "667e7b0a-a3fc-43f6-997e-1273109c4229",
+        "test_session_id": "bqd5CYxzQ0Z",
+        "updated_at": "2026-04-03T12:30:57.094-04:00"
+    },
+    {
+        "id": "bc8ad628-d07e-4ff0-8854-a28ff4898d2a",
+        "created_at": "2026-04-03T12:30:57.133-04:00",
+        "inputs": [
+            {
+                "name": "backend_services_smart_auth_info",
+                "value": "{\"auth_type\":\"backend_services\",\"use_discovery\":\"true\",\"token_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/token\",\"auth_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/authorization\",\"requested_scopes\":\"system/*.rs\",\"client_id\":\"smart_client_test_demo\",\"pkce_support\":\"enabled\",\"pkce_code_challenge_method\":\"S256\",\"auth_request_method\":\"GET\",\"encryption_algorithm\":\"ES384\",\"name\":\"backend_services_smart_auth_info\"}",
+                "type": "auth_info"
+            }
+        ],
+        "optional": false,
+        "outputs": [],
+        "requests": [
+            {
+                "id": "a63b4de7-2dfe-49ad-963a-10e5df0c8534",
+                "direction": "outgoing",
+                "index": 860,
+                "result_id": "bc8ad628-d07e-4ff0-8854-a28ff4898d2a",
+                "status": 200,
+                "timestamp": "2026-04-03T12:30:57.135-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/auth/token",
+                "verb": "post"
+            }
+        ],
+        "result": "fail",
+        "result_message": "Unexpected response status: expected 400, 401, but received 200",
+        "test_id": "smart_stu2_2-smart_backend_services-backend_services_authorization-smart_backend_services_invalid_jwt",
+        "test_run_id": "667e7b0a-a3fc-43f6-997e-1273109c4229",
+        "test_session_id": "bqd5CYxzQ0Z",
+        "updated_at": "2026-04-03T12:30:57.133-04:00"
+    },
+    {
+        "id": "51939a9c-64c3-4eae-a5d8-41c6cb69cb09",
+        "created_at": "2026-04-03T12:30:57.159-04:00",
+        "inputs": [
+            {
+                "name": "backend_services_smart_auth_info",
+                "value": "{\"auth_type\":\"backend_services\",\"use_discovery\":\"true\",\"token_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/token\",\"auth_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/authorization\",\"requested_scopes\":\"system/*.rs\",\"client_id\":\"smart_client_test_demo\",\"pkce_support\":\"enabled\",\"pkce_code_challenge_method\":\"S256\",\"auth_request_method\":\"GET\",\"encryption_algorithm\":\"ES384\",\"name\":\"backend_services_smart_auth_info\"}",
+                "type": "auth_info"
+            }
+        ],
+        "optional": false,
+        "outputs": [
+            {
+                "name": "authentication_response",
+                "type": "text",
+                "value": "{\"access_token\":\"eyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc3NTIzNzQ1Nywibm9uY2UiOiI1NDVlNDlmM2U2ZjgxMjQzIn0\",\"token_type\":\"Bearer\",\"expires_in\":3600,\"scope\":\"system/*.rs\"}"
+            },
+            {
+                "name": "backend_services_smart_auth_info",
+                "type": "text",
+                "value": "{\"auth_type\":\"backend_services\",\"use_discovery\":\"true\",\"token_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/token\",\"auth_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/authorization\",\"requested_scopes\":\"system/*.rs\",\"client_id\":\"smart_client_test_demo\",\"pkce_support\":\"enabled\",\"pkce_code_challenge_method\":\"S256\",\"auth_request_method\":\"GET\",\"encryption_algorithm\":\"ES384\",\"issue_time\":\"2026-04-03T12:30:57-04:00\",\"name\":\"backend_services_smart_auth_info\"}"
+            }
+        ],
+        "requests": [
+            {
+                "id": "2ae0eeb3-4359-4357-9f9f-07c94a788589",
+                "direction": "outgoing",
+                "index": 862,
+                "result_id": "51939a9c-64c3-4eae-a5d8-41c6cb69cb09",
+                "status": 200,
+                "timestamp": "2026-04-03T12:30:57.159-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/auth/token",
+                "verb": "post"
+            }
+        ],
+        "result": "pass",
+        "test_id": "smart_stu2_2-smart_backend_services-backend_services_authorization-smart_backend_services_auth_request_success",
+        "test_run_id": "667e7b0a-a3fc-43f6-997e-1273109c4229",
+        "test_session_id": "bqd5CYxzQ0Z",
+        "updated_at": "2026-04-03T12:30:57.159-04:00"
+    },
+    {
+        "id": "f18affc0-1d3a-4904-a666-af533cc10d29",
+        "created_at": "2026-04-03T12:30:57.168-04:00",
+        "inputs": [
+            {
+                "name": "authentication_response",
+                "value": "{\"access_token\":\"eyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc3NTIzNzQ1Nywibm9uY2UiOiI1NDVlNDlmM2U2ZjgxMjQzIn0\",\"token_type\":\"Bearer\",\"expires_in\":3600,\"scope\":\"system/*.rs\"}",
+                "type": "text"
+            },
+            {
+                "name": "backend_services_smart_auth_info",
+                "value": "{\"auth_type\":\"backend_services\",\"use_discovery\":\"true\",\"token_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/token\",\"auth_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/authorization\",\"requested_scopes\":\"system/*.rs\",\"client_id\":\"smart_client_test_demo\",\"pkce_support\":\"enabled\",\"pkce_code_challenge_method\":\"S256\",\"auth_request_method\":\"GET\",\"encryption_algorithm\":\"ES384\",\"issue_time\":\"2026-04-03T12:30:57-04:00\",\"name\":\"backend_services_smart_auth_info\"}",
+                "type": "auth_info"
+            }
+        ],
+        "optional": false,
+        "outputs": [
+            {
+                "name": "bearer_token",
+                "type": "text",
+                "value": "eyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc3NTIzNzQ1Nywibm9uY2UiOiI1NDVlNDlmM2U2ZjgxMjQzIn0"
+            },
+            {
+                "name": "backend_services_smart_auth_info",
+                "type": "text",
+                "value": "{\"auth_type\":\"backend_services\",\"use_discovery\":\"true\",\"token_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/token\",\"auth_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/authorization\",\"requested_scopes\":\"system/*.rs\",\"client_id\":\"smart_client_test_demo\",\"pkce_support\":\"enabled\",\"pkce_code_challenge_method\":\"S256\",\"auth_request_method\":\"GET\",\"encryption_algorithm\":\"ES384\",\"access_token\":\"eyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc3NTIzNzQ1Nywibm9uY2UiOiI1NDVlNDlmM2U2ZjgxMjQzIn0\",\"issue_time\":\"2026-04-03T12:30:57-04:00\",\"expires_in\":3600,\"name\":\"backend_services_smart_auth_info\"}"
+            },
+            {
+                "name": "backend_services_received_scopes",
+                "type": "text",
+                "value": "system/*.rs"
+            }
+        ],
+        "requests": [],
+        "result": "pass",
+        "test_id": "smart_stu2_2-smart_backend_services-backend_services_authorization-smart_backend_services_auth_response_body",
+        "test_run_id": "667e7b0a-a3fc-43f6-997e-1273109c4229",
+        "test_session_id": "bqd5CYxzQ0Z",
+        "updated_at": "2026-04-03T12:30:57.168-04:00"
+    },
+    {
+        "id": "20599988-2744-4ad6-ae30-436957709ed2",
+        "created_at": "2026-04-03T12:30:57.179-04:00",
+        "inputs": [
+            {
+                "name": "url",
+                "label": null,
+                "description": null,
+                "value": "http://localhost:4567/custom/smart_client_stu2_2/fhir",
+                "type": "text"
+            },
+            {
+                "name": "backend_services_smart_auth_info",
+                "label": "Backend Services Credentials",
+                "description": null,
+                "value": "{\"auth_type\":\"backend_services\",\"use_discovery\":\"true\",\"token_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/token\",\"auth_url\":\"http://localhost:4567/custom/smart_client_stu2_2/auth/authorization\",\"requested_scopes\":\"system/*.rs\",\"client_id\":\"smart_client_test_demo\",\"pkce_support\":\"enabled\",\"pkce_code_challenge_method\":\"S256\",\"auth_request_method\":\"GET\",\"encryption_algorithm\":\"ES384\",\"name\":\"backend_services_smart_auth_info\"}",
+                "type": "auth_info"
+            }
+        ],
+        "optional": false,
+        "outputs": [],
+        "requests": [],
+        "result": "fail",
+        "test_group_id": "smart_stu2_2-smart_backend_services-backend_services_authorization",
+        "test_run_id": "667e7b0a-a3fc-43f6-997e-1273109c4229",
+        "test_session_id": "bqd5CYxzQ0Z",
+        "updated_at": "2026-04-03T12:30:57.179-04:00"
+    },
+    {
+        "id": "76e734bc-183c-46a7-8a8e-e26284890e7a",
+        "created_at": "2026-04-03T12:30:57.181-04:00",
+        "inputs": [
+            {
+                "name": "url",
+                "label": "FHIR Endpoint",
+                "description": "URL of the FHIR endpoint used by SMART applications",
+                "value": "http://localhost:4567/custom/smart_client_stu2_2/fhir",
+                "type": "text"
+            },
+            {
+                "name": "backend_services_smart_auth_info",
+                "label": "Backend Services Credentials",
+                "description": null,
+                "value": "{\"auth_type\":\"backend_services\",\"use_discovery\":\"true\",\"requested_scopes\":\"system/*.rs\",\"client_id\":\"smart_client_test_demo\",\"pkce_support\":\"enabled\",\"pkce_code_challenge_method\":\"S256\",\"auth_request_method\":\"GET\",\"encryption_algorithm\":\"ES384\",\"name\":\"backend_services_smart_auth_info\"}",
+                "type": "auth_info"
+            }
+        ],
+        "optional": false,
+        "outputs": [],
+        "requests": [],
+        "result": "fail",
+        "test_group_id": "smart_stu2_2-smart_backend_services",
+        "test_run_id": "667e7b0a-a3fc-43f6-997e-1273109c4229",
+        "test_session_id": "bqd5CYxzQ0Z",
+        "updated_at": "2026-04-03T12:30:57.181-04:00"
+    }
+]

@@ -1,0 +1,507 @@
+[
+    {
+        "id": "d88654a6-189c-4dd3-82ae-50aa3495c0ac",
+        "created_at": "2026-04-03T13:50:25.597-04:00",
+        "inputs": [
+            {
+                "name": "client_id",
+                "value": "smart_client_test_demo",
+                "type": "text"
+            },
+            {
+                "name": "smart_launch_urls",
+                "value": "http://localhost:4567/custom/smart_stu2_2/launch",
+                "type": "textarea"
+            },
+            {
+                "name": "smart_redirect_uris",
+                "value": "http://localhost:4567/custom/smart_stu2_2/redirect",
+                "type": "textarea"
+            }
+        ],
+        "optional": false,
+        "outputs": [
+            {
+                "name": "smart_launch_urls",
+                "type": "text",
+                "value": "http://localhost:4567/custom/smart_stu2_2/launch"
+            },
+            {
+                "name": "smart_redirect_uris",
+                "type": "text",
+                "value": "http://localhost:4567/custom/smart_stu2_2/redirect"
+            }
+        ],
+        "requests": [],
+        "result": "pass",
+        "test_id": "smart_client_stu2_2-smart_client_registration_alp-smart_client_registration_alp_verification",
+        "test_run_id": "38600dfd-6cbd-42e1-9303-6353f35714d6",
+        "test_session_id": "gTBhvHtDD7H",
+        "updated_at": "2026-04-03T13:50:25.597-04:00"
+    },
+    {
+        "id": "9280defd-0f0d-4933-8a2d-1f98d4f9745d",
+        "created_at": "2026-04-03T13:50:25.606-04:00",
+        "inputs": [
+            {
+                "name": "client_id",
+                "value": "smart_client_test_demo",
+                "type": "text"
+            },
+            {
+                "name": "smart_launch_urls",
+                "value": "http://localhost:4567/custom/smart_stu2_2/launch",
+                "type": "textarea"
+            },
+            {
+                "name": "launch_context",
+                "value": "{ \"patient\": \"example\" }",
+                "type": "textarea"
+            },
+            {
+                "name": "fhir_user_relative_reference",
+                "value": "Patient/example",
+                "type": "text"
+            },
+            {
+                "name": "fhir_read_resources_bundle",
+                "value": "{\n  \"resourceType\": \"Bundle\",\n  \"entry\": [\n    {\n      \"resource\": {\n        \"resourceType\": \"Patient\",\n        \"id\": \"example\",\n        \"name\": [\n          {\n            \"family\": \"Chalmers\",\n            \"given\": [\n              \"Peter\",\n              \"James\"\n            ]\n          }\n        ],\n        \"gender\": \"male\",\n        \"birthDate\": \"1974-12-25\",\n        \"address\": [\n          {\n            \"line\": [\n              \"534 Erewhon St\"\n            ],\n            \"city\": \"Ann Arbor\",\n            \"state\": \"MI\",\n            \"postalCode\": \"48108\"\n          }\n        ]\n      }\n    }\n  ]\n}",
+                "type": "textarea"
+            },
+            {
+                "name": "echoed_fhir_response",
+                "value": null,
+                "type": "textarea"
+            }
+        ],
+        "optional": false,
+        "outputs": [
+            {
+                "name": "continuation_url",
+                "type": "text",
+                "value": "http://localhost:4567/custom/smart_client_stu2_2/resume_pass?token=smart_client_test_demo"
+            },
+            {
+                "name": "launch_key",
+                "type": "text",
+                "value": "9194875783ef5f9aaf7f015d87251da3cad1b465145ba335878723a6e5c1e5ab"
+            },
+            {
+                "name": "launch_urls",
+                "type": "text",
+                "value": "http://localhost:4567/custom/smart_stu2_2/launch?iss=http%3A%2F%2Flocalhost%3A4567%2Fcustom%2Fsmart_client_stu2_2%2Ffhir\u0026launch=9194875783ef5f9aaf7f015d87251da3cad1b465145ba335878723a6e5c1e5ab"
+            }
+        ],
+        "requests": [],
+        "result": "pass",
+        "test_id": "smart_client_stu2_2-smart_client_access-smart_client_access_alp_interaction",
+        "test_run_id": "38600dfd-6cbd-42e1-9303-6353f35714d6",
+        "test_session_id": "gTBhvHtDD7H",
+        "updated_at": "2026-04-03T13:50:48.894-04:00"
+    },
+    {
+        "id": "a169f1da-a228-4fa4-91d2-6b50a0242e79",
+        "created_at": "2026-04-03T13:50:48.913-04:00",
+        "inputs": [
+            {
+                "name": "client_id",
+                "label": "Client Id",
+                "description": "Testers may provide a specific value for Inferno to assign as the client id. If no value is provided, the Inferno session id will be used.",
+                "value": "smart_client_test_demo",
+                "type": "text"
+            },
+            {
+                "name": "smart_launch_urls",
+                "label": "SMART App Launch URL(s)",
+                "description": "If the client app supports EHR launch, a comma-delimited list of one or more URLs that Inferno can use to launch the app.",
+                "value": "http://localhost:4567/custom/smart_stu2_2/launch",
+                "type": "textarea"
+            },
+            {
+                "name": "smart_redirect_uris",
+                "label": "SMART App Launch Redirect URI(s)",
+                "description": "A comma-separated list of one or more URIs that the app will sepcify as the target of the redirect for Inferno to use when providing the authorization code.",
+                "value": "http://localhost:4567/custom/smart_stu2_2/redirect",
+                "type": "textarea"
+            }
+        ],
+        "optional": false,
+        "outputs": [],
+        "requests": [],
+        "result": "fail",
+        "test_group_id": "smart_client_stu2_2-smart_client_registration_alp",
+        "test_run_id": "38600dfd-6cbd-42e1-9303-6353f35714d6",
+        "test_session_id": "gTBhvHtDD7H",
+        "updated_at": "2026-04-03T13:50:48.913-04:00"
+    },
+    {
+        "id": "a560b416-40e4-4ac8-8f44-6d81b3ab9f12",
+        "created_at": "2026-04-03T13:50:48.920-04:00",
+        "inputs": [
+            {
+                "name": "client_id",
+                "value": "smart_client_test_demo",
+                "type": "text"
+            },
+            {
+                "name": "smart_redirect_uris",
+                "value": "http://localhost:4567/custom/smart_stu2_2/redirect",
+                "type": "textarea"
+            },
+            {
+                "name": "launch_key",
+                "value": "9194875783ef5f9aaf7f015d87251da3cad1b465145ba335878723a6e5c1e5ab",
+                "type": "text"
+            }
+        ],
+        "optional": false,
+        "outputs": [],
+        "requests": [
+            {
+                "id": "add50c3e-adab-4c2d-9bdf-73a19661867d",
+                "direction": "incoming",
+                "index": 1149,
+                "result_id": "9280defd-0f0d-4933-8a2d-1f98d4f9745d",
+                "status": 302,
+                "timestamp": "2026-04-03T13:50:33.291-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/auth/authorization?response_type=code\u0026client_id=smart_client_test_demo\u0026redirect_uri=http%3A%2F%2Flocalhost%3A4567%2Fcustom%2Fsmart_stu2_2%2Fredirect\u0026scope=launch%2Fpatient+openid+fhirUser+offline_access+patient%2F*.rs\u0026state=0b097d4d-9b4f-4e8f-9fea-7b250698bed9\u0026aud=http%3A%2F%2Flocalhost%3A4567%2Fcustom%2Fsmart_client_stu2_2%2Ffhir\u0026code_challenge=KhFee1b6z3QKKcbCDPB28oQlhhOGkBJj-1XoYe6iMog\u0026code_challenge_method=S256",
+                "verb": "GET"
+            },
+            {
+                "id": "1f887ed4-97ea-49dd-b410-e8277221a8da",
+                "direction": "incoming",
+                "index": 1167,
+                "result_id": "9280defd-0f0d-4933-8a2d-1f98d4f9745d",
+                "status": 302,
+                "timestamp": "2026-04-03T13:50:39.699-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/auth/authorization?response_type=code\u0026client_id=smart_client_test_demo\u0026redirect_uri=http%3A%2F%2Flocalhost%3A4567%2Fcustom%2Fsmart_stu2_2%2Fredirect\u0026scope=launch+openid+fhirUser+offline_access+patient%2F*.rs\u0026state=f4639db8-9c64-4f78-bc09-04be52a71937\u0026aud=http%3A%2F%2Flocalhost%3A4567%2Fcustom%2Fsmart_client_stu2_2%2Ffhir\u0026launch=9194875783ef5f9aaf7f015d87251da3cad1b465145ba335878723a6e5c1e5ab\u0026code_challenge=7TQ8M5bZjRv-uqQkasbaiZQUPbvhfqSQdlZFS7wSlUs\u0026code_challenge_method=S256",
+                "verb": "GET"
+            },
+            {
+                "id": "ef24efe2-b914-4e2b-b7f6-97ffc44343e3",
+                "direction": "incoming",
+                "index": 1184,
+                "result_id": "9280defd-0f0d-4933-8a2d-1f98d4f9745d",
+                "status": 302,
+                "timestamp": "2026-04-03T13:50:47.333-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/auth/authorization?response_type=code\u0026client_id=smart_client_test_demo\u0026redirect_uri=http%3A%2F%2Flocalhost%3A4567%2Fcustom%2Fsmart_stu2_2%2Fredirect\u0026scope=launch%2Fpatient+openid+fhirUser+offline_access+patient%2F*.rs\u0026state=a04b47ab-1aff-4c30-8afa-b4f519ea2b9f\u0026aud=http%3A%2F%2Flocalhost%3A4567%2Fcustom%2Fsmart_client_stu2_2%2Ffhir\u0026code_challenge=Gu8rf_mnaHj_9JSch406jWFajO8AmespRWliTj3ZyME\u0026code_challenge_method=S256",
+                "verb": "GET"
+            }
+        ],
+        "result": "pass",
+        "test_id": "smart_client_stu2_2-smart_client_access-smart_client_authorization_request_alp_verification",
+        "test_run_id": "38600dfd-6cbd-42e1-9303-6353f35714d6",
+        "test_session_id": "gTBhvHtDD7H",
+        "updated_at": "2026-04-03T13:50:48.920-04:00"
+    },
+    {
+        "id": "9b7511d5-f16c-4a61-a80d-98ac2fccdf94",
+        "created_at": "2026-04-03T13:50:48.940-04:00",
+        "inputs": [
+            {
+                "name": "client_id",
+                "value": "smart_client_test_demo",
+                "type": "text"
+            }
+        ],
+        "optional": false,
+        "outputs": [
+            {
+                "name": "smart_tokens",
+                "type": "text",
+                "value": "eyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc3NTI0MjIzMywibm9uY2UiOiI2NWNkZTBhMzRhYTY5Yjk2In0\neyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc3NTI0MjIzOSwibm9uY2UiOiJjNzg1MjE1MzE5N2YxOGZmIn0\neyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc3NTI0MjI0Nywibm9uY2UiOiIyNjY2Y2EyMTBhZTBlYjNmIn0\neyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc3NTI0MjIzMywibm9uY2UiOiJjNzVmNjI3MjU3YjdhYzMzIn0\neyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc3NTI0MjIzMywibm9uY2UiOiI4ODEyYTM0MGUzNzBiYTg0In0\neyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc3NTI0MjIzOSwibm9uY2UiOiJmMzg5YmRkNmY2NGYxNDA3In0\neyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc3NTI0MjIzOSwibm9uY2UiOiI5OWM2M2M0M2E4YmIzMWI0In0"
+            }
+        ],
+        "requests": [
+            {
+                "id": "889e99f9-564d-48ad-8596-c6ae8ccff1d9",
+                "direction": "incoming",
+                "index": 1151,
+                "result_id": "9280defd-0f0d-4933-8a2d-1f98d4f9745d",
+                "status": 200,
+                "timestamp": "2026-04-03T13:50:33.353-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/auth/token",
+                "verb": "POST"
+            },
+            {
+                "id": "220d8d77-3500-4063-903d-a4617421b660",
+                "direction": "incoming",
+                "index": 1159,
+                "result_id": "9280defd-0f0d-4933-8a2d-1f98d4f9745d",
+                "status": 200,
+                "timestamp": "2026-04-03T13:50:33.521-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/auth/token",
+                "verb": "POST"
+            },
+            {
+                "id": "3df9fc40-ebbf-45d4-b570-86fe05cf671c",
+                "direction": "incoming",
+                "index": 1161,
+                "result_id": "9280defd-0f0d-4933-8a2d-1f98d4f9745d",
+                "status": 200,
+                "timestamp": "2026-04-03T13:50:33.559-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/auth/token",
+                "verb": "POST"
+            },
+            {
+                "id": "869df61f-486d-4b73-a5ec-2da0bbb04296",
+                "direction": "incoming",
+                "index": 1169,
+                "result_id": "9280defd-0f0d-4933-8a2d-1f98d4f9745d",
+                "status": 200,
+                "timestamp": "2026-04-03T13:50:39.766-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/auth/token",
+                "verb": "POST"
+            },
+            {
+                "id": "ddca953f-9634-4608-b61a-e271ccb1d5fc",
+                "direction": "incoming",
+                "index": 1177,
+                "result_id": "9280defd-0f0d-4933-8a2d-1f98d4f9745d",
+                "status": 200,
+                "timestamp": "2026-04-03T13:50:39.953-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/auth/token",
+                "verb": "POST"
+            },
+            {
+                "id": "3880abf0-71d1-4edc-bf25-72bcf6db6f39",
+                "direction": "incoming",
+                "index": 1179,
+                "result_id": "9280defd-0f0d-4933-8a2d-1f98d4f9745d",
+                "status": 200,
+                "timestamp": "2026-04-03T13:50:39.994-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/auth/token",
+                "verb": "POST"
+            },
+            {
+                "id": "60a45397-dcce-4de5-9d1e-f079824027f3",
+                "direction": "incoming",
+                "index": 1186,
+                "result_id": "9280defd-0f0d-4933-8a2d-1f98d4f9745d",
+                "status": 200,
+                "timestamp": "2026-04-03T13:50:47.392-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/auth/token",
+                "verb": "POST"
+            }
+        ],
+        "result": "pass",
+        "test_id": "smart_client_stu2_2-smart_client_access-smart_client_token_request_alp_verification",
+        "test_run_id": "38600dfd-6cbd-42e1-9303-6353f35714d6",
+        "test_session_id": "gTBhvHtDD7H",
+        "updated_at": "2026-04-03T13:50:48.940-04:00"
+    },
+    {
+        "id": "b2e10bb4-f3ed-4c0a-9d31-88d9c93521ca",
+        "created_at": "2026-04-03T13:50:48.947-04:00",
+        "inputs": [
+            {
+                "name": "smart_tokens",
+                "value": "eyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc3NTI0MjIzMywibm9uY2UiOiI2NWNkZTBhMzRhYTY5Yjk2In0\neyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc3NTI0MjIzOSwibm9uY2UiOiJjNzg1MjE1MzE5N2YxOGZmIn0\neyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc3NTI0MjI0Nywibm9uY2UiOiIyNjY2Y2EyMTBhZTBlYjNmIn0\neyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc3NTI0MjIzMywibm9uY2UiOiJjNzVmNjI3MjU3YjdhYzMzIn0\neyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc3NTI0MjIzMywibm9uY2UiOiI4ODEyYTM0MGUzNzBiYTg0In0\neyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc3NTI0MjIzOSwibm9uY2UiOiJmMzg5YmRkNmY2NGYxNDA3In0\neyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc3NTI0MjIzOSwibm9uY2UiOiI5OWM2M2M0M2E4YmIzMWI0In0",
+                "type": "text"
+            }
+        ],
+        "optional": false,
+        "outputs": [],
+        "requests": [
+            {
+                "id": "7ee36bd4-b7e0-457d-99e7-9562e69d2bc5",
+                "direction": "incoming",
+                "index": 1155,
+                "result_id": "9280defd-0f0d-4933-8a2d-1f98d4f9745d",
+                "status": 200,
+                "timestamp": "2026-04-03T13:50:33.426-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/fhir/Patient/example",
+                "verb": "GET"
+            },
+            {
+                "id": "c4b51b7d-b043-4199-9a3f-fc36106c2515",
+                "direction": "incoming",
+                "index": 1157,
+                "result_id": "9280defd-0f0d-4933-8a2d-1f98d4f9745d",
+                "status": 200,
+                "timestamp": "2026-04-03T13:50:33.457-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/fhir/Patient/example",
+                "verb": "GET"
+            },
+            {
+                "id": "a4951d63-1364-4e05-bd00-170b7db71b89",
+                "direction": "incoming",
+                "index": 1173,
+                "result_id": "9280defd-0f0d-4933-8a2d-1f98d4f9745d",
+                "status": 200,
+                "timestamp": "2026-04-03T13:50:39.896-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/fhir/Patient/example",
+                "verb": "GET"
+            },
+            {
+                "id": "f478a583-9e56-4d66-b7b9-8a7cb67c7dfc",
+                "direction": "incoming",
+                "index": 1175,
+                "result_id": "9280defd-0f0d-4933-8a2d-1f98d4f9745d",
+                "status": 200,
+                "timestamp": "2026-04-03T13:50:39.916-04:00",
+                "url": "http://localhost:4567/custom/smart_client_stu2_2/fhir/Patient/example",
+                "verb": "GET"
+            }
+        ],
+        "result": "pass",
+        "test_id": "smart_client_stu2_2-smart_client_access-smart_client_token_use_verification",
+        "test_run_id": "38600dfd-6cbd-42e1-9303-6353f35714d6",
+        "test_session_id": "gTBhvHtDD7H",
+        "updated_at": "2026-04-03T13:50:48.947-04:00"
+    },
+    {
+        "id": "267cabaa-4595-421d-ad98-b5ea0636ba4b",
+        "created_at": "2026-04-03T13:50:48.951-04:00",
+        "inputs": [
+            {
+                "name": "client_id",
+                "label": "Client Id",
+                "description": "The registered Client Id for use in obtaining access tokens. Create a new session and re-run the Client Registration group if you need to change this value.",
+                "value": "smart_client_test_demo",
+                "type": "text"
+            },
+            {
+                "name": "smart_launch_urls",
+                "label": "SMART App Launch URL(s)",
+                "description": "Registered Launch URLs in the form of a comma-separated list of zero or more URLs. If present, Inferno will provide an option to use each to launch the app. Create a new session and re-run the Client Registration group if you need to change this value.",
+                "value": "http://localhost:4567/custom/smart_stu2_2/launch",
+                "type": "textarea"
+            },
+            {
+                "name": "launch_context",
+                "label": "Launch Context",
+                "description": "Launch context details to be included in access token responses, specified as a JSON array. If provided, the contents will be merged into Inferno's token responses.",
+                "value": "{ \"patient\": \"example\" }",
+                "type": "textarea"
+            },
+            {
+                "name": "fhir_user_relative_reference",
+                "label": "FHIR User Relative Reference",
+                "description": "A FHIR relative reference (\u003cresource type\u003e/\u003cid\u003e) for the FHIR user record to return when the openid and fhirUser scopes are requested. Include this resource in the **Available Resources** input so that it can be accessed via FHIR read.",
+                "value": "Patient/example",
+                "type": "text"
+            },
+            {
+                "name": "fhir_read_resources_bundle",
+                "label": "Available Resources",
+                "description": "Resources to make available in Inferno's simulated FHIR server provided as a FHIR bundle. Each entry must contain a resource with the id element populated. Each instance present will be available for retrieval from Inferno at the endpoint: \u003cfhir-base\u003e/\u003cresource type\u003e/\u003cinstance id\u003e. These will only be available through the read interaction.",
+                "value": "{\n  \"resourceType\": \"Bundle\",\n  \"entry\": [\n    {\n      \"resource\": {\n        \"resourceType\": \"Patient\",\n        \"id\": \"example\",\n        \"name\": [\n          {\n            \"family\": \"Chalmers\",\n            \"given\": [\n              \"Peter\",\n              \"James\"\n            ]\n          }\n        ],\n        \"gender\": \"male\",\n        \"birthDate\": \"1974-12-25\",\n        \"address\": [\n          {\n            \"line\": [\n              \"534 Erewhon St\"\n            ],\n            \"city\": \"Ann Arbor\",\n            \"state\": \"MI\",\n            \"postalCode\": \"48108\"\n          }\n        ]\n      }\n    }\n  ]\n}",
+                "type": "textarea"
+            },
+            {
+                "name": "echoed_fhir_response",
+                "label": "Default FHIR Response",
+                "description": "JSON representation of a default FHIR resource for Inferno to echo when a request is made to the simulated FHIR server. Reads targetting resources in the **Available Resources** input will return that resource instead of this. Otherwise, the content here will be echoed back exactly and no check will be made that it is appropriate for the request made. If nothing is provided, an OperationOutcome indicating nothing to echo will be returned.",
+                "value": null,
+                "type": "textarea"
+            },
+            {
+                "name": "smart_redirect_uris",
+                "label": "SMART App Launch Redirect URI(s)",
+                "description": "Registered Redirect URIs in the form of a comma-separated list of one or more URIs. Redirect URIs specified in authorization requests must come from this list. Create a new session and re-run the Client Registration group if you need to change this value.",
+                "value": "http://localhost:4567/custom/smart_stu2_2/redirect",
+                "type": "textarea"
+            },
+            {
+                "name": "smart_jwk_set",
+                "label": "JSON Web Key Set (JWKS)",
+                "description": "The SMART client's JSON Web Key Set in the form of either a publicly accessible url containing the JWKS, or the raw JWKS JSON. Must include the key(s) Inferno will need to verify signatures on token requests made by the client. Create a new session and re-run the Client Registration group if you need to change this value.",
+                "value": "http://localhost:4567/custom/smart_stu2_2/.well-known/jwks.json",
+                "type": "textarea"
+            },
+            {
+                "name": "smart_client_secret",
+                "label": "SMART Confidential Symmetric Client Secret",
+                "description": "The registered client secret that will be provided during token requests to authenticate the client to Inferno. Create a new session and re-run the Client Registration group if you need to change this value.",
+                "value": "SAMPLE_SECRET",
+                "type": "text"
+            }
+        ],
+        "optional": false,
+        "outputs": [],
+        "requests": [],
+        "result": "pass",
+        "test_group_id": "smart_client_stu2_2-smart_client_access",
+        "test_run_id": "38600dfd-6cbd-42e1-9303-6353f35714d6",
+        "test_session_id": "gTBhvHtDD7H",
+        "updated_at": "2026-04-03T13:50:48.951-04:00"
+    },
+    {
+        "id": "11c91293-30ec-4905-987d-2055bc1d4edb",
+        "created_at": "2026-04-03T13:50:48.954-04:00",
+        "inputs": [
+            {
+                "name": "client_id",
+                "label": "Client Id",
+                "description": "Testers may provide a specific value for Inferno to assign as the client id. If no value is provided, the Inferno session id will be used.",
+                "value": "smart_client_test_demo",
+                "type": "text"
+            },
+            {
+                "name": "smart_launch_urls",
+                "label": "SMART App Launch URL(s)",
+                "description": "If the client app supports EHR launch, a comma-delimited list of one or more URLs that Inferno can use to launch the app.",
+                "value": "http://localhost:4567/custom/smart_stu2_2/launch",
+                "type": "textarea"
+            },
+            {
+                "name": "smart_redirect_uris",
+                "label": "SMART App Launch Redirect URI(s)",
+                "description": "A comma-separated list of one or more URIs that the app will sepcify as the target of the redirect for Inferno to use when providing the authorization code.",
+                "value": "http://localhost:4567/custom/smart_stu2_2/redirect",
+                "type": "textarea"
+            },
+            {
+                "name": "smart_jwk_set",
+                "label": "SMART Confidential Asymmetric JSON Web Key Set (JWKS)",
+                "description": "The SMART client's JSON Web Key Set including the key(s) Inferno will need to verify signatures on token requests made by the client. May be provided as either a publicly accessible url containing the JWKS, or the raw JWKS JSON.",
+                "value": "http://localhost:4567/custom/smart_stu2_2/.well-known/jwks.json",
+                "type": "textarea"
+            },
+            {
+                "name": "smart_client_secret",
+                "label": "SMART Confidential Symmetric Client Secret",
+                "description": "Provide the client secret that the confidential symmetric client will send with token requests to authenticate the client to Inferno.",
+                "value": "SAMPLE_SECRET",
+                "type": "text"
+            },
+            {
+                "name": "launch_context",
+                "label": "Launch Context",
+                "description": "Launch context details to be included in access token responses, specified as a JSON array. If provided, the contents will be merged into Inferno's token responses.",
+                "value": "{ \"patient\": \"example\" }",
+                "type": "textarea"
+            },
+            {
+                "name": "fhir_user_relative_reference",
+                "label": "FHIR User Relative Reference",
+                "description": "A FHIR relative reference (\u003cresource type\u003e/\u003cid\u003e) for the FHIR user record to return when the openid and fhirUser scopes are requested. Include this resource in the **Available Resources** input so that it can be accessed via FHIR read.",
+                "value": "Patient/example",
+                "type": "text"
+            },
+            {
+                "name": "fhir_read_resources_bundle",
+                "label": "Available Resources",
+                "description": "Resources to make available in Inferno's simulated FHIR server provided as a FHIR bundle. Each entry must contain a resource with the id element populated. Each instance present will be available for retrieval from Inferno at the endpoint: \u003cfhir-base\u003e/\u003cresource type\u003e/\u003cinstance id\u003e. These will only be available through the read interaction.",
+                "value": "{\n  \"resourceType\": \"Bundle\",\n  \"entry\": [\n    {\n      \"resource\": {\n        \"resourceType\": \"Patient\",\n        \"id\": \"example\",\n        \"name\": [\n          {\n            \"family\": \"Chalmers\",\n            \"given\": [\n              \"Peter\",\n              \"James\"\n            ]\n          }\n        ],\n        \"gender\": \"male\",\n        \"birthDate\": \"1974-12-25\",\n        \"address\": [\n          {\n            \"line\": [\n              \"534 Erewhon St\"\n            ],\n            \"city\": \"Ann Arbor\",\n            \"state\": \"MI\",\n            \"postalCode\": \"48108\"\n          }\n        ]\n      }\n    }\n  ]\n}",
+                "type": "textarea"
+            },
+            {
+                "name": "echoed_fhir_response",
+                "label": "Default FHIR Response",
+                "description": "JSON representation of a default FHIR resource for Inferno to echo when a request is made to the simulated FHIR server. Reads targetting resources in the **Available Resources** input will return that resource instead of this. Otherwise, the content here will be echoed back exactly and no check will be made that it is appropriate for the request made. If nothing is provided, an OperationOutcome indicating nothing to echo will be returned.",
+                "value": null,
+                "type": "textarea"
+            }
+        ],
+        "optional": false,
+        "outputs": [],
+        "requests": [],
+        "result": "fail",
+        "test_run_id": "38600dfd-6cbd-42e1-9303-6353f35714d6",
+        "test_session_id": "gTBhvHtDD7H",
+        "test_suite_id": "smart_client_stu2_2",
+        "updated_at": "2026-04-03T13:50:48.954-04:00"
+    }
+]

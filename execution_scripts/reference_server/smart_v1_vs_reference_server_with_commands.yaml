@@ -30,7 +30,7 @@ steps:
   - state_description: Wait at test 1.2.02 OAuth server redirects client browser to app redirect URI
     status: waiting
     last_completed: 1.2.02
-    command: bundle exec ruby execution_scripts/reference_server/authorize_85_all_scopes.rb '{wait_outputs.authorization_url}'
+    command: bundle exec ruby execution_scripts/reference_server/ref_server_authorize_85_all_scopes.rb '{wait_outputs.authorization_url}'
     action_description: Authorize patient 85
     
   - state_description: Finished Group 1 Standalone Launch
@@ -43,13 +43,13 @@ steps:
   - state_description: Wait at test 2.2.01 EHR server redirects client browser to Inferno app launch URI
     status: waiting
     last_completed: 2.2.01
-    command: bundle exec ruby execution_scripts/reference_server/perform_app_launch_85.rb '{wait_outputs.launch_uri}' '{wait_outputs.target_iss}'
+    command: bundle exec ruby execution_scripts/reference_server/ref_server_ehr_launch_85.rb '{wait_outputs.launch_uri}' '{wait_outputs.target_iss}'
     action_description: Launch Inferno as a SMART app using patient 85 as the patient context
 
   - state_description: Wait at test 2.2.04 OAuth server redirects client browser to app redirect URI
     status: waiting
     last_completed: 2.2.04
-    command: bundle exec ruby execution_scripts/reference_server/authorize_launched_all_scopes.rb '{wait_outputs.authorization_url}'
+    command: bundle exec ruby execution_scripts/reference_server/ref_server_authorize_launched_all_scopes.rb '{wait_outputs.authorization_url}'
     action_description: Authorize all requested scopes for launched patient
 
   - state_description: Finished Group 2 EHR Launch

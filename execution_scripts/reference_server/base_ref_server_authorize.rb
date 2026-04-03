@@ -6,7 +6,7 @@ rescue LoadError
   exit(1)
 end
 
-def authorize(authorize_url, target_patient_id: nil, click_scopes: nil)
+def ref_server_authorize(authorize_url, target_patient_id: nil, click_scopes: nil)
   options = Selenium::WebDriver::Options.chrome(args: ['--headless=new'])
   driver = Selenium::WebDriver.for(:chrome, options: options)
   wait = Selenium::WebDriver::Wait.new(timeout: 10)

@@ -21,13 +21,13 @@ comparison_config:
       pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i
   alternate_expected_files: # for CORS exception when requestor (inferno) and target (ref server) are on the same host
     - file: smart_v22_vs_reference_server_with_commands_same_host_expected.json
-      when:
+      when: # both prod
         - field: inferno_base_url
           matches: inferno\.healthit\.gov
         - field: inputs.url
           matches: inferno\.healthit\.gov
     - file: smart_v22_vs_reference_server_with_commands_same_host_expected.json
-      when:
+      when: # both qa
         - field: inferno_base_url
           matches: inferno-qa\.healthit\.gov
         - field: inputs.url

@@ -30,13 +30,13 @@ comparison_config:
   sessions:
     server:
       alternate_expected_files:           
-        - file: smart_v22_public_server_no_tls_expected.json
+        - file: smart_v22_public_with_commands_server_no_tls_expected.json
           when:
             - field: inputs.url
               matches: ^http://
     client:
       alternate_expected_files:           
-        - file: smart_v22_public_client_no_tls_expected.json
+        - file: smart_v22_public_with_commands_client_no_tls_expected.json
           when:
             - field: inputs.smart_launch_urls
               matches: ^http://

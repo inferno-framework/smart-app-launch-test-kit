@@ -3,10 +3,10 @@ sessions:
     name: client
     preset: smart_run_client_against_server_v2_2
     suite_options:
-      SMART Client Type: 'SMART App Launch Public Client'
+      SMART Client Type: 'SMART App Launch Confidential Symmetric Client'
   - suite: smart_stu2_2
     name: server
-    preset: smart_run_server_against_p_client_v2_2
+    preset: 'Demo: Run Against the SMART Client Suite (Confidential Symmetric)'
 
 comparison_config:
   normalized_strings:
@@ -30,13 +30,13 @@ comparison_config:
   sessions:
     server:
       alternate_expected_files:           
-        - file: smart_v22_public_with_commands_server_no_tls_expected.json
+        - file: smart_v22_confidential_symmetric_with_commands_server_no_tls_expected.json
           when:
             - field: inputs.url
               matches: ^http://
     client:
       alternate_expected_files:           
-        - file: smart_v22_public_with_commands_client_no_tls_expected.json
+        - file: smart_v22_confidential_symmetric_with_commands_client_no_tls_expected.json
           when:
             - field: inputs.smart_launch_urls
               matches: ^http://
@@ -50,10 +50,10 @@ steps:
       runnable: suite
     action_description: Run the client suite
 
-  - state_description: Wait at Client test 5.03 Access a secured FHIR endpoint using SMART App Launch
+  - state_description: Wait at Client test 5.02 Access a secured FHIR endpoint using SMART App Launch
     session: client
     status: waiting
-    last_completed: 5.03
+    last_completed: 5.02
     start_run:
       session: server
       runnable: 1
@@ -120,4 +120,3 @@ steps:
     last_completed: suite
     action: END_SCRIPT
     action_description: Finished Script
-    

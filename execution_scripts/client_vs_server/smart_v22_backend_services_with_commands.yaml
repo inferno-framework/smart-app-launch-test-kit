@@ -38,7 +38,7 @@ steps:
     session: client
     status: created
     start_run:
-      session: "{client.session_id}" 
+      session: client
       runnable: suite
     action_description: Run the client suite
 
@@ -47,7 +47,7 @@ steps:
     status: waiting
     last_completed: 5.04
     start_run:
-      session: "{server.session_id}"
+      session: server
       runnable: 3
     next_poll_session: server
     action_description: Run server group 3 Backend Services

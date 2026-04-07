@@ -15,8 +15,3 @@ driver.get target_url
 wait.until { driver.find_element(:xpath, '//title') }
 driver.quit
 exit(0)
-
-
-
-
-

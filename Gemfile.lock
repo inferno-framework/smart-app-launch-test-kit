@@ -363,7 +363,7 @@ DEPENDENCIES
   inferno_core!
   rack-test (~> 1.1.0)
   roo (~> 2.10.1)
-  rspec (~> 3.13)
+  rspec (~> 3.10)
   smart_app_launch_test_kit!
   tls_test_kit!
   webmock (~> 3.11)

@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'inferno_core', '~> 1.2', '>= 1.2.2'
   spec.add_runtime_dependency 'json-jwt', '~> 1.15.3'
   spec.add_runtime_dependency 'jwt', '~> 2.6'
-  spec.add_runtime_dependency 'tls_test_kit', '~> 1.0.2'
+  spec.add_runtime_dependency 'tls_test_kit', '~> 1.0', '>= 1.0.2'
   spec.add_development_dependency 'database_cleaner-sequel', '~> 1.8'
   spec.add_development_dependency 'factory_bot', '~> 6.1'
   spec.add_development_dependency 'rack-test', '~> 1.1.0'

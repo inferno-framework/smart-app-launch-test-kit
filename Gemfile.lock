@@ -5,7 +5,7 @@ PATH
       inferno_core (~> 1.2, >= 1.2.2)
       json-jwt (~> 1.15.3)
       jwt (~> 2.6)
-      tls_test_kit (~> 1.0.2)
+      tls_test_kit (~> 1.0, >= 1.0.2)
 
 GEM
   remote: https://rubygems.org/

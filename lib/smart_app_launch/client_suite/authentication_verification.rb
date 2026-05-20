@@ -34,7 +34,7 @@ module SMARTAppLaunch
       return unless decoded_token.present?
 
       check_jwt_header(decoded_token.header, request_num)
-      check_jwt_payload(decoded_token.payload, jti_list, request_num)
+      check_jwt_payload(decoded_token.unverified_payload, jti_list, request_num)
       check_jwt_signature(decoded_token, request_num)
     end
 

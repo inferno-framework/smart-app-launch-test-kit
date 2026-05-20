@@ -205,8 +205,10 @@ module SMARTAppLaunch
         invalid_token_introspection_response_body_parsed = JSON.parse(invalid_token_introspection_response_body)
         assert invalid_token_introspection_response_body_parsed['active'] == false,
                "Failure: expected introspection response for 'active' to be Boolean value false for invalid token"
-        assert invalid_token_introspection_response_body_parsed.size == 1,
-               "Failure: expected only 'active' field to be present in introspection response for invalid token"
+        warning do
+          assert invalid_token_introspection_response_body_parsed.size == 1, 
+                 'Introspection response for the invalid token contains more than the status. Inactive responses should not contain additional information.'
+        end
       end
     end
   end

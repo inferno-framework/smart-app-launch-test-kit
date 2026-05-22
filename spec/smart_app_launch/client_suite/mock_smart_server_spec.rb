@@ -51,7 +51,11 @@ RSpec.describe SMARTAppLaunch::MockSMARTServer, :request, :runnable do
     }
   end
   let(:client_assertion_sig_valid) { make_jwt(payload_invalid, header_invalid, 'RS384', parsed_jwks.keys[3]) }
-  let(:client_assertion_sig_invalid) { "#{make_jwt(payload_invalid, header_invalid, 'RS384', parsed_jwks.keys[3])}bad" }
+  let(:client_assertion_sig_invalid) do
+    parts = make_jwt(payload_invalid, header_invalid, 'RS384', parsed_jwks.keys[3]).split('.')
+    parts[2] = Base64.urlsafe_encode64(SecureRandom.bytes(256), padding: false)
+    parts.join('.')
+  end
   let(:token_request_body_sig_invalid) do
     { grant_type: 'client_credentials',
       client_assertion_type: 'invalid',

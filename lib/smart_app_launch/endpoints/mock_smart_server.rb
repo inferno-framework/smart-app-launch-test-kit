@@ -188,7 +188,7 @@ module SMARTAppLaunch
       begin
         encoded_token.verify_signature!(algorithm: encoded_token.header['alg'], key: jwk.verify_key)
       rescue StandardError => e
-        return "Signature verification failed: #{e}"
+        return e
       end
 
       nil

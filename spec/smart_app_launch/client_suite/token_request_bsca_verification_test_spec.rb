@@ -57,7 +57,11 @@ RSpec.describe SMARTAppLaunch::SMARTClientTokenRequestBackendServicesConfidentia
       aud: 'https://inferno-qa.healthit.gov/suites/custom/davinci_pas_v201_client/auth/token'
     }
   end
-  let(:client_assertion_invalid) { "#{make_jwt(payload_invalid, header_invalid, 'RS384', parsed_jwks.keys[3])}bad" }
+  let(:client_assertion_invalid) do
+    parts = make_jwt(payload_invalid, header_invalid, 'RS384', parsed_jwks.keys[3]).split('.')
+    parts[2] = Base64.urlsafe_encode64(SecureRandom.bytes(256), padding: false)
+    parts.join('.')
+  end
   let(:token_request_body_invalid) do
     { grant_type: 'invalid',
       client_assertion_type: 'invalid',

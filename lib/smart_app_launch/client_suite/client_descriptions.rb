@@ -91,15 +91,16 @@ module SMARTAppLaunch
 
         launch_query_string = Rack::Utils.build_query({ iss: fhir_base_url, launch: launch_key })
         ehr_launch_locations = smart_launch_urls.split(',').map { |launch_url| "#{launch_url}?#{launch_query_string}" }
+        output(launch_urls: ehr_launch_locations.join(','))
+        
         ehr_launch_links_string = ehr_launch_locations.map { |url| "- [launch](#{url})" }.join("\n")
-
         "\n\nOr open one of the following links in a new tab to perform an EHR launch:\n#{ehr_launch_links_string}\n\n"
       else
         ''
       end
     end
 
-    def access_wait_dialog_access_response_and_continue_suffix(client_id, resume_pass_url)
+    def access_wait_dialog_access_response_and_continue_suffix(continuation_url)
       <<~SUFFIX
         Inferno will respond to requests with either:
         - A resource from the Bundle in the **Available Resources** input if the request is a read matching
@@ -107,7 +108,7 @@ module SMARTAppLaunch
         - Otherwise, the contents of the **Default FHIR Response** if provided.
         - Otherwise, an OperationOutcome indicating nothing to echo.
 
-        [Click here](#{resume_pass_url}?token=#{client_id}) once the client has made a data access request.
+        [Click here](#{continuation_url}) once the client has made a data access request.
       SUFFIX
     end
   end

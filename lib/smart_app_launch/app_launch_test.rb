@@ -8,6 +8,7 @@ module SMARTAppLaunch
     id :smart_app_launch
 
     input :url
+    output :launch_uri, :target_iss
     receives_request :launch
 
     def default_launch_uri
@@ -32,6 +33,9 @@ module SMARTAppLaunch
     end
 
     run do
+      output(launch_uri:)
+      output(target_iss: url)
+      
       wait(
         identifier: url,
         message: wait_message

@@ -4,7 +4,7 @@ PATH
     smart_app_launch_test_kit (1.0.1)
       inferno_core (~> 1.2, >= 1.2.2)
       json-jwt (~> 1.15.3)
-      jwt (~> 2.6)
+      jwt (~> 3.2)
       tls_test_kit (~> 1.0, >= 1.0.2)
 
 GEM
@@ -195,7 +195,7 @@ GEM
       aes_key_wrap
       bindata
       httpclient
-    jwt (2.10.2)
+    jwt (3.2.0)
       base64
     kramdown (2.5.2)
       rexml (>= 3.4.4)
@@ -293,6 +293,12 @@ GEM
     ruby2_keywords (0.0.5)
     rubyzip (2.4.1)
     securerandom (0.4.1)
+    selenium-webdriver (4.43.0)
+      base64 (~> 0.2)
+      logger (~> 1.4)
+      rexml (~> 3.2, >= 3.2.5)
+      rubyzip (>= 1.2.2, < 4.0)
+      websocket (~> 1.0)
     sequel (5.42.0)
     sidekiq (7.2.4)
       concurrent-ruby (< 2)
@@ -335,6 +341,7 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
+    websocket (1.2.11)
     zeitwerk (2.7.3)
 
 PLATFORMS
@@ -356,6 +363,7 @@ DEPENDENCIES
   rack-test (~> 1.1.0)
   roo (~> 2.10.1)
   rspec (~> 3.10)
+  selenium-webdriver
   smart_app_launch_test_kit!
   webmock (~> 3.11)
 

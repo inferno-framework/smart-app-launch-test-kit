@@ -17,7 +17,16 @@ RSpec.describe SMARTAppLaunch::CORSOpenIDFHIRUserClaimTest do
     }.to_json
   end
   let(:url) { 'http://example.com/fhir' }
+  let(:url_same_host) { "#{Inferno::Application['inferno_host']}/fhir" }
   let(:id_token_fhir_user) { "#{url}/Patient/123" }
+  let(:id_token_fhir_user_same_host) { "#{url_same_host}/Patient/123" }
+  let(:results_repo) { Inferno::Repositories::Results.new }
+
+  def entity_result_messages
+    results_repo.current_results_for_test_session_and_runnables(test_session.id, [test])
+      .first
+      .messages
+  end
 
   def cors_header(value)
     {
@@ -91,6 +100,26 @@ RSpec.describe SMARTAppLaunch::CORSOpenIDFHIRUserClaimTest do
     expect(result.result).to eq('fail')
     expect(user_request).to have_been_made
     expect(result.result_message).to match('No `Access-Control-Allow-Origin` header received')
+  end
+
+  it 'passes with an info message when request is to the same host and a response with no cors header is received' do
+    user_request =
+      stub_request(:get, id_token_fhir_user_same_host)
+      .to_return(status: 200, body: FHIR::Patient.new(id: '123').to_json)
+
+    result = run(
+      test,
+      url: url_same_host,
+      smart_auth_info:,
+      id_token_fhir_user: id_token_fhir_user_same_host
+    )
+
+    expect(result.result).to eq('pass')
+    expect(user_request).to have_been_made
+    messages = entity_result_messages
+    expect(messages.size).to eq(1)
+    expect(messages[0].type).to eq('info')
+    expect(messages[0].message).to eq('No CORS headers required: Inferno and the target server are on the same host.')
   end
 
   it 'fails when a response with incorrect cors header is received' do

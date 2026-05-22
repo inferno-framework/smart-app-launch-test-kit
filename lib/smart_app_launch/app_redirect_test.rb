@@ -14,7 +14,7 @@ module SMARTAppLaunch
 
     input :url
     input :smart_auth_info, type: :auth_info, options: { mode: 'auth' }
-    output :state, :pkce_code_challenge, :pkce_code_verifier
+    output :state, :pkce_code_challenge, :pkce_code_verifier, :authorization_url
     receives_request :redirect
 
     def default_redirect_uri
@@ -104,6 +104,7 @@ module SMARTAppLaunch
       )
 
       info("Inferno redirecting browser to #{authorization_url}.")
+      output(authorization_url:)
 
       wait(
         identifier: state,

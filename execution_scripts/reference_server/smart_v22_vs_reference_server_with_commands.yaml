@@ -1,0 +1,93 @@
+sessions:
+  - suite: smart_stu2_2
+    preset: smart_stu2_2_reference_server
+
+comparison_config:
+  normalized_strings:
+    - replacement: <INFERNO_HOST>
+      patterns:
+        - http://localhost:4567/inferno # local inferno core ruby
+        - http://localhost:4567 # local ruby
+        - http://localhost # local docker
+        - https://inferno.healthit.gov/suites # prod
+        - https://inferno-qa.healthit.gov/suites # qa
+    - replacement: <REFERENCE_SERVER_URL>
+      patterns:
+        - https://inferno.healthit.gov/reference-server # prod reference server
+        - https://inferno-qa.healthit.gov/reference-server # qa reference server
+    - replacement: code_challenge=<CODE_CHALLENGE>
+      pattern: /code_challenge=[A-Za-z0-9+\/=_-]{43}/
+    - replacement: <UUID>
+      pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i
+  alternate_expected_files: # for CORS exception when requestor (inferno) and target (ref server) are on the same host
+    - file: smart_v22_vs_reference_server_with_commands_same_host_expected.json
+      when: # both prod
+        - field: inferno_base_url
+          matches: inferno\.healthit\.gov
+        - field: inputs.url
+          matches: inferno\.healthit\.gov
+    - file: smart_v22_vs_reference_server_with_commands_same_host_expected.json
+      when: # both qa
+        - field: inferno_base_url
+          matches: inferno-qa\.healthit\.gov
+        - field: inputs.url
+          matches: inferno-qa\.healthit\.gov
+
+steps:
+  - state_description: Session Created
+    status: created
+    start_run:
+      runnable: 1
+    action_description: Run Group 1 Standalone Launch
+
+  - state_description: Wait at test 1.2.02 OAuth server redirects client browser to app redirect URI
+    status: waiting
+    last_completed: 1.2.02
+    command: bundle exec ruby execution_scripts/reference_server/ref_server_authorize_85_all_scopes.rb '{wait_outputs.authorization_url}'
+    action_description: Authorize patient 85
+    
+  - state_description: Finished Group 1 Standalone Launch
+    status: done
+    last_completed: 1
+    start_run:
+      runnable: 2
+    action_description: Run Group 2 EHR Launch
+
+  - state_description: Wait at test 2.2.01 EHR server redirects client browser to Inferno app launch URI
+    status: waiting
+    last_completed: 2.2.01
+    command: bundle exec ruby execution_scripts/reference_server/ref_server_ehr_launch_85.rb '{wait_outputs.launch_uri}' '{wait_outputs.target_iss}'
+    action_description: Launch Inferno as a SMART app using patient 85 as the patient context
+
+  - state_description: Wait at test 2.2.04 OAuth server redirects client browser to app redirect URI
+    status: waiting
+    last_completed: 2.2.04
+    command: bundle exec ruby execution_scripts/reference_server/ref_server_authorize_launched_all_scopes.rb '{wait_outputs.authorization_url}'
+    action_description: Authorize all requested scopes for launched patient
+
+  - state_description: Finished Group 2 EHR Launch
+    status: done
+    last_completed: 2
+    start_run:
+      runnable: 3
+    action_description: Run Group 3 Backend Services
+
+  - state_description: Finished Group 3 Backend Services
+    status: done
+    last_completed: 3
+    start_run:
+      runnable: 4
+    action_description: Run Group 4 Token Introspection
+
+  - state_description: Wait at test 4.1.2.02 OAuth server redirects client browser to app redirect URI
+    status: waiting
+    last_completed: 4.1.2.02
+    command: bundle exec ruby execution_scripts/reference_server/ref_server_authorize_85_all_scopes.rb '{wait_outputs.authorization_url}'
+    action_description: Authorize patient 85
+
+  - state_description: Finished Group 4 Token Introspection
+    status: done
+    last_completed: 4
+    action: END_SCRIPT
+    action_description: Finished Script
+    

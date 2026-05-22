@@ -33,10 +33,17 @@ module SMARTAppLaunch
 
       assert_response_status(200)
       inferno_origin = Inferno::Application['inferno_host']
-      cors_allow_origin = request.response_header('Access-Control-Allow-Origin')&.value
-      assert cors_allow_origin.present?, 'No `Access-Control-Allow-Origin` header received.'
-      assert cors_allow_origin == inferno_origin || cors_allow_origin == '*',
-             "`Access-Control-Allow-Origin` must be `#{inferno_origin}`, but received: `#{cors_allow_origin}`"
+      
+      if url.starts_with?(inferno_origin)
+        info 'No CORS headers required: Inferno and the target server are on the same host.'
+      else
+        cors_allow_origin = request.response_header('Access-Control-Allow-Origin')&.value
+        assert cors_allow_origin.present?, 'No `Access-Control-Allow-Origin` header received.'
+        assert cors_allow_origin == inferno_origin || cors_allow_origin == '*',
+              "`Access-Control-Allow-Origin` must be `#{inferno_origin}`, but received: `#{cors_allow_origin}`"
+      end
+
+      
     end
   end
 end

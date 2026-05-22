@@ -5,6 +5,8 @@ RSpec.describe SMARTAppLaunch::CORSWellKnownEndpointTest do
   let(:test) { Inferno::Repositories::Tests.new.find('smart_cors_well_known_endpoint') }
   let(:url) { 'http://example.com/fhir' }
   let(:well_known_url) { 'http://example.com/fhir/.well-known/smart-configuration' }
+  let(:url_same_host) { "#{Inferno::Application['inferno_host']}/fhir" }
+  let(:well_known_url_same_host) { "#{Inferno::Application['inferno_host']}/fhir/.well-known/smart-configuration" }
   let(:well_known_config) do
     {
       'authorization_endpoint' => 'https://example.com/fhir/auth/authorize',
@@ -24,6 +26,13 @@ RSpec.describe SMARTAppLaunch::CORSWellKnownEndpointTest do
       'grant_types_supported' => ['authorization_code'],
       'code_challenge_methods_supported' => ['S256']
     }
+  end
+  let(:results_repo) { Inferno::Repositories::Results.new }
+
+  def entity_result_messages
+    results_repo.current_results_for_test_session_and_runnables(test_session.id, [test])
+      .first
+      .messages
   end
 
   def cors_header(value)
@@ -76,6 +85,21 @@ RSpec.describe SMARTAppLaunch::CORSWellKnownEndpointTest do
     expect(result.result).to eq('fail')
     expect(well_known_request).to have_been_made
     expect(result.result_message).to match('No `Access-Control-Allow-Origin` header received')
+  end
+
+  it 'passes with an info message when request is to the same host and a response with no cors header is received' do
+    well_known_request = stub_request(:get, well_known_url_same_host)
+      .to_return(status: 200, body: well_known_config.to_json,
+                 headers: { 'Content-Type' => 'application/json' })
+
+    result = run(test, url: url_same_host)
+
+    expect(result.result).to eq('pass')
+    expect(well_known_request).to have_been_made
+    messages = entity_result_messages
+    expect(messages.size).to eq(1)
+    expect(messages[0].type).to eq('info')
+    expect(messages[0].message).to eq('No CORS headers required: Inferno and the target server are on the same host.')
   end
 
   it 'fails when a response with incorrect cors header is received' do

@@ -1,0 +1,122 @@
+sessions:
+  - suite: smart_client_stu2_2
+    name: client
+    preset: smart_run_client_against_server_v2_2
+    suite_options:
+      SMART Client Type: 'SMART App Launch Confidential Symmetric Client'
+  - suite: smart_stu2_2
+    name: server
+    preset: 'Demo: Run Against the SMART Client Suite (Confidential Symmetric)'
+
+comparison_config:
+  normalized_strings:
+    - replacement: <INFERNO_HOST>
+      patterns:
+        - http://localhost:4567/inferno # local inferno core ruby
+        - http://localhost:4567 # local ruby
+        - http://localhost # local docker
+        - https://inferno.healthit.gov/suites # prod
+        - https://inferno-qa.healthit.gov/suites # qa
+    - replacement: <REFERENCE_SERVER_URL>
+      patterns:
+        - https://inferno.healthit.gov/reference-server # prod reference server
+        - https://inferno-qa.healthit.gov/reference-server # qa reference server
+    - replacement: code_challenge=<CODE_CHALLENGE>
+      pattern: /code_challenge=[A-Za-z0-9+\/=_-]{43}/
+    - replacement: launch=<LAUNCH_KEY>
+      pattern: /launch=[a-f0-9]{64}/
+    - replacement: <UUID>
+      pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i
+  sessions:
+    server:
+      alternate_expected_files:           
+        - file: smart_v22_confidential_symmetric_with_commands_server_no_tls_expected.json
+          when:
+            - field: inputs.url
+              matches: ^http://
+    client:
+      alternate_expected_files:           
+        - file: smart_v22_confidential_symmetric_with_commands_client_no_tls_expected.json
+          when:
+            - field: inputs.smart_launch_urls
+              matches: ^http://
+
+steps:
+  - state_description: Session Created
+    session: client
+    status: created
+    start_run:
+      session: client
+      runnable: suite
+    action_description: Run the client suite
+
+  - state_description: Wait at Client test 5.02 Access a secured FHIR endpoint using SMART App Launch
+    session: client
+    status: waiting
+    last_completed: 5.02
+    start_run:
+      session: server
+      runnable: 1
+    next_poll_session: server
+    action_description: Run server group 1 Standalone Launch
+    
+  - state_description: Wait at Server test 1.2.02 OAuth server redirects client browser to app redirect URI
+    session: server
+    status: waiting
+    last_completed: 1.2.02
+    command: bundle exec ruby execution_scripts/client_vs_server/visit_and_wait_to_return_to_inferno.rb '{server.wait_outputs.authorization_url}'
+    action_description: Click the authorization link
+
+  - state_description: Finished Server group 1 Standalone Launch
+    session: server
+    status: done
+    last_completed: 1
+    start_run:
+      session: server
+      runnable: 2
+    action_description: Run server group 2 EHR Launch
+
+  - state_description: Wait at Server test 2.2.01 EHR server redirects client browser to Inferno app launch URI
+    session: server
+    status: waiting
+    last_completed: 2.2.01
+    command: bundle exec ruby execution_scripts/client_vs_server/visit_and_wait_to_return_to_inferno.rb '{client.wait_outputs.launch_urls}'
+    action_description: Perform an EHR launch using the simulated launch url
+
+  - state_description: Wait at Server test 2.2.04 OAuth server redirects client browser to app redirect URI
+    session: server
+    status: waiting
+    last_completed: 2.2.04
+    command: bundle exec ruby execution_scripts/client_vs_server/visit_and_wait_to_return_to_inferno.rb '{server.wait_outputs.authorization_url}'
+    action_description: Click the authorization link
+
+  - state_description: Finished Server group 2 EHR Launch
+    session: server
+    status: done
+    last_completed: 2
+    start_run:
+      session: server
+      runnable: 4
+    action_description: Run server group 4 Token Introspection
+
+  - state_description: Wait at Server test 4.1.2.02 OAuth server redirects client browser to app redirect URI
+    session: server
+    status: waiting
+    last_completed: 4.1.2.02
+    command: bundle exec ruby execution_scripts/client_vs_server/visit_and_wait_to_return_to_inferno.rb '{server.wait_outputs.authorization_url}'
+    action_description: Click the authorization link
+
+  - state_description: Finished Server group 4 Token Introspection
+    session: server
+    status: done
+    last_completed: 4
+    command: bundle exec ruby execution_scripts/client_vs_server/visit_and_wait_to_return_to_inferno.rb '{client.wait_outputs.continuation_url}'
+    next_poll_session: client
+    action_description: Continue the Client tests
+    
+  - state_description: Finished Client Suite
+    session: client
+    status: done
+    last_completed: suite
+    action: END_SCRIPT
+    action_description: Finished Script

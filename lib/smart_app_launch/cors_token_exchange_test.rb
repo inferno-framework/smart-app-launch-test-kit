@@ -28,10 +28,14 @@ module SMARTAppLaunch
       skip_if request.status != 200, 'Previous request was unsuccessful, cannot check for CORS support'
 
       inferno_origin = Inferno::Application['inferno_host']
-      cors_header = request.response_header('Access-Control-Allow-Origin')&.value
+      if request.url.starts_with?(inferno_origin)
+        info 'No CORS headers required: Inferno and the target server are on the same host.'
+      else
+        cors_header = request.response_header('Access-Control-Allow-Origin')&.value
 
-      assert cors_header == inferno_origin || cors_header == '*',
-             "Request must have `Access-Control-Allow-Origin` header containing `#{inferno_origin}`"
+        assert cors_header == inferno_origin || cors_header == '*',
+              "Request must have `Access-Control-Allow-Origin` header containing `#{inferno_origin}`"
+      end
     end
   end
 end

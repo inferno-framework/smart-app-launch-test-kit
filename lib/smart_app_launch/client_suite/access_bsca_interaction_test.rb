@@ -31,6 +31,7 @@ module SMARTAppLaunch
           type: 'textarea',
           optional: true,
           description: INPUT_ECHOED_FHIR_RESPONSE_DESCRIPTION
+    output :continuation_url
 
     def client_suite_id
       return config.options[:endpoint_suite_id] if config.options[:endpoint_suite_id].present?
@@ -39,10 +40,12 @@ module SMARTAppLaunch
     end
 
     run do
+      continuation_url = "#{client_resume_pass_url}?token=#{client_id}"
+      output(continuation_url:)
       wait(
         identifier: client_id,
         message: access_wait_dialog_backend_services_access_prefix(client_id, client_fhir_base_url) + 
-                 access_wait_dialog_access_response_and_continue_suffix(client_id, client_resume_pass_url)
+                 access_wait_dialog_access_response_and_continue_suffix(continuation_url)
       )
     end
   end

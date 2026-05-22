@@ -1,0 +1,69 @@
+sessions:
+  - suite: smart_client_stu2_2
+    name: client
+    preset: smart_run_client_against_server_v2_2
+    suite_options:
+      SMART Client Type: SMART Backend Services Confidential Asymmetric Client
+  - suite: smart_stu2_2
+    name: server
+    preset: smart_run_server_against_ca_client_v2_2
+
+comparison_config:
+  normalized_strings:
+    - replacement: <INFERNO_HOST>
+      patterns:
+        - http://localhost:4567/inferno # local inferno core ruby
+        - http://localhost:4567 # local ruby
+        - http://localhost # local docker
+        - https://inferno.healthit.gov/suites # prod
+        - https://inferno-qa.healthit.gov/suites # qa
+    - replacement: <REFERENCE_SERVER_URL>
+      patterns:
+        - https://inferno.healthit.gov/reference-server # prod reference server
+        - https://inferno-qa.healthit.gov/reference-server # qa reference server
+    - replacement: code_challenge=<CODE_CHALLENGE>
+      pattern: /code_challenge=[A-Za-z0-9+\/=_-]{43}/
+    - replacement: <UUID>
+      pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i
+  sessions:
+    server:
+      alternate_expected_files:           
+        - file: smart_v22_backend_services_with_commands_server_no_tls_expected.json
+          when:
+            - field: inputs.url
+              matches: ^http://
+
+steps:
+  - state_description: Session Created
+    session: client
+    status: created
+    start_run:
+      session: client
+      runnable: suite
+    action_description: Run the client suite
+
+  - state_description: Wait at Client test 5.04 Access a secured FHIR endpoint using SMART Backend Services
+    session: client
+    status: waiting
+    last_completed: 5.04
+    start_run:
+      session: server
+      runnable: 3
+    next_poll_session: server
+    action_description: Run server group 3 Backend Services
+    
+  - state_description: Finished server group 3 Backend Services
+    session: server
+    status: done
+    last_completed: 3
+    command: bundle exec ruby execution_scripts/client_vs_server/access_data_and_continue_client.rb {session_id} smart_client_stu2_2 '{client.wait_outputs.continuation_url}' example {inferno_base_url}
+    next_poll_session: client
+    action_description: Perform access and tell the client tests the access was performed
+
+  - state_description: Finished Client Suite
+    session: client
+    status: done
+    last_completed: suite
+    action: END_SCRIPT
+    action_description: Finished Script
+    

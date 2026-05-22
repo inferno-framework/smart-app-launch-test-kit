@@ -52,6 +52,8 @@ module SMARTAppLaunch
           description: INPUT_ECHOED_FHIR_RESPONSE_DESCRIPTION
 
     output :launch_key
+    output :launch_urls
+    output :continuation_url
 
     def client_suite_id
       return config.options[:endpoint_suite_id] if config.options[:endpoint_suite_id].present?
@@ -69,11 +71,13 @@ module SMARTAppLaunch
         )
       end
 
+      continuation_url = "#{client_resume_pass_url}?token=#{client_id}"
+      output(continuation_url:)
       wait(
         identifier: client_id,
         message: access_wait_dialog_app_launch_access_prefix(client_id, 'confidential asymmetric', client_fhir_base_url) +
                  access_wait_dialog_ehr_launch_instructions(smart_launch_urls, client_fhir_base_url) +
-                 access_wait_dialog_access_response_and_continue_suffix(client_id, client_resume_pass_url)
+                 access_wait_dialog_access_response_and_continue_suffix(continuation_url)
       )
     end
   end

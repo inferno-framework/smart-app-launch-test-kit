@@ -1,3 +1,10 @@
+# 1.0.2
+* Bumping jwt gem to 3.2 and addressing breaking changes by @FlexonyoPizza in:
+https://github.com/inferno-framework/smart-app-launch-test-kit/pull/116
+* ID-45: execution scripts by @karlnaden in:
+https://github.com/inferno-framework/smart-app-launch-test-kit/pull/112
+
+
 # 1.0.1
 * ID-134: Gem dependency updates and addressing vulnerabilities by @FlexonyoPizza in 
   https://github.com/inferno-framework/smart-app-launch-test-kit/pull/113 , 

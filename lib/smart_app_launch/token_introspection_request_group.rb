@@ -121,6 +121,8 @@ module SMARTAppLaunch
           end
         end
 
+        body += "&#{optional_introspection_request_params}" if optional_introspection_request_params.present?
+
         post(well_known_introspection_url, body:, headers:)
 
         assert_response_status(200)

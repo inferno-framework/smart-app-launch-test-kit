@@ -1,3 +1,6 @@
+# 1.0.3
+* Apply optional_introspection_request_params in invalid-token test by @zacharywhitley in https://github.com/inferno-framework/smart-app-launch-test-kit/pull/118
+
 # 1.0.2
 * Bumping jwt gem to 3.2 and addressing breaking changes by @FlexonyoPizza in:
 https://github.com/inferno-framework/smart-app-launch-test-kit/pull/116

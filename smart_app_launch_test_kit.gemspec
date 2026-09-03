@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.description   = 'Inferno Tests for the SMART Application Launch Framework Implementation Guide'
   spec.homepage      = 'https://github.com/inferno-framework/smart-app-launch-test-kit'
   spec.license       = 'Apache-2.0'
-  spec.add_runtime_dependency 'inferno_core', '~> 1.2', '>= 1.2.2'
+  spec.add_runtime_dependency 'inferno_core', '~> 1.4', '>= 1.4.2'
   spec.add_runtime_dependency 'json-jwt', '~> 1.15.3'
   spec.add_runtime_dependency 'jwt', '~> 3.2'
   spec.add_runtime_dependency 'tls_test_kit', '~> 1.0', '>= 1.0.2'

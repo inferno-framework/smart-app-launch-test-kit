@@ -1,3 +1,6 @@
+# 1.0.4
+* ID-266: Remove unused roo pin from gemspec by @abhinandan2012 in https://github.com/inferno-framework/smart-app-launch-test-kit/pull/120
+
 # 1.0.3
 * Apply optional_introspection_request_params in invalid-token test by @zacharywhitley in https://github.com/inferno-framework/smart-app-launch-test-kit/pull/118
 
